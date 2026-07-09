@@ -39,6 +39,8 @@ begin
   end if;
 end $$;
 
+notify pgrst, 'reload schema';
+
 alter table public.rental_checks enable row level security;
 alter table public.rental_config enable row level security;
 
