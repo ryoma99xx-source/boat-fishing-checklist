@@ -70,6 +70,10 @@ h2 {
   background: #ffffff;
 }
 
+.tabs.threeTabs {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .tab {
   min-height: 48px;
   border: 0;
@@ -139,6 +143,39 @@ h2 {
   background: #c63f35;
   color: #ffffff;
   font-weight: 800;
+}
+
+.saveButton,
+.addButton,
+.deleteButton {
+  min-height: 46px;
+  border: 0;
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.saveButton {
+  flex: 0 0 auto;
+  padding: 0 18px;
+  background: #146c4f;
+  color: #ffffff;
+}
+
+.saveButton:disabled {
+  opacity: 0.6;
+}
+
+.addButton {
+  padding: 0 14px;
+  background: #eaf2ed;
+  color: #146c4f;
+}
+
+.deleteButton {
+  flex: 0 0 auto;
+  padding: 0 12px;
+  background: #f7dedb;
+  color: #9a332a;
 }
 
 .notice {
@@ -283,6 +320,68 @@ h2 {
   font-size: 1.1rem;
 }
 
+.editorGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.editorSection {
+  min-width: 0;
+}
+
+.editorHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.editorHeading h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.editList {
+  display: grid;
+  gap: 9px;
+}
+
+.editRow {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 56px;
+  padding: 8px;
+  border: 1px solid #dce5da;
+  border-radius: 8px;
+  background: #fbfcfa;
+}
+
+.rowNumber {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: #edf6f1;
+  color: #47705f;
+  font-weight: 900;
+}
+
+.editRow input {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #cfdad3;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #ffffff;
+  color: #16231f;
+  font-size: 1rem;
+}
+
 @media (max-width: 640px) {
   .appShell {
     padding: 12px 10px 24px;
@@ -294,6 +393,10 @@ h2 {
 
   .sectionTitle {
     align-items: flex-start;
+  }
+
+  .tabs.threeTabs {
+    grid-template-columns: 1fr;
   }
 
   .rentalTable {
@@ -313,5 +416,22 @@ h2 {
 
   .totals {
     grid-template-columns: 1fr;
+  }
+
+  .editorGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .editorHeading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .editRow {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+
+  .deleteButton {
+    grid-column: 2;
   }
 }
