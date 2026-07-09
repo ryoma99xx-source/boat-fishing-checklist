@@ -19,7 +19,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -89,6 +90,46 @@ h2 {
   color: #ffffff;
 }
 
+.listBar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 1fr);
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 12px;
+  border: 1px solid #d9e1d6;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.listSelectLabel,
+.nameField {
+  display: grid;
+  gap: 6px;
+  color: #405149;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.listSelectLabel select,
+.nameField input,
+.newListBox input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid #cfdad3;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #ffffff;
+  color: #16231f;
+  font-size: 1rem;
+}
+
+.newListBox {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 8px;
+}
+
 .panel {
   padding: 16px;
   border: 1px solid #d9e1d6;
@@ -147,7 +188,8 @@ h2 {
 
 .saveButton,
 .addButton,
-.deleteButton {
+.deleteButton,
+.deleteListButton {
   min-height: 46px;
   border: 0;
   border-radius: 8px;
@@ -176,6 +218,17 @@ h2 {
   padding: 0 12px;
   background: #f7dedb;
   color: #9a332a;
+}
+
+.deleteListButton {
+  width: 100%;
+  padding: 0 14px;
+  background: #c63f35;
+  color: #ffffff;
+}
+
+.deleteListButton:disabled {
+  opacity: 0.5;
 }
 
 .notice {
@@ -324,6 +377,7 @@ h2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+  margin-top: 14px;
 }
 
 .editorSection {
@@ -382,6 +436,16 @@ h2 {
   font-size: 1rem;
 }
 
+.nameField {
+  margin: 0 0 14px;
+}
+
+.dangerArea {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #e2e9df;
+}
+
 @media (max-width: 640px) {
   .appShell {
     padding: 12px 10px 24px;
@@ -396,6 +460,11 @@ h2 {
   }
 
   .tabs.threeTabs {
+    grid-template-columns: 1fr;
+  }
+
+  .listBar,
+  .newListBox {
     grid-template-columns: 1fr;
   }
 

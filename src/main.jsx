@@ -22,7 +22,9 @@ const DEFAULT_RENTAL_ITEMS = [
   { key: 'rod_holder', label: 'ロッドホルダーだけ' }
 ];
 
-const DEFAULT_CONFIG = {
+const DEFAULT_LIST = {
+  id: 'main',
+  name: 'レンタル確認',
   members: DEFAULT_MEMBERS,
   items: DEFAULT_RENTAL_ITEMS
 };
@@ -53,11 +55,13 @@ function createKey(prefix) {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
-function normalizeConfig(config) {
-  const members = Array.isArray(config?.members) ? config.members : DEFAULT_MEMBERS;
-  const items = Array.isArray(config?.items) ? config.items : DEFAULT_RENTAL_ITEMS;
+function normalizeList(list) {
+  const members = Array.isArray(list?.members) ? list.members : DEFAULT_MEMBERS;
+  const items = Array.isArray(list?.items) ? list.items : DEFAULT_RENTAL_ITEMS;
 
   return {
+    id: list?.id || createKey('list'),
+    name: String(list?.name || '新しいリスト').trim() || '新しいリスト',
     members: members
       .filter((member) => member?.key && member?.name)
       .map((member) => ({ key: member.key, name: member.name })),
@@ -69,48 +73,81 @@ function normalizeConfig(config) {
 
 function App() {
   const [activePage, setActivePage] = useState('rental');
-  const [config, setConfig] = useState(DEFAULT_CONFIG);
-  const [configLoading, setConfigLoading] = useState(hasSupabaseConfig);
-  const [configError, setConfigError] = useState('');
+  const [lists, setLists] = useState([DEFAULT_LIST]);
+  const [selectedListId, setSelectedListId] = useState(() => {
+    return localStorage.getItem('selectedRentalListId') || DEFAULT_LIST.id;
+  });
+  const [listsLoading, setListsLoading] = useState(hasSupabaseConfig);
+  const [listsError, setListsError] = useState('');
+
+  const selectedList = useMemo(() => {
+    return lists.find((list) => list.id === selectedListId) || lists[0] || DEFAULT_LIST;
+  }, [lists, selectedListId]);
+
+  useEffect(() => {
+    localStorage.setItem('selectedRentalListId', selectedList.id);
+  }, [selectedList.id]);
 
   useEffect(() => {
     if (!supabase) return;
 
     let isMounted = true;
 
-    async function loadConfig() {
-      setConfigLoading(true);
-      setConfigError('');
+    async function loadLists() {
+      setListsLoading(true);
+      setListsError('');
 
       const { data, error } = await supabase
         .from('rental_config')
-        .select('members,items')
-        .eq('id', 'main')
-        .maybeSingle();
+        .select('id,name,members,items')
+        .order('updated_at', { ascending: true });
 
       if (!isMounted) return;
 
       if (error) {
-        setConfigError('リスト設定を読み込めませんでした。SupabaseのSQLを更新してください。');
-      } else if (data) {
-        setConfig(normalizeConfig(data));
+        setListsError('リストを読み込めませんでした。SupabaseのSQLを更新してください。');
+      } else if (data?.length) {
+        const nextLists = data.map(normalizeList);
+        setLists(nextLists);
+        if (!nextLists.some((list) => list.id === selectedListId)) {
+          setSelectedListId(nextLists[0].id);
+        }
       } else {
-        await saveConfig(DEFAULT_CONFIG);
+        await saveList(DEFAULT_LIST);
       }
 
-      setConfigLoading(false);
+      setListsLoading(false);
     }
 
-    loadConfig();
+    loadLists();
 
     const channel = supabase
-      .channel('rental-config-shared')
+      .channel('rental-lists-shared')
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'rental_config', filter: 'id=eq.main' },
+        { event: '*', schema: 'public', table: 'rental_config' },
         (payload) => {
+          if (payload.eventType === 'DELETE') {
+            const deletedId = payload.old?.id;
+            setLists((current) => {
+              const nextLists = current.filter((list) => list.id !== deletedId);
+              if (deletedId === selectedListId && nextLists[0]) {
+                setSelectedListId(nextLists[0].id);
+              }
+              return nextLists.length ? nextLists : [DEFAULT_LIST];
+            });
+            return;
+          }
+
           if (payload.new) {
-            setConfig(normalizeConfig(payload.new));
+            const nextList = normalizeList(payload.new);
+            setLists((current) => {
+              const exists = current.some((list) => list.id === nextList.id);
+              if (exists) {
+                return current.map((list) => (list.id === nextList.id ? nextList : list));
+              }
+              return [...current, nextList];
+            });
           }
         }
       )
@@ -120,30 +157,86 @@ function App() {
       isMounted = false;
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [selectedListId]);
 
-  async function saveConfig(nextConfig) {
-    const cleanConfig = normalizeConfig(nextConfig);
-    setConfig(cleanConfig);
+  async function saveList(nextList) {
+    const cleanList = normalizeList(nextList);
+    setLists((current) => {
+      const exists = current.some((list) => list.id === cleanList.id);
+      if (exists) {
+        return current.map((list) => (list.id === cleanList.id ? cleanList : list));
+      }
+      return [...current, cleanList];
+    });
 
     if (!supabase) {
-      setConfigError('Supabaseの環境変数が未設定です。Vercelの環境変数を確認してください。');
+      setListsError('Supabaseの環境変数が未設定です。Vercelの環境変数を確認してください。');
       return false;
     }
 
     const { error } = await supabase.from('rental_config').upsert({
-      id: 'main',
-      members: cleanConfig.members,
-      items: cleanConfig.items,
+      id: cleanList.id,
+      name: cleanList.name,
+      members: cleanList.members,
+      items: cleanList.items,
       updated_at: new Date().toISOString()
     });
 
     if (error) {
-      setConfigError('リスト設定の保存に失敗しました。SupabaseのSQLを更新してください。');
+      setListsError('リストの保存に失敗しました。SupabaseのSQLを更新してください。');
       return false;
     }
 
-    setConfigError('');
+    setListsError('');
+    return true;
+  }
+
+  async function createList(name) {
+    const newList = {
+      ...DEFAULT_LIST,
+      id: createKey('list'),
+      name: name.trim() || '新しいリスト',
+      members: DEFAULT_MEMBERS,
+      items: DEFAULT_RENTAL_ITEMS
+    };
+    const ok = await saveList(newList);
+    if (ok) {
+      setSelectedListId(newList.id);
+      setActivePage('edit');
+    }
+    return ok;
+  }
+
+  async function deleteList(listId) {
+    if (lists.length <= 1) {
+      setListsError('リストは最低1つ必要です。');
+      return false;
+    }
+
+    const nextSelectedId = lists.find((list) => list.id !== listId)?.id || DEFAULT_LIST.id;
+    setLists((current) => current.filter((list) => list.id !== listId));
+    setSelectedListId(nextSelectedId);
+
+    if (!supabase) {
+      setListsError('Supabaseの環境変数が未設定です。Vercelの環境変数を確認してください。');
+      return false;
+    }
+
+    const { error: checksError } = await supabase
+      .from('rental_checks')
+      .delete()
+      .eq('list_id', listId);
+    const { error: listError } = await supabase
+      .from('rental_config')
+      .delete()
+      .eq('id', listId);
+
+    if (checksError || listError) {
+      setListsError('リストの削除に失敗しました。ページを再読み込みして確認してください。');
+      return false;
+    }
+
+    setListsError('');
     return true;
   }
 
@@ -180,13 +273,70 @@ function App() {
         </button>
       </nav>
 
-      {configError && <div className="notice error">{configError}</div>}
-      {configLoading && <div className="notice">リスト設定を読み込み中...</div>}
+      {activePage !== 'bag' && (
+        <ListBar
+          lists={lists}
+          onCreateList={createList}
+          onSelectList={setSelectedListId}
+          selectedListId={selectedList.id}
+        />
+      )}
+
+      {listsError && <div className="notice error">{listsError}</div>}
+      {listsLoading && <div className="notice">リストを読み込み中...</div>}
 
       {activePage === 'bag' && <BagChecklist />}
-      {activePage === 'rental' && <RentalChecklist config={config} />}
-      {activePage === 'edit' && <ListEditor config={config} onSave={saveConfig} />}
+      {activePage === 'rental' && <RentalChecklist list={selectedList} />}
+      {activePage === 'edit' && (
+        <ListEditor
+          list={selectedList}
+          listCount={lists.length}
+          onDelete={deleteList}
+          onSave={saveList}
+        />
+      )}
     </main>
+  );
+}
+
+function ListBar({ lists, onCreateList, onSelectList, selectedListId }) {
+  const [newListName, setNewListName] = useState('');
+  const [creating, setCreating] = useState(false);
+
+  async function handleCreate() {
+    setCreating(true);
+    const ok = await onCreateList(newListName);
+    if (ok) {
+      setNewListName('');
+    }
+    setCreating(false);
+  }
+
+  return (
+    <section className="listBar" aria-label="リスト選択">
+      <label className="listSelectLabel">
+        <span>表示するリスト</span>
+        <select value={selectedListId} onChange={(event) => onSelectList(event.target.value)}>
+          {lists.map((list) => (
+            <option key={list.id} value={list.id}>
+              {list.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      <div className="newListBox">
+        <input
+          aria-label="新しいリスト名"
+          onChange={(event) => setNewListName(event.target.value)}
+          placeholder="新しいリスト名"
+          type="text"
+          value={newListName}
+        />
+        <button className="addButton" disabled={creating} onClick={handleCreate} type="button">
+          {creating ? '作成中...' : '新規作成'}
+        </button>
+      </div>
+    </section>
   );
 }
 
@@ -228,8 +378,8 @@ function BagChecklist() {
   );
 }
 
-function RentalChecklist({ config }) {
-  const { members, items } = config;
+function RentalChecklist({ list }) {
+  const { members, items } = list;
   const [checks, setChecks] = useState({});
   const [loading, setLoading] = useState(hasSupabaseConfig);
   const [savingKey, setSavingKey] = useState('');
@@ -253,7 +403,8 @@ function RentalChecklist({ config }) {
 
       const { data, error: loadError } = await supabase
         .from('rental_checks')
-        .select('member_key,item_key,checked');
+        .select('member_key,item_key,checked')
+        .eq('list_id', list.id);
 
       if (!isMounted) return;
 
@@ -273,10 +424,10 @@ function RentalChecklist({ config }) {
     loadChecks();
 
     const channel = supabase
-      .channel('rental-checks-shared')
+      .channel(`rental-checks-${list.id}`)
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'rental_checks' },
+        { event: '*', schema: 'public', table: 'rental_checks', filter: `list_id=eq.${list.id}` },
         (payload) => {
           const row = payload.new;
           if (!row?.member_key || !row?.item_key) return;
@@ -293,7 +444,7 @@ function RentalChecklist({ config }) {
       isMounted = false;
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [list.id]);
 
   async function toggleCheck(memberKey, itemKey) {
     const cellKey = makeCellKey(memberKey, itemKey);
@@ -310,6 +461,7 @@ function RentalChecklist({ config }) {
     setError('');
 
     const { error: saveError } = await supabase.from('rental_checks').upsert({
+      list_id: list.id,
       member_key: memberKey,
       item_key: itemKey,
       checked: nextValue,
@@ -328,6 +480,7 @@ function RentalChecklist({ config }) {
     const previousChecks = checks;
     const resetRows = members.flatMap((member) =>
       items.map((item) => ({
+        list_id: list.id,
         member_key: member.key,
         item_key: item.key,
         checked: false,
@@ -356,8 +509,8 @@ function RentalChecklist({ config }) {
     <section className="panel rentalPanel" aria-labelledby="rental-title">
       <div className="sectionTitle">
         <div>
-          <h2 id="rental-title">レンタル確認</h2>
-          <p>全員で同じURLを開くと、同じチェック状態を見られます。</p>
+          <h2 id="rental-title">{list.name}</h2>
+          <p>選択中のリストだけのチェック状態を共有します。</p>
         </div>
         <button className="resetButton" onClick={resetAll} type="button">
           全リセット
@@ -425,14 +578,16 @@ function RentalChecklist({ config }) {
   );
 }
 
-function ListEditor({ config, onSave }) {
-  const [draft, setDraft] = useState(config);
+function ListEditor({ list, listCount, onDelete, onSave }) {
+  const [draft, setDraft] = useState(list);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    setDraft(config);
-  }, [config]);
+    setDraft(list);
+    setMessage('');
+  }, [list]);
 
   function updateMember(key, name) {
     setDraft((current) => ({
@@ -481,12 +636,18 @@ function ListEditor({ config, onSave }) {
   }
 
   async function handleSave() {
+    const cleanName = draft.name.trim();
     const cleanMembers = draft.members
       .map((member) => ({ ...member, name: member.name.trim() }))
       .filter((member) => member.name);
     const cleanItems = draft.items
       .map((item) => ({ ...item, label: item.label.trim() }))
       .filter((item) => item.label);
+
+    if (!cleanName) {
+      setMessage('リスト名を入力してください。');
+      return;
+    }
 
     if (cleanMembers.length === 0 || cleanItems.length === 0) {
       setMessage('名前と項目はそれぞれ1つ以上必要です。');
@@ -495,9 +656,32 @@ function ListEditor({ config, onSave }) {
 
     setSaving(true);
     setMessage('');
-    const ok = await onSave({ members: cleanMembers, items: cleanItems });
+    const ok = await onSave({
+      id: draft.id,
+      name: cleanName,
+      members: cleanMembers,
+      items: cleanItems
+    });
     setSaving(false);
     setMessage(ok ? '保存しました。レンタル確認にも反映されます。' : '保存できませんでした。');
+  }
+
+  async function handleDelete() {
+    if (listCount <= 1) {
+      setMessage('リストは最低1つ必要です。');
+      return;
+    }
+
+    const confirmed = window.confirm(`「${list.name}」を削除しますか？チェック状態も消えます。`);
+    if (!confirmed) return;
+
+    setDeleting(true);
+    setMessage('');
+    const ok = await onDelete(list.id);
+    setDeleting(false);
+    if (!ok) {
+      setMessage('削除できませんでした。');
+    }
   }
 
   return (
@@ -505,7 +689,7 @@ function ListEditor({ config, onSave }) {
       <div className="sectionTitle">
         <div>
           <h2 id="edit-title">リスト編集</h2>
-          <p>縦軸の名前と、横軸のチェック項目を編集できます。</p>
+          <p>リスト名、縦軸の名前、横軸のチェック項目を編集できます。</p>
         </div>
         <button className="saveButton" disabled={saving} onClick={handleSave} type="button">
           {saving ? '保存中...' : '保存'}
@@ -513,6 +697,16 @@ function ListEditor({ config, onSave }) {
       </div>
 
       {message && <div className="notice">{message}</div>}
+
+      <label className="nameField">
+        <span>リスト名</span>
+        <input
+          onChange={(event) => setDraft((current) => ({ ...current, name: event.target.value }))}
+          placeholder="例：7月20日 午前船"
+          type="text"
+          value={draft.name}
+        />
+      </label>
 
       <div className="editorGrid">
         <EditorSection
@@ -535,6 +729,17 @@ function ListEditor({ config, onSave }) {
           placeholder="項目名"
           valueKey="label"
         />
+      </div>
+
+      <div className="dangerArea">
+        <button
+          className="deleteListButton"
+          disabled={deleting || listCount <= 1}
+          onClick={handleDelete}
+          type="button"
+        >
+          {deleting ? '削除中...' : 'このリストを削除'}
+        </button>
       </div>
     </section>
   );
