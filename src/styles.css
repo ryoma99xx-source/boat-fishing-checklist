@@ -130,6 +130,25 @@ h2 {
   gap: 8px;
 }
 
+.shareBox {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding-top: 2px;
+}
+
+.shareBox span {
+  min-width: 0;
+  color: #405149;
+  font-size: 0.9rem;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .panel {
   padding: 16px;
   border: 1px solid #d9e1d6;
@@ -189,7 +208,8 @@ h2 {
 .saveButton,
 .addButton,
 .deleteButton,
-.deleteListButton {
+.deleteListButton,
+.shareButton {
   min-height: 46px;
   border: 0;
   border-radius: 8px;
@@ -211,6 +231,12 @@ h2 {
   padding: 0 14px;
   background: #eaf2ed;
   color: #146c4f;
+}
+
+.shareButton {
+  padding: 0 14px;
+  background: #146c4f;
+  color: #ffffff;
 }
 
 .deleteButton {
@@ -464,7 +490,8 @@ h2 {
   }
 
   .listBar,
-  .newListBox {
+  .newListBox,
+  .shareBox {
     grid-template-columns: 1fr;
   }
 

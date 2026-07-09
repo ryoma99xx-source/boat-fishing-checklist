@@ -75,7 +75,8 @@ function App() {
   const [activePage, setActivePage] = useState('rental');
   const [lists, setLists] = useState([DEFAULT_LIST]);
   const [selectedListId, setSelectedListId] = useState(() => {
-    return localStorage.getItem('selectedRentalListId') || DEFAULT_LIST.id;
+    const params = new URLSearchParams(window.location.search);
+    return params.get('list') || localStorage.getItem('selectedRentalListId') || DEFAULT_LIST.id;
   });
   const [listsLoading, setListsLoading] = useState(hasSupabaseConfig);
   const [listsError, setListsError] = useState('');
@@ -86,6 +87,9 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('selectedRentalListId', selectedList.id);
+    const url = new URL(window.location.href);
+    url.searchParams.set('list', selectedList.id);
+    window.history.replaceState({}, '', url);
   }, [selectedList.id]);
 
   useEffect(() => {
@@ -302,6 +306,9 @@ function App() {
 function ListBar({ lists, onCreateList, onSelectList, selectedListId }) {
   const [newListName, setNewListName] = useState('');
   const [creating, setCreating] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const selectedList = lists.find((list) => list.id === selectedListId) || lists[0] || DEFAULT_LIST;
 
   async function handleCreate() {
     setCreating(true);
@@ -310,6 +317,14 @@ function ListBar({ lists, onCreateList, onSelectList, selectedListId }) {
       setNewListName('');
     }
     setCreating(false);
+  }
+
+  async function copyShareUrl() {
+    const url = new URL(window.location.href);
+    url.searchParams.set('list', selectedListId);
+    await navigator.clipboard.writeText(url.toString());
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
   }
 
   return (
@@ -334,6 +349,12 @@ function ListBar({ lists, onCreateList, onSelectList, selectedListId }) {
         />
         <button className="addButton" disabled={creating} onClick={handleCreate} type="button">
           {creating ? '作成中...' : '新規作成'}
+        </button>
+      </div>
+      <div className="shareBox">
+        <span>共有URL：{selectedList.name}</span>
+        <button className="shareButton" onClick={copyShareUrl} type="button">
+          {copied ? 'コピー済み' : 'URLをコピー'}
         </button>
       </div>
     </section>
