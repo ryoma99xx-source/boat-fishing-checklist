@@ -1,0 +1,14 @@
+// Serves the harmonic current grids. Binary files are stored gzipped in the bundle and
+// returned as their original bytes through frameResponse (hosting owns HTTP compression).
+// Content-hashed URLs never change content, so they can be cached for a long time.
+export function harmonicResponse(path, bundle, respond = frameResponse) {
+ if (!path.startsWith('/api/harmonic/')) return null;
+ if (path === '/api/harmonic/index.json') return new Response(bundle.index, {headers: {'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'}});
+ const file = Object.hasOwn(bundle.files, path) ? bundle.files[path] : null;
+ if (!file) return new Response('Not found', {status: 404});
+ const cache = 'public, max-age=31536000, immutable';
+ if (file.type === 'json') return new Response(file.text, {headers: {'content-type': 'application/json; charset=utf-8', 'cache-control': cache}});
+ const response = respond(file.gz);
+ response.headers.set('cache-control', cache);
+ return response;
+}

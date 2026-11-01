@@ -29,7 +29,13 @@ def inference():
         r[minor] = (abs(a) / abs(b), np.angle(a) - np.angle(b))
     return r
 
-def design(t, inf):
+def fit_names(t):
+    days = (t[-1] - t[0]) / 24
+    if days >= 27: return FIT
+    if days >= 14.5: return ['O1', 'K1', 'M2', 'S2', 'M4', 'MS4', 'M6']
+    return ['K1', 'M2', 'M4']
+
+def design(t, inf, FIT):
     F, VU = tl.args(OUT, t, utc=True); R = np.radians(VU)
     cols = []
     for n in FIT:
@@ -44,7 +50,8 @@ def design(t, inf):
 
 def analyse(t, U, inf):
     """U: (nt, 2, ncell). Returns mean (2,n), coefficients (len(OUT), 2 comps, 2 (a,b), n), residual rms (n)."""
-    X = design(t, inf)
+    FIT = fit_names(t)
+    X = design(t, inf, FIT)
     nt, _, n = U.shape
     Y = U.reshape(nt, 2 * n).astype(np.float64)
     coef, *_ = np.linalg.lstsq(X, Y, rcond=None)
@@ -57,6 +64,7 @@ def analyse(t, U, inf):
         a = coef[1 + 2 * i]; b = coef[2 + 2 * i]
         out[OUT.index(nm), :, 0] = a; out[OUT.index(nm), :, 1] = b
     for minor, major in TIED.items():
+        if major not in FIT: continue
         ratio, dph = inf[minor]
         a = out[OUT.index(major), :, 0]; b = out[OUT.index(major), :, 1]
         # amplitude*ratio, phase + dph

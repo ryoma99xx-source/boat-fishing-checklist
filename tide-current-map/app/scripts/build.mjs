@@ -1,24 +1,25 @@
 import fs from 'node:fs';
 import {gzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
+import {packHarmonic} from '../worker/harmonic-build.mjs';
 const api=fs.readFileSync('worker/api.js','utf8').replaceAll('export ','');
 const frameApi=fs.readFileSync('worker/frame.js','utf8').replaceAll('export ','');
 const mapConfigApi=fs.readFileSync('worker/map-config.js','utf8').replaceAll('export ','');
+const harmonicApi=fs.readFileSync('worker/harmonic.js','utf8').replaceAll('export ','');
 const htmlSource=fs.readFileSync('app.html','utf8');
 const js=fs.readFileSync('app.js','utf8');
 const geo=fs.readFileSync('geometry.js','utf8');
-const coastal=fs.readFileSync('coastal.js','utf8');
 const coverage=fs.readFileSync('coverage.js','utf8');
 const chart=fs.readFileSync('chart.js','utf8');
-const experiment=fs.readFileSync('experiment.js','utf8');
+const modules={};for(const f of ['harmonic.js','currents.js','spots.js','flow-layer.js'])modules['/'+f]=fs.readFileSync(f,'utf8');
 const tideModule=fs.readFileSync('tide.js','utf8');
 const clockModule=fs.readFileSync('clock.js','utf8');
 const googleGuard=fs.readFileSync('google-guard.js','utf8');
 const mapGestures=fs.readFileSync('map-gestures.js','utf8');
-const experimentMeta=fs.existsSync('data/tidal-case.json')?fs.readFileSync('data/tidal-case.json','utf8'):null;
-const experimentFrames=[];
-if(experimentMeta){const meta=JSON.parse(experimentMeta),raw=fs.readFileSync('data/tidal-frames.bin'),size=meta.wetIds.length*4;if(raw.length!==size*meta.frameCount)throw Error('Invalid experiment frame length');for(let i=0;i<meta.frameCount;i++)experimentFrames.push(gzipSync(raw.subarray(i*size,(i+1)*size)).toString('base64'));}
-const model=fs.readFileSync('data/coastal-model.json','utf8');
+const harmonic=packHarmonic('data');
+if(!JSON.parse(harmonic.index).grids.length)throw Error('No harmonic current grid in data/');
+// Only the basemap placement is needed from the old coastal model.
+const coastalMap=JSON.stringify(JSON.parse(fs.readFileSync('data/coastal-model.json','utf8')).map);
 const map=fs.readFileSync('data/coastal-map.webp').toString('base64');
 const logo=fs.readFileSync('data/brand-logo.png').toString('base64');
 const iconTypes={'favicon.ico':'image/x-icon','favicon-32.png':'image/png','apple-touch-icon.png':'image/png','icon-192.png':'image/png','icon-512.png':'image/png'};
@@ -28,7 +29,7 @@ const webmanifest=JSON.stringify({id:'/',name:'東京湾の潮と流れ | TIDE &
 const overview=fs.readFileSync('data/overview-map.json','utf8');
 const overviewMap=fs.readFileSync('data/overview-map.webp').toString('base64');
 const css=fs.readFileSync('app.css','utf8');
-const revision=createHash('sha256').update(js+css).digest('hex').slice(0,12);
+const revision=createHash('sha256').update(js+css+Object.values(modules).join('')).digest('hex').slice(0,12);
 const html=htmlSource.replace('/app.js','/app.js?v='+revision).replace('/app.css','/app.css?v='+revision).replaceAll('__ICON_VERSION__',iconRevision);
 const tideTables={};for(const code of ['TK','Z1','MR']){const path='data/'+code+'-2026.txt';if(fs.existsSync(path))tideTables[code]=fs.readFileSync(path,'utf8');}
 const snapshots={};for(const f of fs.readdirSync('data'))if(f.startsWith('current-')){const d=JSON.parse(fs.readFileSync('data/'+f,'utf8'));snapshots[d.date+'/'+d.hour]=d;}
@@ -36,8 +37,8 @@ fs.mkdirSync('dist/server',{recursive:true});fs.mkdirSync('dist/.openai',{recurs
 const manifest=JSON.parse(fs.readFileSync('.openai/hosting.json','utf8'));delete manifest.static;
 fs.writeFileSync('.openai/hosting.json',JSON.stringify(manifest,null,2));
 fs.copyFileSync('.openai/hosting.json','dist/.openai/hosting.json');
-fs.writeFileSync('dist/server/index.js',api+frameApi+mapConfigApi+`\nconst HTML=${JSON.stringify(html)},JS=${JSON.stringify(js)},GEO=${JSON.stringify(geo)},COASTAL=${JSON.stringify(coastal)},COVERAGE=${JSON.stringify(coverage)},CHART=${JSON.stringify(chart)},MODEL=${JSON.stringify(model)},MAP=${JSON.stringify(map)},OVERVIEW=${JSON.stringify(overview)},OVERVIEWMAP=${JSON.stringify(overviewMap)},CSS=${JSON.stringify(css)},TIDETABLES=${JSON.stringify(tideTables)},SNAPSHOTS=${JSON.stringify(snapshots)};
-const LOGO=${JSON.stringify(logo)},ICONS=${JSON.stringify(icons)},WEBMANIFEST=${JSON.stringify(webmanifest)},TIDEMODULE=${JSON.stringify(tideModule)},EXPERIMENT=${JSON.stringify(experiment)},EXPERIMENTMETA=${JSON.stringify(experimentMeta)},EXPERIMENTFRAMES=${JSON.stringify(experimentFrames)};
+fs.writeFileSync('dist/server/index.js',api+frameApi+mapConfigApi+harmonicApi+`\nconst HTML=${JSON.stringify(html)},JS=${JSON.stringify(js)},GEO=${JSON.stringify(geo)},COVERAGE=${JSON.stringify(coverage)},CHART=${JSON.stringify(chart)},COASTALMAP=${JSON.stringify(coastalMap)},MAP=${JSON.stringify(map)},OVERVIEW=${JSON.stringify(overview)},OVERVIEWMAP=${JSON.stringify(overviewMap)},CSS=${JSON.stringify(css)},TIDETABLES=${JSON.stringify(tideTables)},SNAPSHOTS=${JSON.stringify(snapshots)};
+const LOGO=${JSON.stringify(logo)},ICONS=${JSON.stringify(icons)},WEBMANIFEST=${JSON.stringify(webmanifest)},TIDEMODULE=${JSON.stringify(tideModule)},MODULES=${JSON.stringify(modules)},HARMONIC=${JSON.stringify(harmonic)};
 const memo=new Map();
 export default {async fetch(request,env,ctx){
  const u=new URL(request.url),path=u.pathname;
@@ -49,11 +50,10 @@ export default {async fetch(request,env,ctx){
  if(Object.hasOwn(ICONS,path)){const icon=ICONS[path];return new Response(Uint8Array.from(atob(icon.data),c=>c.charCodeAt(0)),{headers:{'content-type':icon.type,'cache-control':'public, max-age=86400','X-Content-Type-Options':'nosniff'}});}
  if(path==='/brand-logo.png')return new Response(Uint8Array.from(atob(LOGO),c=>c.charCodeAt(0)),{headers:{'content-type':'image/png','cache-control':'public, max-age=86400'}});
  if(path==='/tide.js')return new Response(TIDEMODULE,{headers:{'content-type':'text/javascript; charset=utf-8','cache-control':'no-cache'}});
- if(path==='/experiment.js')return new Response(EXPERIMENT,{headers:{'content-type':'text/javascript; charset=utf-8','cache-control':'no-cache'}});
- if(path==='/api/experiment/meta')return new Response(EXPERIMENTMETA||'{"error":"No experiment available"}',{status:EXPERIMENTMETA?200:404,headers:{'content-type':'application/json; charset=utf-8','cache-control':'public, max-age=3600'}});
- if(path==='/api/experiment/frame'){const value=u.searchParams.get('index'),i=Number(value);if(value===null||!Number.isInteger(i)||i<0||i>=EXPERIMENTFRAMES.length)return new Response('Invalid frame',{status:400});return frameResponse(EXPERIMENTFRAMES[i]);}
+ if(Object.hasOwn(MODULES,path))return new Response(MODULES[path],{headers:{'content-type':'text/javascript; charset=utf-8','cache-control':'no-cache'}});
+ if(path.startsWith('/api/harmonic/'))return harmonicResponse(path,HARMONIC);
 
- if(path==='/api/coastal-model')return new Response(MODEL,{headers:{'content-type':'application/json; charset=utf-8','cache-control':'public, max-age=3600'}});
+ if(path==='/coastal-map.json')return new Response(COASTALMAP,{headers:{'content-type':'application/json; charset=utf-8','cache-control':'public, max-age=3600'}});
  if(path==='/overview-map.json')return new Response(OVERVIEW,{headers:{'content-type':'application/json; charset=utf-8'}});
  if(path==='/overview-map.webp'){const str=atob(OVERVIEWMAP),bytes=Uint8Array.from(str,c=>c.charCodeAt(0));return new Response(bytes,{headers:{'content-type':'image/webp','cache-control':'public, max-age=3600'}});}
  if(path==='/coastal-map.webp'){const str=atob(MAP),bytes=Uint8Array.from(str,c=>c.charCodeAt(0));return new Response(bytes,{headers:{'content-type':'image/webp','cache-control':'public, max-age=3600'}});}
@@ -73,11 +73,10 @@ export default {async fetch(request,env,ctx){
  }
  if(path==='/app.js')return new Response(JS,{headers:{'content-type':'text/javascript; charset=utf-8','cache-control':'no-cache'}});
  if(path==='/geometry.js')return new Response(GEO,{headers:{'content-type':'text/javascript; charset=utf-8','cache-control':'no-cache'}});
- if(path==='/coastal.js')return new Response(COASTAL,{headers:{'content-type':'text/javascript; charset=utf-8','cache-control':'no-cache'}});
  if(path==='/coverage.js')return new Response(COVERAGE,{headers:{'content-type':'text/javascript; charset=utf-8','cache-control':'no-cache'}});
  if(path==='/chart.js')return new Response(CHART,{headers:{'content-type':'text/javascript; charset=utf-8','cache-control':'no-cache'}});
  if(path==='/app.css')return new Response(CSS,{headers:{'content-type':'text/css; charset=utf-8'}});
  if(path!=='/'&&path!=='/index.html')return new Response('Not found',{status:404});
  return new Response(HTML,{headers:{'content-type':'text/html; charset=utf-8','cache-control':'no-cache','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin'}});
 }};`);
-console.log('Built Worker ESM: dist/server/index.js');
+console.log('Built Worker ESM: dist/server/index.js',(fs.statSync('dist/server/index.js').size/1e6).toFixed(2)+' MB; harmonic grids: '+JSON.parse(harmonic.index).grids.map(g=>g.name+' '+g.wetCount+' cells').join(', '));

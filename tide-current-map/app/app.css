@@ -25,3 +25,19 @@ dialog{width:min(680px,94vw);max-height:90vh;overflow:auto;padding:25px;border:1
 
 /* Current location stays reachable while viewing the map. */
 .map-controls{justify-items:end}#locateMap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:48px;height:48px;padding:4px;line-height:1.1;border-color:#4fd0d68a;background:#0b2531f2;color:var(--accent)}#locateMap .location-symbol{font-size:20px}#locateMap .location-caption{font-size:10px;white-space:nowrap}.north{pointer-events:none}
+/* Harmonic current model: dark map, flow canvases, legend ramp, validation */
+#flowField,#flowTrails{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+#flowField{opacity:.9}
+body.flow-on #map{background:#0a1626}
+body.flow-on #base{filter:invert(1) hue-rotate(195deg) brightness(.62) contrast(1.15) saturate(.55)}
+.legend .ramp-model{width:64px;height:6px;border-radius:3px;background:linear-gradient(90deg,#0e285c,#185abe 25%,#18b9d7 55%,#3cd78c 85%,#78e678)}
+.legend .ramp-official{background:#8ac8c4}
+.legend .ramp-official+span+.ramp-official{background:var(--gold)}
+body.flow-on .legend .ramp-official,body.flow-on .legend .official-scale{display:none}
+body:not(.flow-on) .legend .ramp-model,body:not(.flow-on) .legend .model-scale{display:none}
+.validation{grid-column:1/-1;margin-top:10px;padding:14px 16px;background:var(--bg-2);border:1px dashed var(--line);border-radius:9px;font-size:11px;color:var(--muted);line-height:1.8}
+.validation h2{font-size:13px;margin:0 0 6px;color:var(--text)}
+.validation p{margin:0 0 6px}.validation ul{margin:0;padding-left:18px}.validation b{color:var(--silver);font-weight:500}
+.validation-meta{font-size:9px}
+.mode-explanation details:not([open])>.validation{display:none}
+@media (max-width:700px){.validation{padding:12px;font-size:10px}.legend .ramp-model{width:48px}}
