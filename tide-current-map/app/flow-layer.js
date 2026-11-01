@@ -3,7 +3,7 @@
 // particles advect through it and respawn on land / outside / old age.
 const KT = 1.94384;
 // Displayed particle speed (px/s) grows with sqrt(kt) so 0.1–0.3 kt still visibly moves.
-export function screenSpeed(kt) { return 34 * Math.sqrt(Math.max(0, kt)); }
+export function screenSpeed(kt) { return 8 + 30 * Math.sqrt(Math.max(0, kt)); }
 export function particleCount(width, height, waterFraction) {
  const base = Math.max(500, Math.min(1300, Math.round(width * height / 255)));
  return Math.max(150, Math.round(base * Math.min(1, Math.max(0, waterFraction))));
@@ -102,7 +102,7 @@ export function createFlowLayer({fieldCanvas, trailCanvas, size, unproject, samp
   return uv;
  }
 
- const BUCKETS = [['rgba(150,215,245,.45)', .3], ['rgba(200,240,255,.7)', 1], ['rgba(255,255,255,.9)', Infinity]];
+ const BUCKETS = [['rgba(170,225,250,.62)', .3], ['rgba(210,242,255,.75)', 1], ['rgba(255,255,255,.9)', Infinity]];
  function stepParticles(c, dt) {
   const paths = BUCKETS.map(() => []);
   for (let p = 0; p < S.n; p++) {
