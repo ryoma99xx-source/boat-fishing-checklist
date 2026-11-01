@@ -1,0 +1,247 @@
+[
+ {
+  "code": "QN",
+  "name": "横須賀",
+  "cellDistanceKm": 0.65,
+  "O1": {
+   "modelCm": 17.9,
+   "jmaCm": 18.9,
+   "phaseDiffDeg": -1.2,
+   "phaseDiffMin": -5.0
+  },
+  "K1": {
+   "modelCm": 26.7,
+   "jmaCm": 24.1,
+   "phaseDiffDeg": -0.5,
+   "phaseDiffMin": -1.8
+  },
+  "M2": {
+   "modelCm": 42.8,
+   "jmaCm": 40.7,
+   "phaseDiffDeg": -1.4,
+   "phaseDiffMin": -2.9
+  },
+  "S2": {
+   "modelCm": 19.5,
+   "jmaCm": 20.0,
+   "phaseDiffDeg": 3.8,
+   "phaseDiffMin": 7.6
+  },
+  "M4": {
+   "modelCm": 0.2,
+   "jmaCm": 0.6,
+   "phaseDiffDeg": -18.5,
+   "phaseDiffMin": -19.2
+  }
+ },
+ {
+  "code": "HM",
+  "name": "本牧",
+  "cellDistanceKm": 0.97,
+  "O1": {
+   "modelCm": 18.1,
+   "jmaCm": 19.4,
+   "phaseDiffDeg": -1.5,
+   "phaseDiffMin": -6.4
+  },
+  "K1": {
+   "modelCm": 27.0,
+   "jmaCm": 24.6,
+   "phaseDiffDeg": -0.8,
+   "phaseDiffMin": -3.0
+  },
+  "M2": {
+   "modelCm": 45.3,
+   "jmaCm": 44.5,
+   "phaseDiffDeg": -1.7,
+   "phaseDiffMin": -3.6
+  },
+  "S2": {
+   "modelCm": 20.9,
+   "jmaCm": 21.9,
+   "phaseDiffDeg": 2.7,
+   "phaseDiffMin": 5.5
+  },
+  "M4": {
+   "modelCm": 0.2,
+   "jmaCm": 0.6,
+   "phaseDiffDeg": -5.5,
+   "phaseDiffMin": -5.6
+  }
+ },
+ {
+  "code": "QS",
+  "name": "横浜",
+  "cellDistanceKm": 0.06,
+  "O1": {
+   "modelCm": 18.1,
+   "jmaCm": 19.3,
+   "phaseDiffDeg": -0.8,
+   "phaseDiffMin": -3.6
+  },
+  "K1": {
+   "modelCm": 27.0,
+   "jmaCm": 24.5,
+   "phaseDiffDeg": -0.2,
+   "phaseDiffMin": -1.0
+  },
+  "M2": {
+   "modelCm": 45.5,
+   "jmaCm": 44.0,
+   "phaseDiffDeg": -1.5,
+   "phaseDiffMin": -3.1
+  },
+  "S2": {
+   "modelCm": 20.9,
+   "jmaCm": 21.7,
+   "phaseDiffDeg": 4.2,
+   "phaseDiffMin": 8.4
+  },
+  "M4": {
+   "modelCm": 0.2,
+   "jmaCm": 0.6,
+   "phaseDiffDeg": 8.0,
+   "phaseDiffMin": 8.3
+  }
+ },
+ {
+  "code": "KW",
+  "name": "川崎",
+  "cellDistanceKm": 0.4,
+  "O1": {
+   "modelCm": 18.2,
+   "jmaCm": 19.7,
+   "phaseDiffDeg": -1.0,
+   "phaseDiffMin": -4.4
+  },
+  "K1": {
+   "modelCm": 27.2,
+   "jmaCm": 24.9,
+   "phaseDiffDeg": -0.9,
+   "phaseDiffMin": -3.4
+  },
+  "M2": {
+   "modelCm": 46.5,
+   "jmaCm": 45.3,
+   "phaseDiffDeg": -1.5,
+   "phaseDiffMin": -3.1
+  },
+  "S2": {
+   "modelCm": 21.5,
+   "jmaCm": 22.4,
+   "phaseDiffDeg": 3.8,
+   "phaseDiffMin": 7.7
+  },
+  "M4": {
+   "modelCm": 0.2,
+   "jmaCm": 0.7,
+   "phaseDiffDeg": 19.6,
+   "phaseDiffMin": 20.3
+  }
+ },
+ {
+  "code": "TK",
+  "name": "東京",
+  "cellDistanceKm": 0.1,
+  "O1": {
+   "modelCm": 18.4,
+   "jmaCm": 19.6,
+   "phaseDiffDeg": -0.9,
+   "phaseDiffMin": -4.0
+  },
+  "K1": {
+   "modelCm": 27.5,
+   "jmaCm": 25.1,
+   "phaseDiffDeg": -0.4,
+   "phaseDiffMin": -1.7
+  },
+  "M2": {
+   "modelCm": 48.6,
+   "jmaCm": 47.7,
+   "phaseDiffDeg": -2.2,
+   "phaseDiffMin": -4.5
+  },
+  "S2": {
+   "modelCm": 22.6,
+   "jmaCm": 23.7,
+   "phaseDiffDeg": 3.7,
+   "phaseDiffMin": 7.3
+  },
+  "M4": {
+   "modelCm": 0.3,
+   "jmaCm": 0.8,
+   "phaseDiffDeg": -0.8,
+   "phaseDiffMin": -0.8
+  }
+ },
+ {
+  "code": "QL",
+  "name": "千葉",
+  "cellDistanceKm": 0.04,
+  "O1": {
+   "modelCm": 18.4,
+   "jmaCm": 19.7,
+   "phaseDiffDeg": -0.7,
+   "phaseDiffMin": -3.2
+  },
+  "K1": {
+   "modelCm": 27.5,
+   "jmaCm": 25.1,
+   "phaseDiffDeg": -0.1,
+   "phaseDiffMin": -0.4
+  },
+  "M2": {
+   "modelCm": 48.8,
+   "jmaCm": 47.8,
+   "phaseDiffDeg": -1.4,
+   "phaseDiffMin": -2.9
+  },
+  "S2": {
+   "modelCm": 22.6,
+   "jmaCm": 23.8,
+   "phaseDiffDeg": 4.5,
+   "phaseDiffMin": 9.1
+  },
+  "M4": {
+   "modelCm": 0.3,
+   "jmaCm": 0.9,
+   "phaseDiffDeg": 8.7,
+   "phaseDiffMin": 9.1
+  }
+ },
+ {
+  "code": "KZ",
+  "name": "木更津",
+  "cellDistanceKm": 1.75,
+  "O1": {
+   "modelCm": 18.1,
+   "jmaCm": 19.0,
+   "phaseDiffDeg": -1.3,
+   "phaseDiffMin": -5.8
+  },
+  "K1": {
+   "modelCm": 27.1,
+   "jmaCm": 24.4,
+   "phaseDiffDeg": -0.1,
+   "phaseDiffMin": -0.2
+  },
+  "M2": {
+   "modelCm": 46.0,
+   "jmaCm": 44.1,
+   "phaseDiffDeg": -1.0,
+   "phaseDiffMin": -2.0
+  },
+  "S2": {
+   "modelCm": 21.2,
+   "jmaCm": 21.5,
+   "phaseDiffDeg": 4.2,
+   "phaseDiffMin": 8.3
+  },
+  "M4": {
+   "modelCm": 0.2,
+   "jmaCm": 0.5,
+   "phaseDiffDeg": 13.1,
+   "phaseDiffMin": 13.5
+  }
+ }
+]
