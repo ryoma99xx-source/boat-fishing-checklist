@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {cellAt,anchorWeights,flowAt,interpolateBoundary} from '../coastal.js';
+const g=JSON.parse(fs.readFileSync('data/coastal-model.json'));
+test('model conserves water internally to numerical tolerance',()=>{assert.ok(g.validation.maxInteriorFluxDivergence<1e-8);assert.ok(g.validation.linearResidual<1e-6);});
+test('offshore forcing is reproduced at the calibration anchor',()=>{for(const [u,v]of [[1,0],[0,1],[-.7,.3]]){const weights=anchorWeights(g,u,v),f=flowAt(g,g.anchor.lat,g.anchor.lon,weights);assert.ok(Math.abs(f.u-u)<1e-8);assert.ok(Math.abs(f.v-v)<1e-8);}});
+test('zero boundary forcing stays zero locally',()=>{const f=flowAt(g,35.279,139.708,anchorWeights(g,0,0));assert.equal(f.speed,0);});
+test('land, missing depth, and outside positions cannot receive a current',()=>{assert.equal(cellAt(g,34,140).reason,'outside');for(const kind of [0,2]){const i=g.mask.findIndex(x=>x===kind);assert.ok(i>=0);const lat=g.lat0+Math.floor(i/g.n)*g.dlat,lon=g.lon0+(i%g.n)*g.dlon;const f=flowAt(g,lat,lon,anchorWeights(g,1,0));assert.equal(f.bearing,undefined);}});
+test('the user observation point has a modeled result, not the offshore value copied over',()=>{const f=flowAt(g,35.279,139.708,anchorWeights(g,.6,-.8));assert.ok(Number.isFinite(f.speed));assert.ok(f.depth>0);assert.ok(f.shore>0);assert.ok(Math.abs(f.u-.6)+Math.abs(f.v+.8)>.02);});
+test('half-hour interpolation uses components through a direction wrap',()=>{const f=interpolateBoundary({bearing:350,speed:1},{bearing:10,speed:1},.5);assert.ok(Math.abs(f.u)<1e-6);assert.ok(f.v>.98);assert.equal(interpolateBoundary({bearing:null,speed:1},null,0),null);});

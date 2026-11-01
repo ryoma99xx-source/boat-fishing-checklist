@@ -1,0 +1,8 @@
+dist/
+*.tar.gz
+data/coastal-cache/
+
+data/source-cache/
+
+__pycache__/
+.openai/
