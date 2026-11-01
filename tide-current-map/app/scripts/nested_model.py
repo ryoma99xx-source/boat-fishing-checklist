@@ -101,7 +101,8 @@ class Nest:
 def run(args):
     t0 = time.time()
     outer = grid(OUTER, args.outer_dx, 3.0)
-    inner = grid(INNER, args.inner_dx, args.inner_min_depth) if not args.outer_only else grid(dict(south=35.20,north=35.30,west=139.70,east=139.80), 500, 1)
+    INNER_B = dict(zip(['south','north','west','east'], map(float, args.inner_bounds.split(',')))) if args.inner_bounds else INNER
+    inner = grid(INNER_B, args.inner_dx, args.inner_min_depth) if not args.outer_only else grid(dict(south=35.20,north=35.30,west=139.70,east=139.80), 500, 1)
     print('outer', outer['H'].shape, int(outer['wet'].sum()), 'inner', inner['H'].shape, int(inner['wet'].sum()), flush=True)
     consts = station_constants()
     oedge, OC = boundary_constants(outer, consts)
@@ -167,6 +168,7 @@ if __name__ == '__main__':
     p.add_argument('--days', type=float, default=30)
     p.add_argument('--spinup', type=float, default=48)
     p.add_argument('--record-hours', type=float, default=1)
+    p.add_argument('--inner-bounds', default='', help='south,north,west,east')
     p.add_argument('--outer-only', action='store_true')
     p.add_argument('--bench', type=int, default=0)
     p.add_argument('--out', default='/tmp/nested-run.npz')
