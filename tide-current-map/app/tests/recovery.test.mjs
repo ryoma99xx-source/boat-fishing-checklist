@@ -47,12 +47,18 @@ test('stalled basemap metadata cannot block model results',async()=>{const h=set
 
 test('stalled model data times out, shows no value, and can be retried',async()=>{let blocked=true;const h=setup(url=>blocked&&/\/api\/harmonic\/outer-[0-9a-f]+\.bin$/.test(url));try{await until(()=>h.element('status').textContent.includes('取得失敗'));assert.match(h.element('status').textContent,/タップで再取得/);assert.equal(h.element('speed').textContent,'—');assert.match(h.element('peekFlow').textContent,/取得できません/);assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false);blocked=false;h.element('status').onclick();await until(()=>ready(h));assert.match(h.element('peekFlow').textContent,/kt/)}finally{h.close()}});
 
-test('any date uses the same model; the 10/24 shortcut sets the case date and 8:30',async()=>{
+test('any date uses the same model and the date is kept',async()=>{
  const h=setup(()=>false);try{await until(()=>ready(h));assert.equal(h.element('date').value,'2026-10-24');
- const before=h.element('peekFlow').textContent;
- chooseDate(h,'2026-12-15');await until(()=>ready(h)&&h.element('date').value==='2026-12-15');assert.match(h.element('modelMethod').textContent,/調和モデル/);assert.match(h.element('peekFlow').textContent,/kt/);assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false);
+ chooseDate(h,'2026-12-15');await until(()=>ready(h)&&h.element('date').value==='2026-12-15');assert.match(h.element('modelMethod').textContent,/自作モデル/);assert.match(h.element('peekFlow').textContent,/kt/);assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false);
  assert.equal(h.requests.filter(u=>u==='/api/harmonic/index.json').length,1);
- h.element('caseDate').onclick();await until(()=>ready(h)&&h.element('date').value==='2026-10-24');assert.equal(h.element('time').textContent,'08:30');assert.equal(h.element('peekFlow').textContent,before);
+ }finally{h.close()}
+});
+test('comparison shows model values with the hourly official chart; official mode rounds to the hour',async()=>{
+ const h=setup(()=>false);try{await until(()=>ready(h));assert.equal(h.element('time').textContent,'08:30');
+ h.element('compareMode').onclick();await until(()=>ready(h)&&h.requests.some(u=>u.startsWith('/api/current?date=2026-10-24&hour=8')));
+ assert.equal(h.element('time').textContent,'08:00');assert.match(h.element('peekFlow').textContent,/kt/);assert.equal(h.element('hourNote').hidden,false);assert.equal(h.element('compareMode').classList.contains('active'),true);
+ h.element('officialMode').onclick();await until(()=>h.element('status').textContent.includes('公式推算'));assert.match(h.element('peekFlow').textContent,/kn/);assert.equal(h.element('slider').max,46);
+ h.element('coastalMode').onclick();await until(()=>ready(h));assert.equal(h.element('hourNote').hidden,true);assert.equal(h.element('slider').max,48);
  }finally{h.close()}
 });
 test('unavailable model data does not fall back to another calculation',async()=>{

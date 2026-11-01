@@ -155,18 +155,37 @@ test('particle display keeps weak coastal currents visibly moving within budget'
  assert.deepEqual(speedColor(0).length, 4);
 });
 
-test('inner 50 m grid (when present) covers the observation, reference points and spot vertices', {skip: !fs.existsSync(dataUrl('harmonic-inner.json'))}, () => {
- const meta = JSON.parse(fs.readFileSync(dataUrl('harmonic-inner.json'))), raw = fs.readFileSync(dataUrl('harmonic-inner.bin'));
- const g = prepareGrid(meta, new Int16Array(Uint8Array.from(raw).buffer));
- updateField(g, jstSlotTime('2026-10-24', 17));
- assert.equal(g.dxM, 50);
- for (const p of [...REFERENCE_POINTS, {name: 'observation', lat: 35.279, lon: 139.708}]) {
-  const s = sampleCurrents([g], p.lat, p.lon);
-  assert.ok(Number.isFinite(s.speed), p.name + ' ' + JSON.stringify(s));
- }
- for (const spot of SPOTS) for (const [lat, lon] of spot.polygon) {
-  const s = sampleCurrents([g], lat, lon);
-  if (s.reason === 'outside') continue;
-  assert.notEqual(s.reason, 'land', spot.label + ' ' + lat + ',' + lon);
- }
+for (const name of ['inner', 'mid']) {
+ test(`${name} grid (when present): reference points and spot vertices inside it are on water`, {skip: !fs.existsSync(dataUrl(`harmonic-${name}.json`))}, () => {
+  const meta = JSON.parse(fs.readFileSync(dataUrl(`harmonic-${name}.json`))), raw = fs.readFileSync(dataUrl(`harmonic-${name}.bin`));
+  const g = prepareGrid(meta, new Int16Array(Uint8Array.from(raw).buffer));
+  updateField(g, jstSlotTime('2026-11-01', 17));
+  assert.equal(g.dxM, name === 'inner' ? 50 : 100);
+  let inside = 0;
+  for (const p of REFERENCE_POINTS) {
+   const s = sampleCurrents([g], p.lat, p.lon);
+   if (s.reason === 'outside') continue;
+   inside++; assert.ok(Number.isFinite(s.speed), p.name + ' ' + JSON.stringify(s));
+  }
+  assert.ok(inside >= 2);
+  for (const spot of SPOTS) for (const [lat, lon] of spot.polygon) {
+   const s = sampleCurrents([g], lat, lon);
+   if (s.reason === 'outside') continue;
+   assert.notEqual(s.reason, 'land', spot.label + ' ' + lat + ',' + lon);
+  }
+ });
+}
+
+test('three nested grids: 50 m > 100 m > 250 m, and land in a finer grid stays land', () => {
+ const outer = synthetic({nx: 20, ny: 20, lat0: 35, lon0: 139, dlat: .01, dlon: .01, dxM: 250, name: 'outer', wet: all(20, 20), flow: () => [100, 0]});
+ const mid = synthetic({nx: 40, ny: 40, lat0: 35.05, lon0: 139.05, dlat: .002, dlon: .002, dxM: 100, name: 'mid', wet: all(40, 40).filter(i => i !== 0), flow: () => [0, 100]});
+ const inner = synthetic({nx: 20, ny: 20, lat0: 35.1, lon0: 139.1, dlat: .0005, dlon: .0005, dxM: 50, name: 'inner', wet: all(20, 20), flow: () => [-100, 0]});
+ const grids = [inner, mid, outer];
+ assert.equal(sampleCurrents(grids, 35.105, 139.105).grid, 'inner');
+ assert.equal(sampleCurrents(grids, 35.08, 139.08).grid, 'mid');
+ assert.equal(sampleCurrents(grids, 35.02, 139.02).grid, 'outer');
+ const dry = sampleCurrents(grids, 35.05, 139.05);
+ assert.equal(dry.reason, 'land'); assert.equal(dry.grid, 'mid');
+ // mid absent -> outer answers there
+ assert.equal(sampleCurrents([inner, outer], 35.08, 139.08).grid, 'outer');
 });

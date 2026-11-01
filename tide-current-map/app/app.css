@@ -41,3 +41,18 @@ body:not(.flow-on) .legend .ramp-model,body:not(.flow-on) .legend .model-scale{d
 .validation-meta{font-size:9px}
 .mode-explanation details:not([open])>.validation{display:none}
 @media (max-width:700px){.validation{padding:12px;font-size:10px}.legend .ramp-model{width:48px}}
+/* Model switch on the map (自作モデル / 海上保安庁 / 重ねて比較) */
+.map-modes{position:absolute;top:10px;left:10px;right:10px;z-index:5;display:flex;padding:3px;gap:2px;background:#08101ef0;border:1px solid #42536a;border-radius:9px;box-shadow:0 2px 10px #0004}
+.map-modes button{flex:1;min-width:0;padding:8px 4px;border:0;border-radius:6px;background:none;color:var(--silver);font-size:12px;font-weight:600;line-height:1.3;white-space:nowrap}
+.map-modes button.active{background:var(--accent);color:#06151c}
+.map-top{top:58px}.map-guide{top:97px}.gesture-help{top:125px}.map-controls{top:157px}.google #mapCredit{top:154px}
+.hour-note{display:inline-block;margin-left:8px;font-size:10px;color:var(--gold)}
+.external-link{font-size:10px;color:var(--accent)}
+.legend .official-scale{display:none;align-items:center;gap:3px;white-space:nowrap}
+.legend .jcg{display:inline-block;width:10px;height:4px;border-radius:2px}
+.legend .jcg.c1{background:#cdd7e1}.legend .jcg.c2{background:#6a5acd}.legend .jcg.c3{background:#2f5bff}.legend .jcg.c4{background:#1f8a3a}.legend .jcg.c5{background:#ff3030}
+body.mode-official .legend .official-scale,body.mode-compare .legend .official-scale{display:inline-flex}
+body.mode-official .legend .ramp-model,body.mode-official .legend .model-scale{display:none}
+body.mode-compare .legend .model-scale{display:none}
+@media(max-width:800px){.map-modes button{font-size:10.5px;padding:8px 2px;letter-spacing:-.02em}.map-top{top:54px}.map-guide{top:91px}.gesture-help{top:118px}.map-controls{top:150px}.google #mapCredit{top:146px}}
+@media(max-width:380px){.map-modes button{font-size:10px}}
