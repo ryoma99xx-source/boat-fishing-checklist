@@ -37,8 +37,8 @@ function setup(stall,now=Date.parse('2026-10-23T23:30:00Z')){
  const context=vm.createContext({...geometry,...coverage,...tide,...clock,...mapGestures,...currents,...spots,...flowLayer,Date:FixedDate,extract:async d=>({...d,stations:d.stations.map(s=>({...s,bearing:180}))}),fetch,AbortController,URL,Int16Array,Int32Array,Uint16Array,console,devicePixelRatio:1,document:{getElementById:element,querySelectorAll:()=>[],addEventListener(){},body:{classList:classes()},head:{append(){}},createElement:()=>element('created')},window:{},localStorage:{getItem:()=>null},sessionStorage:{getItem:()=>null},Image:class{},ResizeObserver:class{observe(){}},setTimeout:(fn,ms)=>{const t=setTimeout(()=>{timers.delete(t);fn()},ms===15000?60:ms===30000?120:ms===4500?50:ms);timers.add(t);return t},clearTimeout:t=>{clearTimeout(t);timers.delete(t)}});
  vm.runInContext(source,context);return {element,requests,context,close(){for(const t of timers)clearTimeout(t)}};
 }
-async function until(predicate){const end=Date.now()+3000;while(!predicate()){if(Date.now()>end)throw Error('Condition not met');await new Promise(r=>setTimeout(r,5))}}
-const ready=h=>h.element('status').textContent.includes('潮流モデル（');
+async function until(predicate){const end=Date.now()+6000;while(!predicate()){if(Date.now()>end)throw Error('Condition not met');await new Promise(r=>setTimeout(r,5))}}
+const ready=h=>h.element('status').textContent.includes('潮流モデル（')&&!h.element('peekFlow').textContent.includes('取得中');
 function chooseDate(h,date){const input=h.element('date');input.value=date;input.onchange({target:input});}
 
 test('stalled offshore startup cannot block the harmonic model',async()=>{const h=setup(url=>url.startsWith('/api/current'));try{await until(()=>ready(h));assert.equal(h.element('coastalMode').classList.contains('active'),true);assert.match(h.element('modelMethod').textContent,/250m/);assert.match(h.element('peekFlow').textContent,/kt/);assert.match(h.element('speedUnit').textContent,/モデル/);assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false)}finally{h.close()}});
@@ -70,3 +70,12 @@ test('official mode still reads the offshore stations',async()=>{const h=setup((
 test('operator map configuration cannot block current data',async()=>{const h=setup(u=>u==='/api/map-config');try{await until(()=>ready(h));assert.match(h.element('peekFlow').textContent,/kt/);}finally{h.close()}});
 
 test('fresh access uses the Japanese date',async()=>{const h=setup(()=>false,Date.parse('2026-10-26T15:30:00Z'));try{await until(()=>ready(h));assert.equal(h.element('date').value,'2026-10-27');assert.equal(h.element('time').textContent,'00:30');assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false);}finally{h.close()}});
+
+test('the lazy 50 m grid is never replaced by the 250 m value while it loads or fails',async()=>{
+ const h=setup(u=>/\/api\/harmonic\/inner-[0-9a-f]+\.bin$/.test(u));try{
+  await until(()=>h.element('status').textContent.includes('50m格子の取得失敗'));
+  assert.equal(h.element('speed').textContent,'—');assert.match(h.element('peekFlow').textContent,/50m格子を取得できません/);
+  // a point outside the 50 m area still uses the 250 m grid
+  h.context.selectPoint({lat:35.6,lon:139.9});assert.match(h.element('peekFlow').textContent,/kt/);assert.match(h.element('peekNote').textContent,/250m/);
+ }finally{h.close()}
+});

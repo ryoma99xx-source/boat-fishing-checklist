@@ -25,7 +25,7 @@ export function packGrid(meta, bin, name) {
  const depthRaw = depthBytes(depth);
  const hash = createHash('sha256').update(served).update(bin).update(depthRaw).digest('hex').slice(0, 12);
  const base = `/api/harmonic/${name}-${hash}`;
- return {entry: {name, label: meta.label || name, dxM: meta.dxM, wetCount: ids.length, meta: base + '.json', coef: base + '.bin', depth: base + '.depth.bin', coefBytes: bin.length},
+ return {entry: {name, label: meta.label || name, dxM: meta.dxM, nx: meta.nx, ny: meta.ny, lat0: meta.lat0, lon0: meta.lon0, dlat: meta.dlat, dlon: meta.dlon, wetCount: ids.length, meta: base + '.json', coef: base + '.bin', depth: base + '.depth.bin', coefBytes: bin.length},
   files: {[base + '.json']: {type: 'json', text: served}, [base + '.bin']: {type: 'bin', gz: gzipSync(bin, {level: 9}).toString('base64')}, [base + '.depth.bin']: {type: 'bin', gz: gzipSync(depthRaw, {level: 9}).toString('base64')}}};
 }
 

@@ -154,3 +154,19 @@ test('particle display keeps weak coastal currents visibly moving within budget'
  assert.ok(particleCount(390, 500, .1) < 400);
  assert.deepEqual(speedColor(0).length, 4);
 });
+
+test('inner 50 m grid (when present) covers the observation, reference points and spot vertices', {skip: !fs.existsSync(dataUrl('harmonic-inner.json'))}, () => {
+ const meta = JSON.parse(fs.readFileSync(dataUrl('harmonic-inner.json'))), raw = fs.readFileSync(dataUrl('harmonic-inner.bin'));
+ const g = prepareGrid(meta, new Int16Array(Uint8Array.from(raw).buffer));
+ updateField(g, jstSlotTime('2026-10-24', 17));
+ assert.equal(g.dxM, 50);
+ for (const p of [...REFERENCE_POINTS, {name: 'observation', lat: 35.279, lon: 139.708}]) {
+  const s = sampleCurrents([g], p.lat, p.lon);
+  assert.ok(Number.isFinite(s.speed), p.name + ' ' + JSON.stringify(s));
+ }
+ for (const spot of SPOTS) for (const [lat, lon] of spot.polygon) {
+  const s = sampleCurrents([g], lat, lon);
+  if (s.reason === 'outside') continue;
+  assert.notEqual(s.reason, 'land', spot.label + ' ' + lat + ',' + lon);
+ }
+});

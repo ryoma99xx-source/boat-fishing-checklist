@@ -36,6 +36,12 @@ export function prepareGrid(meta, coef, depthDm = null) {
   dxM: meta.dxM, ids, index, coef, depthDm, wetCount: ids.length, field: new Float32Array(ids.length * 2), fieldTime: null};
 }
 
+// Placeholder for a grid listed in the index but not downloaded yet (lazy inner grid).
+// It occupies its area so the coarser grid is never substituted there.
+export function pendingGrid(entry) {
+ return {name: entry.name, nx: entry.nx, ny: entry.ny, lat0: entry.lat0, lon0: entry.lon0, dlat: entry.dlat, dlon: entry.dlon, dxM: entry.dxM, pending: true, failed: false, entry};
+}
+
 export function gridBounds(g) {
  return {south: g.lat0 - g.dlat / 2, north: g.lat0 + g.dlat * (g.ny - .5), west: g.lon0 - g.dlon / 2, east: g.lon0 + g.dlon * (g.nx - .5)};
 }
@@ -61,6 +67,7 @@ function locate(g, lat, lon) {
 // Bilinear velocity [u,v] (m/s) inside one grid; null on dry/outside. Dry corners are left out
 // and the remaining weights renormalised; the nearest cell itself must be wet.
 export function velocityInGrid(g, lat, lon, out = [0, 0]) {
+ if (g.pending) return null;
  const p = locate(g, lat, lon);
  if (!p || g.index[p.iy * g.nx + p.ix] < 0) return null;
  const x0 = Math.floor(p.fx), y0 = Math.floor(p.fy), tx = p.fx - x0, ty = p.fy - y0, f = g.field;
@@ -92,6 +99,7 @@ export function sampleCurrents(grids, lat, lon) {
  if (!grids || !grids.length) return {reason: 'loading'};
  const g = gridFor(grids, lat, lon);
  if (!g) return {reason: 'outside'};
+ if (g.pending) return {reason: g.failed ? 'failed' : 'pending', grid: g.name, cellSize: g.dxM};
  if (g.fieldTime === null) return {reason: 'loading'};
  const p = locate(g, lat, lon), cell = g.index[p.iy * g.nx + p.ix];
  if (cell < 0) return {reason: 'land', grid: g.name, cellSize: g.dxM};
