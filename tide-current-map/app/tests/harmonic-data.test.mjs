@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {gzipSync, gunzipSync} from 'node:zlib';
-import {MPS_TO_KT, encodeRuns, decodeRuns, prepareGrid, updateField, velocityInGrid, velocityAt, sampleCurrents, jstSlotTime, gridFor} from '../currents.js';
+import {MPS_TO_KT, encodeRuns, decodeRuns, prepareGrid, updateField, velocityInGrid, velocityAt, sampleCurrents, jstSlotTime, gridFor, inflate, isGzip, canInflate} from '../currents.js';
 import {synthesizeCell} from '../harmonic.js';
 import {packGrid, packHarmonic, depthBytes} from '../worker/harmonic-build.mjs';
 import {harmonicResponse} from '../worker/harmonic.js';
@@ -188,4 +188,23 @@ test('three nested grids: 50 m > 100 m > 250 m, and land in a finer grid stays l
  assert.equal(dry.reason, 'land'); assert.equal(dry.grid, 'mid');
  // mid absent -> outer answers there
  assert.equal(sampleCurrents([inner, outer], 35.08, 139.08).grid, 'outer');
+});
+
+test('gzip copies are served as plain binary and inflate in the browser to the source bytes', async () => {
+ const bundle = packHarmonic(new URL('../data', import.meta.url).pathname);
+ const index = JSON.parse(bundle.index);
+ assert.ok(canInflate());
+ for (const e of index.grids) {
+  const source = fs.readFileSync(dataUrl(`harmonic-${e.name}.bin`));
+  assert.match(e.coefGz, /^\/api\/harmonic\/[a-z]+-[0-9a-f]{12}\.bin\.gz$/);
+  const r = harmonicResponse(e.coefGz, bundle, frameResponse);
+  assert.equal(r.headers.get('content-encoding'), null);
+  assert.equal(r.headers.get('content-type'), 'application/octet-stream');
+  const gz = await r.arrayBuffer();
+  assert.ok(isGzip(gz)); assert.ok(gz.byteLength < source.length / 2, 'gzip copy should be much smaller');
+  assert.deepEqual(Buffer.from(await inflate(gz)), source);
+  assert.deepEqual(Buffer.from(await inflate(source.buffer.slice(source.byteOffset, source.byteOffset + source.length))), source); // already inflated bytes pass through
+  const depth = await inflate(await harmonicResponse(e.depthGz, bundle, frameResponse).arrayBuffer());
+  assert.equal(depth.byteLength, e.wetCount * 2);
+ }
 });

@@ -673,5 +673,355 @@
     "grid": "harmonic-inner"
    }
   ]
+ },
+ "direction": {
+  "summary": {
+   "n": 1331,
+   "medianAbsDiffDeg": 10.1,
+   "within30deg": 0.8422238918106687,
+   "within45deg": 0.9278737791134485,
+   "meanBiasDeg": 3.9026388213748726
+  },
+  "areas": {
+   "観音崎北（走水寄り）": {
+    "lat": 35.2846,
+    "lon": 139.7337,
+    "n": 78,
+    "medianAbsDiffDeg": 22.6,
+    "within30deg": 0.7307692307692307,
+    "biasDeg": -26.56655362237493
+   },
+   "猿島沖": {
+    "lat": 35.3286,
+    "lon": 139.6715,
+    "n": 6,
+    "medianAbsDiffDeg": 90.69999999999999,
+    "within30deg": 0.5,
+    "biasDeg": -85.80345529703239
+   },
+   "横須賀沖": {
+    "lat": 35.3286,
+    "lon": 139.6715,
+    "n": 6,
+    "medianAbsDiffDeg": 90.69999999999999,
+    "within30deg": 0.5,
+    "biasDeg": -85.80345529703239
+   },
+   "第二海堡付近": {
+    "lat": 35.3286,
+    "lon": 139.7545,
+    "n": 58,
+    "medianAbsDiffDeg": 56.5,
+    "within30deg": 0.0,
+    "biasDeg": 62.59413579166446
+   },
+   "中ノ瀬付近": {
+    "lat": 35.3953,
+    "lon": 139.7723,
+    "n": 13,
+    "medianAbsDiffDeg": 2.0,
+    "within30deg": 1.0,
+    "biasDeg": 0.011576261324751227
+   },
+   "浦賀水道中央": {
+    "lat": 35.2846,
+    "lon": 139.7752,
+    "n": 55,
+    "medianAbsDiffDeg": 13.8,
+    "within30deg": 0.8727272727272727,
+    "biasDeg": -16.247949668323063
+   }
+  },
+  "stations": [
+   {
+    "lat": 35.4893,
+    "lon": 139.8271,
+    "n": 51,
+    "medianAbsDiffDeg": 11.6,
+    "within30deg": 0.9411764705882353,
+    "biasDeg": -3.4053268712915408
+   },
+   {
+    "lat": 35.2846,
+    "lon": 139.7752,
+    "n": 55,
+    "medianAbsDiffDeg": 13.8,
+    "within30deg": 0.8727272727272727,
+    "biasDeg": -16.247949668323063
+   },
+   {
+    "lat": 35.5274,
+    "lon": 139.8211,
+    "n": 52,
+    "medianAbsDiffDeg": 30.85,
+    "within30deg": 0.21153846153846154,
+    "biasDeg": 31.178723346861354
+   },
+   {
+    "lat": 35.4453,
+    "lon": 139.7545,
+    "n": 56,
+    "medianAbsDiffDeg": 8.0,
+    "within30deg": 1.0,
+    "biasDeg": 7.882141339037699
+   },
+   {
+    "lat": 35.4453,
+    "lon": 139.8048,
+    "n": 55,
+    "medianAbsDiffDeg": 1.2,
+    "within30deg": 1.0,
+    "biasDeg": 1.0909591832579706
+   },
+   {
+    "lat": 35.3953,
+    "lon": 139.7219,
+    "n": 57,
+    "medianAbsDiffDeg": 12.8,
+    "within30deg": 1.0,
+    "biasDeg": -13.28160463690048
+   },
+   {
+    "lat": 35.3619,
+    "lon": 139.6715,
+    "n": 51,
+    "medianAbsDiffDeg": 2.9,
+    "within30deg": 1.0,
+    "biasDeg": -2.004199638886253
+   },
+   {
+    "lat": 35.3619,
+    "lon": 139.8048,
+    "n": 55,
+    "medianAbsDiffDeg": 8.1,
+    "within30deg": 0.9818181818181818,
+    "biasDeg": -7.9092610185536945
+   },
+   {
+    "lat": 35.3286,
+    "lon": 139.8048,
+    "n": 36,
+    "medianAbsDiffDeg": 24.75,
+    "within30deg": 0.9722222222222222,
+    "biasDeg": 25.576470454334224
+   },
+   {
+    "lat": 35.2453,
+    "lon": 139.8048,
+    "n": 54,
+    "medianAbsDiffDeg": 7.35,
+    "within30deg": 1.0,
+    "biasDeg": -7.795105223393217
+   },
+   {
+    "lat": 35.2119,
+    "lon": 139.7886,
+    "n": 55,
+    "medianAbsDiffDeg": 6.1,
+    "within30deg": 0.9818181818181818,
+    "biasDeg": 0.22461409261515172
+   },
+   {
+    "lat": 35.2846,
+    "lon": 139.7337,
+    "n": 78,
+    "medianAbsDiffDeg": 22.6,
+    "within30deg": 0.7307692307692307,
+    "biasDeg": -26.56655362237493
+   },
+   {
+    "lat": 35.5774,
+    "lon": 139.8123,
+    "n": 26,
+    "medianAbsDiffDeg": 33.65,
+    "within30deg": 0.34615384615384615,
+    "biasDeg": -34.73919803395426
+   },
+   {
+    "lat": 35.5191,
+    "lon": 140.0019,
+    "n": 8,
+    "medianAbsDiffDeg": 10.5,
+    "within30deg": 1.0,
+    "biasDeg": -10.366652036788762
+   },
+   {
+    "lat": 35.5607,
+    "lon": 139.8715,
+    "n": 42,
+    "medianAbsDiffDeg": 12.5,
+    "within30deg": 1.0,
+    "biasDeg": 12.407142144478652
+   },
+   {
+    "lat": 35.5607,
+    "lon": 139.9219,
+    "n": 27,
+    "medianAbsDiffDeg": 7.9,
+    "within30deg": 1.0,
+    "biasDeg": 7.948117401048729
+   },
+   {
+    "lat": 35.5607,
+    "lon": 139.9723,
+    "n": 19,
+    "medianAbsDiffDeg": 9.5,
+    "within30deg": 1.0,
+    "biasDeg": 10.231535879829131
+   },
+   {
+    "lat": 35.5274,
+    "lon": 139.8878,
+    "n": 49,
+    "medianAbsDiffDeg": 8.1,
+    "within30deg": 1.0,
+    "biasDeg": 7.385700128308881
+   },
+   {
+    "lat": 35.5274,
+    "lon": 139.9545,
+    "n": 32,
+    "medianAbsDiffDeg": 9.75,
+    "within30deg": 1.0,
+    "biasDeg": 9.94997358215881
+   },
+   {
+    "lat": 35.4774,
+    "lon": 139.7545,
+    "n": 50,
+    "medianAbsDiffDeg": 1.55,
+    "within30deg": 1.0,
+    "biasDeg": 0.46157092524559534
+   },
+   {
+    "lat": 35.4774,
+    "lon": 139.8715,
+    "n": 49,
+    "medianAbsDiffDeg": 7.3,
+    "within30deg": 1.0,
+    "biasDeg": 7.414277575687067
+   },
+   {
+    "lat": 35.4774,
+    "lon": 139.9219,
+    "n": 40,
+    "medianAbsDiffDeg": 14.5,
+    "within30deg": 1.0,
+    "biasDeg": 14.909468701624409
+   },
+   {
+    "lat": 35.4774,
+    "lon": 139.9723,
+    "n": 18,
+    "medianAbsDiffDeg": 13.1,
+    "within30deg": 1.0,
+    "biasDeg": 13.166667161103527
+   },
+   {
+    "lat": 35.4453,
+    "lon": 139.7056,
+    "n": 40,
+    "medianAbsDiffDeg": 6.3,
+    "within30deg": 1.0,
+    "biasDeg": -6.020090778942468
+   },
+   {
+    "lat": 35.4453,
+    "lon": 139.8552,
+    "n": 51,
+    "medianAbsDiffDeg": 2.4,
+    "within30deg": 1.0,
+    "biasDeg": -1.8465416068467853
+   },
+   {
+    "lat": 35.4453,
+    "lon": 139.9056,
+    "n": 42,
+    "medianAbsDiffDeg": 35.5,
+    "within30deg": 0.16666666666666666,
+    "biasDeg": 37.595966021210295
+   },
+   {
+    "lat": 35.3619,
+    "lon": 139.7382,
+    "n": 65,
+    "medianAbsDiffDeg": 18.3,
+    "within30deg": 0.8307692307692308,
+    "biasDeg": 20.438671059272835
+   },
+   {
+    "lat": 35.3286,
+    "lon": 139.7545,
+    "n": 58,
+    "medianAbsDiffDeg": 56.5,
+    "within30deg": 0.0,
+    "biasDeg": 62.59413579166446
+   },
+   {
+    "lat": 35.3953,
+    "lon": 139.7723,
+    "n": 13,
+    "medianAbsDiffDeg": 2.0,
+    "within30deg": 1.0,
+    "biasDeg": 0.011576261324751227
+   },
+   {
+    "lat": 35.4036,
+    "lon": 139.8048,
+    "n": 16,
+    "medianAbsDiffDeg": 16.3,
+    "within30deg": 0.9375,
+    "biasDeg": -5.445463116975013
+   },
+   {
+    "lat": 35.3334,
+    "lon": 139.7115,
+    "n": 14,
+    "medianAbsDiffDeg": 40.35,
+    "within30deg": 0.2857142857142857,
+    "biasDeg": -55.984918155706985
+   },
+   {
+    "lat": 35.3286,
+    "lon": 139.6715,
+    "n": 6,
+    "medianAbsDiffDeg": 90.69999999999999,
+    "within30deg": 0.5,
+    "biasDeg": -85.80345529703239
+   },
+   {
+    "lat": 35.6107,
+    "lon": 139.9382,
+    "n": 8,
+    "medianAbsDiffDeg": 12.15,
+    "within30deg": 1.0,
+    "biasDeg": 12.049996173253783
+   },
+   {
+    "lat": 35.6107,
+    "lon": 139.8715,
+    "n": 1,
+    "medianAbsDiffDeg": 1.8,
+    "within30deg": 1.0,
+    "biasDeg": 1.7999999999999998
+   },
+   {
+    "lat": 35.6107,
+    "lon": 140.0048,
+    "n": 1,
+    "medianAbsDiffDeg": 7.1,
+    "within30deg": 1.0,
+    "biasDeg": -7.1
+   },
+   {
+    "lat": 35.5607,
+    "lon": 140.0211,
+    "n": 1,
+    "medianAbsDiffDeg": 7.7,
+    "within30deg": 1.0,
+    "biasDeg": -7.699999999999999
+   }
+  ],
+  "source": "海上保安庁 潮流推算図（2026-10-11/18/24/26、毎正時）の矢印を画像から読み取り。0.2kn未満と、同色の矢印が重なる地点は除外。"
  }
 }

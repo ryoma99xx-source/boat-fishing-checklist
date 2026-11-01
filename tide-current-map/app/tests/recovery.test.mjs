@@ -45,7 +45,7 @@ test('stalled offshore startup cannot block the harmonic model',async()=>{const 
 
 test('stalled basemap metadata cannot block model results',async()=>{const h=setup(url=>url==='/coastal-map.json'||url==='/overview-map.json');try{await until(()=>ready(h));assert.match(h.element('peekFlow').textContent,/kt/)}finally{h.close()}});
 
-test('stalled model data times out, shows no value, and can be retried',async()=>{let blocked=true;const h=setup(url=>blocked&&/\/api\/harmonic\/outer-[0-9a-f]+\.bin$/.test(url));try{await until(()=>h.element('status').textContent.includes('取得失敗'));assert.match(h.element('status').textContent,/タップで再取得/);assert.equal(h.element('speed').textContent,'—');assert.match(h.element('peekFlow').textContent,/取得できません/);assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false);blocked=false;h.element('status').onclick();await until(()=>ready(h));assert.match(h.element('peekFlow').textContent,/kt/)}finally{h.close()}});
+test('stalled model data times out, shows no value, and can be retried',async()=>{let blocked=true;const h=setup(url=>blocked&&/\/api\/harmonic\/outer-[0-9a-f]+\.bin(\.gz)?$/.test(url));try{await until(()=>h.element('status').textContent.includes('取得失敗'));assert.match(h.element('status').textContent,/タップで再取得/);assert.equal(h.element('speed').textContent,'—');assert.match(h.element('peekFlow').textContent,/取得できません/);assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false);blocked=false;h.element('status').onclick();await until(()=>ready(h));assert.match(h.element('peekFlow').textContent,/kt/)}finally{h.close()}});
 
 test('any date uses the same model and the date is kept',async()=>{
  const h=setup(()=>false);try{await until(()=>ready(h));assert.equal(h.element('date').value,'2026-10-24');
@@ -78,7 +78,7 @@ test('operator map configuration cannot block current data',async()=>{const h=se
 test('fresh access uses the Japanese date',async()=>{const h=setup(()=>false,Date.parse('2026-10-26T15:30:00Z'));try{await until(()=>ready(h));assert.equal(h.element('date').value,'2026-10-27');assert.equal(h.element('time').textContent,'00:30');assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false);}finally{h.close()}});
 
 test('the lazy 50 m grid is never replaced by the 250 m value while it loads or fails',async()=>{
- const h=setup(u=>/\/api\/harmonic\/inner-[0-9a-f]+\.bin$/.test(u));try{
+ const h=setup(u=>/\/api\/harmonic\/inner-[0-9a-f]+\.bin(\.gz)?$/.test(u));try{
   await until(()=>h.element('status').textContent.includes('50m格子の取得失敗'));
   assert.equal(h.element('speed').textContent,'—');assert.match(h.element('peekFlow').textContent,/50m格子を取得できません/);
   // a point outside the 50 m area still uses the 250 m grid

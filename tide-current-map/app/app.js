@@ -5,7 +5,7 @@ import {VIEW_AREA,REGIONS,contains,fitArea} from '/coverage.js';
 import {getJstSelection} from '/clock.js';
 import {claimGoogleMapLoad} from '/google-guard.js';
 import {installMapGestureBoundary} from '/map-gestures.js';
-import {prepareGrid,pendingGrid,updateField,sampleCurrents,velocityAt,gridBounds,jstSlotTime} from '/currents.js';
+import {prepareGrid,pendingGrid,updateField,sampleCurrents,velocityAt,gridBounds,jstSlotTime,canInflate,inflate} from '/currents.js';
 import {SPOTS,REFERENCE_POINTS,spotCentroid} from '/spots.js';
 import {createFlowLayer} from '/flow-layer.js';
 // START: initial map centre and default fishing position (新安浦沖).
@@ -240,7 +240,9 @@ function lastSlot(){return hourly()?46:48;}
 function updateTime(){$('date').value=S.date;const hour=Math.floor(S.slot/2),half=S.slot%2;$('time').textContent=String(hour).padStart(2,'0')+':'+(half?'30':'00');$('slider').value=S.slot;$('timeDetail').textContent=S.mode==='official'?'毎正時の公式推算 / JST':S.mode==='compare'?'毎正時で比較 / JST':'30分ごと・潮汐の調和合成 / JST';document.querySelectorAll('[data-time]').forEach(b=>b.classList.toggle('active',+b.dataset.time===S.slot));drawTide();}
 // Harmonic grids: index -> per-grid meta, coefficients and depth (content-hashed URLs).
 // The coarsest grid (last) loads first; finer grids (50 m inner, ~7 MB) load lazily when the view reaches them.
-async function fetchGrid(e){const [meta,coef,depth]=await Promise.all([resource(e.meta),resource(e.coef,'buffer',30000),resource(e.depth,'buffer',30000).catch(()=>null)]);if(coef.byteLength!==e.coefBytes)throw Error('潮流モデルのデータ長が不正です');return prepareGrid(meta,new Int16Array(coef),depth&&depth.byteLength===e.wetCount*2?new Uint16Array(depth):null);}
+// Prefer the gzip copy and inflate it here (about 1/4 of the bytes); fall back to the plain bytes.
+async function binary(url,gzUrl,expected){if(gzUrl&&canInflate()){try{const b=await inflate(await resource(gzUrl,'buffer',30000));if(b.byteLength===expected)return b;}catch{}}return await resource(url,'buffer',30000);}
+async function fetchGrid(e){const [meta,coef,depth]=await Promise.all([resource(e.meta),binary(e.coef,e.coefGz,e.coefBytes),binary(e.depth,e.depthGz,e.wetCount*2).catch(()=>null)]);if(coef.byteLength!==e.coefBytes)throw Error('潮流モデルのデータ長が不正です');return prepareGrid(meta,new Int16Array(coef),depth&&depth.byteLength===e.wetCount*2?new Uint16Array(depth):null);}
 async function loadHarmonicData(){
  if(H.grids)return H.grids;if(H.request)return H.request;
  H.request=(async()=>{

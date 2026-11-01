@@ -18,11 +18,13 @@ export const SPOTS = [
 ];
 
 // モデル値を表示する固定の参考点（値はすべて「モデル」。実測ではありません）。
+// 「走水沖（台船付近・仮）」の台船の位置は未確認。利用者が正しい位置へ直してください。
 // minZoom: この縮尺以上で表示（混み合う場所は拡大したときだけ）。
 export const REFERENCE_POINTS = [
- {id:'sarushima-east', name:'猿島東', lat:35.2865, lon:139.7065, minZoom:13},
- {id:'hashirimizu', name:'走水沖', lat:35.2665, lon:139.7410, minZoom:13},
- {id:'kannonzaki', name:'観音崎沖', lat:35.2560, lon:139.7550, minZoom:12},
+ {id:'sarushima-off', name:'猿島沖', lat:35.2880, lon:139.7080, minZoom:12},
+ {id:'hashirimizu', name:'走水沖（台船付近・仮）', lat:35.2665, lon:139.7410, minZoom:12},
+ {id:'kannonzaki-north', name:'観音崎北', lat:35.2846, lon:139.7337, minZoom:12},
+ {id:'kannonzaki', name:'観音崎沖', lat:35.2560, lon:139.7550, minZoom:13},
  {id:'daini-kaiho', name:'第二海堡', lat:35.3125, lon:139.7495, minZoom:13},
  {id:'daiichi-kaiho', name:'第一海堡付近', lat:35.3105, lon:139.7700, minZoom:13},
  {id:'nakanose', name:'中ノ瀬', lat:35.3800, lon:139.7950, minZoom:12},

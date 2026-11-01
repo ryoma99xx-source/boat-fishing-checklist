@@ -4,6 +4,16 @@ import {synthesize} from './harmonic.js';
 
 export const MPS_TO_KT = 1.94384;
 
+// Inflate gzip bytes in the browser (DecompressionStream). Bytes that are not gzip (a proxy
+// already inflated them) are returned unchanged. Returns an ArrayBuffer.
+export const canInflate = () => typeof DecompressionStream === 'function';
+export function isGzip(buffer) { const b = new Uint8Array(buffer); return b.length > 2 && b[0] === 0x1f && b[1] === 0x8b; }
+export async function inflate(buffer) {
+ if (!isGzip(buffer)) return buffer;
+ const stream = new Blob([buffer]).stream().pipeThrough(new DecompressionStream('gzip'));
+ return await new Response(stream).arrayBuffer();
+}
+
 // wetRuns: flat [start0,length0,start1,length1,...] of ascending row-major ids.
 export function encodeRuns(ids) {
  const runs = [];
