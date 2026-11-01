@@ -93,7 +93,8 @@ def official(grids, folder):
         st = [(int(a), int(b), float(c)) for a, b, c in re.findall(r'coords\s*=\s*["\']?(\d+),(\d+),\d+\s+ALT=["\']([\d.]+)kn\.', html, re.I)]
         th = tl.hours(datetime.datetime(y, mo, d, h) - datetime.timedelta(hours=9))
         for x, yy, kn in st:
-            lat = 35 + (631 - yy) / 840; lon = 139.5 + (x - 30) / 675
+            # JCG chart pixels -> lat/lon, plus the Tokyo-datum style shift measured against the coastline
+            lat = 35 + (631 - yy) / 840 + 0.0036; lon = 139.5 + (x - 30) / 675 - 0.0033
             g, i = pick(grids, lat, lon)
             if g is None: continue
             u, v = g.predict(i, th)
@@ -114,6 +115,6 @@ def official(grids, folder):
 
 if __name__ == '__main__':
     hd, npz, harm, jcg, out = sys.argv[1:6]
-    grids = [Grid(hd, n) for n in ['harmonic-inner', 'harmonic-outer'] if os.path.exists(f'{hd}/{n}.json')]
+    grids = [Grid(hd, n) for n in ['harmonic-inner', 'harmonic-mid', 'harmonic-outer'] if os.path.exists(f'{hd}/{n}.json')]
     res = {'ferry': ferry(grids, npz, harm), 'official': official(grids, jcg)}
     json.dump(res, open(out, 'w'), ensure_ascii=False, indent=1)
