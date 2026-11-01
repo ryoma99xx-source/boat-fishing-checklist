@@ -148,9 +148,9 @@ test('content hash changes when the coefficients change', () => {
 
 test('particle display keeps weak coastal currents visibly moving within budget', () => {
  assert.ok(screenSpeed(.1) >= 10); assert.ok(screenSpeed(.3) > screenSpeed(.1)); assert.ok(screenSpeed(2) < 4 * screenSpeed(.5));
- assert.equal(particleCount(390, 500, 1), 2438);
- assert.equal(particleCount(1440, 700, 1), 3000);
- assert.equal(particleCount(200, 200, 1), 1500);
+ assert.equal(particleCount(390, 500, 1), 765);
+ assert.equal(particleCount(1440, 700, 1), 1300);
+ assert.equal(particleCount(200, 200, 1), 500);
  assert.ok(particleCount(390, 500, .1) < 400);
  assert.deepEqual(speedColor(0).length, 4);
 });

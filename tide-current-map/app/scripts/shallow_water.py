@@ -31,12 +31,16 @@ class ShallowWater:
   u,v=self.centers();return float(np.sum((self.H*(u*u+v*v)+9.81*self.eta**2)[self.inside])*.5*self.dx**2)
  def step(self,boundary=0.):
   dt=self.dt;dx=self.dx;u=self.u;v=self.v;uc,vc=self.centers();vu=np.zeros_like(u);uv=np.zeros_like(v);vu[:,1:-1]=(vc[:,:-1]+vc[:,1:])/2;uv[1:-1]=(uc[:-1]+uc[1:])/2
-  def terms(q,ux,vy):
+  def terms(q,ux,vy,mask):
    p=np.pad(q,1,mode='edge');west=p[1:-1,:-2];east=p[1:-1,2:];south=p[:-2,1:-1];north=p[2:,1:-1]
    adv=ux*np.where(ux>=0,q-west,east-q)/dx+vy*np.where(vy>=0,q-south,north-q)/dx
+   # Free-slip coast: a land-face neighbour takes the cell's own value, so viscosity does not
+   # drag the flow to zero in a 100-200 m band along the shore (no-slip is wrong at 50-250 m).
+   pm=np.pad(mask,1,mode='edge');mw=pm[1:-1,:-2];me=pm[1:-1,2:];ms=pm[:-2,1:-1];mn=pm[2:,1:-1]
+   west=np.where(mw,west,q);east=np.where(me,east,q);south=np.where(ms,south,q);north=np.where(mn,north,q)
    return -adv+self.nu*(west+east+south+north-4*q)/dx**2
-  ust=(u+dt*(terms(u,u,vu)+self.f*vu))*self.umask
-  vst=(v+dt*(terms(v,uv,v)-self.f*uv))*self.vmask
+  ust=(u+dt*(terms(u,u,vu,self.umask)+self.f*vu))*self.umask
+  vst=(v+dt*(terms(v,uv,v,self.vmask)-self.f*uv))*self.vmask
   # Semi-implicit quadratic drag remains stable in shallow cells.
   ust/=1+dt*self.cd*np.divide(np.hypot(u,vu),self.hu,out=np.zeros_like(u),where=self.umask)
   vst/=1+dt*self.cd*np.divide(np.hypot(v,uv),self.hv,out=np.zeros_like(v),where=self.vmask)

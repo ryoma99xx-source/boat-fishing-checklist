@@ -41,7 +41,7 @@ function modelSample(lat,lon){if(!contains(VIEW_AREA,{lat,lon}))return {reason:'
 const flow=createFlowLayer({fieldCanvas:$('flowField'),trailCanvas:$('flowTrails'),size:()=>({width:$('map').clientWidth,height:$('map').clientHeight}),unproject:screenToLatLon,sample:(lat,lon,out)=>fieldReady()&&contains(VIEW_AREA,{lat,lon})?velocityAt(H.grids,lat,lon,out):null});
 globalThis.__flow=flow;
 function canvas(id){const el=$(id),dpr=devicePixelRatio||1,w=$('map').clientWidth,h=$('map').clientHeight;if(el.width!==w*dpr||el.height!==h*dpr){el.width=w*dpr;el.height=h*dpr;}const c=el.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,w,h);return c;}
-function tile(x,y,z){const key=z+'/'+x+'/'+y;if(tiles.has(key))return tiles.get(key);const t={ok:false,im:new Image()};t.im.onload=()=>{t.ok=true;drawBase();};t.im.src='https://cyberjapandata.gsi.go.jp/xyz/std/'+key+'.png';tiles.set(key,t);if(tiles.size>200)tiles.delete(tiles.keys().next().value);return t;}
+function tile(x,y,z){const key=z+'/'+x+'/'+y;if(tiles.has(key))return tiles.get(key);const t={ok:false,im:new Image()};t.im.onload=()=>{t.ok=true;drawBase();};t.im.src='https://cyberjapandata.gsi.go.jp/xyz/pale/'+key+'.png';tiles.set(key,t);if(tiles.size>200)tiles.delete(tiles.keys().next().value);return t;}
 function drawBase(){if(S.google)return;const c=canvas('base'),w=$('map').clientWidth,h=$('map').clientHeight,center=world(S.center.lat,S.center.lon),left=center.x-w/2,top=center.y-h/2;c.fillStyle='#bed2ff';c.fillRect(0,0,w,h);
  const ov=S.overview,ovk=ov?2**(S.zoom-ov.z):0;
  if(overviewReady&&ov)c.drawImage(overviewImage,ov.x*256*ovk-left,ov.y*256*ovk-top,ov.w*ovk,ov.h*ovk);
@@ -342,7 +342,7 @@ function useStandard(){
  for(const l of googleListeners)l.remove();googleListeners=[];
  S.google=null;S.projection=null;document.body.classList.remove('google');
  $('googleMap').replaceChildren();
- $('mapCredit').textContent='地理院タイル（標準地図） / 水深 NIED GtTM · CC BY 4.0';
+ $('mapCredit').textContent='地理院タイル（淡色地図） / 水深 NIED GtTM · CC BY 4.0';
  $('gestureHelp').textContent='二本指で拡大縮小 · タップで地点選択';
  draw();
 }

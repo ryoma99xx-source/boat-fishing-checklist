@@ -5,11 +5,11 @@ const KT = 1.94384;
 // Displayed particle speed (px/s) grows with sqrt(kt) so 0.1–0.3 kt still visibly moves.
 export function screenSpeed(kt) { return 34 * Math.sqrt(Math.max(0, kt)); }
 export function particleCount(width, height, waterFraction) {
- const base = Math.max(1500, Math.min(3000, Math.round(width * height / 80)));
+ const base = Math.max(500, Math.min(1300, Math.round(width * height / 255)));
  return Math.max(150, Math.round(base * Math.min(1, Math.max(0, waterFraction))));
 }
 // Dark navy -> blue -> cyan -> green by speed (kt). Returns [r,g,b,a].
-const STOPS = [[0, [14, 40, 92, 70]], [.3, [24, 90, 190, 95]], [1, [24, 185, 215, 110]], [2, [60, 215, 140, 120]], [3, [120, 230, 120, 130]]];
+const STOPS = [[0, [10, 30, 80, 120]], [.3, [20, 80, 185, 150]], [1, [20, 175, 210, 165]], [2, [50, 205, 130, 175]], [3, [120, 225, 110, 185]]];
 export function speedColor(kt) {
  if (kt <= 0) return STOPS[0][1];
  for (let i = 1; i < STOPS.length; i++) if (kt <= STOPS[i][0]) {
@@ -83,22 +83,26 @@ export function createFlowLayer({fieldCanvas, trailCanvas, size, unproject, samp
  function spawn(p) {
   const k = S.water[(Math.random() * S.waterCount) | 0], i = k % S.gw, j = (k / S.gw) | 0;
   S.px[p] = (i + Math.random() - .5) * S.step; S.py[p] = (j + Math.random() - .5) * S.step;
-  S.age[p] = 0; S.life[p] = 2 + Math.random() * 4;
+  S.age[p] = 0; S.life[p] = 4 + Math.random() * 6;
  }
 
- // Bilinear velocity on the pixel grid; null if any corner is land/outside.
+ // Bilinear velocity on the pixel grid. Dry corners are left out and the weights renormalised,
+ // so streaks follow the shore; null when the nearest node is land or the point is outside.
  function velocity(x, y) {
   const fx = x / S.step, fy = y / S.step, i = Math.floor(fx), j = Math.floor(fy);
   if (i < 0 || j < 0 || i >= S.gw - 1 || j >= S.gh - 1) return null;
   const k = j * S.gw + i, tx = fx - i, ty = fy - j, U = S.u, V = S.v;
-  const a = U[k], b = U[k + 1], c = U[k + S.gw], d = U[k + S.gw + 1];
-  if (Number.isNaN(a) || Number.isNaN(b) || Number.isNaN(c) || Number.isNaN(d)) return null;
-  uv[0] = (a * (1 - tx) + b * tx) * (1 - ty) + (c * (1 - tx) + d * tx) * ty;
-  uv[1] = (V[k] * (1 - tx) + V[k + 1] * tx) * (1 - ty) + (V[k + S.gw] * (1 - tx) + V[k + S.gw + 1] * tx) * ty;
+  const near = k + (tx > .5 ? 1 : 0) + (ty > .5 ? S.gw : 0);
+  if (Number.isNaN(U[near])) return null;
+  let u = 0, v = 0, w = 0;
+  const add = (idx, wt) => { if (!Number.isNaN(U[idx])) { u += U[idx] * wt; v += V[idx] * wt; w += wt; } };
+  add(k, (1 - tx) * (1 - ty)); add(k + 1, tx * (1 - ty)); add(k + S.gw, (1 - tx) * ty); add(k + S.gw + 1, tx * ty);
+  if (w <= 1e-9) return null;
+  uv[0] = u / w; uv[1] = v / w;
   return uv;
  }
 
- const BUCKETS = [['rgba(120,210,255,.55)', .3], ['rgba(170,235,255,.8)', 1], ['rgba(255,255,255,.95)', Infinity]];
+ const BUCKETS = [['rgba(150,215,245,.45)', .3], ['rgba(200,240,255,.7)', 1], ['rgba(255,255,255,.9)', Infinity]];
  function stepParticles(c, dt) {
   const paths = BUCKETS.map(() => []);
   for (let p = 0; p < S.n; p++) {
@@ -112,7 +116,7 @@ export function createFlowLayer({fieldCanvas, trailCanvas, size, unproject, samp
    S.px[p] = nx; S.py[p] = ny;
    paths[kt < BUCKETS[0][1] ? 0 : kt < BUCKETS[1][1] ? 1 : 2].push(x, y, nx, ny);
   }
-  c.lineWidth = 1.4; c.lineCap = 'round';
+  c.lineWidth = 1; c.lineCap = 'round';
   BUCKETS.forEach(([color], b) => {
    const a = paths[b]; if (!a.length) return;
    c.beginPath();
@@ -133,7 +137,7 @@ export function createFlowLayer({fieldCanvas, trailCanvas, size, unproject, samp
   const dt = Math.min(.05, S.last ? (t - S.last) / 1000 : 1 / 60); S.last = t;
   const c = trailCanvas.getContext('2d');
   c.globalCompositeOperation = 'destination-out';
-  c.fillStyle = `rgba(0,0,0,${1 - Math.pow(.95, dt * 60)})`; c.fillRect(0, 0, S.w, S.h);
+  c.fillStyle = `rgba(0,0,0,${1 - Math.pow(.94, dt * 60)})`; c.fillRect(0, 0, S.w, S.h);
   c.globalCompositeOperation = 'source-over';
   stepParticles(c, dt); S.frames++;
   schedule();
