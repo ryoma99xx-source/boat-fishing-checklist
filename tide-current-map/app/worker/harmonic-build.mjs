@@ -6,7 +6,7 @@ import {gzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
 import {encodeRuns} from '../currents.js';
 
-export const GRID_ORDER = ['inner', 'mid', 'uchibo', 'outer', 'boso']; // finest first: the first grid containing a point decides
+export const GRID_ORDER = ['inner', 'mid', 'outer', 'uchibo', 'boso']; // first grid containing a point decides. The bay model (outer) is tuned to the bay tide gauges, so it outranks the 200 m inner-Boso grid inside its box
 
 export function depthBytes(depth) {
  const out = new Uint16Array(depth.length);

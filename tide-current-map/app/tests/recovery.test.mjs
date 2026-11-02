@@ -45,7 +45,7 @@ test('stalled offshore startup cannot block the harmonic model',async()=>{const 
 
 test('stalled basemap metadata cannot block model results',async()=>{const h=setup(url=>url==='/coastal-map.json'||url==='/overview-map.json');try{await until(()=>ready(h));assert.match(h.element('peekFlow').textContent,/kt/)}finally{h.close()}});
 
-test('stalled model data times out, shows no value, and can be retried',async()=>{let blocked=true;const h=setup(url=>blocked&&/\/api\/harmonic\/outer-[0-9a-f]+\.bin(\.gz)?$/.test(url));try{await until(()=>h.element('status').textContent.includes('取得失敗'));assert.match(h.element('status').textContent,/タップで再取得/);assert.equal(h.element('speed').textContent,'—');assert.match(h.element('peekFlow').textContent,/取得できません/);assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false);blocked=false;h.element('status').onclick();await until(()=>ready(h));assert.match(h.element('peekFlow').textContent,/kt/)}finally{h.close()}});
+test('stalled model data times out, shows no value, and can be retried',async()=>{let blocked=true;const h=setup(url=>blocked&&/\/api\/harmonic\/boso-[0-9a-f]+\.bin(\.gz)?$/.test(url));try{await until(()=>h.element('status').textContent.includes('取得失敗'));assert.match(h.element('status').textContent,/タップで再取得/);assert.equal(h.element('speed').textContent,'—');assert.match(h.element('peekFlow').textContent,/取得できません/);assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false);blocked=false;h.element('status').onclick();await until(()=>ready(h));assert.match(h.element('peekFlow').textContent,/kt/)}finally{h.close()}});
 
 test('any date uses the same model and the date is kept',async()=>{
  const h=setup(()=>false);try{await until(()=>ready(h));assert.equal(h.element('date').value,'2026-10-24');

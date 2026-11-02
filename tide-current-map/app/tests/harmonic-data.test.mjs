@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {gzipSync, gunzipSync} from 'node:zlib';
 import {MPS_TO_KT, encodeRuns, decodeRuns, prepareGrid, updateField, velocityInGrid, velocityAt, sampleCurrents, jstSlotTime, gridFor, inflate, isGzip, canInflate} from '../currents.js';
 import {synthesizeCell} from '../harmonic.js';
-import {packGrid, packHarmonic, depthBytes} from '../worker/harmonic-build.mjs';
+import {packGrid, packHarmonic, depthBytes, GRID_ORDER} from '../worker/harmonic-build.mjs';
 import {harmonicResponse} from '../worker/harmonic.js';
 import {frameResponse} from '../worker/frame.js';
 import {SPOTS, REFERENCE_POINTS} from '../spots.js';
@@ -96,6 +96,7 @@ test('real outer grid: synthesis matches the per-cell reference and covers the Y
   assert.ok(Math.abs(g.field[2 * i] - u) < 1e-6 && Math.abs(g.field[2 * i + 1] - v) < 1e-6);
  }
  for (const p of [...REFERENCE_POINTS, {name: 'observation', lat: 35.279, lon: 139.708}]) {
+  if (!gridFor([g], p.lat, p.lon)) continue; // Boso points lie outside the bay grid
   const s = sampleCurrents([g], p.lat, p.lon);
   assert.ok(Number.isFinite(s.speed), p.name + ' ' + JSON.stringify(s));
  }
@@ -117,7 +118,7 @@ test('served harmonic bytes equal the source bytes, with compression left to hos
  const bundle = packHarmonic(new URL('../data', import.meta.url).pathname);
  const index = JSON.parse(bundle.index);
  assert.ok(index.grids.length >= 1);
- assert.equal(index.grids.at(-1).name, 'outer');
+ assert.equal(index.grids.at(-1).name, GRID_ORDER.filter(n => fs.existsSync(dataUrl(`harmonic-${n}.json`))).at(-1));
  const res = harmonicResponse('/api/harmonic/index.json', bundle, frameResponse);
  assert.equal(res.headers.get('cache-control'), 'no-cache');
  for (const e of index.grids) {
@@ -155,12 +156,12 @@ test('particle display keeps weak coastal currents visibly moving within budget'
  assert.deepEqual(speedColor(0).length, 4);
 });
 
-for (const name of ['inner', 'mid']) {
+for (const name of ['inner', 'mid', 'uchibo', 'boso']) {
  test(`${name} grid (when present): reference points and spot vertices inside it are on water`, {skip: !fs.existsSync(dataUrl(`harmonic-${name}.json`))}, () => {
   const meta = JSON.parse(fs.readFileSync(dataUrl(`harmonic-${name}.json`))), raw = fs.readFileSync(dataUrl(`harmonic-${name}.bin`));
   const g = prepareGrid(meta, new Int16Array(Uint8Array.from(raw).buffer));
   updateField(g, jstSlotTime('2026-11-01', 17));
-  assert.equal(g.dxM, name === 'inner' ? 50 : 100);
+  assert.equal(g.dxM, {inner: 50, mid: 100, uchibo: 200, boso: 500}[name]);
   let inside = 0;
   for (const p of REFERENCE_POINTS) {
    const s = sampleCurrents([g], p.lat, p.lon);
@@ -168,7 +169,8 @@ for (const name of ['inner', 'mid']) {
    inside++; assert.ok(Number.isFinite(s.speed), p.name + ' ' + JSON.stringify(s));
   }
   assert.ok(inside >= 2);
-  for (const spot of SPOTS) for (const [lat, lon] of spot.polygon) {
+  // spot outlines hug islands and forts; the 500 m Boso grid is too coarse to resolve them
+  for (const spot of g.dxM <= 200 ? SPOTS : []) for (const [lat, lon] of spot.polygon) {
    const s = sampleCurrents([g], lat, lon);
    if (s.reason === 'outside') continue;
    assert.notEqual(s.reason, 'land', spot.label + ' ' + lat + ',' + lon);
