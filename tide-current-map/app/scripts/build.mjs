@@ -31,7 +31,7 @@ const overviewMap=fs.readFileSync('data/overview-map.webp').toString('base64');
 const css=fs.readFileSync('app.css','utf8');
 const revision=createHash('sha256').update(js+css+Object.values(modules).join('')).digest('hex').slice(0,12);
 const html=htmlSource.replace('/app.js','/app.js?v='+revision).replace('/app.css','/app.css?v='+revision).replaceAll('__ICON_VERSION__',iconRevision);
-const tideTables={};for(const code of ['TK','Z1','MR']){const path='data/'+code+'-2026.txt';if(fs.existsSync(path))tideTables[code]=fs.readFileSync(path,'utf8');}
+const tideTables={};for(const code of ['TK','Z1','MR','TT','ZF','CS']){const path='data/'+code+'-2026.txt';if(fs.existsSync(path))tideTables[code]=fs.readFileSync(path,'utf8');}
 const snapshots={};for(const f of fs.readdirSync('data'))if(f.startsWith('current-')){const d=JSON.parse(fs.readFileSync('data/'+f,'utf8'));snapshots[d.date+'/'+d.hour]=d;}
 fs.mkdirSync('dist/server',{recursive:true});fs.mkdirSync('dist/.openai',{recursive:true});
 const manifest=JSON.parse(fs.readFileSync('.openai/hosting.json','utf8'));delete manifest.static;

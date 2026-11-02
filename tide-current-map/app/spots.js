@@ -30,7 +30,14 @@ export const REFERENCE_POINTS = [
  {id:'daini-kaiho', name:'第二海堡', lat:35.3125, lon:139.7495, minZoom:13},
  {id:'daiichi-kaiho', name:'第一海堡付近', lat:35.3105, lon:139.7700, minZoom:13},
  {id:'nakanose', name:'中ノ瀬', lat:35.3800, lon:139.7950, minZoom:12},
- {id:'kisarazu', name:'木更津沖', lat:35.3800, lon:139.8500, minZoom:12}
+ {id:'kisarazu', name:'木更津沖', lat:35.3800, lon:139.8500, minZoom:12},
+ {id:'tateyama', name:'館山湾', lat:34.9950, lon:139.8250, minZoom:11},
+ {id:'sunosaki', name:'洲崎沖', lat:34.9750, lon:139.7300, minZoom:11},
+ {id:'katsuyama', name:'勝山沖', lat:35.1150, lon:139.8100, minZoom:12},
+ {id:'katsuura', name:'勝浦沖', lat:35.1150, lon:140.3300, minZoom:10},
+ {id:'ohara', name:'大原沖', lat:35.2500, lon:140.4300, minZoom:10},
+ {id:'kujukuri', name:'九十九里沖', lat:35.5000, lon:140.5800, minZoom:10},
+ {id:'choshi', name:'銚子沖', lat:35.7000, lon:140.9300, minZoom:10}
 ];
 
 export function spotCentroid(spot){

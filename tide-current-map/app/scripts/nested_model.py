@@ -27,14 +27,20 @@ FORCING_NAMES = ['Q1','O1','M1','P1','K1','J1','OO1','2N2','MU2','N2','NU2','M2'
 FIT_NAMES = ['Sa','Ssa','Mm','MSf'] + FORCING_NAMES
 STATIONS = {'Z1': (35.160, 139.617), 'TT': (34.983, 139.850), 'OK': (34.783, 139.383), 'Z3': (34.900, 139.133)}
 OUTER = dict(south=35.03, north=35.75, west=139.43, east=140.20)
+TERRAIN = 'gttm-tokyo.npz'
+# Boso region (inner Boso / outer Boso to southern Kashima-nada): own terrain, outer box and stations.
+REGIONS = {'boso': dict(terrain='gttm-boso.npz', outer=dict(south=34.82, north=35.995, west=139.58, east=141.05),
+                        stations={'Z1': (35.160, 139.617), 'TT': (34.983, 139.850), 'MR': (34.917, 139.833), 'OK': (34.783, 139.383),
+                                  'ZF': (35.133, 140.250), 'CS': (35.750, 140.867), 'D2': (35.933, 140.700)})}
 INNER = dict(south=35.195, north=35.345, west=139.625, east=139.815)
 
 _gttm = None
 def gttm():
     global _gttm
     if _gttm is None:
-        raw = np.load(ROOT + '/data/gttm-tokyo.npz')
-        _gttm = RegularGridInterpolator((raw['lat'], raw['lon']), raw['depth'])
+        raw = np.load(ROOT + '/data/' + TERRAIN)
+        depth = raw['depth'] if 'depth' in raw else raw['depth_dm'].astype(np.float32) / 10
+        _gttm = RegularGridInterpolator((raw['lat'], raw['lon']), depth)
     return _gttm
 
 def grid(b, dx, min_depth):
@@ -99,6 +105,9 @@ class Nest:
         return sum(w * eta_outer[y, x] for y, x, w in self.taps)
 
 def run(args):
+    global OUTER, TERRAIN, STATIONS
+    if args.region:
+        R = REGIONS[args.region]; OUTER = R['outer']; TERRAIN = R['terrain']; STATIONS = R['stations']
     t0 = time.time()
     outer = grid(OUTER, args.outer_dx, 3.0)
     INNER_B = dict(zip(['south','north','west','east'], map(float, args.inner_bounds.split(',')))) if args.inner_bounds else INNER
@@ -168,6 +177,7 @@ if __name__ == '__main__':
     p.add_argument('--days', type=float, default=30)
     p.add_argument('--spinup', type=float, default=48)
     p.add_argument('--record-hours', type=float, default=1)
+    p.add_argument('--region', default='', help='boso: Boso Peninsula region (own terrain, outer box, stations)')
     p.add_argument('--inner-bounds', default='', help='south,north,west,east')
     p.add_argument('--outer-only', action='store_true')
     p.add_argument('--bench', type=int, default=0)

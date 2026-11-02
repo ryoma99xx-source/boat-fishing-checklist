@@ -7,7 +7,7 @@ export function validDate(s){if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;cons
 export function parseStations(html){
  return [...html.matchAll(/coords\s*=\s*["']?(\d+),(\d+),\d+\s+ALT=["']([\d.]+)kn\./gi)].map(m=>({x:+m[1],y:+m[2],lat:35+(631-(+m[2]))/840,lon:139.5+((+m[1])-30)/675,speed:+m[3]}));
 }
-export const TIDE_STATIONS={TK:{name:'東京',lat:35.65,lon:139.766667},Z1:{name:'油壺',lat:35.166667,lon:139.616667},MR:{name:'布良',lat:34.916667,lon:139.833333}};
+export const TIDE_STATIONS={TK:{name:'東京',lat:35.65,lon:139.766667},Z1:{name:'油壺',lat:35.166667,lon:139.616667},MR:{name:'布良',lat:34.916667,lon:139.833333},TT:{name:'館山',lat:34.983333,lon:139.85},ZF:{name:'勝浦',lat:35.133333,lon:140.25},CS:{name:'銚子漁港',lat:35.75,lon:140.866667}};
 export function parseTides(raw,date,code='TK'){
  if(!TIDE_STATIONS[code])throw new Error('対応していない潮位地点です。');
  const lines=raw.split(/\r?\n/),find=d=>{const [y,m,day]=d.split('-').map(Number);return lines.find(l=>+l.slice(72,74)===y%100&&+l.slice(74,76)===m&&+l.slice(76,78)===day)};

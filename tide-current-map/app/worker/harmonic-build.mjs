@@ -6,7 +6,7 @@ import {gzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
 import {encodeRuns} from '../currents.js';
 
-export const GRID_ORDER = ['inner', 'mid', 'outer']; // finest first: the first grid containing a point decides
+export const GRID_ORDER = ['inner', 'mid', 'uchibo', 'outer', 'boso']; // finest first: the first grid containing a point decides
 
 export function depthBytes(depth) {
  const out = new Uint16Array(depth.length);

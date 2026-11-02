@@ -1,5 +1,5 @@
 import {distanceKm} from './geometry.js';
-export const TIDE_POINTS={TK:{name:'東京',lat:35.65,lon:139.766667},Z1:{name:'油壺',lat:35.166667,lon:139.616667},MR:{name:'布良',lat:34.916667,lon:139.833333}};
+export const TIDE_POINTS={TK:{name:'東京',lat:35.65,lon:139.766667},Z1:{name:'油壺',lat:35.166667,lon:139.616667},MR:{name:'布良',lat:34.916667,lon:139.833333},TT:{name:'館山',lat:34.983333,lon:139.85},ZF:{name:'勝浦',lat:35.133333,lon:140.25},CS:{name:'銚子漁港',lat:35.75,lon:140.866667}};
 export function nearestTideStation(point){return Object.keys(TIDE_POINTS).reduce((a,b)=>distanceKm(point,TIDE_POINTS[a])<=distanceKm(point,TIDE_POINTS[b])?a:b);}
 function spline(points){
  const n=points.length,h=[],d=[],m=Array(n).fill(0);for(let i=0;i<n-1;i++){h[i]=points[i+1].x-points[i].x;d[i]=(points[i+1].y-points[i].y)/h[i];}
