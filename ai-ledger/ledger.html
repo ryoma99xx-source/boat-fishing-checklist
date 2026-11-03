@@ -135,12 +135,12 @@ nav.tabs a[aria-current="page"]{color:var(--accent);font-weight:700}
 </div>
 
 <nav class="tabs" aria-label="画面">
+  <a href="#home" data-v="home"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3"/><circle cx="12" cy="12" r="2.2"/></svg><span>司令塔 <span id="homeN"></span></span></a>
   <a href="#list" data-v="list"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>一覧</a>
   <a href="#map" data-v="map"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="6" rx="1"/><rect x="14" y="4" width="7" height="6" rx="1"/><rect x="8.5" y="15" width="7" height="6" rx="1"/><path d="M6.5 10v2.5h11V10M12 12.5V15"/></svg>全体図</a>
-  <a href="#inbox" data-v="inbox"><svg viewBox="0 0 24 24"><path d="M4 13l3-8h10l3 8v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/></svg><span>未整理 <span id="inboxN"></span></span></a>
   <a href="#handoff" data-v="handoff"><svg viewBox="0 0 24 24"><path d="M4 12h13M13 7l5 5-5 5"/></svg>指示文</a>
   <a href="#report" data-v="report"><svg viewBox="0 0 24 24"><path d="M20 12H7M11 7l-5 5 5 5"/></svg>報告</a>
-  <a href="#howto" data-v="howto"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></svg>仕組み</a>
+  <a href="#more" data-v="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>その他 <span id="inboxN"></span></span></a>
 </nav>
 
 <script>
@@ -203,7 +203,7 @@ const delFeat=id=>write('features',id,ref=>ref.delete());
 function addLog(f,text,by){const logs=[...(f.logs||[]),{at:nowIso(),by:by||'自分',text}];return saveFeat(f.id,{logs})}
 
 // ---------- routing ----------
-function readHash(){const h=location.hash.slice(1);if(/^f-[a-z0-9-]+$/.test(h))route={v:'detail',id:h};else route={v:['list','map','inbox','handoff','report','howto'].includes(h)?h:'list',id:null};render()}
+function readHash(){const h=location.hash.slice(1);if(/^f-[a-z0-9-]+$/.test(h))route={v:'detail',id:h};else route={v:['home','list','map','inbox','handoff','report','howto','more'].includes(h)?h:'home',id:null};render()}
 window.addEventListener('hashchange',readHash);
 function go(h){if(location.hash==='#'+h)readHash();else location.hash=h}
 
@@ -220,7 +220,7 @@ function render(){
   Object.entries(keep).forEach(([k,v])=>{const el=document.getElementById(k);if(el){if(el.type==='checkbox')el.checked=v;else el.value=v}});
 }
 function renderInner(){
-  document.querySelectorAll('nav.tabs a').forEach(a=>a.setAttribute('aria-current',a.dataset.v===(route.v==='detail'?'list':route.v)?'page':'false'));
+  document.querySelectorAll('nav.tabs a').forEach(a=>a.setAttribute('aria-current',a.dataset.v===({detail:'list',inbox:'more',howto:'more'}[route.v]||route.v)?'page':'false'));
   $('#inboxN').innerHTML=inbox.length?`<span class="badge-n">${inbox.length}</span>`:'';
   const v=$('#view');
   if(route.v==='detail')v.innerHTML=viewDetail();
@@ -229,7 +229,10 @@ function renderInner(){
   else if(route.v==='handoff')v.innerHTML=viewHandoff();
   else if(route.v==='report')v.innerHTML=viewReport();
   else if(route.v==='howto')v.innerHTML=viewHowto();
-  else v.innerHTML=viewList();
+  else if(route.v==='list')v.innerHTML=viewList();
+  else if(route.v==='more')v.innerHTML=viewMore();
+  else v.innerHTML=viewHome();
+  const hn=yourTurn().length;$('#homeN').innerHTML=hn?`<span class="badge-n">${hn}</span>`:'';
   bind();
 }
 function notReady(){return !loaded?`<div class="empty">台帳を読み込んでいます…<br>表示されない場合は claude.ai にログインした状態で開き直してください。</div>`:''}
@@ -438,7 +441,7 @@ function buildPrompt(){
   (h.rules||rulesFor(f)).forEach(r=>L.push(`- ${r}`));
   h.extra.split('\n').map(x=>x.trim()).filter(Boolean).forEach(r=>L.push(`- ${r}`));
   L.push('','## 完了したら、この書式で報告してください','（このまま台帳に貼り付けます。項目名は変えないでください。該当なしは「なし」）','',
-    '【完了報告】',`機能ID：${f.id}`,`担当：${t.startsWith('Claude')?'Claude':t}`,'状態：（構想／作業中／確認・公開待ち／公開済み／保留 から1つ）','やったこと：','変更したもの（ブランチ・コミット・ファイル）：','ZIP名：','SHA256：','公開URL・バージョン：','次の一手：','確認したいこと：');
+    '【完了報告】',`機能ID：${f.id}`,`担当：${t.startsWith('Claude')?'Claude':t}`,'状態：（構想／作業中／確認・公開待ち／公開済み／保留 から1つ）','やったこと：','変更したもの（ブランチ・コミット・ファイル）：','ZIP名：','SHA256：','公開URL・バージョン：','次の一手：','確認したいこと：','ChatGPTへの依頼文：（あなたが手作業でChatGPTに渡す工程があれば、ChatGPTにそのまま貼れる依頼文をここ以降に全部書く。なければ「なし」）');
   return L.join('\n')}
 
 const sessFromUrl=u=>((u||'').match(/session_[A-Za-z0-9]+/)||[''])[0];
@@ -521,14 +524,15 @@ function viewHandoff(){
   <pre class="out" id="hOut">${esc(h.text||'機能を選ぶと指示文ができます。')}</pre>`}
 
 function parseReport(t){
-  const keys=['機能ID','担当','状態','やったこと','変更したもの','ZIP名','SHA256','公開URL','次の一手','確認したいこと'];
+  const keys=['機能ID','担当','状態','やったこと','変更したもの','ZIP名','SHA256','公開URL','次の一手','確認したいこと','ChatGPTへの依頼文'];
   const out={};let cur=null;
   t.split('\n').forEach(line=>{
+    if(cur==='ChatGPTへの依頼文'){out[cur]+=(out[cur]?'\n':'')+line;return}
     const k=keys.find(k=>new RegExp('^\\s*[-・]?\\s*\\**'+k).test(line));
     if(k){cur=k;out[k]=line.replace(/^[^：:]*[：:]\s*/,'').trim()}
     else if(cur&&line.trim()&&!/^【/.test(line))out[cur]+=(out[cur]?'\n':'')+line.trim();
   });
-  Object.keys(out).forEach(k=>{if(/^(なし|ー|-|（.*）)$/.test(out[k]))out[k]=''});
+  Object.keys(out).forEach(k=>{out[k]=out[k].trim();if(/^(なし|ー|-|（[^）]*）)$/.test(out[k]))out[k]=''});
   return out}
 
 function viewReport(){
@@ -604,6 +608,140 @@ function bindMap(){
     await write('sites',id,r=>r.set({n,u:$('#nsUrl').value.trim(),at:nowIso()}));clean('ns');toast('追加しました')});
 }
 
+const WHO=['Claude Code','GPT（API経由）','ChatGPT（手作業）','自分'];
+const whoCls=w=>w.startsWith('Claude')?'Claude':w.startsWith('自分')?'自分':'ChatGPT';
+const AUTO=w=>w==='Claude Code'||w==='GPT（API経由）';
+const GPT_RULES=['「GPT（API経由）」の工程は、環境変数 OPENAI_API_KEY があれば OpenAI API で GPT に実行させ、その出力を使う。モデルは使える最新の GPT を選ぶ。キーの値は表示・ログ・ファイル・コミットに絶対に出さない。キーが無い・失敗した場合は、その工程を「ChatGPTへの依頼文」に回す',
+ '「ChatGPT（手作業）」の工程（ChatGPT Sites での公開、GPTs・プラグインでの WordPress 登録など）は自分で行わない。必要なファイル（ZIP名・SHA256）を用意し、ChatGPT にそのまま貼れる依頼文を報告の「ChatGPTへの依頼文」に書く',
+ 'オーナーの判断が必要な所は、推測で進めず「確認したいこと」に書いて止まる'];
+function yourTurn(){const L=[];
+  feats.forEach(f=>{
+    if(f.gptAsk&&!f.gptAsk.done)L.push({f,kind:'gpt'});
+    const m=ccMsg[f.id];if(m&&m.report)L.push({f,kind:'report'});else if(m&&m.bucket==='BLOCKED')L.push({f,kind:'blocked'});
+    if(f.status==='確認・公開待ち'&&!(f.gptAsk&&!f.gptAsk.done))L.push({f,kind:'wait'})});
+  return L}
+function planHtml(pl){
+  return `<div class="box" id="planBox"><div style="font-size:12px;color:var(--muted);letter-spacing:.04em">計画（${esc(pl.kind||'')}）</div>
+    <h3 style="margin:2px 0 4px">${esc(pl.title)}</h3>
+    <div class="meta" style="display:flex;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--muted)"><span class="tag">${esc(siteName(pl.site))}</span>${pl.featureId&&feats.some(f=>f.id===pl.featureId)?`<span>既存の機能に追加</span>`:'<span>新しい機能として登録</span>'}</div>
+    ${pl.summary?`<p style="font-size:14px;margin:8px 0">${esc(pl.summary)}</p>`:''}
+    <div class="list" style="gap:6px">${(pl.steps||[]).map((st,i)=>`<div class="role ai-${whoCls(st.who)}" style="cursor:default;flex:none"><span class="stp">手順${i+1}${AUTO(st.who)?'・自動':'・あなたの番'}</span><span class="ai">${esc(st.who)}</span><span class="pl">${esc(st.what)}</span></div>`).join('')}</div>
+    ${pl.question?`<div class="banner">確認：${esc(pl.question)}</div>`:''}
+    <div class="actions"><button class="primary" id="plStart">${(pl.steps||[]).some(x=>AUTO(x.who))?'この計画で始める（Claude Code に送る）':'この計画で登録する'}</button><button id="plRedo">作り直す</button><button id="plDrop">やめる</button></div>
+    <div id="plMsg"></div></div>`}
+function viewHome(){
+  if(!loaded)return notReady();
+  const yt=yourTurn(),running=feats.filter(f=>f.cc&&f.cc.state==='作業中');
+  const kinds=['自動で判断','機能追加','ツール追加','記事作成','修正','公開'];
+  return `<h2 style="margin-top:14px">何をしますか</h2>
+  <textarea id="cmdText" placeholder="例：潮と流れマップに、釣り場ごとのおすすめ時間帯を表示する機能を足したい&#10;例：今週の釣行をもとに記事を1本作ってWordPressに下書き登録まで">${esc(ui.cmd||'')}</textarea>
+  <div class="row2"><div><label for="cmdSite">サイト</label><select id="cmdSite"><option value="">自動で判断</option>${allSites().map(s=>`<option value="${esc(s.k)}" ${ui.cmdSite===s.k?'selected':''}>${esc(s.n)}</option>`).join('')}</select></div>
+  <div><label for="cmdKind">種類</label><select id="cmdKind">${opts(kinds,ui.cmdKind||'自動で判断')}</select></div></div>
+  <div class="actions"><button class="primary" id="cmdPlan" ${sample?'':'disabled'}>計画を立てる</button>${sample?'':'<span class="next" style="font-size:12px">claude.ai で開くと使えます</span>'}</div>
+  ${ui.plan?planHtml(ui.plan):''}
+  <h2>あなたの番 <span style="font-size:13px;color:var(--muted)">${yt.length}件</span></h2>
+  <div class="list">${yt.length?yt.map(({f,kind})=>{
+    if(kind==='gpt')return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-作業中">ChatGPT へ渡す</span></div><div class="title">${esc(f.title)}</div>
+      <details><summary>依頼文を見る</summary><pre class="out">${esc(f.gptAsk.text)}</pre></details>
+      <div class="actions"><a class="btn primary" href="https://chatgpt.com/" target="_blank" rel="noopener" data-gptcopy="${esc(f.id)}">コピーして ChatGPT を開く ↗</a><button class="small" data-gptdone="${esc(f.id)}">渡した</button></div></div>`;
+    if(kind==='report')return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-確認・公開待ち">報告が届いています</span></div><div class="title">${esc(f.title)}</div><div class="actions"><button class="small primary" data-takerep="${esc(f.id)}">確認して取り込む</button></div></div>`;
+    if(kind==='blocked')return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-保留">Claude Code が返事待ち</span></div><div class="title">${esc(f.title)}</div><div class="actions"><a class="btn primary" href="${esc(f.cc.url)}" target="_blank" rel="noopener">セッションを開いて答える ↗</a></div></div>`;
+    return cardHtml(f)}).join(''):'<div class="empty">今あなたがやることはありません。</div>'}</div>
+  <h2>動いている作業 <span style="font-size:13px;color:var(--muted)">${running.length}件</span></h2>
+  <div class="list">${running.length?running.map(f=>{const m=ccMsg[f.id];return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-作業中">Claude Code</span><span>送信 ${esc(fmt(f.cc.sentAt))}</span></div><div class="title"><a href="#${esc(f.id)}" style="color:inherit">${esc(f.title)}</a></div><div class="next">${esc(m?m.msg:'まだ確認していません')}</div><div class="actions"><button class="small" data-check="${esc(f.id)}" ${mcp?'':'disabled'}>確認</button>${f.cc.url?`<a class="btn small" href="${esc(f.cc.url)}" target="_blank" rel="noopener">開く ↗</a>`:''}</div></div>`}).join(''):'<div class="empty">動いている作業はありません。</div>'}</div>`}
+function viewMore(){return `<h2>その他</h2>
+  <div class="list"><a class="card" href="#inbox"><div class="title">未整理のチャット ${inbox.length?`<span class="badge-n">${inbox.length}</span>`:''}</div><div class="next">履歴の取り込みと振り分け</div></a>
+  <a class="card" href="#howto"><div class="title">仕組みと使い方</div><div class="next">GPT と Claude のつながり方</div></a></div>
+  <h2>連携の状態</h2>
+  <div class="box legend">
+    <b>Claude Code</b><span>${mcp?'つながっています（送信・結果確認ができます）':'この表示では使えません（claude.ai で開いてください）'}</span>
+    <b>台帳内の Claude</b><span>${sample?'使えます（計画づくり・文章作業）':'この表示では使えません'}</span>
+    <b>GPT（API経由）</b><span>Claude Code の作業環境に <span class="mono">OPENAI_API_KEY</span> を置くと、Claude Code が GPT に作業させられます。設定：claude.ai/code の環境メニュー → 編集 → 環境変数（またはシークレット）。キーは台帳には保存しません。</span>
+    <b>ChatGPT（手作業）</b><span>ChatGPT Sites での公開や GPTs・プラグインは外から動かせないため、Claude Code が作った依頼文を「あなたの番」からコピーして渡します。</span>
+  </div>`}
+async function makePlan(){
+  const text=$('#cmdText').value.trim();if(!text)return toast('やりたいことを書いてください');
+  ui.cmd=text;ui.cmdSite=$('#cmdSite').value;ui.cmdKind=$('#cmdKind').value;
+  const b=$('#cmdPlan');b.disabled=true;b.textContent='計画を立てています…';
+  const ctx={sites:allSites().map(s=>({key:s.k,name:s.n,url:s.u})),
+    roles:roles.map(r=>`${siteName(r.site)}｜${r.step}｜${r.ai}（${r.place||'場所未確認'}）${r.detail?'：'+r.detail:''}`),
+    features:feats.map(f=>({id:f.id,site:f.site,title:f.title,status:f.status,owner:f.owner,repo:(f.src||{}).repo||''}))};
+  try{
+    const pl=await sample.json(`あなたは釣りサイト群（cutlassfish.tokyo と関連ツール）の制作司令塔です。オーナーの依頼を、誰がどの順にやるかの計画にしてください。
+実行者は次の4つだけ：
+- "Claude Code"：コード・ツール・アプリの制作や修正、GitHub への push、公開用ZIPの作成、記事の下書きなどファイルを伴う作業
+- "GPT（API経由）"：Claude Code が OpenAI API で GPT に頼む文章作業（記事の下書き・別視点のレビューなど）。GPT らしさが必要なときだけ使う
+- "ChatGPT（手作業）"：ChatGPT Sites での公開、GPTs・自作プラグインでの WordPress 登録など、ChatGPT の画面でしかできない作業
+- "自分"：オーナーの確認・判断・実機での確認
+今の分担（必ず従う。例：公開が ChatGPT Sites のサイトは公開を "ChatGPT（手作業）" にする）：
+${ctx.roles.join('\n')||'（未登録）'}
+サイト：${JSON.stringify(ctx.sites)}
+既存の機能：${JSON.stringify(ctx.features)}
+依頼：${text}
+指定サイト：${ui.cmdSite?siteName(ui.cmdSite):'自動で判断'}／種類：${ui.cmdKind}
+次のJSONだけを返してください：{"kind":"機能追加|ツール追加|記事作成|修正|公開|その他","site":"サイトのkey","featureId":"既存の機能に当たるならそのid、無ければ null","title":"機能名（短く）","summary":"何をするかを1〜2文","steps":[{"who":"上の4つのどれか","what":"具体的に何をするか"}],"question":"判断に迷う点があれば1つ、無ければ空文字"}
+手順は2〜6個。自動で進められる工程（Claude Code・GPT）を先に、ChatGPT（手作業）と自分の確認を後ろに置く。`,{modelTier:'complex',cache:false});
+    if(!pl||!Array.isArray(pl.steps))throw{message:'計画の形が読めませんでした'};
+    pl.steps=pl.steps.filter(x=>x&&x.what).map(x=>({who:WHO.includes(x.who)?x.who:'自分',what:String(x.what)}));
+    if(!allSites().some(s=>s.k===pl.site))pl.site=ui.cmdSite||'other';
+    ui.plan=pl}
+  catch(e){toast('計画を作れませんでした：'+(e.code||e.message||''))}
+  render()}
+function promptFor(fid,target,req,extra){const keep=ui.ho;ui.ho={fid,target,req,rules:null,extra:extra||'',split:false,text:''};const t=buildPrompt();ui.ho=keep;return t}
+async function ccDispatch(f,text){
+  const s=f.src||{};const input={prompt:text,title:`${siteName(f.site)}｜${f.title}`.slice(0,120),environment_id:ENV_ID};
+  if(s.repo){input.source_url=`https://github.com/${s.repo}`;if(s.branch)input.source_revision=s.branch}
+  const p=payloadOf(await mcp.callTool(CCR,'create_session',input));
+  return (p&&(p.session_id||p.id||(p.session&&p.session.id)))||((JSON.stringify(p||'').match(/session_[A-Za-z0-9]+/)||[''])[0])}
+async function startPlan(){
+  const pl=ui.plan,b=$('#plStart'),msg=$('#plMsg');b.disabled=true;
+  try{
+    let f=pl.featureId&&feats.find(x=>x.id===pl.featureId);let fid=f&&f.id;
+    const planText=pl.steps.map((x,i)=>`${i+1}. ${x.who}：${x.what}`).join('\n');
+    const auto=pl.steps.some(x=>AUTO(x.who));
+    const logs=[...((f&&f.logs)||[]),{at:nowIso(),by:'自分',text:`司令塔からの依頼：${ui.cmd}\n計画：\n${planText}`}];
+    if(!f){fid=newId();await createFeat(fid,{title:pl.title,site:pl.site,status:'作業中',owner:auto?'Claude':'自分',next:pl.steps[0].what,logs,plan:pl.steps});}
+    else await saveFeat(fid,{status:'作業中',next:pl.steps[0].what,logs,plan:pl.steps});
+    f={...(f||{}),id:fid,title:pl.title,site:pl.site,status:'作業中',owner:auto?'Claude':(f&&f.owner)||'自分',logs,src:(f&&f.src)||{},chats:(f&&f.chats)||[],deploy:(f&&f.deploy)||''};
+    if(auto&&mcp){
+      msg.innerHTML='<div class="banner">Claude Code に送っています…</div>';
+      const req=`${ui.cmd}\n\n## 計画（あなたは「Claude Code」と「GPT（API経由）」の工程を担当）\n${planText}${pl.question?`\n\n確認事項：${pl.question}（判断できなければ報告の「確認したいこと」へ）`:''}`;
+      const text=promptFor(fid,'Claude Code',req,GPT_RULES.join('\n'));
+      const sid=await ccDispatch(f,text);const url=sid?`https://claude.ai/code/${sid}`:'';
+      await saveFeat(fid,{cc:{sessionId:sid,url,sentAt:nowIso(),state:'作業中'},chats:url?[...f.chats,{tool:'Claude Code',name:pl.title,url}]:f.chats});
+      toast('Claude Code が作業を始めました')}
+    else if(auto&&!mcp){toast('Claude Code に送れない表示です。指示文画面から送ってください');ui.ho={...ui.ho,fid,target:'Claude Code',req:ui.cmd+'\n\n'+planText,rules:null,text:''};ui.plan=null;ui.cmd='';go('handoff');return}
+    else{toast('登録しました');}
+    ui.plan=null;ui.cmd='';clean('cmd');render()}
+  catch(e){msg.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;b.disabled=false}}
+async function ccFetch(f){
+  const sid=f.cc.sessionId;
+  const g=payloadOf(await mcp.callTool(CCR,'get_session',{session_id:sid}));
+  const bucket=((JSON.stringify(g||'').match(/(?:SESSION_STATUS_BUCKET_)?(WORKING|BLOCKED|REVIEW_READY|COMPLETED|FAILED)/i)||[])[1]||'').toUpperCase();
+  const ev=payloadOf(await mcp.callTool(CCR,'list_events',{session_id:sid,kinds:['result'],limit:100}));
+  const texts=((ev&&ev.data)||[]).filter(e=>!f.cc.sentAt||String(e.created_at||'')>=f.cc.sentAt).map(e=>{const r=e.result||{};return (r.internal_anthropic_catchall&&r.internal_anthropic_catchall.result)||r.result}).filter(t=>typeof t==='string'&&t.trim());
+  const last=texts[texts.length-1]||'';
+  const report=last.includes('【完了報告】')?last.slice(last.indexOf('【完了報告】')):'';
+  const msg=report?'完了報告が届いています':bucket==='WORKING'?'作業中':bucket==='BLOCKED'?'あなたの返事・許可を待っています':bucket==='FAILED'?'エラーで止まっています（開いて確認）':last?'返答あり（完了報告なし）':'まだ返答なし';
+  ccMsg[f.id]={msg,text:last,report,bucket}}
+let autoChecked=false;
+async function autoCheck(){
+  if(autoChecked||!mcp||!loaded)return;autoChecked=true;
+  try{const perm=await window.claude.use('permissions');const st=perm?await perm.state('mcp:'+CCR).catch(()=>'unavailable'):'unavailable';if(st!=='granted')return}catch(e){return}
+  for(const f of feats.filter(f=>f.cc&&f.cc.state==='作業中'&&f.cc.sessionId)){try{await ccFetch(f)}catch(e){ccMsg[f.id]={msg:mcpErr(e),text:''}}}
+  render()}
+function bindHome(){
+  const on=(sel,ev,fn)=>{const e=$(sel);if(e)e.addEventListener(ev,fn)};
+  on('#cmdPlan','click',makePlan);
+  on('#plStart','click',startPlan);
+  on('#plRedo','click',makePlan);
+  on('#plDrop','click',()=>{ui.plan=null;render()});
+  document.querySelectorAll('[data-gptcopy]').forEach(a=>a.addEventListener('click',()=>{const f=feats.find(x=>x.id===a.dataset.gptcopy);try{navigator.clipboard.writeText(f.gptAsk.text).then(()=>toast('コピーしました。ChatGPT に貼ってください'),()=>toast('コピーできませんでした。依頼文を開いて長押しでコピーしてください'))}catch(e){}}));
+  document.querySelectorAll('[data-gptdone]').forEach(b=>b.onclick=async()=>{const f=feats.find(x=>x.id===b.dataset.gptdone);await saveFeat(f.id,{gptAsk:{...f.gptAsk,done:true},status:'確認・公開待ち',logs:[...(f.logs||[]),{at:nowIso(),by:'自分',text:'ChatGPT に依頼文を渡した'}]});toast('記録しました。ChatGPT の返事は「報告」に貼ってください')});
+  document.querySelectorAll('[data-takerep]').forEach(b=>b.onclick=()=>{const m=ccMsg[b.dataset.takerep];ui.rep={text:m.report,fid:b.dataset.takerep};go('report')});
+  document.querySelectorAll('[data-check]').forEach(b=>b.onclick=async()=>{const f=feats.find(x=>x.id===b.dataset.check);b.disabled=true;b.textContent='確認中…';try{await ccFetch(f)}catch(e){ccMsg[f.id]={msg:mcpErr(e),text:''}}render()});
+}
+
 function viewHowto(){return `<h2>GPT と Claude はこうつながる</h2>
   <p>まず<b>全体図</b>タブで「どの工程をどのAIのどこでやるか」を決めておくと、指示文にその分担が自動で入り、相手のAIが担当外の作業（例：Claude が勝手に公開）をしなくなります。</p>
   <p>AI同士は直接話せず、ファイルも直接は渡せません。<b>あなたがコピペで運ぶ「文章」</b>と、<b>両方が読める置き場（GitHub か ZIP）</b>の2本でつなぎます。この台帳はその中継点です。</p>
@@ -635,6 +773,7 @@ function viewHowto(){return `<h2>GPT と Claude はこうつながる</h2>
 
 // ---------- events ----------
 function bind(){
+  if(route.v==='home')bindHome();
   if(route.v==='map')bindMap();
   const on=(sel,ev,fn)=>{const e=$(sel);if(e)e.addEventListener(ev,fn)};
   document.querySelectorAll('.stat').forEach(b=>b.onclick=()=>{ui.filter=ui.filter===b.dataset.f?'all':b.dataset.f;saveUi();render()});
@@ -703,7 +842,10 @@ function bind(){
     if($('#rSt')?.checked)patch.status=STATUS.find(s=>p['状態'].includes(s));
     if($('#rNext')?.checked)patch.next=p['次の一手'].split('\n')[0];
     if($('#rSha')?.checked)patch.src={...(tf.src||{}),sha:p['SHA256'].match(/[0-9a-fA-F]{64}/)[0].toLowerCase(),...(p['ZIP名']?{zip:p['ZIP名'].split('\n')[0]}:{})};
-    await saveFeat(tf.id,patch);ui.rep={text:'',fid:''};toast('台帳に記録しました');go(tf.id)});
+    if(p['ChatGPTへの依頼文'])patch.gptAsk={text:p['ChatGPTへの依頼文'],at:nowIso(),done:false};
+    if(tf.cc&&tf.cc.state!=='取込済み')patch.cc={...tf.cc,state:'取込済み'};
+    delete ccMsg[tf.id];
+    await saveFeat(tf.id,patch);ui.rep={text:'',fid:''};toast(patch.gptAsk?'記録しました。ChatGPTへの依頼が司令塔に出ています':'台帳に記録しました');go(patch.gptAsk?'home':tf.id)});
 }
 
 // facts that must survive AI tidying
@@ -737,5 +879,6 @@ readHash();
   try{sample=await window.claude.use('sample')}catch(e){sample=null}
   try{mcp=await window.claude.use('mcp')}catch(e){mcp=null}
   render();
+  const waitLoad=setInterval(()=>{if(loaded){clearInterval(waitLoad);autoCheck()}},500);setTimeout(()=>clearInterval(waitLoad),15000);
 })();
 </script>
