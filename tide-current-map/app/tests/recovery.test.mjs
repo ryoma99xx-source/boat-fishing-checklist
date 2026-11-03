@@ -34,7 +34,7 @@ function setup(stall,now=Date.parse('2026-10-23T23:30:00Z')){
   if(u.pathname==='/overview-map.json')return new Response(fs.readFileSync(new URL('../data/overview-map.json',import.meta.url)),{headers:{'content-type':'application/json'}});
   return new Response('Not found',{status:404});
  };
- const context=vm.createContext({...geometry,...coverage,...tide,...clock,...mapGestures,...currents,...spots,...flowLayer,Date:FixedDate,extract:async d=>({...d,stations:d.stations.map(s=>({...s,bearing:180}))}),fetch,AbortController,URL,Int16Array,Int32Array,Uint16Array,console,devicePixelRatio:1,document:{getElementById:element,querySelectorAll:()=>[],addEventListener(){},body:{classList:classes()},head:{append(){}},createElement:()=>element('created')},window:{},localStorage:{getItem:()=>null},sessionStorage:{getItem:()=>null},Image:class{},ResizeObserver:class{observe(){}},setTimeout:(fn,ms)=>{const t=setTimeout(()=>{timers.delete(t);fn()},ms===15000?60:ms===30000?120:ms===4500?50:ms);timers.add(t);return t},clearTimeout:t=>{clearTimeout(t);timers.delete(t)}});
+ const context=vm.createContext({...geometry,...coverage,...tide,...clock,...mapGestures,...currents,...spots,...flowLayer,Date:FixedDate,extract:async d=>({...d,stations:d.stations.map(s=>({...s,bearing:180}))}),fetch,AbortController,URL,Int16Array,Int32Array,Uint16Array,Uint8Array,Float32Array,Blob,Response,DecompressionStream,console,devicePixelRatio:1,document:{getElementById:element,querySelectorAll:()=>[],addEventListener(){},body:{classList:classes()},head:{append(){}},createElement:()=>element('created')},window:{},localStorage:{getItem:()=>null},sessionStorage:{getItem:()=>null},Image:class{},ResizeObserver:class{observe(){}},setTimeout:(fn,ms)=>{const t=setTimeout(()=>{timers.delete(t);fn()},ms===15000?60:ms===30000?120:ms===4500?50:ms);timers.add(t);return t},clearTimeout:t=>{clearTimeout(t);timers.delete(t)}});
  vm.runInContext(source,context);return {element,requests,context,close(){for(const t of timers)clearTimeout(t)}};
 }
 async function until(predicate){const end=Date.now()+6000;while(!predicate()){if(Date.now()>end)throw Error('Condition not met');await new Promise(r=>setTimeout(r,5))}}
@@ -45,7 +45,7 @@ test('stalled offshore startup cannot block the harmonic model',async()=>{const 
 
 test('stalled basemap metadata cannot block model results',async()=>{const h=setup(url=>url==='/coastal-map.json'||url==='/overview-map.json');try{await until(()=>ready(h));assert.match(h.element('peekFlow').textContent,/kt/)}finally{h.close()}});
 
-test('stalled model data times out, shows no value, and can be retried',async()=>{let blocked=true;const h=setup(url=>blocked&&/\/api\/harmonic\/boso-[0-9a-f]+\.bin(\.gz)?$/.test(url));try{await until(()=>h.element('status').textContent.includes('取得失敗'));assert.match(h.element('status').textContent,/タップで再取得/);assert.equal(h.element('speed').textContent,'—');assert.match(h.element('peekFlow').textContent,/取得できません/);assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false);blocked=false;h.element('status').onclick();await until(()=>ready(h));assert.match(h.element('peekFlow').textContent,/kt/)}finally{h.close()}});
+test('stalled model data times out, shows no value, and can be retried',async()=>{let blocked=true;const h=setup(url=>blocked&&/\/api\/harmonic\/[a-z]+-[0-9a-f]+\.t\d+\.(gz|bin)$/.test(url));try{await until(()=>h.element('status').textContent.includes('取得失敗'));assert.match(h.element('status').textContent,/タップで再取得/);await until(()=>/取得できません/.test(h.element('peekFlow').textContent));assert.equal(h.element('speed').textContent,'—');assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false);blocked=false;h.element('status').onclick();await until(()=>/kt/.test(h.element('peekFlow').textContent));assert.match(h.element('status').textContent,/潮流モデル（/)}finally{h.close()}});
 
 test('any date uses the same model and the date is kept',async()=>{
  const h=setup(()=>false);try{await until(()=>ready(h));assert.equal(h.element('date').value,'2026-10-24');
@@ -78,10 +78,11 @@ test('operator map configuration cannot block current data',async()=>{const h=se
 test('fresh access uses the Japanese date',async()=>{const h=setup(()=>false,Date.parse('2026-10-26T15:30:00Z'));try{await until(()=>ready(h));assert.equal(h.element('date').value,'2026-10-27');assert.equal(h.element('time').textContent,'00:30');assert.equal(h.requests.some(u=>u.startsWith('/api/current')),false);}finally{h.close()}});
 
 test('the lazy 50 m grid is never replaced by the 250 m value while it loads or fails',async()=>{
- const h=setup(u=>/\/api\/harmonic\/inner-[0-9a-f]+\.bin(\.gz)?$/.test(u));try{
+ const h=setup(u=>/\/api\/harmonic\/inner-[0-9a-f]+\.t\d+\.(gz|bin)$/.test(u));try{
   await until(()=>h.element('status').textContent.includes('50m格子の取得失敗'));
-  assert.equal(h.element('speed').textContent,'—');assert.match(h.element('peekFlow').textContent,/50m格子を取得できません/);
+  await until(()=>/50m格子を取得できません/.test(h.element('peekFlow').textContent));assert.equal(h.element('speed').textContent,'—');
   // a point outside the 50 m area still uses the 250 m grid
-  h.context.selectPoint({lat:35.6,lon:139.9});assert.match(h.element('peekFlow').textContent,/kt/);assert.match(h.element('peekNote').textContent,/250m/);
+  // tiles load on demand, so wait for the new point's 250 m tile
+  h.context.selectPoint({lat:35.6,lon:139.9});await until(()=>/kt/.test(h.element('peekFlow').textContent));assert.match(h.element('peekNote').textContent,/250m/);
  }finally{h.close()}
 });

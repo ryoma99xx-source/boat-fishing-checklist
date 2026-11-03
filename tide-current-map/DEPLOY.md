@@ -2,7 +2,7 @@
 
 対象：https://tide-current-map.cutlassfish.tokyo/ （Sites プロジェクトID `appgprj_6add2cbb45b481919ec5e41b49cb1067`、公開範囲 public）
 
-新しいソース：GitHub `ryoma99xx-source/boat-fishing-checklist` のブランチ `claude/funny-dijkstra-n8oyg0` の `tide-current-map/app/`（2026-11-02 時点の最新コミットを使う。`npm test` 63件合格、`npm run build` 成功、`dist/server/index.js` 約9.4MB を確認済み）
+新しいソース：GitHub `ryoma99xx-source/boat-fishing-checklist` のブランチ `claude/funny-dijkstra-n8oyg0` の `tide-current-map/app/`（2026-11-02 時点の最新コミットを使う。`npm test` 58件合格、`npm run build` 成功、`dist/server/index.js` 約6.1MB を確認済み）
 （`.openai/hosting.json` は含めていない。既存チェックアウトのものをそのまま使う）
 
 ## 手順（OpenAI側の環境で実行）
@@ -36,7 +36,7 @@ git add -A && git commit -m "Harmonic tidal current model (50/100/250 m) with fl
 ## 公開後の確認
 
 - https://tide-current-map.cutlassfish.tokyo/ を開き、流れのアニメーション、3つの切替（自作モデル／海上保安庁／重ねて比較）、今日の日付が初期表示になることを確認。
-- 50m格子データの転送量：ブラウザの開発ツールで `/api/harmonic/inner-*.bin.gz` が約1.9MBで読み込まれていること（これが通常。`.bin.gz` ではなく `.bin` が7MB前後で読まれている場合は、ブラウザが古いか配信側で `.bin.gz` が壊れている）。
+- 潮流データは区画（`/api/harmonic/<格子>-<hash>.t<番号>.gz`、1つ数KB〜20KB）で、画面に映る範囲だけ読み込まれること。初期表示（横須賀付近）で合計0.2〜0.4MB程度。
 - 3つの切替（自作モデル／海上保安庁 潮流推算／重ねて比較）が動くこと。海保側は海上保安庁のサーバーへ Worker から取得するので、`/api/current` が200を返すこと。
 - 参考点（猿島沖・台船（馬堀沖）・観音崎北・第二海堡・中ノ瀬・木更津沖、房総側は館山湾・洲崎沖・勝浦沖・九十九里沖・銚子沖など）と赤破線の囲みが出ること。
 - 「海域へ移動」で内房（館山）・外房（勝浦）・銚子沖へ移動し、流れが表示されること。潮位曲線で館山・勝浦・銚子漁港を選べること。

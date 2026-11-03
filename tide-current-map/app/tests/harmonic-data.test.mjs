@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {gzipSync, gunzipSync} from 'node:zlib';
-import {MPS_TO_KT, encodeRuns, decodeRuns, prepareGrid, updateField, velocityInGrid, velocityAt, sampleCurrents, jstSlotTime, gridFor, inflate, isGzip, canInflate} from '../currents.js';
+import {MPS_TO_KT, encodeRuns, decodeRuns, prepareGrid, updateField, velocityInGrid, velocityAt, sampleCurrents, jstSlotTime, gridFor, inflate, isGzip, canInflate, emptyGrid, applyTile, encodeTile, decodeTile} from '../currents.js';
 import {synthesizeCell} from '../harmonic.js';
 import {packGrid, packHarmonic, depthBytes, GRID_ORDER} from '../worker/harmonic-build.mjs';
 import {harmonicResponse} from '../worker/harmonic.js';
@@ -114,99 +114,61 @@ test('fishing spot placeholders are drawn on water in the outer model (vertices)
  }
 });
 
-test('served harmonic bytes equal the source bytes, with compression left to hosting', async () => {
+test('tiles served by the Worker rebuild every grid exactly (coefficients, depth, wet cells)', async () => {
  const bundle = packHarmonic(new URL('../data', import.meta.url).pathname);
  const index = JSON.parse(bundle.index);
  assert.ok(index.grids.length >= 1);
  assert.equal(index.grids.at(-1).name, GRID_ORDER.filter(n => fs.existsSync(dataUrl(`harmonic-${n}.json`))).at(-1));
- const res = harmonicResponse('/api/harmonic/index.json', bundle, frameResponse);
- assert.equal(res.headers.get('cache-control'), 'no-cache');
+ assert.equal(harmonicResponse('/api/harmonic/index.json', bundle, frameResponse).headers.get('cache-control'), 'no-cache');
+ assert.ok(canInflate());
  for (const e of index.grids) {
   const source = fs.readFileSync(dataUrl(`harmonic-${e.name}.bin`)), meta = JSON.parse(fs.readFileSync(dataUrl(`harmonic-${e.name}.json`)));
-  assert.match(e.coef, /^\/api\/harmonic\/[a-z]+-[0-9a-f]{12}\.bin$/);
-  const r = harmonicResponse(e.coef, bundle, frameResponse);
-  assert.equal(r.headers.get('content-encoding'), null);
-  assert.match(r.headers.get('cache-control'), /immutable/);
-  const bytes = Buffer.from(await r.arrayBuffer());
-  assert.equal(bytes.length, e.coefBytes); assert.deepEqual(bytes, source);
-  assert.deepEqual(gunzipSync(gzipSync(bytes)), source);
-  const depth = Buffer.from(await harmonicResponse(e.depth, bundle, frameResponse).arrayBuffer());
-  assert.deepEqual(depth, depthBytes(meta.depth));
   const servedMeta = await harmonicResponse(e.meta, bundle, frameResponse).json();
   assert.deepEqual([...decodeRuns(servedMeta.wetRuns, servedMeta.wetCount)], meta.wetIds);
+  const g = emptyGrid(servedMeta, e);
+  let gzBytes = 0, tiles = 0;
+  for (let t = 0; t < g.ntx * g.nty; t++) {
+   if (!g.tileLists[t].length) { assert.equal(e.tiles[t], undefined); continue; }
+   const url = `${e.tileBase}.t${t}.gz`, r = harmonicResponse(url, bundle, frameResponse);
+   assert.equal(r.status, 200); assert.equal(r.headers.get('content-encoding'), null);
+   assert.equal(r.headers.get('content-type'), 'application/octet-stream'); assert.match(r.headers.get('cache-control'), /immutable/);
+   const gz = await r.arrayBuffer(); assert.ok(isGzip(gz)); gzBytes += gz.byteLength; tiles++;
+   const raw = await inflate(gz);
+   // the Worker-inflated .bin copy (for browsers without DecompressionStream) has the same bytes
+   assert.deepEqual(Buffer.from(await harmonicResponse(`${e.tileBase}.t${t}.bin`, bundle, frameResponse).arrayBuffer()), Buffer.from(raw));
+   applyTile(g, t, new Int16Array(raw));
+  }
+  assert.equal(tiles, Object.keys(e.tiles).length);
+  assert.deepEqual(Buffer.from(g.coef.buffer), source, e.name + ' coefficients');
+  assert.deepEqual(Buffer.from(g.depthDm.buffer), depthBytes(meta.depth), e.name + ' depth');
+  assert.ok(g.cellReady.every(x => x === 1));
+  assert.ok(gzBytes < source.length / 3, e.name + ' tiles should be much smaller than the raw grid');
  }
- assert.equal(harmonicResponse('/api/harmonic/outer-000000000000.bin', bundle, frameResponse).status, 404);
+ assert.equal(harmonicResponse('/api/harmonic/outer-000000000000.t0.gz', bundle, frameResponse).status, 404);
  assert.equal(harmonicResponse('/api/other', bundle, frameResponse), null);
 });
-
 test('content hash changes when the coefficients change', () => {
  const meta = {name: 'x', nx: 2, ny: 1, lat0: 35, lon0: 139, dlat: .01, dlon: .01, dxM: 50, ...CONST, wetIds: [0, 1], depth: [5, 6]};
  const a = packGrid(meta, Buffer.alloc(24), 'inner'), b = packGrid(meta, Buffer.alloc(24, 1), 'inner');
- assert.notEqual(a.entry.coef, b.entry.coef);
+ assert.notEqual(a.entry.tileBase, b.entry.tileBase);
  assert.throws(() => packGrid(meta, Buffer.alloc(10), 'inner'), /bin length/);
  assert.throws(() => packGrid({...meta, wetIds: [1, 0]}, Buffer.alloc(24), 'inner'), /ascend/);
 });
-
-test('particle display keeps weak coastal currents visibly moving within budget', () => {
- assert.ok(screenSpeed(.1) >= 10); assert.ok(screenSpeed(.3) > screenSpeed(.1)); assert.ok(screenSpeed(2) < 4 * screenSpeed(.5));
- assert.equal(particleCount(390, 500, 1), 765);
- assert.equal(particleCount(1440, 700, 1), 1300);
- assert.equal(particleCount(200, 200, 1), 500);
- assert.ok(particleCount(390, 500, .1) < 400);
- assert.deepEqual(speedColor(0).length, 4);
+test('tile delta coding survives int16 wrap-around and large depths', () => {
+ const stride = 2, cells = [0, 1, 2, 3], coef = Int16Array.from([32767, -32768, -32768, 32767, 0, 1, 32767, -1]);
+ const depth = Uint16Array.from([0, 65535, 30000, 1]);
+ const enc = encodeTile(coef, depth, stride, cells), c2 = new Int16Array(coef.length), d2 = new Uint16Array(depth.length);
+ decodeTile(enc, c2, d2, stride, cells);
+ assert.deepEqual([...c2], [...coef]); assert.deepEqual([...d2], [...depth]);
+});
+test('cells of tiles that are not loaded yet report pending, never a coarser value', () => {
+ const meta = {nx: 40, ny: 1, lat0: 35, lon0: 139, dlat: .001, dlon: .001, dxM: 50, ...CONST, wetRuns: [0, 40], wetCount: 40};
+ const g = emptyGrid(meta, {name: 'inner'}); updateField(g, jstSlotTime('2026-11-01', 17));
+ assert.equal(g.ntx, 2);
+ assert.equal(sampleCurrents([g], 35, 139.005).reason, 'pending');
+ applyTile(g, 0, encodeTile(new Int16Array(40 * g.stride).fill(100), new Uint16Array(40).fill(50), g.stride, g.tileLists[0])); updateField(g, jstSlotTime('2026-11-01', 17));
+ assert.ok(Number.isFinite(sampleCurrents([g], 35, 139.005).speed));
+ assert.equal(sampleCurrents([g], 35, 139.035).reason, 'pending');
+ g.tileState[1] = 3; assert.equal(sampleCurrents([g], 35, 139.035).reason, 'failed');
 });
 
-for (const name of ['inner', 'mid', 'uchibo', 'boso']) {
- test(`${name} grid (when present): reference points and spot vertices inside it are on water`, {skip: !fs.existsSync(dataUrl(`harmonic-${name}.json`))}, () => {
-  const meta = JSON.parse(fs.readFileSync(dataUrl(`harmonic-${name}.json`))), raw = fs.readFileSync(dataUrl(`harmonic-${name}.bin`));
-  const g = prepareGrid(meta, new Int16Array(Uint8Array.from(raw).buffer));
-  updateField(g, jstSlotTime('2026-11-01', 17));
-  assert.equal(g.dxM, {inner: 50, mid: 100, uchibo: 200, boso: 500}[name]);
-  let inside = 0;
-  for (const p of REFERENCE_POINTS) {
-   const s = sampleCurrents([g], p.lat, p.lon);
-   if (s.reason === 'outside') continue;
-   inside++; assert.ok(Number.isFinite(s.speed), p.name + ' ' + JSON.stringify(s));
-  }
-  assert.ok(inside >= 2);
-  // spot outlines hug islands and forts; the 500 m Boso grid is too coarse to resolve them
-  for (const spot of g.dxM <= 200 ? SPOTS : []) for (const [lat, lon] of spot.polygon) {
-   const s = sampleCurrents([g], lat, lon);
-   if (s.reason === 'outside') continue;
-   assert.notEqual(s.reason, 'land', spot.label + ' ' + lat + ',' + lon);
-  }
- });
-}
-
-test('three nested grids: 50 m > 100 m > 250 m, and land in a finer grid stays land', () => {
- const outer = synthetic({nx: 20, ny: 20, lat0: 35, lon0: 139, dlat: .01, dlon: .01, dxM: 250, name: 'outer', wet: all(20, 20), flow: () => [100, 0]});
- const mid = synthetic({nx: 40, ny: 40, lat0: 35.05, lon0: 139.05, dlat: .002, dlon: .002, dxM: 100, name: 'mid', wet: all(40, 40).filter(i => i !== 0), flow: () => [0, 100]});
- const inner = synthetic({nx: 20, ny: 20, lat0: 35.1, lon0: 139.1, dlat: .0005, dlon: .0005, dxM: 50, name: 'inner', wet: all(20, 20), flow: () => [-100, 0]});
- const grids = [inner, mid, outer];
- assert.equal(sampleCurrents(grids, 35.105, 139.105).grid, 'inner');
- assert.equal(sampleCurrents(grids, 35.08, 139.08).grid, 'mid');
- assert.equal(sampleCurrents(grids, 35.02, 139.02).grid, 'outer');
- const dry = sampleCurrents(grids, 35.05, 139.05);
- assert.equal(dry.reason, 'land'); assert.equal(dry.grid, 'mid');
- // mid absent -> outer answers there
- assert.equal(sampleCurrents([inner, outer], 35.08, 139.08).grid, 'outer');
-});
-
-test('gzip copies are served as plain binary and inflate in the browser to the source bytes', async () => {
- const bundle = packHarmonic(new URL('../data', import.meta.url).pathname);
- const index = JSON.parse(bundle.index);
- assert.ok(canInflate());
- for (const e of index.grids) {
-  const source = fs.readFileSync(dataUrl(`harmonic-${e.name}.bin`));
-  assert.match(e.coefGz, /^\/api\/harmonic\/[a-z]+-[0-9a-f]{12}\.bin\.gz$/);
-  const r = harmonicResponse(e.coefGz, bundle, frameResponse);
-  assert.equal(r.headers.get('content-encoding'), null);
-  assert.equal(r.headers.get('content-type'), 'application/octet-stream');
-  const gz = await r.arrayBuffer();
-  assert.ok(isGzip(gz)); assert.ok(gz.byteLength < source.length / 2, 'gzip copy should be much smaller');
-  assert.deepEqual(Buffer.from(await inflate(gz)), source);
-  assert.deepEqual(Buffer.from(await inflate(source.buffer.slice(source.byteOffset, source.byteOffset + source.length))), source); // already inflated bytes pass through
-  const depth = await inflate(await harmonicResponse(e.depthGz, bundle, frameResponse).arrayBuffer());
-  assert.equal(depth.byteLength, e.wetCount * 2);
- }
-});

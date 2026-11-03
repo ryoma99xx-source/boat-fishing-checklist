@@ -82,3 +82,18 @@ export function synthesizeCell(meta, coef, index, ms) {
   }
   return [u / 1000, v / 1000];
 }
+
+// Only the listed cells (wet-cell indices); fac from factors(meta, ms).
+export function synthesizeCells(meta, coef, fac, out, cells) {
+  const n = meta.constituents.length, stride = 2 + 4 * n, {cos, sin} = fac;
+  for (const i of cells) {
+    const o = i * stride;
+    let u = coef[o], v = coef[o + 1];
+    for (let j = 0; j < n; j++) {
+      const k = o + 2 + 4 * j;
+      u += coef[k] * cos[j] + coef[k + 1] * sin[j];
+      v += coef[k + 2] * cos[j] + coef[k + 3] * sin[j];
+    }
+    out[2 * i] = u / 1000; out[2 * i + 1] = v / 1000;
+  }
+}

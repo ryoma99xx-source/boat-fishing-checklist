@@ -5,7 +5,7 @@ import {VIEW_AREA,REGIONS,contains,fitArea} from '/coverage.js';
 import {getJstSelection} from '/clock.js';
 import {claimGoogleMapLoad} from '/google-guard.js';
 import {installMapGestureBoundary} from '/map-gestures.js';
-import {prepareGrid,pendingGrid,updateField,sampleCurrents,velocityAt,gridBounds,jstSlotTime,canInflate,inflate} from '/currents.js';
+import {updateField,sampleCurrents,velocityAt,gridBounds,gridFor,jstSlotTime,canInflate,inflate,emptyGrid,applyTile,tileAt} from '/currents.js';
 import {SPOTS,REFERENCE_POINTS,spotCentroid} from '/spots.js';
 import {createFlowLayer} from '/flow-layer.js';
 // START: initial map centre and default fishing position (新安浦沖).
@@ -199,7 +199,7 @@ $('map').addEventListener('pointerdown',e=>{if(S.google||e.target.closest('butto
 $('map').addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2&&pinch){const p=[...pointers.values()],d=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);const z=Math.max(8,Math.min(18,pinch.zoom+Math.round(Math.log2(d/pinch.distance))));flow.setInteracting(true);if(z!==S.zoom){S.zoom=z;draw();}return;}if(drag&&!pinch){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>6)drag.moved=true;if(drag.moved){flow.setInteracting(true);S.center=inverse(drag.center.x-dx,drag.center.y-dy);draw();}}});
 $('map').addEventListener('pointerup',e=>{if(!pointers.has(e.pointerId))return;const click=pointers.size===1&&drag&&!drag.moved&&!pinch;pointers.delete(e.pointerId);if(click){const r=$('map').getBoundingClientRect();selectPoint(unproject(e.clientX-r.left,e.clientY-r.top));}if(pointers.size===0){drag=null;pinch=null;flow.setInteracting(false);}});
 $('map').addEventListener('pointercancel',()=>{pointers.clear();drag=null;pinch=null;flow.setInteracting(false);});$('map').addEventListener('wheel',e=>{if(S.google)return;e.preventDefault();zoom(e.deltaY<0?1:-1);},{passive:false});
-function selectPoint(p){S.pin=p;updatePoint();drawOverlay();}
+function selectPoint(p){S.pin=p;updatePoint();drawOverlay();loadDetail();}
 function nearestOfficial(){if(!S.frames[0])return null;const best=S.frames[0].stations.reduce((a,b)=>!a||distanceKm(S.pin,jcgPoint(b))<distanceKm(S.pin,jcgPoint(a))?b:a,null);return best&&{...best,...jcgPoint(best)};}
 function pointFlow(){if(!contains(VIEW_AREA,S.pin))return {reason:'view-outside'};if(usesModel())return modelSample(S.pin.lat,S.pin.lon);return nearestOfficial()||{};}
 const AREA_NAME=dx=>dx<75?'横須賀沿岸':dx<150?'東京湾中部':dx<225?'内房':dx<400?'東京湾':'房総（外房・内房）';
@@ -241,37 +241,49 @@ function lastSlot(){return hourly()?46:48;}
 function updateTime(){$('date').value=S.date;const hour=Math.floor(S.slot/2),half=S.slot%2;$('time').textContent=String(hour).padStart(2,'0')+':'+(half?'30':'00');$('slider').value=S.slot;$('timeDetail').textContent=S.mode==='official'?'毎正時の公式推算 / JST':S.mode==='compare'?'毎正時で比較 / JST':'30分ごと・潮汐の調和合成 / JST';document.querySelectorAll('[data-time]').forEach(b=>b.classList.toggle('active',+b.dataset.time===S.slot));drawTide();}
 // Harmonic grids: index -> per-grid meta, coefficients and depth (content-hashed URLs).
 // The coarsest grid (last) loads first; finer grids (50 m inner, ~7 MB) load lazily when the view reaches them.
-// Prefer the gzip copy and inflate it here (about 1/4 of the bytes); fall back to the plain bytes.
-async function binary(url,gzUrl,expected){if(gzUrl&&canInflate()){try{const b=await inflate(await resource(gzUrl,'buffer',30000));if(b.byteLength===expected)return b;}catch{}}return await resource(url,'buffer',30000);}
-async function fetchGrid(e){const [meta,coef,depth]=await Promise.all([resource(e.meta),binary(e.coef,e.coefGz,e.coefBytes),binary(e.depth,e.depthGz,e.wetCount*2).catch(()=>null)]);if(coef.byteLength!==e.coefBytes)throw Error('潮流モデルのデータ長が不正です');return prepareGrid(meta,new Int16Array(coef),depth&&depth.byteLength===e.wetCount*2?new Uint16Array(depth):null);}
+// Tiled harmonic grids: index -> small per-grid meta -> only the 32x32-cell tiles the view needs.
+async function tileBytes(e,t){if(canInflate()){try{return await inflate(await resource(e.tileBase+'.t'+t+'.gz','buffer',30000));}catch{}}return await resource(e.tileBase+'.t'+t+'.bin','buffer',30000);}
 async function loadHarmonicData(){
  if(H.grids)return H.grids;if(H.request)return H.request;
  H.request=(async()=>{
   const index=await resource('/api/harmonic/index.json');if(!Array.isArray(index.grids)||!index.grids.length)throw Error('潮流モデルのデータがありません');
-  const last=index.grids.length-1,base=await fetchGrid(index.grids[last]);
-  H.index=index;H.grids=index.grids.map((e,i)=>i===last?base:pendingGrid(e));renderValidation();syncModeUi();return H.grids;
+  // grid metadata comes inline with the index (one round trip less); the separate file stays as a fallback
+  const metas=await Promise.all(index.grids.map(e=>e.metaData||resource(e.meta)));
+  H.index=index;H.grids=metas.map((m,i)=>emptyGrid(m,index.grids[i]));renderValidation();syncModeUi();return H.grids;
  })();
  try{return await H.request;}finally{H.request=null;}
 }
-function viewTouches(g){const b=gridBounds(g),a=screenToLatLon(0,0),z=screenToLatLon($('map').clientWidth,$('map').clientHeight);return contains(b,S.pin)||(b.south<=a.lat&&b.north>=z.lat&&b.west<=z.lon&&b.east>=a.lon);}
 function refreshModel(){if(!usesModel())return;updatePoint();drawOverlay();flow.invalidate();}
-function loadDetail(retry=false){
- if(!H.grids||!usesModel())return;let started=false;
- H.grids.forEach((g,i)=>{
-  if(!g.pending||g.loading||(g.failed&&!retry)||!viewTouches(g))return;
-  g.loading=true;g.failed=false;started=true;
-  fetchGrid(g.entry).then(grid=>{H.grids[i]=grid;if(S.fieldKey)updateField(grid,jstSlotTime(S.date,S.slot));if(usesModel()&&S.fieldKey)setStatus('潮流モデル（潮汐のみ）/ 実測未検証');syncModeUi();refreshModel();})
-   .catch(e=>{g.loading=false;g.failed=true;if(usesModel()){setStatus(g.dxM+'m格子の取得失敗');toast(e.message);}refreshModel();});
- });
- if(started)refreshModel();
+let refreshQueued=false;
+function queueRefresh(){if(refreshQueued)return;refreshQueued=true;(typeof requestAnimationFrame==='function'?requestAnimationFrame:f=>setTimeout(f,16))(()=>{refreshQueued=false;if(S.fieldKey){const ms=jstSlotTime(S.date,S.slot);for(const g of H.grids||[])updateField(g,ms);}refreshModel();});}
+// Tiles needed for the visible map and the selected point: for sample points across the view, the
+// first grid containing the point decides (same rule as the display), and its tile is requested.
+function neededTiles(){
+ const need=new Map(),w=$('map').clientWidth,h=$('map').clientHeight,N=16;
+ const add=(lat,lon)=>{if(!contains(VIEW_AREA,{lat,lon}))return;const g=gridFor(H.grids,lat,lon);if(!g)return;const t=tileAt(g,lat,lon);if(t>=0&&g.tileState[t]!==2)need.set(g.entry.name+':'+t,[g,t]);};
+ for(let j=0;j<=N;j++)for(let i=0;i<=N;i++){const p=screenToLatLon(i*w/N,j*h/N);add(p.lat,p.lon);}
+ add(S.pin.lat,S.pin.lon);
+ const a=screenToLatLon(0,0),z=screenToLatLon(w,h);
+ for(const r of REFERENCE_POINTS)if(S.zoom>=(r.minZoom||12)&&r.lat<=a.lat&&r.lat>=z.lat&&r.lon>=a.lon&&r.lon<=z.lon)add(r.lat,r.lon);
+ return [...need.values()];
 }
-function gridSummary(){return H.grids?H.grids.map(g=>g.dxM+'m（'+AREA_NAME(g.dxM)+'）'+(g.pending?(g.failed?'・取得失敗':'・取得待ち'):'')).join('＋'):'50m・100m・250m格子';}
+let tileFailures=0;
+function loadDetail(retry=false){
+ if(!H.grids||!usesModel())return;if(retry)tileFailures=0;
+ for(const [g,t] of neededTiles()){
+  const st=g.tileState[t];if(st===1||(st===3&&!retry))continue;
+  g.tileState[t]=1;
+  tileBytes(g.entry,t).then(buf=>{applyTile(g,t,new Int16Array(buf));queueRefresh();if(usesModel()&&S.fieldKey&&tileFailures===0)setStatus('潮流モデル（潮汐のみ）/ 実測未検証');})
+   .catch(e=>{g.tileState[t]=3;tileFailures++;refreshModel();if(usesModel()){setStatus(g.dxM+'m格子の取得失敗（タップで再取得）');toast(e.message);}});
+ }
+}
+function gridSummary(){return H.grids?H.grids.map(g=>g.dxM+'m（'+AREA_NAME(g.dxM)+'）').join('＋'):'50m・100m・250m格子';}
 async function loadModel(){
  const id=++generation;S.frames=[];const key=S.date+'/'+S.slot;
  if(!H.grids){S.loading=true;S.fieldKey=null;updateTime();updatePoint();drawOverlay();flow.setEnabled(false);setStatus('潮流モデルを取得中…');$('boundaryInfo').textContent='潮汐の調和定数を取得中';}
  try{
   const grids=await loadHarmonicData();if(id!==generation)return;
-  const ms=jstSlotTime(S.date,S.slot);for(const g of grids)if(!g.pending)updateField(g,ms);
+  const ms=jstSlotTime(S.date,S.slot);for(const g of grids)updateField(g,ms);
   S.fieldKey=key;S.loading=false;updateTime();setStatus('潮流モデル（潮汐のみ）/ 実測未検証');$('boundaryInfo').textContent=gridSummary()+' · 潮汐のみの調和合成';
   updatePoint();drawOverlay();flow.setEnabled(true);flow.invalidate();loadDetail(true);
  }catch(e){if(id!==generation)return;S.loading=false;S.fieldKey=null;flow.setEnabled(false);updatePoint();drawOverlay();setStatus('潮流モデルの取得失敗');$('boundaryInfo').textContent='取得できませんでした。別の計算では代用しません。';toast(e.message);}
@@ -410,8 +422,7 @@ async function restoreGoogle(){
 
 async function init(){
  S.loading=true;syncModeUi();updateTime();updatePoint();draw();
- const coastalMapTask=(async()=>{try{S.coastalMap=await resource('/coastal-map.json');mapImage=new Image();mapImage.onload=()=>{mapReady=true;drawBase();};mapImage.src='/coastal-map.webp';}catch{ /* Live map tiles remain independent. */ }})();
- const overviewTask=(async()=>{try{S.overview=await resource('/overview-map.json');overviewImage=new Image();overviewImage.onload=()=>{overviewReady=true;drawBase();};overviewImage.src='/overview-map.webp';}catch{ /* Live map tiles remain independent. */ }})();
- await Promise.allSettled([coastalMapTask,overviewTask,load(),restoreGoogle()]);
+ // The old static basemap images (0.8 MB) are no longer fetched: live tiles cover every view.
+ await Promise.allSettled([load(),restoreGoogle()]);
 }
 init();
