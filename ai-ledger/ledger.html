@@ -1,0 +1,529 @@
+<title>釣りサイト制作台帳</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Dela+Gothic+One&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one narrow column (phone first), sticky header, fixed bottom tab bar; detail opens as its own view. */
+:root{
+  --bg:#eef2f3; --surface:#ffffff; --ink:#14262d; --muted:#5b6f76; --line:#d5dee1;
+  --accent:#0b6e78; --accent-ink:#ffffff; --accent-soft:#d8eeef;
+  --s-idea:#6b7a80; --s-work:#1f63c6; --s-wait:#b26a00; --s-done:#227a3d; --s-hold:#7a4f9a;
+  --warn-bg:#fff4dc; --warn-ink:#7a4a00; --bad:#b3261e;
+  --f-display:"Dela Gothic One","Zen Kaku Gothic New",system-ui,sans-serif;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d171b; --surface:#152329; --ink:#e3ecee; --muted:#93a8ae; --line:#26383f;
+  --accent:#4fc0c9; --accent-ink:#06262a; --accent-soft:#173a3f;
+  --s-idea:#9aa8ad; --s-work:#6fa6ff; --s-wait:#f0a63a; --s-done:#5cc77a; --s-hold:#c79ae6;
+  --warn-bg:#3a2d10; --warn-ink:#f5d38a; --bad:#ff8a80; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d171b; --surface:#152329; --ink:#e3ecee; --muted:#93a8ae; --line:#26383f;
+  --accent:#4fc0c9; --accent-ink:#06262a; --accent-soft:#173a3f;
+  --s-idea:#9aa8ad; --s-work:#6fa6ff; --s-wait:#f0a63a; --s-done:#5cc77a; --s-hold:#c79ae6;
+  --warn-bg:#3a2d10; --warn-ink:#f5d38a; --bad:#ff8a80; color-scheme:dark}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 calc(76px + env(safe-area-inset-bottom,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:720px;margin:0 auto}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px 8px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line)}
+h1{font-family:var(--f-display);font-weight:400;font-size:20px;margin:0;letter-spacing:.02em;text-wrap:balance}
+h1 small{font-family:var(--f-body);font-size:12px;color:var(--muted);font-weight:500;margin-left:6px}
+h2{font-size:17px;margin:18px 0 8px;text-wrap:balance}
+h3{font-size:15px;margin:14px 0 6px}
+.sync{font-size:12px;color:var(--muted);white-space:nowrap}
+.sync b{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:4px;vertical-align:1px}
+.sync.ok b{background:var(--s-done)}
+.banner{background:var(--warn-bg);color:var(--warn-ink);padding:10px 12px;border-radius:8px;margin:12px 0;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.stat .n{font-family:var(--f-display);font-size:22px;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat .l{font-size:12px;color:var(--muted)}
+.stat[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.filters input,.filters select{flex:1 1 150px;min-width:0}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%;box-sizing:border-box}
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;letter-spacing:.04em}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row2>div{min-width:0}
+button,.btn{font:inherit;font-size:14px;border-radius:8px;padding:9px 14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;display:inline-block}
+button.primary,.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+button.danger{color:var(--bad);border-color:var(--bad);background:transparent}
+button.small{padding:5px 10px;font-size:13px}
+button:disabled{opacity:.5;cursor:default}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.list{display:flex;flex-direction:column;gap:8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:block;color:inherit;text-decoration:none;min-width:0}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+.card .title{font-weight:700;margin:4px 0 2px;overflow-wrap:anywhere}
+.card .next{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.card .next b{color:var(--ink);font-weight:500}
+.pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1px 8px;font-size:12px;font-weight:700;border:1px solid currentColor;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.st-構想{color:var(--s-idea)} .st-作業中{color:var(--s-work)} .st-確認・公開待ち{color:var(--s-wait)} .st-公開済み{color:var(--s-done)} .st-保留{color:var(--s-hold)}
+.tag{border-radius:4px;padding:0 6px;background:var(--accent-soft);color:var(--ink);font-size:12px;white-space:nowrap}
+.who{font-weight:700;color:var(--ink)}
+.stale{color:var(--warn-ink);background:var(--warn-bg);border-radius:4px;padding:0 6px}
+.empty{color:var(--muted);text-align:center;padding:28px 8px;border:1px dashed var(--line);border-radius:10px}
+.mono{font-family:var(--f-mono);font-size:12.5px;overflow-wrap:anywhere}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}
+.chat{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.chat:first-child{border-top:0}
+.chat .c{flex:1;min-width:0}
+.chat a{color:var(--accent);overflow-wrap:anywhere;font-size:13px}
+.log{padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.log:first-child{border-top:0}
+.log .when{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.log .txt{white-space:pre-wrap;overflow-wrap:anywhere}
+details summary{cursor:pointer;color:var(--accent);font-size:13px}
+pre.out{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-body);font-size:13.5px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;margin:8px 0;max-height:60vh;overflow:auto}
+.checks label{display:flex;gap:8px;align-items:flex-start;font-size:14px;color:var(--ink);letter-spacing:0;margin:6px 0}
+.checks input{width:auto;margin-top:4px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:14px;z-index:20;max-width:90vw}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:8;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);
+  padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 6px;font-size:11px;color:var(--muted);text-decoration:none}
+nav.tabs a svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+nav.tabs a[aria-current="page"]{color:var(--accent);font-weight:700}
+.flow{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.flow .step{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.flow .arrow{text-align:center;color:var(--muted);font-size:13px}
+.flow .step b{display:block}
+.legend{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:14px}
+.badge-n{display:inline-block;min-width:18px;padding:0 5px;border-radius:9px;background:var(--bad);color:#fff;font-size:10px;line-height:16px;text-align:center}
+@media (max-width:420px){.row2{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>制作台帳<small>cutlassfish.tokyo</small></h1>
+    <span class="sync" id="sync"><b></b>接続中…</span>
+  </header>
+  <div id="conn" class="banner" hidden></div>
+  <main id="view"></main>
+</div>
+
+<nav class="tabs" aria-label="画面">
+  <a href="#list" data-v="list"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>一覧</a>
+  <a href="#inbox" data-v="inbox"><svg viewBox="0 0 24 24"><path d="M4 13l3-8h10l3 8v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/></svg><span>未整理 <span id="inboxN"></span></span></a>
+  <a href="#handoff" data-v="handoff"><svg viewBox="0 0 24 24"><path d="M4 12h13M13 7l5 5-5 5"/></svg>指示文</a>
+  <a href="#report" data-v="report"><svg viewBox="0 0 24 24"><path d="M20 12H7M11 7l-5 5 5 5"/></svg>報告取込</a>
+  <a href="#howto" data-v="howto"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></svg>仕組み</a>
+</nav>
+
+<script>
+const SITES=[
+  {k:'main',n:'本サイト',u:'https://cutlassfish.tokyo/'},
+  {k:'tide',n:'潮と流れマップ',u:'https://tide-current-map.cutlassfish.tokyo/'},
+  {k:'reel',n:'リール糸管理',u:'https://reel-line-manager.cutlassfish.tokyo/'},
+  {k:'check',n:'釣り持ち物チェック',u:'https://dont-forget-anything.cutlassfish.tokyo/'},
+  {k:'tenya',n:'テンヤシミュレーター',u:'https://tenya-simulator.cutlassfish.tokyo/'},
+  {k:'other',n:'その他・共通',u:''}];
+const STATUS=['構想','作業中','確認・公開待ち','公開済み','保留'];
+const OWNERS=['Claude','ChatGPT','Codex','自分'];
+const AIS=['Claude','ChatGPT','Codex'];
+const TOOLS=['Claude Code','Claude チャット','ChatGPT','Codex','その他'];
+const TARGETS=['ChatGPT','Claude チャット','Claude Code','Codex'];
+const STALE_DAYS=14;
+const BASE_RULES=[
+  '既存の公開設定・ドメイン・プロジェクトIDを変えない',
+  '新しいプロジェクト（Sites・リポジトリ・アプリ等）を作らない',
+  'APIキー・パスワード・個人情報を出力やファイルに含めない',
+  '公開・上書きの前に、何を変えるかを一度報告して確認を取る',
+  '分からない点は推測で進めず、質問として報告に書く'];
+const UPLOAD_LIMIT={'Claude チャット':30,'ChatGPT':512}; // MB per file, rough guide
+
+let db=null, sample=null, loaded=false, feats=[], inbox=[], route={v:'list',id:null};
+let ui={filter:'all',site:'',q:'',ho:{fid:'',target:'ChatGPT',req:'',rules:null,extra:'',split:false,text:''},rep:{text:'',fid:''},inboxText:''};
+try{const s=JSON.parse(localStorage.getItem('ledger-ui')||'null'); if(s){ui.filter=s.filter||'all';ui.site=s.site||'';}}catch(e){}
+const saveUi=()=>{try{localStorage.setItem('ledger-ui',JSON.stringify({filter:ui.filter,site:ui.site}))}catch(e){}};
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const siteName=k=>(SITES.find(s=>s.k===k)||{n:k||'未設定'}).n;
+const siteUrl=k=>(SITES.find(s=>s.k===k)||{}).u||'';
+const pad=n=>String(n).padStart(2,'0');
+const fmt=iso=>{if(!iso)return'';const d=new Date(iso);return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`};
+const nowIso=()=>new Date().toISOString();
+const newId=()=>'f-'+Math.random().toString(36).slice(2,6)+Date.now().toString(36).slice(-2);
+const daysSince=iso=>iso?Math.floor((Date.now()-new Date(iso))/864e5):999;
+const lastTouch=f=>{const l=(f.logs||[]).map(x=>x.at).sort().pop();return l||f.updatedAt||f.createdAt};
+const isAI=f=>AIS.includes(f.owner)&&(f.status==='作業中'||f.status==='確認・公開待ち');
+const isStopped=f=>f.status==='保留'||(f.status!=='公開済み'&&daysSince(lastTouch(f))>=STALE_DAYS);
+const toolFromUrl=u=>{u=u||'';if(/claude\.ai\/code/.test(u))return'Claude Code';if(/claude\.ai/.test(u))return'Claude チャット';if(/chatgpt\.com\/codex|codex/.test(u))return'Codex';if(/chatgpt\.com|chat\.openai\.com/.test(u))return'ChatGPT';return'その他'};
+const ownerFromTool=t=>t.startsWith('Claude')?'Claude':t==='ChatGPT'?'ChatGPT':t==='Codex'?'Codex':'自分';
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+function setConn(msg){const c=$('#conn');c.hidden=!msg;c.textContent=msg||''}
+
+// one write at a time per document
+const chains={};
+function write(col,id,fn){chains[col+id]=(chains[col+id]||Promise.resolve()).then(()=>fn(db.collection(col).doc(id))).catch(e=>{toast('保存できませんでした：'+(e&&e.message||e.code||e));throw e});return chains[col+id]}
+const saveFeat=(id,patch)=>write('features',id,ref=>ref.update({...patch,updatedAt:nowIso()}));
+const createFeat=(id,data)=>write('features',id,ref=>ref.set({chats:[],logs:[],src:{},deploy:'',next:'',createdAt:nowIso(),updatedAt:nowIso(),...data}));
+const delFeat=id=>write('features',id,ref=>ref.delete());
+function addLog(f,text,by){const logs=[...(f.logs||[]),{at:nowIso(),by:by||'自分',text}];return saveFeat(f.id,{logs})}
+
+// ---------- routing ----------
+function readHash(){const h=location.hash.slice(1);if(/^f-[a-z0-9-]+$/.test(h))route={v:'detail',id:h};else route={v:['list','inbox','handoff','report','howto'].includes(h)?h:'list',id:null};render()}
+window.addEventListener('hashchange',readHash);
+function go(h){if(location.hash==='#'+h)readHash();else location.hash=h}
+
+// ---------- views ----------
+let dirty={},lastKey='';
+document.addEventListener('input',e=>{if(e.target.id&&e.target.closest('#view'))dirty[e.target.id]=1});
+document.addEventListener('change',e=>{if(e.target.id&&e.target.closest('#view'))dirty[e.target.id]=1});
+const clean=prefix=>Object.keys(dirty).forEach(k=>{if(k.startsWith(prefix))delete dirty[k]});
+function render(){
+  const key=route.v+(route.id||'');const keep={};
+  if(key===lastKey)Object.keys(dirty).forEach(k=>{const el=document.getElementById(k);if(el)keep[k]=el.type==='checkbox'?el.checked:el.value});else dirty={};
+  lastKey=key;
+  renderInner();
+  Object.entries(keep).forEach(([k,v])=>{const el=document.getElementById(k);if(el){if(el.type==='checkbox')el.checked=v;else el.value=v}});
+}
+function renderInner(){
+  document.querySelectorAll('nav.tabs a').forEach(a=>a.setAttribute('aria-current',a.dataset.v===(route.v==='detail'?'list':route.v)?'page':'false'));
+  $('#inboxN').innerHTML=inbox.length?`<span class="badge-n">${inbox.length}</span>`:'';
+  const v=$('#view');
+  if(route.v==='detail')v.innerHTML=viewDetail();
+  else if(route.v==='inbox')v.innerHTML=viewInbox();
+  else if(route.v==='handoff')v.innerHTML=viewHandoff();
+  else if(route.v==='report')v.innerHTML=viewReport();
+  else if(route.v==='howto')v.innerHTML=viewHowto();
+  else v.innerHTML=viewList();
+  bind();
+}
+function notReady(){return !loaded?`<div class="empty">台帳を読み込んでいます…<br>表示されない場合は claude.ai にログインした状態で開き直してください。</div>`:''}
+
+function cardHtml(f){
+  const d=daysSince(lastTouch(f));
+  return `<a class="card" href="#${esc(f.id)}">
+    <div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-${esc(f.status)}">${esc(f.status)}</span><span>担当 <span class="who">${esc(f.owner)}</span></span>
+    ${(f.chats||[]).length?`<span>チャット${f.chats.length}</span>`:''}
+    ${f.status!=='公開済み'&&d>=STALE_DAYS&&d<999?`<span class="stale">${d}日動きなし</span>`:''}</div>
+    <div class="title">${esc(f.title)}</div>
+    ${f.next?`<div class="next">次：<b>${esc(f.next)}</b></div>`:''}
+    <div class="next">更新 ${esc(fmt(lastTouch(f)))}</div></a>`}
+
+function viewList(){
+  if(!loaded)return notReady();
+  const nAI=feats.filter(isAI).length,nStop=feats.filter(isStopped).length,nWait=feats.filter(f=>f.status==='確認・公開待ち').length;
+  let L=feats.slice();
+  if(ui.filter==='ai')L=L.filter(isAI);
+  if(ui.filter==='stop')L=L.filter(isStopped);
+  if(ui.filter==='wait')L=L.filter(f=>f.status==='確認・公開待ち');
+  if(ui.filter==='open')L=L.filter(f=>f.status!=='公開済み');
+  if(ui.site)L=L.filter(f=>f.site===ui.site);
+  if(ui.q){const q=ui.q.toLowerCase();L=L.filter(f=>JSON.stringify([f.title,f.next,f.deploy,f.chats,f.src,f.logs]).toLowerCase().includes(q))}
+  const order=s=>({'作業中':0,'確認・公開待ち':1,'構想':2,'保留':3,'公開済み':4}[s]??5);
+  L.sort((a,b)=>order(a.status)-order(b.status)||String(lastTouch(b)).localeCompare(String(lastTouch(a))));
+  return `<div class="stats">
+    <button class="stat" data-f="ai" aria-pressed="${ui.filter==='ai'}"><div class="n">${nAI}</div><div class="l">AIが担当中</div></button>
+    <button class="stat" data-f="stop" aria-pressed="${ui.filter==='stop'}"><div class="n">${nStop}</div><div class="l">止まっている</div></button>
+    <button class="stat" data-f="wait" aria-pressed="${ui.filter==='wait'}"><div class="n">${nWait}</div><div class="l">確認・公開待ち</div></button></div>
+  <div class="filters">
+    <select id="fFilter" aria-label="絞り込み">${[['all','すべて'],['open','公開済み以外'],['ai','AIが担当中'],['stop','止まっている'],['wait','確認・公開待ち']].map(([k,n])=>`<option value="${k}" ${ui.filter===k?'selected':''}>${n}</option>`).join('')}</select>
+    <select id="fSite" aria-label="サイト"><option value="">全サイト</option>${SITES.map(s=>`<option value="${s.k}" ${ui.site===s.k?'selected':''}>${s.n}</option>`).join('')}</select>
+    <input id="fQ" type="search" placeholder="検索（機能名・チャット名・ブランチ等）" value="${esc(ui.q)}">
+  </div>
+  <div class="actions"><button class="primary" id="newFeat">＋ 機能を追加</button></div>
+  <div class="list">${L.length?L.map(cardHtml).join(''):`<div class="empty">${feats.length?'条件に合う機能はありません。':'まだ機能がありません。「＋ 機能を追加」か「未整理」タブから登録します。'}</div>`}</div>
+  <p class="next" style="font-size:12px;color:var(--muted);margin-top:14px">「止まっている」＝保留、または公開済み以外で${STALE_DAYS}日以上ログ・更新がないもの。</p>`}
+
+function opts(list,cur){return list.map(x=>`<option ${x===cur?'selected':''}>${esc(x)}</option>`).join('')}
+function viewDetail(){
+  if(!loaded)return notReady();
+  const f=feats.find(x=>x.id===route.id);
+  if(!f)return `<div class="empty">この機能は見つかりません（削除された可能性があります）。<br><a href="#list">一覧へ戻る</a></div>`;
+  const s=f.src||{};
+  const logs=(f.logs||[]).slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  return `<p><a href="#list" style="color:var(--accent)">← 一覧</a> <span class="mono" style="color:var(--muted);float:right">機能ID ${esc(f.id)}</span></p>
+  <div class="box">
+    <label for="dTitle">機能</label><input id="dTitle" value="${esc(f.title)}">
+    <div class="row2">
+      <div><label for="dSite">サイト</label><select id="dSite">${SITES.map(x=>`<option value="${x.k}" ${x.k===f.site?'selected':''}>${x.n}</option>`).join('')}</select></div>
+      <div><label for="dStatus">状態</label><select id="dStatus">${opts(STATUS,f.status)}</select></div>
+      <div><label for="dOwner">担当</label><select id="dOwner">${opts(OWNERS,f.owner)}</select></div>
+    </div>
+    <label for="dNext">次の一手</label><input id="dNext" value="${esc(f.next)}">
+    <label for="dDeploy">公開先・戻し方・メモ</label><textarea id="dDeploy" placeholder="例：ChatGPT Sites 既存プロジェクト appgprj_… / 戻す場合は保存版 appgver_…">${esc(f.deploy)}</textarea>
+    <div class="actions"><button class="primary" id="dSave">保存</button>
+      <button id="dHand">指示文を作る</button><button id="dRep">報告を貼る</button></div>
+  </div>
+
+  <h2>チャット（${(f.chats||[]).length}）</h2>
+  <div class="box">${(f.chats||[]).length?f.chats.map((c,i)=>`<div class="chat"><div class="c"><div><span class="tag">${esc(c.tool)}</span> <b>${esc(c.name||'(名前なし)')}</b></div>${c.url?`<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.url)}</a>`:''}</div><button class="small" data-delchat="${i}" aria-label="削除">外す</button></div>`).join(''):'<div class="next">まだ登録されていません。</div>'}
+    <details style="margin-top:8px"><summary>チャットを追加</summary>
+      <label for="cUrl">URL</label><input id="cUrl" type="url" placeholder="https://claude.ai/… / https://chatgpt.com/…">
+      <div class="row2"><div><label for="cName">チャット名</label><input id="cName"></div>
+      <div><label for="cTool">種類（URLから自動判定）</label><select id="cTool">${opts(TOOLS,'Claude Code')}</select></div></div>
+      <div class="actions"><button id="cAdd">追加</button></div></details></div>
+
+  <h2>ソース（ファイル連携）</h2>
+  <div class="box">
+    <div class="row2">
+      <div><label for="sRepo">GitHubリポジトリ</label><input id="sRepo" class="mono" value="${esc(s.repo)}" placeholder="owner/repo"></div>
+      <div><label for="sBranch">ブランチ</label><input id="sBranch" class="mono" value="${esc(s.branch)}"></div>
+      <div><label for="sFolder">フォルダ</label><input id="sFolder" class="mono" value="${esc(s.folder)}"></div>
+      <div><label for="sZip">ZIP名</label><input id="sZip" class="mono" value="${esc(s.zip)}"></div>
+    </div>
+    <label for="sSha">ZIPのSHA256</label><input id="sSha" class="mono" value="${esc(s.sha)}" placeholder="64桁の16進数">
+    <div class="row2">
+      <div><label for="sSize">ZIPサイズ（MB）</label><input id="sSize" type="number" min="0" step="0.1" value="${esc(s.size)}"></div>
+      <div><label for="sUrl">ZIPのダウンロードURL（あれば）</label><input id="sUrl" type="url" class="mono" value="${esc(s.zipUrl)}"></div>
+    </div>
+    ${s.repo&&s.branch?`<p class="next" style="font-size:13px">GitHub：<a style="color:var(--accent);overflow-wrap:anywhere" href="${esc(treeUrl(s))}" target="_blank" rel="noopener">${esc(treeUrl(s))}</a></p>`:''}
+    <div class="actions"><button class="primary" id="sSave">ソース情報を保存</button></div></div>
+
+  <h2>作業ログ</h2>
+  <div class="box"><label for="lText">ログを追加</label><textarea id="lText" placeholder="やったこと・決めたこと"></textarea>
+    <div class="row2"><div><label for="lBy">誰が</label><select id="lBy">${opts(['自分',...AIS],'自分')}</select></div><div style="align-self:end"><button class="primary" id="lAdd" style="width:100%">記録</button></div></div></div>
+  <div class="box">${logs.length?logs.map(l=>`<div class="log"><div class="when">${esc(fmt(l.at))}・${esc(l.by)}</div>${(l.text||'').length>220?`<details><summary>${esc(l.text.slice(0,120))}…</summary><div class="txt">${esc(l.text)}</div></details>`:`<div class="txt">${esc(l.text)}</div>`}</div>`).join(''):'<div class="next">ログはまだありません。</div>'}</div>
+
+  <div class="actions" id="delZone"><button class="danger" id="dDel">この機能を削除</button></div>`}
+
+function viewInbox(){
+  if(!loaded)return notReady();
+  return `<h2>未整理のチャット</h2>
+  <p class="next" style="font-size:14px">あちこちにあるチャットを、まずここへまとめて貼り付けます。1行に「チャット名 URL」。あとで1件ずつ機能に振り分けます。</p>
+  <textarea id="iText" placeholder="東京湾の潮流アプリ引き継ぎ https://claude.ai/code/session_…&#10;WordPressプラグイン修正 https://chatgpt.com/c/…">${esc(ui.inboxText)}</textarea>
+  <div class="actions"><button class="primary" id="iAdd">まとめて取り込む</button></div>
+  <div class="list">${inbox.length?inbox.slice().sort((a,b)=>String(a.at).localeCompare(String(b.at))).map(it=>`<div class="card" data-inbox="${esc(it.id)}">
+    <div class="meta"><span class="tag">${esc(it.tool)}</span><span>${esc(fmt(it.at))}</span></div>
+    <div class="title">${esc(it.title||'(名前なし)')}</div>${it.url?`<a class="mono" style="color:var(--accent)" href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.url)}</a>`:''}
+    <label>振り分け先</label>
+    <select class="iDest"><option value="">— 選ぶ —</option><option value="__new">＋ 新しい機能にする</option>${feats.map(f=>`<option value="${esc(f.id)}">${esc(siteName(f.site))}｜${esc(f.title)}</option>`).join('')}</select>
+    <div class="actions"><button class="small primary iGo">振り分ける</button><button class="small iDel">捨てる</button></div></div>`).join(''):'<div class="empty">未整理のチャットはありません。</div>'}</div>`}
+
+function treeUrl(s){return `https://github.com/${s.repo}/tree/${s.branch}${s.folder?'/'+s.folder:''}`}
+function archiveUrl(s){return `https://github.com/${s.repo}/archive/refs/heads/${s.branch}.zip`}
+function rulesFor(f){
+  const r=[...BASE_RULES];
+  const ids=String(f&&f.deploy||'').match(/appg(?:prj|ver)_[0-9a-f]+/g)||[];
+  ids.forEach(id=>r.push(id.startsWith('appgprj')?`公開先は既存プロジェクト ${id} のまま使う（変更・作り直しをしない）`:`保存版 ${id} は削除・上書きしない（戻すときに使う）`));
+  return r}
+
+function buildPrompt(){
+  const h=ui.ho,f=feats.find(x=>x.id===h.fid);if(!f)return'';
+  const s=f.src||{},t=h.target,net=(t==='ChatGPT'||t==='Claude チャット');
+  const logs=(f.logs||[]).slice().sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,5);
+  const L=[];
+  L.push(`# 依頼：${f.title}（${siteName(f.site)}）`);
+  L.push(`あなた（${t}）への引き継ぎです。下の情報だけで作業できるように書いています。読み終えたら、そのまま作業を始めてください。`);
+  L.push('',`## やってほしいこと`,h.req.trim()||'（ここに依頼内容）');
+  L.push('','## 背景');
+  L.push(`- サイト：${siteName(f.site)}${siteUrl(f.site)?' '+siteUrl(f.site):''}`);
+  L.push(`- 機能：${f.title}`,`- 現在の状態：${f.status}／これまでの担当：${f.owner}`);
+  if(f.deploy)L.push(`- 公開先・戻し方：${f.deploy.replace(/\n+/g,' / ')}`);
+  L.push('','## これまでの経過');
+  (f.chats||[]).forEach(c=>L.push(`- ${c.tool}「${c.name||'名前なし'}」${c.url||''}`));
+  if(f.next)L.push(`- 台帳上の次の一手：${f.next}`);
+  if(logs.length){L.push('- 最近の作業ログ（新しい順）');logs.forEach(l=>L.push(`  - ${fmt(l.at).slice(0,10)} ${l.by}：${String(l.text).split('\n')[0].slice(0,140)}`))}
+  L.push('','## ソースの受け取り方');
+  const hasGit=s.repo&&s.branch;
+  if(net){
+    let n=1;
+    if(s.zipUrl){L.push(`${n++}. 次のURLからZIPをダウンロードして使ってください：${s.zipUrl}`)}
+    else if(hasGit){L.push(`${n++}. GitHub のフォルダ ${treeUrl(s)} を使ってください。ブランチ全体のZIPは ${archiveUrl(s)} です（リポジトリが非公開で開けない場合は次へ）。`)}
+    if(s.zip){L.push(`${n++}. ネットに出られない、またはURLが開けない場合は、このメッセージに添付したZIP「${s.zip}」を使ってください。`)}
+    if(h.split&&s.zip){L.push(`${n++}. 添付が「${s.zip.replace(/\.zip$/,'')}.part-aa」「…part-ab」のように分割されている場合は、名前順に連結して「${s.zip}」に戻してから使ってください（例：cat ${s.zip.replace(/\.zip$/,'')}.part-* > ${s.zip}）。`)}
+    if(s.sha&&s.zip){L.push(`${n++}. 使う前に「${s.zip}」のSHA256が ${s.sha} と一致するか確認してください。一致しない場合は作業を止めて報告してください。`)}
+    if(n===1)L.push('（ソースの場所は未登録です。必要なファイルは別途添付します。）');
+    if(hasGit&&s.folder)L.push(`- 主に触るフォルダ：${s.folder}`);
+  }else{
+    if(hasGit){
+      L.push(`- GitHub リポジトリ ${s.repo} のブランチ ${s.branch}${s.folder?`、フォルダ ${s.folder}`:''} から作業してください。`);
+      L.push(`- 参照URL：${treeUrl(s)}`);
+      L.push('- このセッションにリポジトリが無い場合は、リポジトリを追加してから取得してください。新しいリポジトリは作らないでください。');
+      L.push('- 作業したブランチ名とコミットを報告に書いてください。');
+    }else L.push('（リポジトリは未登録です。必要なファイルは別途添付します。）');
+    if(s.zip&&s.sha)L.push(`- 公開用ZIPを作り直した場合は、ZIP名とSHA256を報告に書いてください（現在：${s.zip} / ${s.sha}）。`);
+  }
+  L.push('','## 守ってほしい条件');
+  (h.rules||rulesFor(f)).forEach(r=>L.push(`- ${r}`));
+  h.extra.split('\n').map(x=>x.trim()).filter(Boolean).forEach(r=>L.push(`- ${r}`));
+  L.push('','## 完了したら、この書式で報告してください','（このまま台帳に貼り付けます。項目名は変えないでください。該当なしは「なし」）','',
+    '【完了報告】',`機能ID：${f.id}`,`担当：${t.startsWith('Claude')?'Claude':t}`,'状態：（構想／作業中／確認・公開待ち／公開済み／保留 から1つ）','やったこと：','変更したもの（ブランチ・コミット・ファイル）：','ZIP名：','SHA256：','公開URL・バージョン：','次の一手：','確認したいこと：');
+  return L.join('\n')}
+
+function viewHandoff(){
+  if(!loaded)return notReady();
+  const h=ui.ho; if(!h.fid&&feats[0])h.fid=feats[0].id;
+  const f=feats.find(x=>x.id===h.fid);
+  if(f&&!h.rules)h.rules=rulesFor(f);
+  if(!h.text)h.text=buildPrompt();
+  const s=(f&&f.src)||{};const lim=UPLOAD_LIMIT[h.target];const size=parseFloat(s.size);
+  let warn='';
+  if((h.target==='ChatGPT'||h.target==='Claude チャット')&&s.zip){
+    if(!size)warn=`ZIPサイズが未登録です。${h.target}への添付は1ファイル${lim}MBが目安です。機能の「ソース」にサイズを入れると判定します。`;
+    else if(size>lim)warn=`ZIP（${size}MB）は${h.target}の目安${lim}MBを超えています。①縮小版を作る（地図タイル・データ・node_modules などを除いた版。作業に必要なフォルダだけ）②分割する（例：split -b ${Math.max(5,Math.floor(lim*0.8))}m ${s.zip} ${s.zip.replace(/\.zip$/,'')}.part-）。分割したら下の「分割して添付する」をオンにしてください。どちらの場合もSHA256は元のZIPのものを書いたままでOKです。`;
+  }
+  return `<h2>引き継ぎ指示文</h2>
+  <label for="hFeat">機能</label><select id="hFeat">${feats.map(x=>`<option value="${esc(x.id)}" ${x.id===h.fid?'selected':''}>${esc(siteName(x.site))}｜${esc(x.title)}</option>`).join('')}</select>
+  <label>渡す相手</label><div class="seg" id="hTarget">${TARGETS.map(t=>`<button aria-pressed="${t===h.target}" data-t="${esc(t)}">${esc(t)}</button>`).join('')}</div>
+  <label for="hReq">やってほしいこと（普段の言葉で）</label><textarea id="hReq" placeholder="例：公開版を v20 に置き換えて。終わったら表示確認の結果も教えて">${esc(h.req)}</textarea>
+  <details style="margin-top:10px"><summary>守ってほしい条件（${(h.rules||[]).length}件）</summary><div class="checks" id="hRules">
+    ${(f?rulesFor(f):BASE_RULES).map((r,i)=>`<label><input type="checkbox" data-r="${i}" ${(h.rules||[]).includes(r)?'checked':''}>${esc(r)}</label>`).join('')}</div>
+    <label for="hExtra">追加の条件（1行に1つ）</label><textarea id="hExtra" style="min-height:60px">${esc(h.extra)}</textarea></details>
+  ${(h.target==='ChatGPT'||h.target==='Claude チャット')?`<div class="checks"><label><input type="checkbox" id="hSplit" ${h.split?'checked':''}>ZIPを分割して添付する</label></div>`:''}
+  ${warn?`<div class="banner">${esc(warn)}</div>`:''}
+  <div class="actions"><button class="primary" id="hCopy">コピー</button><button id="hTidy">AIで読みやすく</button><button id="hLog">渡したことをログに残す</button></div>
+  <div id="hTidyMsg"></div>
+  <pre class="out" id="hOut">${esc(h.text||'機能を選ぶと指示文ができます。')}</pre>`}
+
+function parseReport(t){
+  const keys=['機能ID','担当','状態','やったこと','変更したもの','ZIP名','SHA256','公開URL','次の一手','確認したいこと'];
+  const out={};let cur=null;
+  t.split('\n').forEach(line=>{
+    const k=keys.find(k=>new RegExp('^\\s*[-・]?\\s*\\**'+k).test(line));
+    if(k){cur=k;out[k]=line.replace(/^[^：:]*[：:]\s*/,'').trim()}
+    else if(cur&&line.trim()&&!/^【/.test(line))out[cur]+=(out[cur]?'\n':'')+line.trim();
+  });
+  Object.keys(out).forEach(k=>{if(/^(なし|ー|-|（.*）)$/.test(out[k]))out[k]=''});
+  return out}
+
+function viewReport(){
+  if(!loaded)return notReady();
+  const r=ui.rep,p=parseReport(r.text||'');
+  if(p['機能ID']&&feats.some(f=>f.id===p['機能ID'].trim()))r.fid=p['機能ID'].trim();
+  const f=feats.find(x=>x.id===r.fid);
+  const st=STATUS.find(s=>(p['状態']||'').includes(s));
+  const sha=((p['SHA256']||'').match(/[0-9a-fA-F]{64}/)||[])[0];
+  const by=AIS.find(a=>(p['担当']||'').includes(a))||ui.ho.target.replace(' チャット','').replace(' Code','')||'自分';
+  return `<h2>完了報告を取り込む</h2>
+  <p class="next" style="font-size:14px">相手のAIが返した【完了報告】をそのまま貼り付けます。機能IDから自動で機能を選びます。</p>
+  <textarea id="rText" style="min-height:160px" placeholder="【完了報告】&#10;機能ID：f-…&#10;状態：…">${esc(r.text)}</textarea>
+  <label for="rFeat">記録する機能</label><select id="rFeat"><option value="">— 選ぶ —</option>${feats.map(x=>`<option value="${esc(x.id)}" ${x.id===r.fid?'selected':''}>${esc(siteName(x.site))}｜${esc(x.title)}</option>`).join('')}</select>
+  ${r.text&&f?`<div class="box"><b>保存すると</b><div class="checks">
+    <label><input type="checkbox" checked disabled>作業ログに全文を記録（${esc(by)}）</label>
+    ${st&&st!==f.status?`<label><input type="checkbox" id="rSt" checked>状態を「${esc(f.status)}」→「${esc(st)}」に変更</label>`:''}
+    ${p['次の一手']&&p['次の一手']!==f.next?`<label><input type="checkbox" id="rNext" checked>次の一手を「${esc(p['次の一手'])}」に更新</label>`:''}
+    ${sha&&sha!==(f.src||{}).sha?`<label><input type="checkbox" id="rSha" checked>ZIP名・SHA256を更新（${esc(p['ZIP名']||'')} / <span class="mono">${esc(sha)}</span>）</label>`:''}
+  </div></div>`:''}
+  <div class="actions"><button class="primary" id="rSave" ${r.text&&f?'':'disabled'}>台帳に記録</button></div>`}
+
+function viewHowto(){return `<h2>GPT と Claude はこうつながる</h2>
+  <p>AI同士は直接話せず、ファイルも直接は渡せません。<b>あなたがコピペで運ぶ「文章」</b>と、<b>両方が読める置き場（GitHub か ZIP）</b>の2本でつなぎます。この台帳はその中継点です。</p>
+  <h3>やり取り（文章）</h3>
+  <div class="flow">
+    <div class="step"><b>1. 台帳で指示文を作る</b>機能・相手・やってほしいことを選ぶと、背景・経過・ソースの場所・条件・報告書式入りの文章ができる</div>
+    <div class="arrow">↓ あなたがコピーして貼る</div>
+    <div class="step"><b>2. 相手のAIが作業</b>ChatGPT / Codex / Claude チャット / Claude Code のどれでも同じ文章で動ける</div>
+    <div class="arrow">↓ 最後に【完了報告】を返してくる</div>
+    <div class="step"><b>3. 報告を台帳に貼る</b>機能IDで自動判別し、ログ・状態・次の一手・SHA256を更新</div>
+  </div>
+  <h3>ファイル（ソース）</h3>
+  <div class="legend">
+    <b>GitHub</b><span>本命。Claude Code と Codex は直接読み書きできる。ChatGPT チャットは公開リポジトリならURLから読めることがあるが、非公開だと読めない。</span>
+    <b>ZIP</b><span>ChatGPT / Claude チャット向け。Claude Code が ZIP を作り、あなたがダウンロードして相手のチャットに添付する。SHA256 で「同じファイルか」を確かめる。</span>
+    <b>サイズ</b><span>添付の目安：Claude チャット 1ファイル約30MB、ChatGPT 約512MB。超える時は縮小版か分割（指示文画面に案内が出ます）。</span>
+  </div>
+  <h3>典型パターン</h3>
+  <div class="box"><b>Claude Code で作る → ChatGPT Sites で公開</b><br>Claude Code が GitHub に push＋公開用ZIPを作る → 台帳にブランチ・ZIP名・SHA256 → 「ChatGPT」宛て指示文（既存プロジェクトIDを変えない条件つき）→ ZIPを添付して送る → 報告を取込</div>
+  <div class="box"><b>ChatGPT で直した → Claude Code で続ける</b><br>ChatGPT にZIPを出してもらう → あなたがGitHubに上げるか、Claude Code のチャットに添付 → 「Claude Code」宛て指示文 → 報告を取込</div>
+  <h2>はじめて使うとき（整理の手順）</h2>
+  <div class="flow">
+    <div class="step"><b>1. チャットを集める</b>Claude（チャット・Code）と ChatGPT（チャット・Codex）の履歴から、作業中のものを「名前 URL」で1行ずつメモ</div>
+    <div class="step"><b>2. 「未整理」タブにまとめて貼る</b>URLから種類を自動判定して並ぶ</div>
+    <div class="step"><b>3. 1件ずつ振り分け</b>既存の機能につなぐか、「新しい機能にする」</div>
+    <div class="step"><b>4. 各機能で状態・次の一手・ソースを埋める</b>分からない所は空欄でOK。ソース情報は Claude Code / Codex に「この作業のブランチ・フォルダ・ZIP名・SHA256を教えて」と聞けば出る</div>
+  </div>
+  <p class="next" style="font-size:13px">データは claude.ai のこの台帳ページに保存され、スマホとPCで同じ内容が見えます。あなたのアカウントでだけ読み書きでき、APIキーやパスワードは入れない前提です。</p>`}
+
+// ---------- events ----------
+function bind(){
+  const on=(sel,ev,fn)=>{const e=$(sel);if(e)e.addEventListener(ev,fn)};
+  document.querySelectorAll('.stat').forEach(b=>b.onclick=()=>{ui.filter=ui.filter===b.dataset.f?'all':b.dataset.f;saveUi();render()});
+  on('#fFilter','change',e=>{ui.filter=e.target.value;saveUi();render()});
+  on('#fSite','change',e=>{ui.site=e.target.value;saveUi();render()});
+  on('#fQ','input',e=>{ui.q=e.target.value;const p=e.target.selectionStart;render();const q=$('#fQ');q.focus();q.setSelectionRange(p,p)});
+  on('#newFeat','click',async()=>{const id=newId();await createFeat(id,{title:'新しい機能',site:ui.site||'main',status:'構想',owner:'自分'});go(id)});
+  // detail
+  const f=route.v==='detail'&&feats.find(x=>x.id===route.id);
+  if(f){
+    on('#dSave','click',async()=>{await saveFeat(f.id,{title:$('#dTitle').value.trim()||'無題',site:$('#dSite').value,status:$('#dStatus').value,owner:$('#dOwner').value,next:$('#dNext').value.trim(),deploy:$('#dDeploy').value.trim()});clean('d');toast('保存しました')});
+    on('#dHand','click',()=>{ui.ho={...ui.ho,fid:f.id,rules:null,text:''};go('handoff')});
+    on('#dRep','click',()=>{ui.rep={text:'',fid:f.id};go('report')});
+    on('#cUrl','input',e=>{$('#cTool').value=toolFromUrl(e.target.value)});
+    on('#cAdd','click',async()=>{const url=$('#cUrl').value.trim(),name=$('#cName').value.trim();if(!url&&!name)return toast('URLかチャット名を入れてください');await saveFeat(f.id,{chats:[...(f.chats||[]),{tool:$('#cTool').value,name,url}]});clean('c');toast('チャットを追加しました')});
+    document.querySelectorAll('[data-delchat]').forEach(b=>b.onclick=()=>{const c=[...f.chats];c.splice(+b.dataset.delchat,1);saveFeat(f.id,{chats:c})});
+    on('#sSave','click',async()=>{const sha=$('#sSha').value.trim();if(sha&&!/^[0-9a-fA-F]{64}$/.test(sha))return toast('SHA256は64桁の16進数です');
+      await saveFeat(f.id,{src:{repo:$('#sRepo').value.trim(),branch:$('#sBranch').value.trim(),folder:$('#sFolder').value.trim(),zip:$('#sZip').value.trim(),sha:sha.toLowerCase(),size:$('#sSize').value,zipUrl:$('#sUrl').value.trim()}});clean('s');toast('ソース情報を保存しました')});
+    on('#lAdd','click',async()=>{const t=$('#lText').value.trim();if(!t)return;await addLog(f,t,$('#lBy').value);clean('l');toast('記録しました')});
+    on('#dDel','click',()=>{$('#delZone').innerHTML=`<span>本当に削除しますか？ログも消えます。</span><button class="danger" id="dDel2">削除する</button><button id="dCancel">やめる</button>`;
+      on('#dDel2','click',async()=>{await delFeat(f.id);toast('削除しました');go('list')});on('#dCancel','click',render)});
+  }
+  // inbox
+  on('#iText','input',e=>ui.inboxText=e.target.value);
+  on('#iAdd','click',async()=>{
+    const lines=$('#iText').value.split('\n').map(x=>x.trim()).filter(Boolean);let n=0;
+    for(const line of lines){const m=line.match(/https?:\/\/\S+/);const url=m?m[0]:'';const title=line.replace(url,'').replace(/^[\s\-–・|｜:：]+|[\s\-–・|｜:：]+$/g,'').trim();
+      const id='i-'+Math.random().toString(36).slice(2,9);await write('inbox',id,r=>r.set({title,url,tool:toolFromUrl(url),at:nowIso()}));n++}
+    ui.inboxText='';clean('iText');toast(n+'件取り込みました')});
+  document.querySelectorAll('[data-inbox]').forEach(card=>{
+    const it=inbox.find(x=>x.id===card.dataset.inbox);
+    card.querySelector('.iDel').onclick=()=>write('inbox',it.id,r=>r.delete());
+    card.querySelector('.iGo').onclick=async()=>{const dest=card.querySelector('.iDest').value;if(!dest)return toast('振り分け先を選んでください');
+      const chat={tool:it.tool,name:it.title,url:it.url};
+      if(dest==='__new'){const id=newId();await createFeat(id,{title:it.title||'新しい機能',site:'main',status:'作業中',owner:ownerFromTool(it.tool),chats:[chat]});await write('inbox',it.id,r=>r.delete());go(id)}
+      else{const tf=feats.find(x=>x.id===dest);await saveFeat(dest,{chats:[...(tf.chats||[]),chat]});await write('inbox',it.id,r=>r.delete());toast('振り分けました')}}});
+  // handoff
+  const regen=()=>{ui.ho.text=buildPrompt();const o=$('#hOut');if(o)o.textContent=ui.ho.text;$('#hTidyMsg')&&($('#hTidyMsg').innerHTML='')};
+  on('#hFeat','change',e=>{ui.ho.fid=e.target.value;ui.ho.rules=null;ui.ho.text='';render()});
+  document.querySelectorAll('#hTarget button').forEach(b=>b.onclick=()=>{ui.ho.target=b.dataset.t;ui.ho.text='';render()});
+  on('#hReq','input',e=>{ui.ho.req=e.target.value;regen()});
+  on('#hExtra','input',e=>{ui.ho.extra=e.target.value;regen()});
+  on('#hSplit','change',e=>{ui.ho.split=e.target.checked;regen()});
+  document.querySelectorAll('#hRules input').forEach(cb=>cb.onchange=()=>{const all=rulesFor(feats.find(x=>x.id===ui.ho.fid));ui.ho.rules=all.filter((r,i)=>$(`#hRules input[data-r="${i}"]`).checked);regen()});
+  on('#hCopy','click',async()=>{const t=ui.ho.text;try{await navigator.clipboard.writeText(t);toast('コピーしました。相手のチャットに貼ってください')}catch(e){const r=document.createRange();r.selectNodeContents($('#hOut'));const s=getSelection();s.removeAllRanges();s.addRange(r);toast('選択しました。長押しでコピーしてください')}});
+  on('#hLog','click',async()=>{const tf=feats.find(x=>x.id===ui.ho.fid);if(!tf)return;await addLog(tf,`${ui.ho.target} へ引き継ぎ：${ui.ho.req.trim()||'(依頼内容なし)'}`,'自分');toast('ログに残しました')});
+  on('#hTidy','click',tidy);
+  // report
+  on('#rText','input',e=>{ui.rep.text=e.target.value;const p=e.target.selectionStart;render();const t=$('#rText');t.focus();t.setSelectionRange(p,p)});
+  on('#rFeat','change',e=>{ui.rep.fid=e.target.value;render()});
+  on('#rSave','click',async()=>{
+    const r=ui.rep,tf=feats.find(x=>x.id===r.fid);if(!tf)return;const p=parseReport(r.text);
+    const by=AIS.find(a=>(p['担当']||'').includes(a))||'自分';
+    const patch={logs:[...(tf.logs||[]),{at:nowIso(),by,text:r.text.trim()}]};
+    if($('#rSt')?.checked)patch.status=STATUS.find(s=>p['状態'].includes(s));
+    if($('#rNext')?.checked)patch.next=p['次の一手'].split('\n')[0];
+    if($('#rSha')?.checked)patch.src={...(tf.src||{}),sha:p['SHA256'].match(/[0-9a-fA-F]{64}/)[0].toLowerCase(),...(p['ZIP名']?{zip:p['ZIP名'].split('\n')[0]}:{})};
+    await saveFeat(tf.id,patch);ui.rep={text:'',fid:''};toast('台帳に記録しました');go(tf.id)});
+}
+
+// facts that must survive AI tidying
+function facts(t){return [...new Set([...(t.match(/https?:\/\/[^\s）)」]+/g)||[]),...(t.match(/\b[0-9a-f]{64}\b/gi)||[]),...(t.match(/appg(?:prj|ver)_[0-9a-f]+/g)||[]),...(t.match(/f-[a-z0-9]{4,}/g)||[]),...(t.match(/[\w.-]+\.zip/g)||[])])]}
+async function tidy(){
+  const msg=$('#hTidyMsg'),orig=ui.ho.text;if(!orig)return;
+  if(!sample){msg.innerHTML='<div class="banner">この表示ではAI整形を使えません（claude.ai で開いてください）。</div>';return}
+  msg.innerHTML='<div class="banner">整えています…</div>';$('#hTidy').disabled=true;
+  try{
+    const res=await sample(`次の「AIへの依頼文」を、受け取るAIが迷わず実行できるよう読みやすく整えてください。\n厳守：URL・SHA256・ID・ZIP名・ブランチ名・フォルダ名・数値は1文字も変えない。「守ってほしい条件」の項目は削らず意味も変えない。【完了報告】以下の書式はそのまま残す。新しい事実や条件を足さない。見出し構成は保つ。整えた依頼文だけを出力。\n\n----\n${orig}`,{modelTier:'default',cache:false});
+    const out=(res.text||'').trim();const lost=facts(orig).filter(x=>!out.includes(x));
+    const rulesLost=[...(ui.ho.rules||[])].filter(r=>!out.includes(r.slice(0,8)));
+    if(!out||lost.length||!out.includes('【完了報告】')){msg.innerHTML=`<div class="banner">整形結果で事実が変わったため採用しませんでした：${esc(lost.slice(0,3).join(' / ')||'報告書式が欠落')}</div>`}
+    else{ui.ho.text=out;$('#hOut').textContent=out;msg.innerHTML=`<div class="banner">整えました。URL・SHA256・IDはすべて一致を確認済み。${rulesLost.length?'条件の言い回しが変わった項目があります。目で確認してください。':''}</div>`}
+  }catch(e){msg.innerHTML=`<div class="banner">AI整形できませんでした（${esc(e.code||e.message||'')}）。元の指示文はそのまま使えます。</div>`}
+  finally{const b=$('#hTidy');if(b)b.disabled=false}}
+
+// ---------- boot ----------
+readHash();
+(async()=>{
+  const timer=setTimeout(()=>{if(!loaded)setConn('台帳の読み込みに時間がかかっています。電波の良い所で開き直すか、claude.ai にログインしているか確認してください。')},10000);
+  try{db=window.claude?await window.claude.use('db'):null}catch(e){db=null}
+  if(!db){clearTimeout(timer);setConn('台帳に接続できません。claude.ai にログインした状態でこのページを開いてください。');return}
+  const fail=e=>{$('#sync').className='sync';$('#sync').lastChild.textContent='接続エラー';setConn('同期エラー：'+(e&&(e.message||e.code)||''))};
+  db.collection('features').onSnapshot(s=>{feats=s.docs.map(d=>({id:d.id,...d.data()}));loaded=true;clearTimeout(timer);setConn('');
+    $('#sync').className='sync ok';$('#sync').lastChild.textContent='同期中';
+    const a=document.activeElement;if(!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&route.v!=='list'))render()},fail);
+  db.collection('inbox').onSnapshot(s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));if(loaded)render()},fail);
+  try{sample=await window.claude.use('sample')}catch(e){sample=null}
+})();
+</script>
