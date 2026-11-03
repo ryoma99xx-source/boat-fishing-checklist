@@ -611,9 +611,11 @@ function bindMap(){
 const WHO=['Claude Code','GPT（API経由）','ChatGPT（手作業）','自分'];
 const whoCls=w=>w.startsWith('Claude')?'Claude':w.startsWith('自分')?'自分':'ChatGPT';
 const AUTO=w=>w==='Claude Code'||w==='GPT（API経由）';
+const TOOLS_REPO='ryoma99xx-source/boat-fishing-checklist', TOOLS_BRANCH='claude/relaxed-mayer-1u2nhq';
 const GPT_RULES=['「GPT（API経由）」の工程は、環境変数 OPENAI_API_KEY があれば OpenAI API で GPT に実行させ、その出力を使う。モデルは使える最新の GPT を選ぶ。キーの値は表示・ログ・ファイル・コミットに絶対に出さない。キーが無い・失敗した場合は、その工程を「ChatGPTへの依頼文」に回す',
  '「ChatGPT（手作業）」の工程（ChatGPT Sites での公開、GPTs・プラグインでの WordPress 登録など）は自分で行わない。必要なファイル（ZIP名・SHA256）を用意し、ChatGPT にそのまま貼れる依頼文を報告の「ChatGPTへの依頼文」に書く',
- 'オーナーの判断が必要な所は、推測で進めず「確認したいこと」に書いて止まる'];
+ 'オーナーの判断が必要な所は、推測で進めず「確認したいこと」に書いて止まる',
+ `WordPress（cutlassfish.tokyo）への記事登録は、リポジトリ ${TOOLS_REPO} のブランチ ${TOOLS_BRANCH} にある wordpress/README.md の手順で「下書き」まで行う（公開はしない）。環境変数 WP_USER / WP_APP_PASSWORD が無ければ記事パックZIPを作って形式チェックまで行い、ZIP名とSHA256を報告に書く`];
 function yourTurn(){const L=[];
   feats.forEach(f=>{
     if(f.gptAsk&&!f.gptAsk.done)L.push({f,kind:'gpt'});
@@ -669,7 +671,7 @@ async function makePlan(){
   try{
     const pl=await sample.json(`あなたは釣りサイト群（cutlassfish.tokyo と関連ツール）の制作司令塔です。オーナーの依頼を、誰がどの順にやるかの計画にしてください。
 実行者は次の4つだけ：
-- "Claude Code"：コード・ツール・アプリの制作や修正、GitHub への push、公開用ZIPの作成、記事の下書きなどファイルを伴う作業
+- "Claude Code"：コード・ツール・アプリの制作や修正、GitHub への push、公開用ZIPの作成、記事の執筆と写真付き記事パックの作成、WordPress への記事の下書き登録（専用APIが使える場合）
 - "GPT（API経由）"：Claude Code が OpenAI API で GPT に頼む文章作業（記事の下書き・別視点のレビューなど）。GPT らしさが必要なときだけ使う
 - "ChatGPT（手作業）"：ChatGPT Sites での公開、GPTs・自作プラグインでの WordPress 登録など、ChatGPT の画面でしかできない作業
 - "自分"：オーナーの確認・判断・実機での確認
@@ -691,6 +693,7 @@ function promptFor(fid,target,req,extra){const keep=ui.ho;ui.ho={fid,target,req,
 async function ccDispatch(f,text){
   const s=f.src||{};const input={prompt:text,title:`${siteName(f.site)}｜${f.title}`.slice(0,120),environment_id:ENV_ID};
   if(s.repo){input.source_url=`https://github.com/${s.repo}`;if(s.branch)input.source_revision=s.branch}
+  else{input.source_url=`https://github.com/${TOOLS_REPO}`;input.source_revision=TOOLS_BRANCH}
   const p=payloadOf(await mcp.callTool(CCR,'create_session',input));
   return (p&&(p.session_id||p.id||(p.session&&p.session.id)))||((JSON.stringify(p||'').match(/session_[A-Za-z0-9]+/)||[''])[0])}
 async function startPlan(){
