@@ -65,7 +65,7 @@ function drawCoverage(c,w,h){
  const nw=project(VIEW_AREA.north,VIEW_AREA.west),se=project(VIEW_AREA.south,VIEW_AREA.east);
  c.beginPath();c.rect(0,0,w,h);c.rect(nw.x,nw.y,se.x-nw.x,se.y-nw.y);c.fillStyle='#eff2f580';c.fill('evenodd');
  const outer=rectangle(VIEW_AREA,'#236ab5',[]);
- if(outer.x>0&&outer.y>100&&outer.x<w-170&&outer.y<h-50)label(c,outer.x+125,outer.y+19,'表示対象：湾奥〜勝山沖・三崎');
+ if(outer.x>0&&outer.y>100&&outer.x<w-170&&outer.y<h-50)label(c,outer.x+125,outer.y+19,'表示対象：東京湾〜房総');
  $('modelCoverageKey').hidden=!usesModel();if(usesModel()&&H.grids)for(const g of H.grids){const fine=g.dxM<200,r=rectangle(gridBounds(g),g.dxM<75?'#4fd0a0':g.dxM<200?'#3fb7c9':'#00816b',[6,4]);if(fine&&r.w>110&&r.h>50&&r.x>0&&r.x<w-140&&r.y>120&&r.y<h-90)label(c,r.x+70,r.y+18,g.dxM+'m格子の範囲');}
  c.restore();
  for(const key of ['inner','katsuyama','misaki']){const r=REGIONS[key],p=project(r.lat,r.lon);if(p.x<35||p.x>w-35||p.y<115||p.y>h-70)continue;dot(c,p.x,p.y,3,'#236ab5');label(c,p.x,p.y+19,r.name);}
@@ -362,7 +362,7 @@ function useStandard(){
 function openSettings(){
  modal('地点を座標で指定',`<p>緯度・経度を入力して、確認したい海上の地点へ移動できます。</p>
  <div class="point-grid"><label>北緯<input id="lat" type="number" step=".00001" value="${S.pin.lat.toFixed(5)}"></label><label>東経<input id="lon" type="number" step=".00001" value="${S.pin.lon.toFixed(5)}"></label></div><p id="settingsMessage" role="status"></p><button id="setCoordinates" class="primary">この地点を表示</button><button id="reset">初期位置に戻す</button>`);
- $('setCoordinates').onclick=()=>{const p={lat:+$('lat').value,lon:+$('lon').value};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon)||!contains(VIEW_AREA,p)){$('settingsMessage').textContent='青枠内（湾奥〜勝山沖・三崎周辺）の緯度・経度を入力してください。';return;}selectPoint(p);go(p,15);$('modal').close();};
+ $('setCoordinates').onclick=()=>{const p={lat:+$('lat').value,lon:+$('lon').value};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon)||!contains(VIEW_AREA,p)){$('settingsMessage').textContent='青枠内（東京湾〜房総・鹿島灘南部）の緯度・経度を入力してください。';return;}selectPoint(p);go(p,15);$('modal').close();};
  $('reset').onclick=()=>{selectPoint({...START});go(START,14);$('modal').close();};
 }
 $('settings').onclick=openSettings;
