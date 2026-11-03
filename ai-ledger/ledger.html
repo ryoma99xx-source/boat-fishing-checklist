@@ -319,6 +319,20 @@ function viewDetail(){
 
   <div class="actions" id="delZone"><button class="danger" id="dDel">この機能を削除</button></div>`}
 
+function guessHtml(g){
+  const f=g.featId&&feats.find(x=>x.id===g.featId);
+  return `<div class="box" style="background:var(--bg);margin:8px 0 0"><div style="font-size:12px;color:var(--muted);letter-spacing:.04em">推定（${esc(g.from||'自動収集')}）— 合っていれば下のボタンで登録</div>
+    <div class="flowrow" style="margin:6px 0">${g.step?`<span class="role ai-${esc(g.ai)}" style="cursor:default;flex:0 1 auto"><span class="stp">${esc(siteName(g.site))}｜${esc(g.step)}</span><span class="ai">${esc(g.ai)}</span><span class="pl">${esc(g.place||'場所未確認')}</span></span>`:''}</div>
+    <div style="font-size:13px">${f?`既存の機能「${esc(f.title)}」にチャットとしてつなぐ`:g.newTitle?`新しい機能「${esc(g.newTitle)}」（${esc(g.status||'作業中')}）として登録`:''}</div>
+    ${g.note?`<div class="next" style="font-size:12.5px;margin-top:4px">${esc(g.note)}</div>`:''}
+    <div class="actions" style="margin:8px 0 0"><button class="small primary iOk">推定どおり登録</button></div></div>`}
+async function acceptGuess(it){
+  const g=it.guess,chat={tool:it.tool,name:it.title,url:it.url};let fid=g.featId;
+  if(fid&&feats.some(x=>x.id===fid)){const tf=feats.find(x=>x.id===fid);if(it.url&&!(tf.chats||[]).some(c=>c.url===it.url))await saveFeat(fid,{chats:[...(tf.chats||[]),chat]})}
+  else if(g.newTitle){fid=newId();await createFeat(fid,{title:g.newTitle,site:g.site||'other',status:g.status||'作業中',owner:g.ai||'自分',chats:it.url?[chat]:[],logs:g.note?[{at:nowIso(),by:'自分',text:'自動収集からの登録：'+g.note}]:[]})}
+  if(g.step&&!roles.some(r=>r.site===g.site&&r.step===g.step&&r.ai===g.ai)){
+    await write('roles','r-'+Math.random().toString(36).slice(2,9),r=>r.set({site:g.site,step:g.step,ai:g.ai,place:g.place||'',detail:g.roleDetail||'',url:g.roleUrl||'',feats:fid?[fid]:[],at:nowIso(),updatedAt:nowIso()}))}
+  await write('inbox',it.id,r=>r.delete());toast('登録しました')}
 function viewInbox(){
   if(!loaded)return notReady();
   return `<h2>未整理のチャット</h2>
@@ -328,6 +342,7 @@ function viewInbox(){
   <div class="list">${inbox.length?inbox.slice().sort((a,b)=>String(a.at).localeCompare(String(b.at))).map(it=>`<div class="card" data-inbox="${esc(it.id)}">
     <div class="meta"><span class="tag">${esc(it.tool)}</span><span>${esc(fmt(it.at))}</span></div>
     <div class="title">${esc(it.title||'(名前なし)')}</div>${it.url?`<a class="mono" style="color:var(--accent)" href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.url)}</a>`:''}
+    ${it.guess?guessHtml(it.guess):''}
     <label>振り分け先</label>
     <select class="iDest"><option value="">— 選ぶ —</option><option value="__new">＋ 新しい機能にする</option>${feats.map(f=>`<option value="${esc(f.id)}">${esc(siteName(f.site))}｜${esc(f.title)}</option>`).join('')}</select>
     <div class="actions"><button class="small primary iGo">振り分ける</button><button class="small iDel">捨てる</button></div></div>`).join(''):'<div class="empty">未整理のチャットはありません。</div>'}</div>`}
@@ -557,6 +572,7 @@ function bind(){
   document.querySelectorAll('[data-inbox]').forEach(card=>{
     const it=inbox.find(x=>x.id===card.dataset.inbox);
     card.querySelector('.iDel').onclick=()=>write('inbox',it.id,r=>r.delete());
+    const ok=card.querySelector('.iOk');if(ok)ok.onclick=()=>{ok.disabled=true;acceptGuess(it).catch(()=>ok.disabled=false)};
     card.querySelector('.iGo').onclick=async()=>{const dest=card.querySelector('.iDest').value;if(!dest)return toast('振り分け先を選んでください');
       const chat={tool:it.tool,name:it.title,url:it.url};
       if(dest==='__new'){const id=newId();await createFeat(id,{title:it.title||'新しい機能',site:'main',status:'作業中',owner:ownerFromTool(it.tool),chats:[chat]});await write('inbox',it.id,r=>r.delete());go(id)}
