@@ -122,6 +122,30 @@ nav.tabs a[aria-current="page"]{color:var(--accent);font-weight:700}
 .sitefoot{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--muted)}
 .sitefoot a{color:var(--accent)}
 @media (max-width:420px){.row2{grid-template-columns:1fr}}
+/* Site map tree */
+.tree{padding:10px 8px}
+.tree ul{list-style:none;margin:0;padding:0 0 0 14px;border-left:1px solid var(--line)}
+.tree ul.troot{border-left:0;padding-left:0}
+.tree li{position:relative;padding:2px 0 2px 12px}
+.tree ul:not(.troot)>li::before{content:"";position:absolute;left:0;top:16px;width:10px;border-top:1px solid var(--line)}
+.tree summary{cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:4px 0;list-style:none}
+.tree summary::-webkit-details-marker{display:none}
+.tree summary::before{content:"▸";color:var(--muted);font-size:12px;width:12px;transition:transform .15s}
+.tree details[open]>summary::before{transform:rotate(90deg)}
+.tree .tn{font-weight:700;min-width:0;overflow-wrap:anywhere}
+.tree .tc{font-family:var(--f-mono);font-size:12px;color:var(--muted);background:var(--bg);border-radius:9px;padding:0 7px}
+.tree .tu{font-size:11.5px;font-weight:400;color:var(--accent)}
+.tchips{display:flex;flex-wrap:wrap;gap:4px}
+.tchip{font-size:11px;border:1px solid var(--c,var(--line));color:var(--c,var(--muted));border-radius:5px;padding:0 5px;text-decoration:none;white-space:nowrap}
+.tnew{font-size:11px;color:var(--warn-ink);background:var(--warn-bg);border-radius:5px;padding:0 5px}
+.tleaf{font-size:13.5px}
+.tleaf .tl{color:var(--ink);text-decoration:none;overflow-wrap:anywhere}
+.tleaf .tl:hover{color:var(--accent)}
+.tleaf.linked>.tl{font-weight:700}
+.tleaf .tm{display:flex;flex-wrap:wrap;gap:6px;font-size:11.5px;color:var(--muted);margin:1px 0 4px}
+.tleaf .thist summary{font-size:12px;color:var(--accent)}
+.tleaf .thist summary::before{content:none}
+.tree mark{background:var(--accent-soft);color:var(--ink)}
 /* Org view: a deliberate dark control-room panel in both themes */
 .org{--o-bg:#08111b;--o-panel:#0e1a28;--o-panel2:#122236;--o-line:#26405a;--o-ink:#dce8f3;--o-muted:#8399ae;--o-claude:#ff9f72;--o-gpt:#5ed6aa;--o-me:#a9bccf;--o-glow:#79c3ff;--o-warn:#ffc65c;
   background:radial-gradient(120% 80% at 50% 0%,#0f2033 0%,var(--o-bg) 60%);color:var(--o-ink);border-radius:14px;padding:12px;margin:10px 0;border:1px solid #1b2f45;font-variant-numeric:tabular-nums}
@@ -227,7 +251,9 @@ const saveUi=()=>{try{localStorage.setItem('ledger-ui',JSON.stringify({filter:ui
 
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let extraSites=[],roles=[];
+let extraSites=[],roles=[],smap=null,treeOpen=new Set(['root','tools']);
+try{const t=JSON.parse(localStorage.getItem('ledger-tree')||'null');if(Array.isArray(t))treeOpen=new Set(t)}catch(e){}
+const saveTree=()=>{try{localStorage.setItem('ledger-tree',JSON.stringify([...treeOpen]))}catch(e){}};
 const allSites=()=>[...SITES.filter(s=>s.k!=='other'),...extraSites.slice().sort((a,b)=>String(a.at).localeCompare(String(b.at))),SITES.find(s=>s.k==='other')];
 const siteName=k=>(allSites().find(s=>s.k===k)||{n:k||'未設定'}).n;
 const siteUrl=k=>(allSites().find(s=>s.k===k)||{}).u||'';
@@ -342,6 +368,7 @@ function viewDetail(){
       <div><label for="dOwner">担当</label><select id="dOwner">${opts(OWNERS,f.owner)}</select></div>
     </div>
     <label for="dNext">次の一手</label><input id="dNext" value="${esc(f.next)}">
+    <label for="dPage">対象ページのURL（記事やページに結びつけるとサイトマップに出ます）</label><input id="dPage" type="url" value="${esc(f.pageUrl)}" placeholder="https://cutlassfish.tokyo/article/…">
     <label for="dDeploy">公開先・戻し方・メモ</label><textarea id="dDeploy" placeholder="例：ChatGPT Sites 既存プロジェクト appgprj_… / 戻す場合は保存版 appgver_…">${esc(f.deploy)}</textarea>
     <div class="actions"><button class="primary" id="dSave">保存</button>
       <button id="dHand">指示文を作る</button><button id="dRep">報告を貼る</button></div>
@@ -672,13 +699,67 @@ function drawOrgLines(){
     const ds=[...ceo.closest('.org-side').querySelectorAll('.org-dept')];const top=Math.min(...ds.map(d=>d.offsetTop));
     ds.filter(d=>d.offsetTop-top<4).forEach(d=>P.push([pt(ceo,0),pt(d,1),ds.some(x=>x.dataset.active==='1'&&(x===d||x.offsetLeft===d.offsetLeft))]))});
   svg.innerHTML=P.map(([a,b,on])=>{const m=(a.y+b.y)/2,d=`M${a.x.toFixed(1)},${a.y.toFixed(1)} C${a.x.toFixed(1)},${m.toFixed(1)} ${b.x.toFixed(1)},${m.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`;return `<path class="ol-base" d="${d}"/>${on?`<path class="ol-flow" d="${d}"/>`:''}`}).join('')}
-window.addEventListener('resize',()=>{if(route.v==='map'&&ui.mapMode!=='site')drawOrgLines()});
+window.addEventListener('resize',()=>{if(route.v==='map'&&(ui.mapMode||'org')==='org')drawOrgLines()});
 setInterval(()=>{const c=document.getElementById('orgClock');if(c)c.textContent=new Date().toTimeString().slice(0,8)},1000);
 function viewMap(){
   if(!loaded)return notReady();
-  const seg=`<div class="seg mode-seg" id="mapMode"><button data-m="org" aria-pressed="${ui.mapMode!=='site'}">体制図</button><button data-m="site" aria-pressed="${ui.mapMode==='site'}">サイト別</button></div>`;
-  if(ui.mapMode!=='site')return seg+viewOrg()+`<p class="next" style="font-size:12px">担当をタップすると編集できます。線が光っているのは、いま動いている作業がある所です。</p>`;
+  const md=ui.mapMode||'org';
+  const seg=`<div class="seg mode-seg" id="mapMode">${[['org','体制図'],['tree','サイトマップ'],['site','サイト別']].map(([k,n])=>`<button data-m="${k}" aria-pressed="${md===k}">${n}</button>`).join('')}</div>`;
+  if(md==='tree')return seg+viewTree();
+  if(md==='org')return seg+viewOrg()+`<p class="next" style="font-size:12px">担当をタップすると編集できます。線が光っているのは、いま動いている作業がある所です。</p>`;
   return seg+viewMapSites()}
+function roleChips(site,steps){return roles.filter(r=>r.site===site&&(!steps||steps.includes(r.step))).sort((a,b)=>STEPS.indexOf(a.step)-STEPS.indexOf(b.step)).map(r=>`<span class="tchip ai-${esc(r.ai)}" title="${esc(r.step)}">${esc(r.step)}：${esc(r.ai)}${r.place&&r.place!=='場所未確認'?'・'+esc(r.place):''}</span>`).join('')}
+function featLeaf(f){const l=(f.logs||[]).slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  return `<li class="tleaf"><a href="#${esc(f.id)}" class="tl"><span class="pill st-${esc(f.status)}">${esc(f.status)}</span> ${esc(f.title)}</a>
+    <div class="tm"><span class="tchip ai-${esc(f.owner)}">${esc(f.owner)}</span>${l[0]?`<span>${esc(fmt(l[0].at).slice(5))} ${esc(l[0].by)}：${esc(String(l[0].text).split('\n')[0].slice(0,36))}</span>`:''}</div></li>`}
+function pageLeaf(it,q){const fs=feats.filter(f=>f.pageUrl&&f.pageUrl.replace(/\/$/,'')===it.u.replace(/\/$/,''));
+  const d=it.m?daysSince(it.m):999;
+  return `<li class="tleaf${fs.length?' linked':''}"><a class="tl" href="${esc(it.u)}" target="_blank" rel="noopener">${hl(it.t||it.u,q)}</a>
+    <div class="tm">${it.m?`<span>更新 ${esc(it.m.slice(0,10))}</span>`:''}${d<=7?'<span class="tnew">最近</span>':''}${fs.map(f=>`<a href="#${esc(f.id)}" class="tchip ai-${esc(f.owner)}">${esc(f.owner)}・${esc(f.status)}</a>`).join('')}</div>
+    ${fs.length?`<details class="thist"><summary>履歴</summary>${fs.map(f=>(f.logs||[]).slice().sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,5).map(l=>`<div class="log"><div class="when">${esc(fmt(l.at))}・${esc(l.by)}</div><div class="txt">${esc(String(l.text).slice(0,200))}</div></div>`).join('')).join('')}</details>`:''}</li>`}
+function hl(t,q){t=String(t);if(!q)return esc(t);const i=t.toLowerCase().indexOf(q.toLowerCase());return i<0?esc(t):esc(t.slice(0,i))+'<mark>'+esc(t.slice(i,i+q.length))+'</mark>'+esc(t.slice(i+q.length))}
+function branch(k,label,count,inner,extra,forceOpen){const open=forceOpen||treeOpen.has(k);
+  return `<li><details data-k="${esc(k)}" ${open?'open':''}><summary><span class="tn">${label}</span>${count!=null?`<span class="tc">${count}</span>`:''}${extra||''}</summary><ul>${inner}</ul></details></li>`}
+function viewTree(){
+  if(!loaded)return notReady();
+  const q=(ui.treeQ||'').trim(),match=it=>!q||String(it.t||it.u).toLowerCase().includes(q.toLowerCase());
+  const secs=(smap&&smap.sections)||[],cats=(smap&&smap.cats)||[];
+  const mainFeats=feats.filter(f=>f.site==='main');
+  const articleWip=mainFeats.filter(f=>f.status!=='公開済み'&&!f.pageUrl&&(f.kind==='記事作成'||/記事/.test(f.title)));
+  const siteWide=mainFeats.filter(f=>!articleWip.includes(f)&&!f.pageUrl);
+  const recent=it=>it.m&&daysSince(it.m)<=7;
+  const secHtml=sec=>{
+    const items=sec.items.filter(match).sort((a,b)=>String(b.m).localeCompare(String(a.m)));
+    if(sec.key==='tachiuo_post'){
+      const groups=cats.map(c=>[c,items.filter(i=>(i.c||[]).includes(c.slug))]).filter(([,l])=>l.length);
+      const none=items.filter(i=>!(i.c||[]).length);
+      const inner=(articleWip.length&&!q?branch('art-wip','<span class="pill st-作業中">作成中・修正中</span>',articleWip.length,articleWip.map(featLeaf).join(''),'',true):'')
+        +groups.map(([c,l])=>branch('cat-'+c.slug,esc(c.name),l.length,l.map(i=>pageLeaf(i,q)).join(''),l.some(recent)?'<span class="tnew">最近</span>':'',!!q)).join('')
+        +(none.length?branch('cat-none','トピックなし',none.length,none.map(i=>pageLeaf(i,q)).join(''),'',!!q):'');
+      return branch('sec-'+sec.key,esc(sec.label),items.length,inner,`<span class="tchips">${roleChips('main',['記事作成','WordPress登録'])}</span>`,!!q&&items.length>0)}
+    if(sec.key==='post'&&!q&&sec.items.length<=1)return '';
+    return branch('sec-'+sec.key,esc(sec.label),items.length,items.map(i=>pageLeaf(i,q)).join(''),items.some(recent)?'<span class="tnew">最近</span>':'',!!q&&items.length>0)};
+  const tools=allSites().filter(s=>s.k!=='main'&&s.k!=='other');
+  const toolHtml=tools.map(s=>{const fs=feats.filter(f=>f.site===s.k).sort((a,b)=>({'作業中':0,'確認・公開待ち':1,'構想':2,'保留':3,'公開済み':4}[a.status]??5)-({'作業中':0,'確認・公開待ち':1,'構想':2,'保留':3,'公開済み':4}[b.status]??5));
+    const open=fs.filter(f=>f.status!=='公開済み').length;
+    return branch('tool-'+s.k,`${esc(s.n)}${s.u?` <a class="tu" href="${esc(s.u)}" target="_blank" rel="noopener">${esc(s.u.replace(/^https:\/\/|\/$/g,''))} ↗</a>`:''}`,fs.length?`機能${fs.length}`:null,
+      fs.length?fs.map(featLeaf).join(''):'<li class="tleaf"><span class="next">機能は未登録</span></li>',`<span class="tchips">${roleChips(s.k)}</span>${open?`<span class="tnew">進行中${open}</span>`:''}`,!!q&&fs.some(f=>f.title.includes(q)))}).join('');
+  return `<div class="filters"><input id="treeQ" type="search" placeholder="記事・ページを検索" value="${esc(q)}"><button class="small" data-treeopen="all">全部開く</button><button class="small" data-treeopen="close">畳む</button></div>
+  <div class="tree box"><ul class="troot">
+    <li><details data-k="root" open><summary><span class="tn"><b>cutlassfish.tokyo</b>（トップ）</span><span class="tchips">${roleChips('main',['テーマ・デザイン'])}</span></summary><ul>
+      ${smap?secs.map(secHtml).join(''):'<li class="tleaf"><span class="next">サイトの情報がまだありません。下の「最新にする」で取り込みます。</span></li>'}
+      ${siteWide.length&&!q?branch('site-wide','サイト全体の機能・修正',siteWide.length,siteWide.map(featLeaf).join(''),''):''}
+      ${branch('tools','ツール',tools.length,toolHtml,'',!!q)}
+    </ul></details></li></ul></div>
+  <div class="actions"><button id="treeSync" ${mcp?'':'disabled'}>サイトの情報を最新にする</button><span class="next" style="font-size:12px;align-self:center">${smap?`${esc(fmt(smap.fetchedAt))} 時点（公開中の記事・ページ）`:''}</span></div>
+  <p class="next" style="font-size:12px">記事は普段は畳んであります。台帳の機能に「対象ページのURL」を入れると、その記事の葉に担当と履歴が付きます。作成中の記事は「記事 → 作成中・修正中」に出て、公開後に最新にすると正式な葉になります。</p>`}
+async function treeSync(){
+  const b=$('#treeSync');if(!mcp)return;b.disabled=true;b.textContent='Claude Code に依頼中…';
+  const f={id:'',title:'サイトマップの更新',site:'main',src:{repo:TOOLS_REPO,branch:TOOLS_BRANCH},chats:[]};
+  const text=`制作台帳のサイトマップを最新にしてください。\n1. リポジトリ ${TOOLS_REPO} のブランチ ${TOOLS_BRANCH} で python3 wordpress/sitemap/sync.py -o /tmp/sitemap.json を実行（公開ページを読むだけ）\n2. 結果を制作台帳（${location.href.split('#')[0].includes('claude.ai')?location.href.split('#')[0]:'https://claude.ai/artifact/T4YTywvucGbbGSaWmu3VFQ'}）のデータベースに保存：ArtifactData ツールで collection "sitemap"、doc_id "wp" を、file_path に /tmp/sitemap.json を指定して set（既存の版番号を読んで if_version を付ける）\n3. ツールが無い・失敗した場合は、その旨と件数だけを短く報告\n最後に「記事◯件・釣果◯件…で更新しました」と一言だけ報告してください。コードの変更・push はしないこと。`;
+  try{await ccDispatch(f,text);toast('Claude Code に更新を頼みました。数分で反映されます')}
+  catch(e){toast(mcpErr(e))}
+  b.disabled=false;b.textContent='サイトの情報を最新にする'}
 function viewMapSites(){
   const by={};roles.forEach(r=>{(by[r.ai]=by[r.ai]||{});const p=r.place||'場所未確認';by[r.ai][p]=(by[r.ai][p]||0)+1});
   const sites=allSites().filter(s=>s.k!=='other'||roles.some(r=>r.site==='other'));
@@ -701,7 +782,11 @@ function bindMap(){
   const on=(sel,ev,fn)=>{const e=$(sel);if(e)e.addEventListener(ev,fn)};
   document.querySelectorAll('#mapMode button').forEach(b=>b.onclick=()=>{ui.mapMode=b.dataset.m;render()});
   document.querySelectorAll('[data-orgrole]').forEach(b=>b.onclick=()=>{ui.mapMode='site';ui.roleEdit=b.dataset.orgrole;render();const x=$('#roleBox');if(x)x.scrollIntoView({block:'start'})});
-  if(ui.mapMode!=='site'){requestAnimationFrame(drawOrgLines);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawOrgLines)}
+  document.querySelectorAll('.tree details[data-k]').forEach(d=>d.addEventListener('toggle',()=>{d.open?treeOpen.add(d.dataset.k):treeOpen.delete(d.dataset.k);saveTree()}));
+  const tq=$('#treeQ');if(tq)tq.addEventListener('input',e=>{ui.treeQ=e.target.value;const p=e.target.selectionStart;render();const t=$('#treeQ');t.focus();t.setSelectionRange(p,p)});
+  document.querySelectorAll('[data-treeopen]').forEach(b=>b.onclick=()=>{b.dataset.treeopen==='all'?document.querySelectorAll('.tree details[data-k]').forEach(d=>{d.open=true;treeOpen.add(d.dataset.k)}):(treeOpen=new Set(['root','tools']));saveTree();render()});
+  on('#treeSync','click',treeSync);
+  if((ui.mapMode||'org')==='org'){requestAnimationFrame(drawOrgLines);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawOrgLines)}
   document.querySelectorAll('.legend-ai button').forEach(b=>b.onclick=()=>{ui.mapAi=b.dataset.ai;render()});
   document.querySelectorAll('[data-role]').forEach(b=>b.onclick=()=>{ui.roleEdit=b.dataset.role;render();$('#roleBox').scrollIntoView({block:'start'})});
   document.querySelectorAll('[data-addrole]').forEach(b=>b.onclick=()=>{ui.roleEdit='new';ui.roleSite=b.dataset.addrole;render();$('#roleBox').scrollIntoView({block:'start'})});
@@ -814,7 +899,7 @@ async function startPlan(){
     const planText=pl.steps.map((x,i)=>`${i+1}. ${x.who}：${x.what}`).join('\n');
     const auto=pl.steps.some(x=>AUTO(x.who));
     const logs=[...((f&&f.logs)||[]),{at:nowIso(),by:'自分',text:`司令塔からの依頼：${ui.cmd}\n計画：\n${planText}`}];
-    if(!f){fid=newId();await createFeat(fid,{title:pl.title,site:pl.site,status:'作業中',owner:auto?'Claude':'自分',next:pl.steps[0].what,logs,plan:pl.steps});}
+    if(!f){fid=newId();await createFeat(fid,{title:pl.title,site:pl.site,kind:pl.kind||'',status:'作業中',owner:auto?'Claude':'自分',next:pl.steps[0].what,logs,plan:pl.steps});}
     else await saveFeat(fid,{status:'作業中',next:pl.steps[0].what,logs,plan:pl.steps});
     f={...(f||{}),id:fid,title:pl.title,site:pl.site,status:'作業中',owner:auto?'Claude':(f&&f.owner)||'自分',logs,src:(f&&f.src)||{},chats:(f&&f.chats)||[],deploy:(f&&f.deploy)||''};
     if(auto&&mcp){
@@ -898,7 +983,7 @@ function bind(){
   // detail
   const f=route.v==='detail'&&feats.find(x=>x.id===route.id);
   if(f){
-    on('#dSave','click',async()=>{await saveFeat(f.id,{title:$('#dTitle').value.trim()||'無題',site:$('#dSite').value,status:$('#dStatus').value,owner:$('#dOwner').value,next:$('#dNext').value.trim(),deploy:$('#dDeploy').value.trim()});clean('d');toast('保存しました')});
+    on('#dSave','click',async()=>{await saveFeat(f.id,{title:$('#dTitle').value.trim()||'無題',site:$('#dSite').value,status:$('#dStatus').value,owner:$('#dOwner').value,next:$('#dNext').value.trim(),deploy:$('#dDeploy').value.trim(),pageUrl:$('#dPage').value.trim()});clean('d');toast('保存しました')});
     on('#dHand','click',()=>{ui.ho={...ui.ho,fid:f.id,rules:null,text:''};go('handoff')});
     on('#dRep','click',()=>{ui.rep={text:'',fid:f.id};go('report')});
     on('#cUrl','input',e=>{$('#cTool').value=toolFromUrl(e.target.value)});
@@ -956,6 +1041,7 @@ function bind(){
     if($('#rSt')?.checked)patch.status=STATUS.find(s=>p['状態'].includes(s));
     if($('#rNext')?.checked)patch.next=p['次の一手'].split('\n')[0];
     if($('#rSha')?.checked)patch.src={...(tf.src||{}),sha:p['SHA256'].match(/[0-9a-fA-F]{64}/)[0].toLowerCase(),...(p['ZIP名']?{zip:p['ZIP名'].split('\n')[0]}:{})};
+    const pu=((p['公開URL']||'').match(/https:\/\/[\w.-]*cutlassfish\.tokyo\/[^\s）)]*/)||[])[0];if(pu&&!tf.pageUrl)patch.pageUrl=pu;
     if(p['ChatGPTへの依頼文'])patch.gptAsk={text:p['ChatGPTへの依頼文'],at:nowIso(),done:false};
     if(tf.cc&&tf.cc.state!=='取込済み')patch.cc={...tf.cc,state:'取込済み'};
     delete ccMsg[tf.id];
@@ -988,6 +1074,7 @@ readHash();
     $('#sync').className='sync ok';$('#sync').lastChild.textContent='同期中';
     const a=document.activeElement;if(!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&route.v!=='list'))render()},fail);
   db.collection('roles').onSnapshot(s=>{roles=s.docs.map(d=>({id:d.id,...d.data()}));if(loaded)render()},fail);
+  db.collection('sitemap').onSnapshot(s=>{const d=s.docs.find(x=>x.id==='wp');smap=d?d.data():null;if(loaded)render()},fail);
   db.collection('sites').onSnapshot(s=>{extraSites=s.docs.map(d=>({k:d.id,...d.data()}));if(loaded)render()},fail);
   db.collection('inbox').onSnapshot(s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));if(loaded)render()},fail);
   try{sample=await window.claude.use('sample')}catch(e){sample=null}
