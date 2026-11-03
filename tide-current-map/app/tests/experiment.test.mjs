@@ -14,7 +14,8 @@ test('regional experiment respects land, shallow cells and its rectangular grid'
  assert.equal(sampleExperiment(meta,vector,35.01,139.00).reason,'outside');
 });
 
-test('saved tidal case has complete, finite half-hour fields and covers requested offshore sites',()=>{
+// The old 10/24 case data is left out of the slim deployment package; check it only when present.
+test('saved tidal case has complete, finite half-hour fields and covers requested offshore sites',{skip:!fs.existsSync(new URL('../data/tidal-frames.bin',import.meta.url))},()=>{
  const g=prepareExperiment(JSON.parse(fs.readFileSync('data/tidal-case.json'))),bytes=fs.readFileSync('data/tidal-frames.bin');
  assert.equal(g.frameCount,49);assert.equal(bytes.byteLength,g.frameCount*g.wetIds.length*4);assert.ok(g.report.maxMassResidualM<1e-8);
  for(const slot of [17,22,24]){const offset=slot*g.wetIds.length*4,copy=Uint8Array.from(bytes.subarray(offset,offset+g.wetIds.length*4));const vector=new Int16Array(copy.buffer);for(const [lat,lon]of [[35.279,139.708],[35.113,139.805],[35.13,139.615],[35.61,139.9]]){const flow=sampleExperiment(g,vector,lat,lon);assert.ok(Number.isFinite(flow.speed),JSON.stringify({lat,lon,flow}));assert.ok(flow.depth>=3);}}

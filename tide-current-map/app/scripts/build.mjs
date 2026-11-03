@@ -20,14 +20,15 @@ const harmonic=packHarmonic('data');
 if(!JSON.parse(harmonic.index).grids.length)throw Error('No harmonic current grid in data/');
 // Only the basemap placement is needed from the old coastal model.
 const coastalMap=JSON.stringify(JSON.parse(fs.readFileSync('data/coastal-model.json','utf8')).map);
-const map=fs.readFileSync('data/coastal-map.webp').toString('base64');
+// Legacy static basemaps: no longer fetched by the app; bundled only if present.
+const map=fs.existsSync('data/coastal-map.webp')?fs.readFileSync('data/coastal-map.webp').toString('base64'):'';
 const logo=fs.readFileSync('data/brand-logo.png').toString('base64');
 const iconTypes={'favicon.ico':'image/x-icon','favicon-32.png':'image/png','apple-touch-icon.png':'image/png','icon-192.png':'image/png','icon-512.png':'image/png'};
 const icons={};for(const [name,type] of Object.entries(iconTypes))icons['/'+name]={type,data:fs.readFileSync('data/site-icons/'+name).toString('base64')};
 const iconRevision=createHash('sha256').update(JSON.stringify(icons)).digest('hex').slice(0,12);
 const webmanifest=JSON.stringify({id:'/',name:'東京湾の潮と流れ | TIDE & CURRENT MAP',short_name:'潮流マップ',lang:'ja',start_url:'/',scope:'/',display:'standalone',background_color:'#06080f',theme_color:'#06080f',icons:[{src:'/icon-192.png?v='+iconRevision,sizes:'192x192',type:'image/png',purpose:'any'},{src:'/icon-512.png?v='+iconRevision,sizes:'512x512',type:'image/png',purpose:'any'}]});
 const overview=fs.readFileSync('data/overview-map.json','utf8');
-const overviewMap=fs.readFileSync('data/overview-map.webp').toString('base64');
+const overviewMap=fs.existsSync('data/overview-map.webp')?fs.readFileSync('data/overview-map.webp').toString('base64'):'';
 const css=fs.readFileSync('app.css','utf8');
 const revision=createHash('sha256').update(js+css+Object.values(modules).join('')).digest('hex').slice(0,12);
 const html=htmlSource.replace('/app.js','/app.js?v='+revision).replace('/app.css','/app.css?v='+revision).replaceAll('__ICON_VERSION__',iconRevision);
