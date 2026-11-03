@@ -12,17 +12,18 @@
   --f-display:"Dela Gothic One","Zen Kaku Gothic New",system-ui,sans-serif;
   --f-body:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --ai-claude:#b8501f; --ai-gpt:#0f7a5a; --ai-codex:#3a4fb8; --ai-me:#66767c;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0d171b; --surface:#152329; --ink:#e3ecee; --muted:#93a8ae; --line:#26383f;
   --accent:#4fc0c9; --accent-ink:#06262a; --accent-soft:#173a3f;
   --s-idea:#9aa8ad; --s-work:#6fa6ff; --s-wait:#f0a63a; --s-done:#5cc77a; --s-hold:#c79ae6;
-  --warn-bg:#3a2d10; --warn-ink:#f5d38a; --bad:#ff8a80; color-scheme:dark}}
+  --warn-bg:#3a2d10; --warn-ink:#f5d38a; --bad:#ff8a80; --ai-claude:#ff9d6e; --ai-gpt:#4fd1a5; --ai-codex:#9fb0ff; --ai-me:#a9b6ba; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0d171b; --surface:#152329; --ink:#e3ecee; --muted:#93a8ae; --line:#26383f;
   --accent:#4fc0c9; --accent-ink:#06262a; --accent-soft:#173a3f;
   --s-idea:#9aa8ad; --s-work:#6fa6ff; --s-wait:#f0a63a; --s-done:#5cc77a; --s-hold:#c79ae6;
-  --warn-bg:#3a2d10; --warn-ink:#f5d38a; --bad:#ff8a80; color-scheme:dark}
+  --warn-bg:#3a2d10; --warn-ink:#f5d38a; --bad:#ff8a80; --ai-claude:#ff9d6e; --ai-gpt:#4fd1a5; --ai-codex:#9fb0ff; --ai-me:#a9b6ba; color-scheme:dark}
 html{background:var(--bg)}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
@@ -87,7 +88,7 @@ pre.out{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-body);fo
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:14px;z-index:20;max-width:90vw}
-nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:8;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:8;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);
   padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
 nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 6px;font-size:11px;color:var(--muted);text-decoration:none}
 nav.tabs a svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
@@ -98,6 +99,28 @@ nav.tabs a[aria-current="page"]{color:var(--accent);font-weight:700}
 .flow .step b{display:block}
 .legend{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:14px}
 .badge-n{display:inline-block;min-width:18px;padding:0 5px;border-radius:9px;background:var(--bad);color:#fff;font-size:10px;line-height:16px;text-align:center}
+.ai-Claude{--c:var(--ai-claude)} .ai-ChatGPT{--c:var(--ai-gpt)} .ai-Codex{--c:var(--ai-codex)} .ai-自分{--c:var(--ai-me)}
+.legend-ai{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.legend-ai button{display:inline-flex;align-items:center;gap:6px;border-color:var(--c,var(--line))}
+.legend-ai button .dot{width:10px;height:10px;border-radius:50%;background:var(--c,var(--muted))}
+.legend-ai button[aria-pressed="true"]{box-shadow:inset 0 0 0 1.5px var(--c,var(--accent));font-weight:700}
+.places{font-size:13px;color:var(--muted);margin:2px 0 10px}
+.places b{color:var(--c)}
+.sitemap{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+.sitemap header{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.sitemap header h3{margin:0;font-size:16px}
+.sitemap header a{font-size:12px;color:var(--accent);overflow-wrap:anywhere}
+.flowrow{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px}
+.role{display:flex;flex-direction:column;gap:1px;flex:1 1 128px;min-width:0;text-align:left;font:inherit;color:inherit;cursor:pointer;background:var(--bg);border:1.5px solid var(--c);border-radius:8px;padding:6px 8px;transition:opacity .2s}
+.role .stp{font-size:11px;color:var(--muted);letter-spacing:.04em}
+.role .ai{font-weight:700;color:var(--c);font-size:14px}
+.role .pl{font-size:12.5px}
+.role .dt{font-size:12px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.role.dim{opacity:.22}
+.role.add{border-style:dashed;border-color:var(--line);color:var(--muted);align-items:center;justify-content:center;flex:0 0 auto}
+.arr{align-self:center;color:var(--muted);font-size:14px}
+.sitefoot{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--muted)}
+.sitefoot a{color:var(--accent)}
 @media (max-width:420px){.row2{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -113,9 +136,10 @@ nav.tabs a[aria-current="page"]{color:var(--accent);font-weight:700}
 
 <nav class="tabs" aria-label="画面">
   <a href="#list" data-v="list"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>一覧</a>
+  <a href="#map" data-v="map"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="6" rx="1"/><rect x="14" y="4" width="7" height="6" rx="1"/><rect x="8.5" y="15" width="7" height="6" rx="1"/><path d="M6.5 10v2.5h11V10M12 12.5V15"/></svg>全体図</a>
   <a href="#inbox" data-v="inbox"><svg viewBox="0 0 24 24"><path d="M4 13l3-8h10l3 8v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/></svg><span>未整理 <span id="inboxN"></span></span></a>
   <a href="#handoff" data-v="handoff"><svg viewBox="0 0 24 24"><path d="M4 12h13M13 7l5 5-5 5"/></svg>指示文</a>
-  <a href="#report" data-v="report"><svg viewBox="0 0 24 24"><path d="M20 12H7M11 7l-5 5 5 5"/></svg>報告取込</a>
+  <a href="#report" data-v="report"><svg viewBox="0 0 24 24"><path d="M20 12H7M11 7l-5 5 5 5"/></svg>報告</a>
   <a href="#howto" data-v="howto"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></svg>仕組み</a>
 </nav>
 
@@ -148,8 +172,13 @@ const saveUi=()=>{try{localStorage.setItem('ledger-ui',JSON.stringify({filter:ui
 
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const siteName=k=>(SITES.find(s=>s.k===k)||{n:k||'未設定'}).n;
-const siteUrl=k=>(SITES.find(s=>s.k===k)||{}).u||'';
+let extraSites=[],roles=[];
+const allSites=()=>[...SITES.filter(s=>s.k!=='other'),...extraSites.slice().sort((a,b)=>String(a.at).localeCompare(String(b.at))),SITES.find(s=>s.k==='other')];
+const siteName=k=>(allSites().find(s=>s.k===k)||{n:k||'未設定'}).n;
+const siteUrl=k=>(allSites().find(s=>s.k===k)||{}).u||'';
+const STEPS=['テーマ・デザイン','ツール制作','公開・デプロイ','記事作成','WordPress登録','運用・データ','その他'];
+const PLACES=['Claude Code','Claude チャット','Claude プロジェクト','ChatGPT チャット','ChatGPT Sites','ChatGPT GPTs・プラグイン','ChatGPT プロジェクト','Codex','WordPress管理画面','GitHub','場所未確認'];
+const targetFor=r=>r.ai==='ChatGPT'?'ChatGPT':r.ai==='Codex'?'Codex':r.ai==='Claude'?(/Code/.test(r.place||'')?'Claude Code':'Claude チャット'):'ChatGPT';
 const pad=n=>String(n).padStart(2,'0');
 const fmt=iso=>{if(!iso)return'';const d=new Date(iso);return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`};
 const nowIso=()=>new Date().toISOString();
@@ -172,7 +201,7 @@ const delFeat=id=>write('features',id,ref=>ref.delete());
 function addLog(f,text,by){const logs=[...(f.logs||[]),{at:nowIso(),by:by||'自分',text}];return saveFeat(f.id,{logs})}
 
 // ---------- routing ----------
-function readHash(){const h=location.hash.slice(1);if(/^f-[a-z0-9-]+$/.test(h))route={v:'detail',id:h};else route={v:['list','inbox','handoff','report','howto'].includes(h)?h:'list',id:null};render()}
+function readHash(){const h=location.hash.slice(1);if(/^f-[a-z0-9-]+$/.test(h))route={v:'detail',id:h};else route={v:['list','map','inbox','handoff','report','howto'].includes(h)?h:'list',id:null};render()}
 window.addEventListener('hashchange',readHash);
 function go(h){if(location.hash==='#'+h)readHash();else location.hash=h}
 
@@ -193,6 +222,7 @@ function renderInner(){
   $('#inboxN').innerHTML=inbox.length?`<span class="badge-n">${inbox.length}</span>`:'';
   const v=$('#view');
   if(route.v==='detail')v.innerHTML=viewDetail();
+  else if(route.v==='map')v.innerHTML=viewMap();
   else if(route.v==='inbox')v.innerHTML=viewInbox();
   else if(route.v==='handoff')v.innerHTML=viewHandoff();
   else if(route.v==='report')v.innerHTML=viewReport();
@@ -230,7 +260,7 @@ function viewList(){
     <button class="stat" data-f="wait" aria-pressed="${ui.filter==='wait'}"><div class="n">${nWait}</div><div class="l">確認・公開待ち</div></button></div>
   <div class="filters">
     <select id="fFilter" aria-label="絞り込み">${[['all','すべて'],['open','公開済み以外'],['ai','AIが担当中'],['stop','止まっている'],['wait','確認・公開待ち']].map(([k,n])=>`<option value="${k}" ${ui.filter===k?'selected':''}>${n}</option>`).join('')}</select>
-    <select id="fSite" aria-label="サイト"><option value="">全サイト</option>${SITES.map(s=>`<option value="${s.k}" ${ui.site===s.k?'selected':''}>${s.n}</option>`).join('')}</select>
+    <select id="fSite" aria-label="サイト"><option value="">全サイト</option>${allSites().map(s=>`<option value="${s.k}" ${ui.site===s.k?'selected':''}>${esc(s.n)}</option>`).join('')}</select>
     <input id="fQ" type="search" placeholder="検索（機能名・チャット名・ブランチ等）" value="${esc(ui.q)}">
   </div>
   <div class="actions"><button class="primary" id="newFeat">＋ 機能を追加</button></div>
@@ -248,7 +278,7 @@ function viewDetail(){
   <div class="box">
     <label for="dTitle">機能</label><input id="dTitle" value="${esc(f.title)}">
     <div class="row2">
-      <div><label for="dSite">サイト</label><select id="dSite">${SITES.map(x=>`<option value="${x.k}" ${x.k===f.site?'selected':''}>${x.n}</option>`).join('')}</select></div>
+      <div><label for="dSite">サイト</label><select id="dSite">${allSites().map(x=>`<option value="${x.k}" ${x.k===f.site?'selected':''}>${esc(x.n)}</option>`).join('')}</select></div>
       <div><label for="dStatus">状態</label><select id="dStatus">${opts(STATUS,f.status)}</select></div>
       <div><label for="dOwner">担当</label><select id="dOwner">${opts(OWNERS,f.owner)}</select></div>
     </div>
@@ -322,6 +352,8 @@ function buildPrompt(){
   L.push(`- サイト：${siteName(f.site)}${siteUrl(f.site)?' '+siteUrl(f.site):''}`);
   L.push(`- 機能：${f.title}`,`- 現在の状態：${f.status}／これまでの担当：${f.owner}`);
   if(f.deploy)L.push(`- 公開先・戻し方：${f.deploy.replace(/\n+/g,' / ')}`);
+  const sr=roles.filter(r=>r.site===f.site).sort((a,b)=>STEPS.indexOf(a.step)-STEPS.indexOf(b.step));
+  if(sr.length){L.push('','## このサイトの分担（どの作業をどのAIのどこでやっているか）');sr.forEach(r=>L.push(`- ${r.step}：${r.ai}（${r.place||'場所未確認'}）${r.detail?' … '+r.detail.replace(/\n+/g,' '):''}`));L.push('- 自分の担当外の工程（例：公開）は勝手に行わず、必要なら報告に書いてください。')}
   L.push('','## これまでの経過');
   (f.chats||[]).forEach(c=>L.push(`- ${c.tool}「${c.name||'名前なし'}」${c.url||''}`));
   if(f.next)L.push(`- 台帳上の次の一手：${f.next}`);
@@ -409,7 +441,61 @@ function viewReport(){
   </div></div>`:''}
   <div class="actions"><button class="primary" id="rSave" ${r.text&&f?'':'disabled'}>台帳に記録</button></div>`}
 
+function roleChip(r){const dim=ui.mapAi&&ui.mapAi!==r.ai;
+  return `<button class="role ai-${esc(r.ai)}${dim?' dim':''}" data-role="${esc(r.id)}"><span class="stp">${esc(r.step)}</span><span class="ai">${esc(r.ai)}</span><span class="pl">${esc(r.place||'場所未確認')}</span>${r.detail?`<span class="dt">${esc(r.detail)}</span>`:''}</button>`}
+function roleForm(){
+  const e=ui.roleEdit;if(!e)return'';const r=e==='new'?{site:ui.roleSite||'main',step:'ツール制作',ai:'Claude',place:'',detail:'',url:'',feats:[]}:roles.find(x=>x.id===e);if(!r)return'';
+  const fs=feats.filter(f=>f.site===r.site||(r.feats||[]).includes(f.id));
+  return `<div class="box" id="roleBox"><h3 style="margin-top:0">${e==='new'?'担当を追加':'担当を編集'}</h3>
+  <div class="row2"><div><label for="rlSite">サイト</label><select id="rlSite">${allSites().map(s=>`<option value="${esc(s.k)}" ${s.k===r.site?'selected':''}>${esc(s.n)}</option>`).join('')}</select></div>
+  <div><label for="rlStep">工程</label><select id="rlStep">${opts(STEPS,r.step)}</select></div>
+  <div><label for="rlAi">どのAI</label><select id="rlAi">${opts(OWNERS,r.ai)}</select></div>
+  <div><label for="rlPlace">どこで（自由入力可）</label><input id="rlPlace" list="placeList" value="${esc(r.place)}" placeholder="例：Claude Code"><datalist id="placeList">${PLACES.map(x=>`<option value="${esc(x)}">`).join('')}</datalist></div></div>
+  <label for="rlDetail">何をしているか</label><textarea id="rlDetail" style="min-height:60px">${esc(r.detail)}</textarea>
+  <label for="rlUrl">いつも使う場所のURL（チャット・GPTs・プロジェクト等）</label><input id="rlUrl" type="url" value="${esc(r.url)}">
+  ${fs.length?`<label>関係する機能</label><div class="checks" id="rlFeats">${fs.map(f=>`<label><input type="checkbox" value="${esc(f.id)}" ${(r.feats||[]).includes(f.id)?'checked':''}>${esc(f.title)}</label>`).join('')}</div>`:''}
+  ${r.url?`<p style="font-size:13px"><a style="color:var(--accent)" href="${esc(r.url)}" target="_blank" rel="noopener">この場所を開く ↗</a></p>`:''}
+  <div class="actions"><button class="primary" id="rlSave">保存</button>${e!=='new'?'<button id="rlHand">この担当へ指示文</button><button class="danger" id="rlDel">削除</button>':''}<button id="rlClose">閉じる</button></div></div>`}
+function viewMap(){
+  if(!loaded)return notReady();
+  const by={};roles.forEach(r=>{(by[r.ai]=by[r.ai]||{});const p=r.place||'場所未確認';by[r.ai][p]=(by[r.ai][p]||0)+1});
+  const sites=allSites().filter(s=>s.k!=='other'||roles.some(r=>r.site==='other'));
+  return `<h2>サイト全体の分担</h2>
+  <p class="next" style="font-size:13px;margin:0">各サイトで「どの工程を、どのAIの、どこで」やっているか。左から右へ作業が流れます。タップで編集。</p>
+  <div class="legend-ai"><button aria-pressed="${!ui.mapAi}" data-ai="">すべて</button>${OWNERS.map(a=>`<button class="ai-${a}" aria-pressed="${ui.mapAi===a}" data-ai="${a}"><span class="dot"></span>${a}</button>`).join('')}</div>
+  ${Object.keys(by).length?`<div class="places">${OWNERS.filter(a=>by[a]).map(a=>`<span class="ai-${a}"><b>${a}</b>：${Object.entries(by[a]).map(([p,n])=>`${esc(p)}${n>1?'×'+n:''}`).join('・')}</span>`).join('<br>')}</div>`:''}
+  ${roleForm()}
+  ${sites.map(s=>{const rs=roles.filter(r=>r.site===s.k).sort((a,b)=>STEPS.indexOf(a.step)-STEPS.indexOf(b.step)||String(a.at).localeCompare(String(b.at)));
+    const open=feats.filter(f=>f.site===s.k&&f.status!=='公開済み').length;
+    return `<section class="sitemap"><header><h3>${esc(s.n)}</h3>${s.u?`<a href="${esc(s.u)}" target="_blank" rel="noopener">${esc(s.u.replace(/^https:\/\//,'').replace(/\/$/,''))}</a>`:''}</header>
+    <div class="flowrow">${rs.map(roleChip).join('<span class="arr" aria-hidden="true">→</span>')}<button class="role add" data-addrole="${esc(s.k)}">＋ 担当</button></div>
+    <div class="sitefoot"><a href="#list" data-sitelist="${esc(s.k)}">進行中の機能 ${open}件 →</a></div></section>`}).join('')}
+  <details class="box"><summary>サイト・ツールを追加</summary>
+    <label for="nsName">名前</label><input id="nsName" placeholder="例：カウンターアプリ">
+    <label for="nsUrl">URL（あれば）</label><input id="nsUrl" type="url">
+    <div class="actions"><button id="nsAdd">追加</button></div></details>`}
+
+function bindMap(){
+  const on=(sel,ev,fn)=>{const e=$(sel);if(e)e.addEventListener(ev,fn)};
+  document.querySelectorAll('.legend-ai button').forEach(b=>b.onclick=()=>{ui.mapAi=b.dataset.ai;render()});
+  document.querySelectorAll('[data-role]').forEach(b=>b.onclick=()=>{ui.roleEdit=b.dataset.role;render();$('#roleBox').scrollIntoView({block:'start'})});
+  document.querySelectorAll('[data-addrole]').forEach(b=>b.onclick=()=>{ui.roleEdit='new';ui.roleSite=b.dataset.addrole;render();$('#roleBox').scrollIntoView({block:'start'})});
+  document.querySelectorAll('[data-sitelist]').forEach(a=>a.onclick=()=>{ui.site=a.dataset.sitelist;ui.filter='open';saveUi()});
+  on('#rlClose','click',()=>{ui.roleEdit=null;clean('rl');render()});
+  on('#rlSite','change',e=>{ui.roleSite=e.target.value});
+  on('#rlSave','click',async()=>{const id=ui.roleEdit==='new'?'r-'+Math.random().toString(36).slice(2,9):ui.roleEdit;const old=roles.find(x=>x.id===id)||{};
+    const data={site:$('#rlSite').value,step:$('#rlStep').value,ai:$('#rlAi').value,place:$('#rlPlace').value.trim(),detail:$('#rlDetail').value.trim(),url:$('#rlUrl').value.trim(),
+      feats:$('#rlFeats')?[...document.querySelectorAll('#rlFeats input:checked')].map(x=>x.value):(old.feats||[]),at:old.at||nowIso(),updatedAt:nowIso()};
+    await write('roles',id,r=>r.set(data));ui.roleEdit=null;clean('rl');toast('保存しました')});
+  on('#rlDel','click',()=>{const b=$('#rlDel');if(b.dataset.sure){write('roles',ui.roleEdit,r=>r.delete());ui.roleEdit=null;clean('rl');toast('削除しました')}else{b.dataset.sure=1;b.textContent='もう一度押すと削除'}});
+  on('#rlHand','click',()=>{const r=roles.find(x=>x.id===ui.roleEdit);if(!r)return;const fid=(r.feats||[])[0]||(feats.find(f=>f.site===r.site&&f.status!=='公開済み')||{}).id||ui.ho.fid;
+    ui.ho={...ui.ho,fid,target:targetFor(r),rules:null,text:''};ui.roleEdit=null;go('handoff')});
+  on('#nsAdd','click',async()=>{const n=$('#nsName').value.trim();if(!n)return toast('名前を入れてください');const id='s-'+Math.random().toString(36).slice(2,8);
+    await write('sites',id,r=>r.set({n,u:$('#nsUrl').value.trim(),at:nowIso()}));clean('ns');toast('追加しました')});
+}
+
 function viewHowto(){return `<h2>GPT と Claude はこうつながる</h2>
+  <p>まず<b>全体図</b>タブで「どの工程をどのAIのどこでやるか」を決めておくと、指示文にその分担が自動で入り、相手のAIが担当外の作業（例：Claude が勝手に公開）をしなくなります。</p>
   <p>AI同士は直接話せず、ファイルも直接は渡せません。<b>あなたがコピペで運ぶ「文章」</b>と、<b>両方が読める置き場（GitHub か ZIP）</b>の2本でつなぎます。この台帳はその中継点です。</p>
   <h3>やり取り（文章）</h3>
   <div class="flow">
@@ -439,6 +525,7 @@ function viewHowto(){return `<h2>GPT と Claude はこうつながる</h2>
 
 // ---------- events ----------
 function bind(){
+  if(route.v==='map')bindMap();
   const on=(sel,ev,fn)=>{const e=$(sel);if(e)e.addEventListener(ev,fn)};
   document.querySelectorAll('.stat').forEach(b=>b.onclick=()=>{ui.filter=ui.filter===b.dataset.f?'all':b.dataset.f;saveUi();render()});
   on('#fFilter','change',e=>{ui.filter=e.target.value;saveUi();render()});
@@ -523,6 +610,8 @@ readHash();
   db.collection('features').onSnapshot(s=>{feats=s.docs.map(d=>({id:d.id,...d.data()}));loaded=true;clearTimeout(timer);setConn('');
     $('#sync').className='sync ok';$('#sync').lastChild.textContent='同期中';
     const a=document.activeElement;if(!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&route.v!=='list'))render()},fail);
+  db.collection('roles').onSnapshot(s=>{roles=s.docs.map(d=>({id:d.id,...d.data()}));if(loaded)render()},fail);
+  db.collection('sites').onSnapshot(s=>{extraSites=s.docs.map(d=>({k:d.id,...d.data()}));if(loaded)render()},fail);
   db.collection('inbox').onSnapshot(s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));if(loaded)render()},fail);
   try{sample=await window.claude.use('sample')}catch(e){sample=null}
 })();
