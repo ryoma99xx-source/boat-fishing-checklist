@@ -165,6 +165,8 @@ const BASE_RULES=[
   '分からない点は推測で進めず、質問として報告に書く'];
 const UPLOAD_LIMIT={'Claude チャット':30,'ChatGPT':512}; // MB per file, rough guide
 
+let mcp=null, ccMsg={}, runOut='';
+const CCR='Claude Code Remote', ENV_ID='env_01Df8t8p4B9CdL8XSUWAWj1t';
 let db=null, sample=null, loaded=false, feats=[], inbox=[], route={v:'list',id:null};
 let ui={filter:'all',site:'',q:'',ho:{fid:'',target:'ChatGPT',req:'',rules:null,extra:'',split:false,text:''},rep:{text:'',fid:''},inboxText:''};
 try{const s=JSON.parse(localStorage.getItem('ledger-ui')||'null'); if(s){ui.filter=s.filter||'all';ui.site=s.site||'';}}catch(e){}
@@ -237,6 +239,7 @@ function cardHtml(f){
   return `<a class="card" href="#${esc(f.id)}">
     <div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-${esc(f.status)}">${esc(f.status)}</span><span>担当 <span class="who">${esc(f.owner)}</span></span>
     ${(f.chats||[]).length?`<span>チャット${f.chats.length}</span>`:''}
+    ${f.cc&&f.cc.state==='作業中'?`<span class="tag">Claude Code 作業中</span>`:''}
     ${f.status!=='公開済み'&&d>=STALE_DAYS&&d<999?`<span class="stale">${d}日動きなし</span>`:''}</div>
     <div class="title">${esc(f.title)}</div>
     ${f.next?`<div class="next">次：<b>${esc(f.next)}</b></div>`:''}
@@ -288,6 +291,7 @@ function viewDetail(){
       <button id="dHand">指示文を作る</button><button id="dRep">報告を貼る</button></div>
   </div>
 
+  ${f.cc?ccStatusBox(f):''}
   <h2>チャット（${(f.chats||[]).length}）</h2>
   <div class="box">${(f.chats||[]).length?f.chats.map((c,i)=>`<div class="chat"><div class="c"><div><span class="tag">${esc(c.tool)}</span> <b>${esc(c.name||'(名前なし)')}</b></div>${c.url?`<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.url)}</a>`:''}</div><button class="small" data-delchat="${i}" aria-label="削除">外す</button></div>`).join(''):'<div class="next">まだ登録されていません。</div>'}
     <details style="margin-top:8px"><summary>チャットを追加</summary>
@@ -437,6 +441,57 @@ function buildPrompt(){
     '【完了報告】',`機能ID：${f.id}`,`担当：${t.startsWith('Claude')?'Claude':t}`,'状態：（構想／作業中／確認・公開待ち／公開済み／保留 から1つ）','やったこと：','変更したもの（ブランチ・コミット・ファイル）：','ZIP名：','SHA256：','公開URL・バージョン：','次の一手：','確認したいこと：');
   return L.join('\n')}
 
+const sessFromUrl=u=>((u||'').match(/session_[A-Za-z0-9]+/)||[''])[0];
+function payloadOf(r){let p=r&&r.payload;if(typeof p==='string'){try{p=JSON.parse(p)}catch(e){}}return p&&p.ccr?p.ccr:p}
+function mcpErr(e){const c=e&&e.code;
+  if(c==='server_not_connected')return 'Claude Code Remote がつながっていません。claude.ai の 設定 → コネクタ で確認してください。';
+  if(c==='needs_reauth')return 'Claude Code Remote の再ログインが必要です（claude.ai の 設定 → コネクタ）。';
+  if(c==='approval_required'||c==='not_in_manifest')return 'この台帳からの Claude Code 操作が許可されていません。もう一度押すと許可を求めます（台帳の「権限」メニューからも変えられます）。';
+  if(c==='server_unavailable'||c==='upstream_error')return '応答がありませんでした。送信は届いている可能性があるので、少し待って「結果を確認」で確かめてください。';
+  return (e&&e.message)||c||'不明なエラー'}
+function ccSendBox(f){
+  const sess=(f.chats||[]).filter(c=>sessFromUrl(c.url));
+  return `<div class="box"><b>Claude Code に直接送る</b><p class="next" style="font-size:13px;margin:4px 0">コピペ不要。送ったあとは機能の画面の「結果を確認」で【完了報告】を取り込めます。</p>
+    <label for="ccTo">送り先</label><select id="ccTo"><option value="new">新しいセッションで始める${(f.src||{}).repo?'（'+esc(f.src.repo)+'）':''}</option>${sess.map(c=>`<option value="${esc(sessFromUrl(c.url))}">既存：${esc(c.name||sessFromUrl(c.url))}</option>`).join('')}</select>
+    <div class="actions" style="margin:8px 0 0"><button class="primary" id="ccSend" ${mcp?'':'disabled'}>Claude Code に送る</button></div>
+    ${mcp?'':'<div class="next" style="font-size:12px">この表示では使えません。claude.ai で開いてください。</div>'}<div id="ccSendMsg"></div></div>`}
+function ccStatusBox(f){const c=f.cc,m=ccMsg[f.id];
+  return `<div class="box"><b>Claude Code 連携</b> <span class="tag">${esc(c.state||'')}</span>
+    <div class="next" style="font-size:13px">送信 ${esc(fmt(c.sentAt))}${c.url?` ・ <a style="color:var(--accent)" href="${esc(c.url)}" target="_blank" rel="noopener">セッションを開く ↗</a>`:''}</div>
+    <div class="actions" style="margin:8px 0 0"><button class="primary" id="ccCheck" ${mcp?'':'disabled'}>結果を確認</button></div>
+    ${m?`<div class="banner" style="margin:6px 0 0">${esc(m.msg)}</div>${m.text?`<details><summary>最後の返答を見る</summary><pre class="out">${esc(m.text)}</pre></details><div class="actions"><button id="ccLog">返答をログに残す</button></div>`:''}`:''}</div>`}
+async function ccSend(){
+  const f=feats.find(x=>x.id===ui.ho.fid),btn=$('#ccSend'),out=$('#ccSendMsg');if(!f||!mcp)return;
+  const to=$('#ccTo').value,text=ui.ho.text;btn.disabled=true;out.innerHTML='<div class="banner">送信中…</div>';
+  try{let sid=to,isNew=to==='new';
+    if(isNew){const s=f.src||{};const input={prompt:text,title:`${siteName(f.site)}｜${f.title}`.slice(0,120),environment_id:ENV_ID};
+      if(s.repo){input.source_url=`https://github.com/${s.repo}`;if(s.branch)input.source_revision=s.branch}
+      const p=payloadOf(await mcp.callTool(CCR,'create_session',input));
+      sid=(p&&(p.session_id||p.id||(p.session&&p.session.id)))||((JSON.stringify(p||'').match(/session_[A-Za-z0-9]+/)||[''])[0])}
+    else await mcp.callTool(CCR,'send_message',{session_id:sid,message:text});
+    const url=sid?`https://claude.ai/code/${sid}`:'';
+    const patch={cc:{sessionId:sid,url,sentAt:nowIso(),state:'作業中'},owner:'Claude',logs:[...(f.logs||[]),{at:nowIso(),by:'自分',text:`Claude Code へ送信（${isNew?'新しいセッション':'既存セッション'}）：${ui.ho.req.trim()||'(依頼内容なし)'}`}]};
+    if(f.status==='構想'||f.status==='保留')patch.status='作業中';
+    if(isNew&&url)patch.chats=[...(f.chats||[]),{tool:'Claude Code',name:f.title,url}];
+    await saveFeat(f.id,patch);toast('Claude Code に送りました');go(f.id)}
+  catch(e){out.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;btn.disabled=false}}
+async function ccCheck(f){
+  const btn=$('#ccCheck');btn.disabled=true;btn.textContent='確認中…';
+  try{const sid=f.cc.sessionId;if(!sid)throw{message:'セッションIDが分かりません。セッションを開いて報告をコピーしてください。'};
+    const g=payloadOf(await mcp.callTool(CCR,'get_session',{session_id:sid}));
+    const bucket=((JSON.stringify(g||'').match(/(?:SESSION_STATUS_BUCKET_)?(WORKING|BLOCKED|REVIEW_READY|COMPLETED|FAILED)/i)||[])[1]||'').toUpperCase();
+    const ev=payloadOf(await mcp.callTool(CCR,'list_events',{session_id:sid,kinds:['result'],limit:100}));
+    const texts=((ev&&ev.data)||[]).filter(e=>!f.cc.sentAt||String(e.created_at||'')>=f.cc.sentAt).map(e=>{const r=e.result||{};return (r.internal_anthropic_catchall&&r.internal_anthropic_catchall.result)||r.result}).filter(t=>typeof t==='string'&&t.trim());
+    const last=texts[texts.length-1]||'';
+    if(last.includes('【完了報告】')){ui.rep={text:last.slice(last.indexOf('【完了報告】')),fid:f.id};await saveFeat(f.id,{cc:{...f.cc,state:'取込済み'}});toast('完了報告が届いています');go('report');return}
+    const msg=bucket==='WORKING'?'まだ作業中です。少し待ってからもう一度確認してください。':bucket==='BLOCKED'?'Claude Code があなたの返事や許可を待っています。セッションを開いて答えてください。':bucket==='FAILED'?'セッションがエラーで止まっています。セッションを開いて確認してください。':last?'返答はありますが【完了報告】が見つかりません。返答を確認してください。':'まだ返答がありません。';
+    ccMsg[f.id]={msg,text:last};render()}
+  catch(e){ccMsg[f.id]={msg:mcpErr(e),text:''};render()}}
+async function runHere(){
+  const b=$('#hRunHere');if(!sample)return toast('この表示では使えません');b.disabled=true;b.textContent='実行中…';
+  try{const r=await sample(ui.ho.text,{modelTier:'complex',cache:false,onText:u=>{runOut=u.text;const o=$('#hRunOut');if(o)o.textContent=u.text}});runOut=r.text}
+  catch(e){runOut='実行できませんでした：'+(e.code||e.message||'')}
+  render()}
 function viewHandoff(){
   if(!loaded)return notReady();
   const h=ui.ho; if(!h.fid&&feats[0])h.fid=feats[0].id;
@@ -460,6 +515,9 @@ function viewHandoff(){
   ${warn?`<div class="banner">${esc(warn)}</div>`:''}
   <div class="actions"><button class="primary" id="hCopy">コピー</button><button id="hTidy">AIで読みやすく</button><button id="hLog">渡したことをログに残す</button></div>
   <div id="hTidyMsg"></div>
+  ${f&&h.target==='Claude Code'?ccSendBox(f):''}
+  ${f&&h.target==='Claude チャット'?`<div class="box"><b>この台帳の中で Claude に頼む</b><p class="next" style="font-size:13px;margin:4px 0">文章づくり（記事の下書き、まとめ、チェック）向け。ファイルやネットは使えません。</p><div class="actions" style="margin:6px 0 0"><button class="primary" id="hRunHere">ここで実行</button></div>${runOut?`<pre class="out" id="hRunOut">${esc(runOut)}</pre><div class="actions">${runOut.includes('【完了報告】')?'<button class="primary" id="hRunRep">報告として取り込む</button>':''}<button id="hRunLog">結果をログに残す</button></div>`:''}</div>`:''}
+  ${f&&(h.target==='ChatGPT'||h.target==='Codex')?`<div class="box"><b>${h.target} へ渡す</b><p class="next" style="font-size:13px;margin:4px 0">${h.target} は外から操作できないため、コピーして貼る形になります。下のボタンで指示文をコピーして ${h.target} を開きます。返ってきた【完了報告】は「報告」タブに貼ってください。</p><a class="btn primary" id="hOpenGpt" href="${h.target==='Codex'?'https://chatgpt.com/codex':'https://chatgpt.com/'}" target="_blank" rel="noopener">コピーして ${h.target} を開く ↗</a></div>`:''}
   <pre class="out" id="hOut">${esc(h.text||'機能を選ぶと指示文ができます。')}</pre>`}
 
 function parseReport(t){
@@ -629,6 +687,12 @@ function bind(){
   on('#hCopy','click',async()=>{const t=ui.ho.text;try{await navigator.clipboard.writeText(t);toast('コピーしました。相手のチャットに貼ってください')}catch(e){const r=document.createRange();r.selectNodeContents($('#hOut'));const s=getSelection();s.removeAllRanges();s.addRange(r);toast('選択しました。長押しでコピーしてください')}});
   on('#hLog','click',async()=>{const tf=feats.find(x=>x.id===ui.ho.fid);if(!tf)return;await addLog(tf,`${ui.ho.target} へ引き継ぎ：${ui.ho.req.trim()||'(依頼内容なし)'}`,'自分');toast('ログに残しました')});
   on('#hTidy','click',tidy);
+  on('#ccSend','click',ccSend);
+  on('#hRunHere','click',runHere);
+  on('#hRunRep','click',()=>{ui.rep={text:runOut.slice(runOut.indexOf('【完了報告】')),fid:ui.ho.fid};runOut='';go('report')});
+  on('#hRunLog','click',async()=>{const tf=feats.find(x=>x.id===ui.ho.fid);if(tf){await addLog(tf,runOut,'Claude');toast('ログに残しました')}});
+  on('#hOpenGpt','click',()=>{try{navigator.clipboard.writeText(ui.ho.text).then(()=>toast('コピーしました。開いた画面に貼ってください'),()=>toast('コピーできませんでした。上の「コピー」を使ってください'))}catch(e){}});
+  if(f&&f.cc){on('#ccCheck','click',()=>ccCheck(f));on('#ccLog','click',async()=>{const m=ccMsg[f.id];if(m&&m.text){await addLog(f,m.text,'Claude');toast('ログに残しました')}})}
   // report
   on('#rText','input',e=>{ui.rep.text=e.target.value;const p=e.target.selectionStart;render();const t=$('#rText');t.focus();t.setSelectionRange(p,p)});
   on('#rFeat','change',e=>{ui.rep.fid=e.target.value;render()});
@@ -671,5 +735,7 @@ readHash();
   db.collection('sites').onSnapshot(s=>{extraSites=s.docs.map(d=>({k:d.id,...d.data()}));if(loaded)render()},fail);
   db.collection('inbox').onSnapshot(s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));if(loaded)render()},fail);
   try{sample=await window.claude.use('sample')}catch(e){sample=null}
+  try{mcp=await window.claude.use('mcp')}catch(e){mcp=null}
+  render();
 })();
 </script>
