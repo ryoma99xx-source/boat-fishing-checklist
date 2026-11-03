@@ -319,6 +319,39 @@ function viewDetail(){
 
   <div class="actions" id="delZone"><button class="danger" id="dDel">この機能を削除</button></div>`}
 
+const INVENTORY_ASK=`この会話でやってきたことを、私の制作台帳に登録したいのでまとめてください。
+会話の中に複数のテーマがあれば、テーマごとに【台帳登録】を分けてください。分からない所は推測で埋め、末尾に（推定）と書いてください。下の書式だけを出力してください。
+
+【台帳登録】
+チャット名：
+AI：（Claude／ChatGPT／Codex）
+場所：（Claude チャット／Claude プロジェクト／ChatGPT チャット／ChatGPT GPTs・プラグイン／ChatGPT プロジェクト など）
+サイト：（本サイト cutlassfish.tokyo／潮と流れマップ／リール糸管理／釣り持ち物チェック／テンヤシミュレーター／カウンターアプリ／その他）
+工程：（テーマ・デザイン／ツール制作／公開・デプロイ／記事作成／WordPress登録／運用・データ／その他）
+機能名：（この会話で作った・進めたものを短く）
+状態：（構想／作業中／確認・公開待ち／公開済み／保留）
+作ったもの：（ファイル名・ZIP名・バージョン・公開URL など）
+次の一手：`;
+function parseInventory(text){
+  const keys=['チャット名','チャットURL','AI','場所','サイト','工程','機能名','状態','作ったもの','次の一手'];
+  const segs=text.split('【台帳登録】');const URLRE=/https?:\/\/(?:claude\.ai|chatgpt\.com|chat\.openai\.com)\S*/;
+  return segs.slice(1).map((b,i)=>{const prevTail=segs[i].trim().split('\n').slice(-2).join('\n');
+    const o={};let cur=null;
+    b.split('\n').forEach(line=>{const k=keys.find(k=>new RegExp('^\\s*[-・*]*\\s*'+k+'\\s*[：:]').test(line));
+      if(k){cur=k;o[k]=line.replace(/^[^：:]*[：:]\s*/,'').trim()}else if(cur&&line.trim())o[cur]+=(o[cur]?' ':'')+line.trim()});
+    const clean=v=>{v=(v||'').replace(/（推定）|\(推定\)/g,'').trim();return /^(なし|特になし|ー|-|不明)$/.test(v)?'':v};
+    const url=((b.match(URLRE)||prevTail.match(URLRE)||[])[0])||'';
+    const siteTxt=clean(o['サイト']);const site=(allSites().find(s=>s.k!=='other'&&(siteTxt.includes(s.n)||(s.u&&siteTxt.includes(s.u.replace(/^https:\/\/|\/$/g,''))))))||{k:/cutlassfish|本サイト/.test(siteTxt)?'main':'other'};
+    const step=STEPS.find(x=>clean(o['工程']).includes(x))||'その他';
+    const ai=OWNERS.find(x=>clean(o['AI']).includes(x))||(/chatgpt|openai/.test(url)?'ChatGPT':'Claude');
+    const place=clean(o['場所'])||(ai==='Claude'?'Claude チャット':ai==='ChatGPT'?'ChatGPT チャット':'');
+    const title=clean(o['機能名']);
+    const match=title&&feats.find(f=>f.title.includes(title)||title.includes(f.title));
+    const guessed=/推定/.test(b);
+    return {title:clean(o['チャット名'])||title||'(名前なし)',url,tool:url?toolFromUrl(url):(ai==='ChatGPT'?'ChatGPT':ai==='Codex'?'Codex':'Claude チャット'),at:nowIso(),
+      guess:{from:'チャット自身のまとめ'+(guessed?'・推定を含む':''),site:site.k,step,ai,place,featId:match?match.id:null,newTitle:match?'':title,
+        status:STATUS.find(x=>clean(o['状態']).includes(x))||'作業中',roleDetail:title,next:clean(o['次の一手']),
+        note:[clean(o['作ったもの'])&&('作ったもの：'+o['作ったもの']),clean(o['次の一手'])&&('次：'+o['次の一手']),!url&&'チャットURLが無いので、登録後に機能の画面で追加してください'].filter(Boolean).join(' / ')}}})}
 function guessHtml(g){
   const f=g.featId&&feats.find(x=>x.id===g.featId);
   return `<div class="box" style="background:var(--bg);margin:8px 0 0"><div style="font-size:12px;color:var(--muted);letter-spacing:.04em">推定（${esc(g.from||'自動収集')}）— 合っていれば下のボタンで登録</div>
@@ -329,14 +362,18 @@ function guessHtml(g){
 async function acceptGuess(it){
   const g=it.guess,chat={tool:it.tool,name:it.title,url:it.url};let fid=g.featId;
   if(fid&&feats.some(x=>x.id===fid)){const tf=feats.find(x=>x.id===fid);if(it.url&&!(tf.chats||[]).some(c=>c.url===it.url))await saveFeat(fid,{chats:[...(tf.chats||[]),chat]})}
-  else if(g.newTitle){fid=newId();await createFeat(fid,{title:g.newTitle,site:g.site||'other',status:g.status||'作業中',owner:g.ai||'自分',chats:it.url?[chat]:[],logs:g.note?[{at:nowIso(),by:'自分',text:'自動収集からの登録：'+g.note}]:[]})}
+  else if(g.newTitle){fid=newId();await createFeat(fid,{title:g.newTitle,site:g.site||'other',status:g.status||'作業中',owner:g.ai||'自分',next:g.next||'',chats:it.url?[chat]:[],logs:g.note?[{at:nowIso(),by:'自分',text:'自動収集からの登録：'+g.note}]:[]})}
   if(g.step&&!roles.some(r=>r.site===g.site&&r.step===g.step&&r.ai===g.ai)){
     await write('roles','r-'+Math.random().toString(36).slice(2,9),r=>r.set({site:g.site,step:g.step,ai:g.ai,place:g.place||'',detail:g.roleDetail||'',url:g.roleUrl||'',feats:fid?[fid]:[],at:nowIso(),updatedAt:nowIso()}))}
   await write('inbox',it.id,r=>r.delete());toast('登録しました')}
 function viewInbox(){
   if(!loaded)return notReady();
   return `<h2>未整理のチャット</h2>
-  <p class="next" style="font-size:14px">あちこちにあるチャットを、まずここへまとめて貼り付けます。1行に「チャット名 URL」。あとで1件ずつ機能に振り分けます。</p>
+  <div class="box"><b>チャットに自分でまとめてもらう（おすすめ）</b>
+    <p class="next" style="font-size:13px;margin:4px 0">Claude の普通のチャットや ChatGPT は外から読めません。下の質問文を各チャットに貼ると、そのチャットが【台帳登録】の形で中身を答えます。その答えを、チャットのURLと一緒に下の欄へ貼ってください（何件分でもまとめて貼れます）。</p>
+    <div class="actions" style="margin:6px 0 0"><button class="small primary" id="iAskCopy">質問文をコピー</button></div>
+    <details><summary>質問文を見る</summary><pre class="out" id="iAsk">${esc(INVENTORY_ASK)}</pre></details></div>
+  <p class="next" style="font-size:14px">ここに貼り付け：【台帳登録】の答え、または1行に「チャット名 URL」。</p>
   <textarea id="iText" placeholder="東京湾の潮流アプリ引き継ぎ https://claude.ai/code/session_…&#10;WordPressプラグイン修正 https://chatgpt.com/c/…">${esc(ui.inboxText)}</textarea>
   <div class="actions"><button class="primary" id="iAdd">まとめて取り込む</button></div>
   <div class="list">${inbox.length?inbox.slice().sort((a,b)=>String(a.at).localeCompare(String(b.at))).map(it=>`<div class="card" data-inbox="${esc(it.id)}">
@@ -564,7 +601,11 @@ function bind(){
   }
   // inbox
   on('#iText','input',e=>ui.inboxText=e.target.value);
+  on('#iAskCopy','click',async()=>{try{await navigator.clipboard.writeText(INVENTORY_ASK);toast('コピーしました。各チャットに貼ってください')}catch(e){const d=document.querySelector('#iAsk').closest('details');d.open=true;const r=document.createRange();r.selectNodeContents($('#iAsk'));const sl=getSelection();sl.removeAllRanges();sl.addRange(r);toast('選択しました。長押しでコピーしてください')}});
   on('#iAdd','click',async()=>{
+    const raw=$('#iText').value;
+    if(raw.includes('【台帳登録】')){const items=parseInventory(raw);for(const it of items){const id='i-'+Math.random().toString(36).slice(2,9);await write('inbox',id,r=>r.set(it))}
+      ui.inboxText='';clean('iText');render();toast(items.length+'件取り込みました。推定を確認してください');return}
     const lines=$('#iText').value.split('\n').map(x=>x.trim()).filter(Boolean);let n=0;
     for(const line of lines){const m=line.match(/https?:\/\/\S+/);const url=m?m[0]:'';const title=line.replace(url,'').replace(/^[\s\-–・|｜:：]+|[\s\-–・|｜:：]+$/g,'').trim();
       const id='i-'+Math.random().toString(36).slice(2,9);await write('inbox',id,r=>r.set({title,url,tool:toolFromUrl(url),at:nowIso()}));n++}
