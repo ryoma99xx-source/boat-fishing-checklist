@@ -360,7 +360,7 @@ async function applyReport(f,text){
   catch(e){applying.delete(key)}}
 function autoApplyReports(){if(!loaded||!db)return;feats.forEach(f=>{const c=f.cc;if(c&&c.reportText&&c.state!=='取込済み'&&c.state!=='作業中')applyReport(f,c.reportText)})}
 function lastReport(f){const l=(f.logs||[]).slice().reverse().find(x=>String(x.text||'').includes('【完了報告】'));return l?parseReport(l.text):null}
-function artFor(f){const items=(artDoc&&artDoc.items)||[];const id=f.wpId||((String(f.deploy||'').match(/post=(\d+)/)||[])[1]);return id?items.find(a=>String(a.id)===String(id))||{id,preview_link:`https://cutlassfish.tokyo/?p=${id}&preview=true`}:null}
+function artFor(f){const items=(artDoc&&artDoc.items)||[];const id=f.wpId||((String(f.deploy||'').match(/post=(\d+)/)||[])[1]);return id?items.find(a=>String(a.id)===String(id))||(f.pageUrl?{id,status:'publish',link:f.pageUrl}:{id,preview_link:`https://cutlassfish.tokyo/?p=${id}&preview=true`}):null}
 function render(){
   setTimeout(autoApplyReports,0);
   const key=route.v+(route.id||'');const keep={};
@@ -1042,10 +1042,10 @@ function turnRow(f,kind){
   const rp=lastReport(f),a=artFor(f);
   const body=(rp&&rp['やったこと']?`<div class="next">Claude がやったこと：${esc(rp['やったこと'].slice(0,90))}${rp['やったこと'].length>90?'…':''}</div>`:'')
     +(rp&&rp['確認したいこと']&&!/^なし/.test(rp['確認したいこと'])?`<div class="next" style="color:var(--gold)">Claude からの質問：${esc(rp['確認したいこと'])}</div>`:'')
-    +(f.next&&!a?`<div class="next">次：<b>${esc(f.next)}</b></div>`:'');
+    +(f.next?`<div class="next">次：<b>${esc(f.next)}</b></div>`:'');
   if(a){const pub=a.status==='publish';
-    return {badge:`<span class="pill now-you">あなたの番：${pub?'公開後の確認':'プレビューで確認して公開'}</span>`,body:body+`<div class="next" style="font-size:12px">プレビューは cutlassfish.tokyo の管理画面にログインしているブラウザで開けます。直したい所があれば「直す・公開する」から普段の言葉で送れます。</div>`,
-      act:`<a class="btn small primary" href="${esc(pub?a.link:a.preview_link)}" target="_blank" rel="noopener">${pub?'記事を見る':'プレビューを見る'} ↗</a><button class="small" data-artgo="${esc(a.id)}">直す・公開する</button>`}}
+    return {badge:`<span class="pill now-you">あなたの番：${pub?'公開中の記事・確認':'プレビューで確認して公開'}</span>`,body:body+(pub?'':`<div class="next" style="font-size:12px">プレビューは cutlassfish.tokyo の管理画面にログインしているブラウザで開けます。直したい所があれば「直す・公開する」から普段の言葉で送れます。</div>`),
+      act:`<a class="btn small primary" href="${esc(pub?a.link:a.preview_link)}" target="_blank" rel="noopener">${pub?'記事を見る':'プレビューを見る'} ↗</a>${(((artDoc&&artDoc.items)||[]).some(x=>String(x.id)===String(a.id)))?`<button class="small" data-artgo="${esc(a.id)}">${pub?'直す':'直す・公開する'}</button>`:''}`}}
   return {badge:'<span class="pill now-you">あなたの番：確認・公開</span>',body,act:''}}
 function stepDots(st){const dot=(i,t)=>`<span class="dot ${st>=i?'on':''}">${t}</span>`;return `<div class="dots">${dot(1,'受付')}<i>→</i>${dot(2,'Claude Code 作業中')}<i>→</i>${dot(3,'報告')}</div>`}
 function nowHtml(){
