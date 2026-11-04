@@ -772,7 +772,7 @@ function viewMapSites(){
     const open=feats.filter(f=>f.site===s.k&&f.status!=='公開済み').length;
     return `<section class="sitemap"><header><h3>${esc(s.n)}</h3>${s.u?`<a href="${esc(s.u)}" target="_blank" rel="noopener">${esc(s.u.replace(/^https:\/\//,'').replace(/\/$/,''))}</a>`:''}</header>
     <div class="flowrow">${rs.map(roleChip).join('<span class="arr" aria-hidden="true">→</span>')}<button class="role add" data-addrole="${esc(s.k)}">＋ 担当</button></div>
-    <div class="sitefoot"><a href="#list" data-sitelist="${esc(s.k)}">進行中の機能 ${open}件 →</a></div></section>`}).join('')}
+    <div class="sitefoot"><a href="#list" data-sitelist="${esc(s.k)}">進行中の機能 ${open}件 →</a>${extraSites.some(x=>x.k===s.k)?`<button class="small danger" style="margin-left:auto" data-delsite="${esc(s.k)}">サイトを削除</button>`:''}</div></section>`}).join('')}
   <details class="box"><summary>サイト・ツールを追加</summary>
     <label for="nsName">名前</label><input id="nsName" placeholder="例：カウンターアプリ">
     <label for="nsUrl">URL（あれば）</label><input id="nsUrl" type="url">
@@ -791,6 +791,13 @@ function bindMap(){
   document.querySelectorAll('[data-role]').forEach(b=>b.onclick=()=>{ui.roleEdit=b.dataset.role;render();$('#roleBox').scrollIntoView({block:'start'})});
   document.querySelectorAll('[data-addrole]').forEach(b=>b.onclick=()=>{ui.roleEdit='new';ui.roleSite=b.dataset.addrole;render();$('#roleBox').scrollIntoView({block:'start'})});
   document.querySelectorAll('[data-sitelist]').forEach(a=>a.onclick=()=>{ui.site=a.dataset.sitelist;ui.filter='open';saveUi()});
+  document.querySelectorAll('[data-delsite]').forEach(b=>b.onclick=async()=>{
+    const k=b.dataset.delsite,n=siteName(k),fs=feats.filter(f=>f.site===k),rs=roles.filter(r=>r.site===k);
+    if(fs.length)return toast(`「${n}」には機能が${fs.length}件あります。先に機能の画面でサイトを変えるか、機能を削除してください`);
+    if(!b.dataset.sure){b.dataset.sure=1;b.textContent=rs.length?`担当${rs.length}件ごと削除（もう一度押す）`:'もう一度押すと削除';return}
+    b.disabled=true;
+    for(const r of rs)await write('roles',r.id,ref=>ref.delete());
+    await write('sites',k,ref=>ref.delete());toast(`「${n}」を削除しました`)});
   on('#rlClose','click',()=>{ui.roleEdit=null;clean('rl');render()});
   on('#rlSite','change',e=>{ui.roleSite=e.target.value});
   on('#rlSave','click',async()=>{const id=ui.roleEdit==='new'?'r-'+Math.random().toString(36).slice(2,9):ui.roleEdit;const old=roles.find(x=>x.id===id)||{};
