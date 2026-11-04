@@ -251,6 +251,7 @@ const saveUi=()=>{try{localStorage.setItem('ledger-ui',JSON.stringify({filter:ui
 
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let artDoc=null;
 let extraSites=[],roles=[],smap=null,treeOpen=new Set(['root','tools']);
 try{const t=JSON.parse(localStorage.getItem('ledger-tree')||'null');if(Array.isArray(t))treeOpen=new Set(t)}catch(e){}
 const saveTree=()=>{try{localStorage.setItem('ledger-tree',JSON.stringify([...treeOpen]))}catch(e){}};
@@ -844,6 +845,7 @@ function viewHome(){
   <div><label for="cmdKind">種類</label><select id="cmdKind">${opts(kinds,ui.cmdKind||'自動で判断')}</select></div></div>
   <div class="actions"><button class="primary" id="cmdPlan" ${sample?'':'disabled'}>計画を立てる</button>${sample?'':'<span class="next" style="font-size:12px">claude.ai で開くと使えます</span>'}</div>
   ${ui.plan?planHtml(ui.plan):''}
+  ${articlesHtml()}
   <h2>あなたの番 <span style="font-size:13px;color:var(--muted)">${yt.length}件</span></h2>
   <div class="list">${yt.length?yt.map(({f,kind})=>{
     if(kind==='gpt')return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-作業中">ChatGPT へ渡す</span></div><div class="title">${esc(f.title)}</div>
@@ -854,6 +856,104 @@ function viewHome(){
     return cardHtml(f)}).join(''):'<div class="empty">今あなたがやることはありません。</div>'}</div>
   <h2>動いている作業 <span style="font-size:13px;color:var(--muted)">${running.length}件</span></h2>
   <div class="list">${running.length?running.map(f=>{const m=ccMsg[f.id];return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-作業中">Claude Code</span><span>送信 ${esc(fmt(f.cc.sentAt))}</span></div><div class="title"><a href="#${esc(f.id)}" style="color:inherit">${esc(f.title)}</a></div><div class="next">${esc(m?m.msg:'まだ確認していません')}</div><div class="actions"><button class="small" data-check="${esc(f.id)}" ${mcp?'':'disabled'}>確認</button>${f.cc.url?`<a class="btn small" href="${esc(f.cc.url)}" target="_blank" rel="noopener">開く ↗</a>`:''}</div></div>`}).join(''):'<div class="empty">動いている作業はありません。</div>'}</div>`}
+// ---------- articles (WordPress) ----------
+function parseArticles(text){
+  const i=String(text||'').indexOf('【記事状況】');if(i<0)return [];
+  const t=text.slice(i);const m=t.match(/```(?:json)?\s*([\s\S]*?)```/)||t.match(/(\[[\s\S]*\])/);
+  if(!m)return [];try{const v=JSON.parse(m[1]);return (Array.isArray(v)?v:[v]).filter(x=>x&&x.id)}catch(e){return []}}
+async function upsertArticles(items){
+  const cur=((artDoc&&artDoc.items)||[]).slice();
+  items.forEach(it=>{const k=cur.findIndex(x=>String(x.id)===String(it.id));if(k>=0)cur[k]={...cur[k],...it};else cur.push(it)});
+  await write('articles','list',r=>r.set({...(artDoc||{}),items:cur,fetchedAt:nowIso()}))}
+const ART_ST={draft:'下書き',pending:'レビュー待ち',future:'予約',publish:'公開中',private:'非公開'};
+function artTodo(a){return Array.isArray(a.todo)?a.todo:[]}
+function articlesHtml(){
+  const items=((artDoc&&artDoc.items)||[]).slice().sort((a,b)=>String(b.modified||'').localeCompare(String(a.modified||'')));
+  const drafts=items.filter(a=>a.status!=='publish'),pubs=items.filter(a=>a.status==='publish');
+  const shown=ui.artAll?items:[...drafts,...pubs.slice(0,3)];
+  const job=artDoc&&artDoc.job,jm=ccMsg['__art'];
+  return `<h2>記事 <span style="font-size:13px;color:var(--muted)">下書き${drafts.length}・公開${pubs.length}${artDoc&&artDoc.fetchedAt?`・${esc(fmt(artDoc.fetchedAt).slice(5))} 時点`:''}</span></h2>
+  <div class="actions" style="margin-top:0"><button class="small" id="artSync" ${mcp?'':'disabled'}>記事の状況を更新</button>${job&&job.state==='作業中'?`<span class="next" style="font-size:12px;align-self:center">更新中（${esc(jm?jm.msg:'Claude Code に依頼済み')}）</span><button class="small" id="artCheck">確認</button>`:''}${pubs.length>3?`<button class="small" id="artAll">${ui.artAll?'下書き中心に戻す':'公開済みをすべて表示'}</button>`:''}</div>
+  <div class="list">${shown.length?shown.map(a=>{const td=artTodo(a),open=ui.artOpen===String(a.id);
+    return `<div class="card" style="${open?'border-color:var(--accent)':''}"><div class="meta"><span class="pill st-${a.status==='publish'?'公開済み':'確認・公開待ち'}">${esc(ART_ST[a.status]||a.status||'')}</span><span>ID ${esc(a.id)}</span>${a.modified?`<span>更新 ${esc(fmt(a.modified).slice(5))}</span>`:''}${td.length?`<span class="tnew">未記入・要確認 ${td.length}</span>`:''}</div>
+      <div class="title">${esc(a.title||'(無題)')}</div>
+      ${td.length?`<details><summary>未記入・要確認の箇所</summary><ul style="margin:4px 0;padding-left:18px;font-size:13px">${td.map(x=>`<li>${esc(typeof x==='string'?x:(x.snippet||x.marker||JSON.stringify(x)))}</li>`).join('')}</ul></details>`:''}
+      <div class="actions">${a.edit_link?`<a class="btn small" href="${esc(a.edit_link)}" target="_blank" rel="noopener">編集画面 ↗</a>`:''}${a.status==='publish'&&a.link?`<a class="btn small" href="${esc(a.link)}" target="_blank" rel="noopener">記事を見る ↗</a>`:''}<button class="small ${open?'':'primary'}" data-artopen="${esc(a.id)}">${open?'閉じる':'直す・仕上げる'}</button></div>
+      ${open?artComposer(a):''}</div>`}).join(''):`<div class="empty">記事の情報がまだありません。「記事の状況を更新」を押すと、Claude Code が WordPress から一覧を取ってきます（記事取り込み API v1.1 が必要）。</div>`}</div>`}
+function artComposer(a){
+  const cats=(smap&&smap.cats)||[];const pub=a.status==='publish';
+  return `<div class="box" style="margin:8px 0 0">
+    <label for="artText">どう直す？（普段の言葉で）</label>
+    <textarea id="artText" placeholder="例：オーナー記入の1つ目は「去年の秋、釣果を紙にメモしていたら…」という話を入れて。2つ目は使ってみた感想を3行くらいで。大漁のイメージ画像を1枚足して。">${esc(ui.artText||'')}</textarea>
+    <div class="next" style="font-size:12px">キーボードの音声入力（マイクのボタン）で話して入力できます。</div>
+    <div class="checks">
+      <label><input type="checkbox" id="artGptImg" ${ui.artGptImg?'checked':''}>GPT に画像を作らせる（OpenAI の API キーが必要・使った分だけ課金）</label>
+      <label><input type="checkbox" id="artGptText" ${ui.artGptText?'checked':''}>GPT にも文章の案を出させて、良い方を使う</label>
+      <label><input type="checkbox" id="artPublish" ${ui.artPublish?'checked':''}>${pub?'公開中の記事を直接書き換える（すぐ公開ページに反映）':'仕上げたら公開する'}</label>
+    </div>
+    ${ui.artPublish&&!pub?`<div class="row2"><div><label for="artSlug">スラッグ（URL の末尾）</label><input id="artSlug" value="${esc(ui.artSlug||a.slug||'')}" placeholder="例：dragon-counter"></div><div><label>トピック</label><div class="checks" id="artTopics">${(cats.length?cats:[{slug:'resources',name:'RESOURCES'}]).map(c=>`<label><input type="checkbox" value="${esc(c.slug)}" ${(ui.artTopics||a.topics||['resources']).includes(c.slug)?'checked':''}>${esc(c.name)}</label>`).join('')}</div></div></div>`:''}
+    <div class="actions"><button class="primary" id="artSend" data-art="${esc(a.id)}" ${mcp?'':'disabled'}>Claude Code に送る</button></div>
+    ${ui.artPublish?`<div class="banner" style="margin:6px 0 0">${pub?'公開中の記事を書き換えます。送る前に指示をもう一度確認してください。':'下書きを仕上げたあと、そのまま公開します。公開前に確認したい場合はチェックを外し、下書きで確認してから改めて「公開する」と送ってください。'}</div>`:''}
+    <div id="artMsg"></div></div>`}
+function artPrompt(a,fid){
+  const pub=a.status==='publish';
+  const topics=ui.artTopics||a.topics||['resources'];
+  const L=[`# 記事の修正：${a.title}（post_id ${a.id}、${ART_ST[a.status]||a.status}）`,
+  'cutlassfish.tokyo（WordPress）の記事を、オーナーの指示どおりに直してください。',
+  '','## オーナーの指示',ui.artText.trim(),
+  '','## 手順（リポジトリ ryoma99xx-source/boat-fishing-checklist の wordpress/README.md）',
+  `1. \`python3 wordpress/article-pack/cfpack.py get ${a.id} --out /tmp/art${a.id}\` で今の記事を取り出す`,
+  '2. 指示どおりに article.html / article.json を編集する。既存の画像は {{media:番号}} のまま残す。文体・見出し・インラインスタイルは今の記事に合わせる',
+  '3. 「（オーナー記入…）」などの目印は、指示で中身が与えられた所だけ埋める。中身が無い所は勝手に作らず残す。体験談や数値を作り話で足さない',
+  ui.artGptImg?'4. 必要な画像は `python3 wordpress/gpt/gpt.py image "<内容>" -o images/<id>.png --jpeg` で作り、{{image:<id>}} で入れる。OPENAI_API_KEY が無い・失敗したら画像は作らず、報告の「確認したいこと」に書く':'4. 新しい画像が必要なら、ツールの画面のスクリーンショット（Playwright）など実物から用意する。作り物の写真は入れない',
+  ui.artGptText?'5. 文章は `python3 wordpress/gpt/gpt.py text` でも案を出させ、自分の案と比べて良い方を使う（事実と違う内容は採らない）':'5. 文章は自分で書く',
+  `6. \`cfpack.py build\` → \`cfpack.py update ${a.id} <zip>${pub&&ui.artPublish?' --allow-published':''}\``,
+  pub?(ui.artPublish?'7. この記事は公開中。オーナーの指示により、公開中のまま書き換えてよい':'7. この記事は公開中。書き換えはせず（--allow-published は使わない）、修正案を下書きとして別に作る方法も取らず、報告で「公開中のため未反映。反映には『公開中の記事を直接書き換える』の指示が必要」と伝える'):
+   (ui.artPublish?`7. 仕上げたら \`cfpack.py publish ${a.id} --slug ${ui.artSlug||a.slug||'<適切な英小文字のスラッグ>'} --topics ${topics.join(',')}\` で公開する`:'7. 公開はしない（下書きのまま）'),
+  '','## 報告','最後に、次の2つを書いてください。',
+  '1. `cfpack.py get` の結果をもとにした記事の状況（todo は未記入の目印の一覧）：',
+  '【記事状況】','```json',JSON.stringify([{id:a.id,title:'…',status:'draft|publish',modified:'…',slug:'…',topics:['…'],link:'…',edit_link:'…',preview_link:'…',todo:['…']}]),'```',
+  '2. 完了報告（項目名は変えない）：','【完了報告】',`機能ID：${fid}`,'担当：Claude','状態：（構想／作業中／確認・公開待ち／公開済み／保留 から1つ）','やったこと：','変更したもの（ブランチ・コミット・ファイル）：','ZIP名：','SHA256：','公開URL・バージョン：','次の一手：','確認したいこと：','ChatGPTへの依頼文：なし',
+  '','## 守ること','- WP_USER / WP_APP_PASSWORD / OPENAI_API_KEY の値は表示・保存・コミットしない','- 記事・画像を削除しない','- コードの変更・commit・push はしない'];
+  return L.filter(x=>x!==undefined).join('\n')}
+async function sendArticle(a){
+  const msg=$('#artMsg'),b=$('#artSend');ui.artText=$('#artText').value;if(!ui.artText.trim())return toast('どう直すかを書いてください');
+  ui.artGptImg=$('#artGptImg').checked;ui.artGptText=$('#artGptText').checked;ui.artPublish=$('#artPublish').checked;
+  if($('#artSlug'))ui.artSlug=$('#artSlug').value.trim();
+  if($('#artTopics'))ui.artTopics=[...document.querySelectorAll('#artTopics input:checked')].map(x=>x.value);
+  b.disabled=true;msg.innerHTML='<div class="banner">Claude Code に送っています…</div>';
+  try{
+    const fid='f-wp-'+a.id;let f=feats.find(x=>x.id===fid);
+    const log={at:nowIso(),by:'自分',text:`記事の修正を依頼：${ui.artText.trim()}${ui.artGptImg?'（GPT画像）':''}${ui.artPublish?'（公開まで）':''}`};
+    if(!f){await createFeat(fid,{title:a.title||('記事 '+a.id),site:'main',kind:'記事作成',status:'作業中',owner:'Claude',pageUrl:a.status==='publish'?(a.link||''):'',deploy:a.edit_link?('編集：'+a.edit_link):'',logs:[log]});f={id:fid,title:a.title,site:'main',src:{},chats:[],logs:[log]}}
+    else{await saveFeat(fid,{status:'作業中',logs:[...(f.logs||[]),log]})}
+    const sid=await ccDispatch({...f,src:{repo:TOOLS_REPO,branch:TOOLS_BRANCH}},artPrompt(a,fid));
+    const url=sid?`https://claude.ai/code/${sid}`:'';
+    await saveFeat(fid,{cc:{sessionId:sid,url,sentAt:nowIso(),state:'作業中'},owner:'Claude',chats:[...((f.chats)||[]),...(url?[{tool:'Claude Code',name:'記事の修正',url}]:[])]});
+    ui.artText='';ui.artOpen=null;ui.artPublish=false;clean('art');toast('Claude Code が記事の修正を始めました');render()}
+  catch(e){msg.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;b.disabled=false}}
+async function syncArticles(){
+  const b=$('#artSync');if(!mcp)return;b.disabled=true;b.textContent='依頼中…';
+  const text=`cutlassfish.tokyo（WordPress）の記事の状況を取ってきてください。変更は一切しないこと。\n1. リポジトリ ${TOOLS_REPO} のブランチ ${TOOLS_BRANCH} で \`python3 wordpress/article-pack/cfpack.py list --status any --per-page 50\`（オプション名は --help で確認）を実行\n2. 結果を次の形で報告（記事ごとに id, title, status, modified, slug, topics, link, edit_link, preview_link, todo）。todo は未記入・要確認の目印の短い抜き出しの配列：\n【記事状況】\n\`\`\`json\n[ ... ]\n\`\`\`\n3. 失敗したら（記事取り込み API が v1.1 未満で list が無い等）、その理由だけを短く報告。\nWP_USER / WP_APP_PASSWORD の値は表示しないこと。コードの変更・commit・push はしないこと。`;
+  try{const sid=await ccDispatch({id:'',title:'記事の状況の取得',site:'main',src:{repo:TOOLS_REPO,branch:TOOLS_BRANCH}},text);
+    await write('articles','list',r=>r.set({...(artDoc||{items:[]}),job:{sessionId:sid,url:sid?`https://claude.ai/code/${sid}`:'',sentAt:nowIso(),state:'作業中'}}));toast('記事の状況を取りに行きました。1〜2分で反映されます')}
+  catch(e){toast(mcpErr(e))}
+  b.disabled=false;b.textContent='記事の状況を更新'}
+async function checkArtJob(){
+  const job=artDoc&&artDoc.job;if(!job||!job.sessionId)return;
+  await ccFetch({id:'__art',cc:job});const m=ccMsg['__art'];
+  if(m&&(parseArticles(m.text).length||m.bucket==='COMPLETED'||m.bucket==='FAILED')){await write('articles','list',r=>r.set({...(artDoc||{items:[]}),job:{...job,state:'完了'}}));if(!parseArticles(m.text).length&&m.text)toast('記事の状況：'+m.text.slice(0,80))}
+  render()}
+function bindArticles(on){
+  on('#artSync','click',syncArticles);
+  on('#artCheck','click',async()=>{try{await checkArtJob()}catch(e){toast(mcpErr(e))}});
+  on('#artAll','click',()=>{ui.artAll=!ui.artAll;render()});
+  document.querySelectorAll('[data-artopen]').forEach(b=>b.onclick=()=>{ui.artOpen=ui.artOpen===b.dataset.artopen?null:b.dataset.artopen;ui.artPublish=false;render()});
+  on('#artText','input',e=>ui.artText=e.target.value);
+  on('#artPublish','change',e=>{ui.artText=$('#artText').value;ui.artPublish=e.target.checked;render()});
+  on('#artSend','click',()=>{const a=((artDoc&&artDoc.items)||[]).find(x=>String(x.id)===$('#artSend').dataset.art);if(a)sendArticle(a)});
+}
+
 function viewMore(){return `<h2>その他</h2>
   <div class="list"><a class="card" href="#inbox"><div class="title">未整理のチャット ${inbox.length?`<span class="badge-n">${inbox.length}</span>`:''}</div><div class="next">履歴の取り込みと振り分け</div></a>
   <a class="card" href="#howto"><div class="title">仕組みと使い方</div><div class="next">GPT と Claude のつながり方</div></a></div>
@@ -929,15 +1029,18 @@ async function ccFetch(f){
   const last=texts[texts.length-1]||'';
   const report=last.includes('【完了報告】')?last.slice(last.indexOf('【完了報告】')):'';
   const msg=report?'完了報告が届いています':bucket==='WORKING'?'作業中':bucket==='BLOCKED'?'あなたの返事・許可を待っています':bucket==='FAILED'?'エラーで止まっています（開いて確認）':last?'返答あり（完了報告なし）':'まだ返答なし';
+  const arts=parseArticles(last);if(arts.length)await upsertArticles(arts);
   ccMsg[f.id]={msg,text:last,report,bucket}}
 let autoChecked=false;
 async function autoCheck(){
   if(autoChecked||!mcp||!loaded)return;autoChecked=true;
   try{const perm=await window.claude.use('permissions');const st=perm?await perm.state('mcp:'+CCR).catch(()=>'unavailable'):'unavailable';if(st!=='granted')return}catch(e){return}
   for(const f of feats.filter(f=>f.cc&&f.cc.state==='作業中'&&f.cc.sessionId)){try{await ccFetch(f)}catch(e){ccMsg[f.id]={msg:mcpErr(e),text:''}}}
+  if(artDoc&&artDoc.job&&artDoc.job.state==='作業中'){try{await checkArtJob()}catch(e){}}
   render()}
 function bindHome(){
   const on=(sel,ev,fn)=>{const e=$(sel);if(e)e.addEventListener(ev,fn)};
+  bindArticles(on);
   on('#cmdPlan','click',makePlan);
   on('#plStart','click',startPlan);
   on('#plRedo','click',makePlan);
@@ -1049,6 +1152,7 @@ function bind(){
     if($('#rNext')?.checked)patch.next=p['次の一手'].split('\n')[0];
     if($('#rSha')?.checked)patch.src={...(tf.src||{}),sha:p['SHA256'].match(/[0-9a-fA-F]{64}/)[0].toLowerCase(),...(p['ZIP名']?{zip:p['ZIP名'].split('\n')[0]}:{})};
     const pu=((p['公開URL']||'').match(/https:\/\/[\w.-]*cutlassfish\.tokyo\/[^\s）)]*/)||[])[0];if(pu&&!tf.pageUrl)patch.pageUrl=pu;
+    {const arts=parseArticles(r.text);if(arts.length)upsertArticles(arts)}
     if(p['ChatGPTへの依頼文'])patch.gptAsk={text:p['ChatGPTへの依頼文'],at:nowIso(),done:false};
     if(tf.cc&&tf.cc.state!=='取込済み')patch.cc={...tf.cc,state:'取込済み'};
     delete ccMsg[tf.id];
@@ -1081,6 +1185,7 @@ readHash();
     $('#sync').className='sync ok';$('#sync').lastChild.textContent='同期中';
     const a=document.activeElement;if(!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&route.v!=='list'))render()},fail);
   db.collection('roles').onSnapshot(s=>{roles=s.docs.map(d=>({id:d.id,...d.data()}));if(loaded)render()},fail);
+  db.collection('articles').onSnapshot(s=>{const d=s.docs.find(x=>x.id==='list');artDoc=d?d.data():null;if(loaded)render()},fail);
   db.collection('sitemap').onSnapshot(s=>{const d=s.docs.find(x=>x.id==='wp');smap=d?d.data():null;if(loaded)render()},fail);
   db.collection('sites').onSnapshot(s=>{extraSites=s.docs.map(d=>({k:d.id,...d.data()}));if(loaded)render()},fail);
   db.collection('inbox').onSnapshot(s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));if(loaded)render()},fail);

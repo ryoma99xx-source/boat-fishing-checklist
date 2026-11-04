@@ -52,9 +52,11 @@
    "file": "index.html",
    "content_type": "text/html; charset=utf-8",
    "bytes": 329491,
-   "sha256": "83d791fc2cdfac8b2975224f64b8dd7de82862eb3b3ef8f70918910d29c3d1e6",
+   "sha256": "19c8cdc19d1ef979e7929306f89fecf382a800884d5f72649be525e60d0aa7a0",
    "found_by": "release zip",
-   "modifications": []
+   "modifications": [
+    "「はじめに表示した5ステップの説明」→「6ステップ」（実際の案内は6ステップ。オーナー指示 2026-11-04）"
+   ]
   },
   {
    "path": "/manifest.webmanifest",
