@@ -31,14 +31,16 @@
 
 依頼を扱ったとき、確認を回したとき、見回りをしたときに `meta/heartbeat` を `set`：`{at:<ISO 現在時刻>, note:'中継'|'確認'|'見回り'}`。台帳の「いまの作業」の上に「最終確認 ◯分前」と出る（90分で黄、180分で赤）。
 
-## 4. 見回り（1時間ごと・新しいセッション）
+## 4. 見回り（9・12・15・18・21時（日本時間）・新しいセッション）
 
-定期タスク「台帳の見回り」が毎時、新しいセッションでこの手順を回す。見回りのセッションには `create_session` / `get_session` などの道具が無いことがあるので、**他のセッションに頼らず自分で片付ける**。
+定期タスク「台帳の見回り」が日本時間の 9:07・12:07・15:07・18:07・21:07 に新しいセッションでこの手順を回す（0〜8時は動かない）。
+
+**静かな日の判定（最初に行う）**：直近の動き（features.updatedAt／requests.at／progress.at／meta.heartbeat.at のうち note が「見回り」以外、の最新）が24時間より前なら「静かな日」。静かな日で `meta/patrol.date` が今日（日本時間）なら、その日の見回りは済みなので何もせず終える。つまり静かな日は1日1回（9:07）だけ動く。見回りの最後に `meta/patrol` を `{at, date, quiet}` で更新する。見回りのセッションには `create_session` / `get_session` などの道具が無いことがあるので、**他のセッションに頼らず自分で片付ける**。
 
 1. `ArtifactData list requests` で `status=='pending'` を探す。10分以上前のものがあれば、司令塔本体が止まっている。古い順に1件ずつ、**その依頼文を自分がそのまま実行する**（依頼文は Claude Code 向けの作業指示になっている）。取り掛かる前に `features/<fid>.cc` を `{state:'作業中', sentAt, relayMsg:'見回りのセッションが作業中（HH:MM 開始）', sessionId:<自分のセッション ID が分かれば>}` に、`requests/<id>` を `{status:'sent'}` に更新。終わったら 2-3 のとおり報告を書き戻し、`requests/<id>` を `done` に
 2. `features` で `cc.state=='作業中'` のものを見る。`progress/<fid>` に `reportText` があれば 2-3 のとおり `cc` に書き戻す。`progress` も `relayMsg` も2時間以上更新が無ければ `cc.relayMsg` を「2時間以上動きがありません。セッションを開いて確認してください」にする（セッションの中身は見られないので、それ以上は触らない）
 3. 1日1回（`backups/latest.at` が20時間より古いとき）：全コレクション（features, roles, requests, articles, sitemap, sites, inbox, chat, progress, meta）を `list` で読み、`backups/latest` と `backups/<YYYY-MM-DD>` に `{at, data:{...}}` で `set`。`backups/<日付>` は新しい7件だけ残して古いものは `delete`
-4. `meta/heartbeat` を `{at, note:'見回り'}` で更新
+4. `meta/heartbeat` を `{at, note:'見回り'}`、`meta/patrol` を `{at, date, quiet}` で更新
 5. 何もなければ一言「異常なし」で終える。代わりに作業した・エラーがあったときだけ、やったことを短く報告する。`ArtifactData` が使えなかったときは、その旨を最後に書く
 
 ## 5. 守ること
