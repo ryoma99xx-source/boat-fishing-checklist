@@ -26,15 +26,39 @@ def bg_mask(im, white=240):
     seeds = [(x, y) for x in (0, w // 4, w // 2, 3 * w // 4, w - 1) for y in (0, h // 2, h - 1)]
     for pt in seeds:
         if L.getpixel(pt) == 255: ImageDraw.floodfill(L, pt, 128)
+    # enclosed white is background too: the inside of a drawn frame, of a hook holder, of a leader loop.
+    # (a white head is shaded, so its own white patches stay far below the size limit)
+    for _ in range(8):
+        inner = (np.asarray(L) == 255)
+        if inner.sum() < 0.015 * inner.size: break
+        rows = inner.sum(axis=1); y = int(rows.argmax()); xs = np.where(inner[y])[0]
+        M = L.copy(); ImageDraw.floodfill(M, (int(xs[len(xs) // 2]), y), 128)
+        if (np.asarray(M) == 128).sum() - (np.asarray(L) == 128).sum() < 0.015 * inner.size: break   # biggest region is small
+        L = M
     bg = Image.fromarray(((np.asarray(L) == 128) * 255).astype("uint8")).filter(ImageFilter.MaxFilter(5))  # grow back 2px
     return np.asarray(bg) == 0
 
 def head_component(mask):
-    """Keep only the blob that holds the tallest column (the head). Glow insets, labels and loose rig parts
-    are separate blobs and drop out; a hook attached to the head stays and is trimmed by head_box."""
-    cov = mask.sum(axis=0); x = int(cov.argmax()); ys = np.where(mask[:, x])[0]; y = int(ys[len(ys) // 2])
-    L = Image.fromarray((mask * 255).astype("uint8")).copy(); ImageDraw.floodfill(L, (x, y), 128)
-    return np.asarray(L) == 128
+    """Keep only the biggest *solid* blob (the head, with any hook attached to it). Glow insets, captions, loose rig
+    parts are separate, smaller blobs and drop out; the hook is trimmed later by head_box. Store photos also carry
+    a drawn frame (a huge but hollow outline) and a pasted glow photo (a filled rectangle): both are skipped by
+    their fill ratio."""
+    L = Image.fromarray((mask * 255).astype("uint8")).copy(); best = None; val = 100
+    for _ in range(10):
+        arr = np.asarray(L); rest = arr == 255
+        if rest.sum() < 50: break
+        cov = rest.sum(axis=0); x = int(cov.argmax()); ys = np.where(rest[:, x])[0]; y = int(ys[len(ys) // 2])
+        ImageDraw.floodfill(L, (x, y), val); comp = np.asarray(L) == val; val += 1
+        yy, xx = np.where(comp); bbox = float((yy.max() - yy.min() + 1) * (xx.max() - xx.min() + 1)); fill = comp.sum() / bbox
+        if fill < 0.2 and bbox > 0.1 * mask.size: continue          # hollow frame drawn around the product shot
+        if fill > 0.9 and comp.sum() > 0.01 * mask.size: continue   # pasted rectangular (glow) photo
+        if comp.sum() > 0.01 * mask.size and rectish(comp[yy.min():yy.max() + 1, xx.min():xx.max() + 1]): continue
+        if best is None or comp.sum() > best.sum(): best = comp
+    return best if best is not None else mask
+
+def rectish(c):
+    """A pasted photo touches all four sides of its bbox along most of their length; a head touches each at a point."""
+    return min(c[0].mean(), c[-1].mean(), c[:, 0].mean(), c[:, -1].mean()) > 0.6
 
 def head_box(mask, maxw=1.7):
     cov = mask.mean(axis=0); thr = 0.35 * cov.max(); cols = np.where(cov > thr)[0]
@@ -46,10 +70,11 @@ def head_box(mask, maxw=1.7):
     core = mask[:, x0:x1 + 1]; cy = np.where(core.any(axis=1))[0]; hh = max(1, cy.max() - cy.min())
     lim = x0 + int(maxw * hh)                                                     # a head is never much wider than tall
     while x1 + 1 < min(mask.shape[1], lim) and cov[x1 + 1] > 0.12 * cov.max(): x1 += 1   # ring / eye side
-    while x0 - 1 >= 0 and cov[x0 - 1] > 0.02 * cov.max(): x0 -= 1              # the nose tapers: keep it
+    nose = x0 - int(0.6 * hh)                                                    # ...but a leader line is not a nose
+    while x0 - 1 >= max(0, nose) and cov[x0 - 1] > 0.02 * cov.max(): x0 -= 1     # the nose tapers: keep it
     sub = mask[:, x0:x1 + 1]; ys = np.where(sub.any(axis=1))[0]; return x0, ys.min(), x1, ys.max()
 
-MAXW = {"START": 1.25, "DUO": 1.3}   # START: long mole shank behind the head; DUO: glow inset pasted at the right
+MAXW = {"START": 1.25, "DUO": 1.3, "SHIMANO": 1.45}   # START: long mole shank; DUO: glow inset at the right; SHIMANO: hook holder behind the head
 def cut(path, maker=""):
     global _maxw, _maker; _maxw = MAXW.get(maker, 1.7); _maker = maker
     src = Image.open(path)
@@ -77,6 +102,23 @@ def drop_dark_inset(im, mask):
         return mask & ~grown
     return mask
 
+THICK = {"SHIMANO": 0.1}   # store shots: the head is wired to a snap, a leader and a hook holder; keep the thick part only
+def thick_core(mask, frac):
+    """Erode the blob step by step (starting at frac x its height) until almost nothing is left: the last surviving
+    core is the thickest part, i.e. the head (wires, snap and holder bars are thinner). Grow it back by the same
+    amount and intersect with the original mask."""
+    yy = np.where(mask.any(axis=1))[0]
+    if not len(yy): return mask
+    r = max(2, int(frac * (yy.max() - yy.min() + 1))); M = Image.fromarray((mask * 255).astype("uint8")); last = None
+    while True:
+        core = np.asarray(M.filter(ImageFilter.MinFilter(2 * r + 1))) > 0
+        if core.sum() < 50: break
+        last = (core, r); r += 3
+    if last is None: return mask
+    core, r = last; core = head_component(core)
+    grown = np.asarray(Image.fromarray((core * 255).astype("uint8")).filter(ImageFilter.MaxFilter(2 * r + 5))) > 0
+    return mask & grown
+
 INSET = {("DUO", (680, 250)): (226, 90, 356, 220)}   # DUO pastes a round glow inset at a fixed spot of its 680x250 photos
 def cut_masked(im, mask):
     box = INSET.get((globals().get("_maker", ""), im.size))
@@ -97,6 +139,7 @@ def cut_masked(im, mask):
                 x0 = max(0, min(right) - 70); mask[:, x0:] = False
     mask = drop_dark_inset(im, mask)
     mask = head_component(mask)
+    if globals().get("_maker", "") in THICK: mask = thick_core(mask, THICK[_maker])
     x0, y0, x1, y1 = head_box(mask, globals().get('_maxw', 1.7)); pad = int((y1 - y0) * 0.06)
     bx0, by0, bx1, by1 = max(0, x0 - pad), max(0, y0 - pad), min(im.width, x1 + pad), min(im.height, y1 + pad)
     im = im.crop((bx0, by0, bx1, by1)); m = Image.fromarray((mask[by0:by1, bx0:bx1] * 255).astype("uint8"))
