@@ -12,11 +12,11 @@
 
 ## 手順
 
-1. `git fetch origin claude/relaxed-mayer-1u2nhq && git checkout claude/relaxed-mayer-1u2nhq`
-2. `python3 sites/dragon-counter/tools/catalog_add.py --export` で `public/catalog-all.txt` を最新にし、今のカタログ全件を読む
+1. `git fetch origin claude/relaxed-mayer-1u2nhq && git checkout claude/relaxed-mayer-1u2nhq`、`pip install scipy`（写真の切り出しが速くなる。無くても動く）
+2. `python3 sites/dragon-counter/tools/catalog_add.py --export` で `public/catalog-all.txt` を最新にし、今のカタログ全件を読む。`発売予定` のもの（例：DAIWA 船タチウオテンヤ Rhythm 替えヘッド＝2025年12月に発売延期）は毎回、公式で発売されたか確かめる
 3. 調査（WebSearch / WebFetch）。対象は船のタチウオ用テンヤ。メーカー表記は次のどれか：
    DAIWA / SHIMANO / JACKALL / HAYABUSA / OWNER / Major Craft / PRO MARINE / START / YAMASHITA / DUO / がまかつ / マルシン漁具
-   - 各メーカーの公式サイト（製品ページ・新製品ニュース）を見る。釣具店やまとめサイトの情報だけでは入れない。推測で埋めない
+   - 各メーカーの公式サイト（製品ページ・新製品ニュース）を見る。釣具店やまとめサイトの情報だけでは入れない。推測で埋めない（シマノ公式はこの環境から 403 で見られない。シマノだけは大手釣具店の商品ページで製品名・色名・JAN を確かめてよい）
    - 新しい製品、既存製品の新しい号数・新しいカラーで、カタログに無いもの → `new`
    - カタログにあるものの状態が変わった（発売予定 → 発売、生産終了 など）→ `status`
    - 既にあるテンヤは `catalog-all.txt` の表記と1文字も変えずに書く。新しいテンヤの製品名は、同じ製品があればその表記に合わせ、無ければ公式の製品名どおり。カラーは公式のカラー名どおり。号数ごとに1行
@@ -24,9 +24,15 @@
 4. 結果を `/tmp/catalog.json` に書く：
    `{"checked":"YYYY-MM-DD","new":[{"m":"DAIWA","p":"製品名","u":"https://…","h":false,"z":40,"c":"カラー名","s":""}],"status":[{"m":"DAIWA","p":"製品名","z":40,"c":"カラー名","s":""}]}`
 5. `python3 sites/dragon-counter/tools/catalog_add.py /tmp/catalog.json` で確認。エラーが出たら、表記を公式で確かめて直す。確かめられなければその行を外す
-6. 足すものがあれば `--write` を付けて実行 → `git add sites/dragon-counter` → commit → push（push で公開される）。数分後に https://dragon-counter.cutlassfish.tokyo/catalog-all.json の `updated` と `count` が変わったことを確認
-7. 台帳に記録：ToolSearch で `select:ArtifactData` を読み込み、https://claude.ai/artifact/T4YTywvucGbbGSaWmu3VFQ の `features/f-dragon-catalog` を `get` → `if_version` 付きで `update`：`logs` に `{at, by:'Claude', text:'月次更新：追加 n 件・状態 n 件（調べたメーカー…）。追加したもの：…'}` を足し、`status:'公開済み'`、`next:'次回は <翌月1日>'`、`updatedAt`。`meta/heartbeat` も `{at, note:'カタログ更新'}` で更新
-8. 最後に、調べたメーカー、追加したテンヤ、状態を変えたテンヤ、確かめられず外したものを日本語で5行以内にまとめる。足すものが無ければ「追加なし」と一言
+6. 足すもの・状態が変わるものがあれば `--write` を付けて実行（catalog-extra.json・catalog-all.json・DEPLOY が更新される）
+7. **写真**（新しく足したテンヤ・写真が無かったテンヤの分。下の「テンヤの頭の写真」も読む）
+   - 公式に色別写真があるメーカーは取得コマンド：`tools/tenya_images.py daiwa|jackall|start|duo|hayabusa`（既にある id は飛ばす）。それ以外は公式製品ページの色別画像を `work/src/<id>.jpg` に置く（id は `python3 -c "import sys;sys.path.insert(0,'sites/dragon-counter/tools');import catalog_add as ca;print(ca.key('DAIWA','製品名',40,'カラー名'))"`）
+   - 公式に無ければ釣具店の色別商品写真（店の写真は `work/retail.json` に `{id:{url,page,src,name}}` を足す＝店写真モードで切り出される）。Amazon・シマノ公式は使えない。bot 対策の回避はしない
+   - `python3 sites/dragon-counter/tools/tenya_images.py cut <id…>` で切り出し、**必ず確認シートを作って目で見る**（頭だけか・縁が白く荒くないか・色の取り違えが無いか）。欠ける／枠や文字が混ざるときは元画像を頭だけに手で切り抜いて `retail.json` に `plain: true`
+   - 写真が見つからない id は、最後の報告に「写真なし：…」と書く（カタログには足したままでよい）
+8. `git add sites/dragon-counter` → commit → push（DEPLOY が変わったコミットの push で公開される。写真だけ足したときは `sites/dragon-counter/DEPLOY` の日時行を書き換えてから commit）。数分後に https://dragon-counter.cutlassfish.tokyo/catalog-all.json の `updated`/`count` と https://dragon-counter.cutlassfish.tokyo/tenya/index.json の `ids` の数が変わったことを確認
+9. 台帳に記録：ToolSearch で `select:ArtifactData` を読み込み、https://claude.ai/artifact/T4YTywvucGbbGSaWmu3VFQ の `features/f-dragon-catalog` を `get` → `if_version` 付きで `update`：`logs` に `{at, by:'Claude', text:'月次更新：追加 n 件・状態 n 件・写真 n 件（調べたメーカー…）。追加したもの：…。写真なし：…'}` を足し、`status:'公開済み'`、`next:'次回は <翌月1日>'`、`updatedAt`。`meta/heartbeat` も `{at, note:'カタログ更新'}` で更新
+10. 最後に、調べたメーカー、追加したテンヤ、状態を変えたテンヤ、足した写真、確かめられず外したもの・写真が無いものを日本語で5行以内にまとめる。足すものが無ければ「追加なし」と一言
 
 ## 手で全件リストをもらったとき（例：ChatGPT が出した一覧）
 

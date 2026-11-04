@@ -97,11 +97,12 @@ FIXED = {   # store shots are template photos: one composition per store and pro
     ("fishing-sagamiya", "サーベルマスター 船テンヤ β ゲキハヤ"): (105, 252, 295, 354),
     ("f-marunishi", "サーベルマスター 船テンヤ β"): (195, 290, 350, 425),   # 680x680 (logo, SALE and size overlays)
 }
-def cut(path, maker="", product="", store=None):
+def cut(path, maker="", product="", store=None, flags=None):
     """store: name of the store the photo came from (or True) → a retail shot (frame, badges, glow photo, snap and
     leader in the picture): the head is found by its eye, or by a fixed box known for that store and product"""
-    global _maxw, _maker, _fixed, _store
+    global _maxw, _maker, _fixed, _store, _flags
     _maxw = 1.45 if store else MAXW.get(maker, 1.7); _maker = maker; _store = bool(store); _fixed = FIXED.get((store, product)) if store else None
+    _flags = flags or {}
     src = Image.open(path)
     if src.mode in ("RGBA", "LA") or (src.mode == "P" and "transparency" in src.info):
         src = src.convert("RGBA"); al = np.asarray(src)[:, :, 3]
@@ -194,6 +195,9 @@ def cut_masked(im, mask):
             if right:
                 x0 = max(0, min(right) - 70); mask[:, x0:] = False
     mask = drop_dark_inset(im, mask)
+    if globals().get("_flags", {}).get("fill"):   # source whitened by hand around the head: seal small gaps, fill the holes
+        k = 13; mask = np.asarray(Image.fromarray((mask * 255).astype("uint8")).filter(ImageFilter.MaxFilter(k)).filter(ImageFilter.MinFilter(k))) > 0
+        if _nd is not None: mask = _nd.binary_fill_holes(mask)
     if globals().get("_fixed"):
         x0, y0, x1, y1 = _fixed; box = np.zeros_like(mask); box[y0:y1, x0:x1] = True; mask = mask & box
     elif globals().get("_store"):
@@ -204,10 +208,24 @@ def cut_masked(im, mask):
     bx0, by0, bx1, by1 = max(0, x0 - pad), max(0, y0 - pad), min(im.width, x1 + pad), min(im.height, y1 + pad)
     im = im.crop((bx0, by0, bx1, by1)); m = Image.fromarray((mask[by0:by1, bx0:bx1] * 255).astype("uint8"))
     m = m.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3))
+    if globals().get("_store"): im, m = defringe(im, m)
     r = min((W - 24) / im.width, (H - 24) / im.height); nw, nh = int(im.width * r), int(im.height * r)
     im = im.resize((nw, nh), Image.LANCZOS); m = m.resize((nw, nh), Image.LANCZOS).filter(ImageFilter.GaussianBlur(0.6))
     layer = Image.new("RGBA", (nw, nh)); layer.paste(im, (0, 0)); layer.putalpha(m)
     out = Image.new("RGBA", (W, H), (0, 0, 0, 0)); out.alpha_composite(layer, ((W - nw) // 2, (H - nh) // 2)); return out
+
+def defringe(im, m, band=3):
+    """Store JPEGs on white: the pixels along the edge are a blend of head and white paper, and on the app's dark
+    background they show as a ragged white rim. In a thin band along the mask edge, make a pixel as transparent as
+    it is white and take the white back out of its colour (un-premultiply against white)."""
+    mk = np.asarray(m) > 127; k = 2 * band + 1
+    inner = np.asarray(Image.fromarray((mk * 255).astype("uint8")).filter(ImageFilter.MinFilter(k))) > 0
+    ring = mk & ~inner
+    a = np.asarray(im).astype(float); mn = a.min(axis=2)
+    alpha = np.where(mk, 1.0, 0.0); alpha[ring] = np.clip((250.0 - mn[ring]) / 45.0, 0.0, 1.0)   # white → 0, ≤205 → 1
+    out = a.copy(); sel = ring & (alpha > 0.15)
+    aa = alpha[sel][:, None]; out[sel] = np.clip((a[sel] - 255.0 * (1.0 - aa)) / aa, 0, 255)
+    return Image.fromarray(out.astype("uint8")), Image.fromarray((alpha * 255).astype("uint8"))
 
 def catalog():
     items = json.load(open(os.path.join(PUB, "catalog-all.json"), encoding="utf-8"))["items"]
@@ -320,7 +338,9 @@ def export():
     items, _ = catalog(); maker_of = {ca.key(i["m"], i["p"], i["z"], i["c"]): i["m"] for i in items}
     product_of = {ca.key(i["m"], i["p"], i["z"], i["c"]): i["p"] for i in items}
     retail = os.path.join(SITE, "work", "retail.json")   # ids whose source is a store photo (kept out of git with the sources)
-    stores = {k: (None if v.get("plain") else (v.get("src") or True)) for k, v in json.load(open(retail, encoding="utf-8")).items()} if os.path.exists(retail) else {}   # "plain": hand-cropped to the head already
+    rj = json.load(open(retail, encoding="utf-8")) if os.path.exists(retail) else {}
+    stores = {k: (None if v.get("plain") else (v.get("src") or True)) for k, v in rj.items()}   # "plain": hand-cropped to the head already
+    flags = {k: {f: v[f] for f in ("fill",) if v.get(f)} for k, v in rj.items()}
     only = set(sys.argv[2:])
     for f in sorted(os.listdir(WORK)):
         if not f.lower().endswith((".jpg", ".jpeg", ".png", ".webp")): continue
@@ -328,7 +348,7 @@ def export():
         if only and maker_of.get(iid) not in only and iid not in only:
             if os.path.exists(os.path.join(OUT, iid + ".webp")): ids.append(iid)
             continue
-        try: im = cut(os.path.join(WORK, f), maker_of.get(iid, ""), product_of.get(iid, ""), stores.get(iid))
+        try: im = cut(os.path.join(WORK, f), maker_of.get(iid, ""), product_of.get(iid, ""), stores.get(iid), flags.get(iid))
         except Exception as e: print("切り出し失敗", f, e); continue
         im.resize((240, 180), Image.LANCZOS).save(os.path.join(OUT, iid + ".webp"), "WEBP", quality=82, method=6); ids.append(iid); n += 1
     json.dump({"v": 1, "ids": sorted(ids)}, open(os.path.join(OUT, "index.json"), "w"))
