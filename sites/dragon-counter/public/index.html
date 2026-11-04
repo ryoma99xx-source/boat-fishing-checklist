@@ -600,7 +600,11 @@ body.has-back .toast{bottom:calc(146px + env(safe-area-inset-bottom,0px))}
 .qty button:disabled{color:var(--line)}
 .qty b{min-width:34px;text-align:center;font-family:var(--f-num);font-size:18px}
 .qty b small{font-family:"Noto Sans JP",sans-serif;font-size:10px;color:var(--muted);margin-left:1px}
-.trow-q{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line);padding-right:4px}
+.trow-q{display:flex;flex-wrap:wrap;align-items:center;gap:8px;border-bottom:1px solid var(--line);padding-right:4px}
+.trow-own{flex-wrap:wrap}
+.tsets{flex:0 0 100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:0 0 12px 52px;font-size:13px}
+.tset{min-height:34px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink,inherit);font-size:13px;white-space:nowrap}
+.tset.on{border-color:var(--teal);color:var(--teal);background:rgba(54,200,200,.10)}
 .trow-q .trow{border-bottom:none;flex:1;min-width:0}
 .trow-own .qty{margin-right:4px}
 .tchip.mine{display:flex;width:100%;align-items:center;gap:8px;padding:6px 6px 6px 10px}
@@ -1499,8 +1503,13 @@ function tbRows(){const T=TEN();const mine=new Set(myTenya());const inSet=tb.mod
     const on=tb.mode==='set'?inSet.has(t.id):mine.has(t.id);
     const row=`<button class="trow" data-act="${tb.mode==='set'?'tbSet':'tbMine'}" data-id="${t.id}" aria-pressed="${on}"><span class="tck ${on?'on':''}">${on?'✓':''}</span>${lbl}</button>`;
     const q=tb.mode==='mine'&&on?qtyHTML(t.id):'';const ed=t.custom?`<button class="btn sm tedit" data-act="ctEdit" data-id="${t.id}" data-from="tb">編集</button>`:'';
-    return t.custom?`<div class="trow-own">${row}${q}${ed}</div>`:q?`<div class="trow-q">${row}${q}</div>`:row}).join('');
+    const ls=tb.mode==='mine'&&on?tbSetChips(t.id):'';
+    return t.custom?`<div class="trow-own">${row}${q}${ed}${ls}</div>`:q?`<div class="trow-q">${row}${q}${ls}</div>`:row}).join('');
   return `<p class="muted">${n}件${n>300?'（先頭の300件を表示。号数やメーカーで絞り込んでください）':''}</p>${rows||'<p class="muted">見つかりません</p>'}${tb.mode!=='catch'&&tb.mode!=='cur'?'<button class="btn sm" data-act="ctEdit" data-from="tb">＋ カタログにないテンヤを自分で追加</button>':''}`}
+// 所有テンヤを選ぶ画面で、チェックした行の下に「当日のリストに入れる」ボタンを出す
+function tbSetChips(id){const sets=TEN().sets;
+  if(!sets.length)return `<div class="tsets"><span class="muted">当日のリスト：</span><button class="tset" data-act="tbSetNew" data-id="${id}">＋ 一軍リストを作って入れる</button></div>`;
+  return `<div class="tsets"><span class="muted">当日のリスト：</span>${sets.map(st=>{const on=st.items.includes(id);return `<button class="tset ${on?'on':''}" data-act="tbSetQuick" data-set="${st.id}" data-id="${id}" aria-pressed="${on}">${on?'✓ ':'＋ '}${esc(st.name)}</button>`}).join('')}</div>`}
 // 検索用の正規化：全角→半角、大文字→小文字、ひらがな→カタカナ
 function normQ(x){return String(x||'').normalize('NFKC').toLowerCase().replace(/[\u3041-\u3096]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60))}
 function tbBarHTML(){const makers=[...new Set(CAT.list.map(t=>t.m))].sort();
@@ -1708,6 +1717,8 @@ const acts={
   tbDone:()=>{closeSheet()},
   tbClear:()=>{tb.q='';const i=$('#tbQ');if(i){i.value='';i.focus()}tbRefresh();const x=$('.sb-x');if(x)x.hidden=true},
   tbZ:b=>{tb.z=b.dataset.d;tbRefresh()},tbOnly:b=>{tb.only=b.dataset.d;tbRefresh()},
+  tbSetQuick:b=>{const T=TEN(),st=T.sets.find(x=>x.id===b.dataset.set),id=b.dataset.id;if(!st)return;const add=!st.items.includes(id);st.items=add?st.items.concat([id]):st.items.filter(x=>x!==id);cfgTouch();tbRefresh();toast(add?`「${st.name}」に入れました`:`「${st.name}」から外しました`)},
+  tbSetNew:b=>{const T=TEN();const st={id:uid(),name:SET_NAMES[0],items:[b.dataset.id]};T.sets.push(st);cfgTouch();tbRefresh();toast(`「${st.name}」を作って入れました`)},
   tbMine:b=>{const T=TEN(),id=b.dataset.id;T.mine=T.mine.includes(id)?T.mine.filter(x=>x!==id):T.mine.concat([id]);cfgTouch();tbRefresh()},
   tbSet:b=>{const T=TEN(),st=T.sets.find(x=>x.id===tb.setId),id=b.dataset.id;if(!st)return;st.items=st.items.includes(id)?st.items.filter(x=>x!==id):st.items.concat([id]);if(!T.mine.includes(id))T.mine.push(id);cfgTouch();tbRefresh()},
   tbCatch:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.id;g.extra=g.extra||[];if(!dayTenya(tr,tr.cur.sp).includes(id))g.extra.push(id);$('#sheet').hidden=true;sheetCtx=null;addEvent('catch',mainV(tr.cur.sp),null,null,id)},
