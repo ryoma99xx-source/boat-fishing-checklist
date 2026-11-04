@@ -4,6 +4,7 @@
     python3 sites/dragon-counter/tools/catalog_add.py <gpt.json>            # check only
     python3 sites/dragon-counter/tools/catalog_add.py <gpt.json> --write    # write catalog-extra.json, catalog-all.json and DEPLOY
     python3 sites/dragon-counter/tools/catalog_add.py --export              # only rewrite catalog-all.json
+    add --no-new when importing an existing lineup in bulk (no 新商品 label); the monthly research omits it
 
 <gpt.json> is the 【カタログ追加】 JSON (from Claude's monthly research, or any list converted to this shape): {"checked":"YYYY-MM-DD","new":[...],"status":[...]}.
 - "new": tenya not in the catalog yet. Ones already there (same maker|product|size|color) are skipped.
@@ -75,6 +76,7 @@ def main():
         sys.exit(__doc__)
     gpt = {} if sys.argv[1] == "--export" else json.load(open(sys.argv[1], encoding="utf-8"))
     write = "--write" in sys.argv
+    no_new = "--no-new" in sys.argv  # bulk import of an existing lineup: don't label everything 新商品
     src = open(INDEX, encoding="utf-8").read()
     cat = json.loads(re.search(r"const TENYA_CAT=(\{.*?\});\n", src, re.S).group(1))
     have = {}
@@ -99,7 +101,7 @@ def main():
         k = key(x["m"], x["p"], x["z"], x["c"])
         if k in have: skipped.append(where); continue
         u = x.get("u") or next((v.get("u", "") for v in have.values() if v["m"] == x["m"] and v["p"] == x["p"] and v.get("u")), "")
-        it = {"m": x["m"], "p": x["p"], "u": u, "h": bool(x.get("h")), "z": int(x["z"]), "c": x["c"], "s": x.get("s", ""), "a": today}
+        it = {"m": x["m"], "p": x["p"], "u": u, "h": bool(x.get("h")), "z": int(x["z"]), "c": x["c"], "s": x.get("s", ""), "a": "" if no_new else today}
         have[k] = it; added.append(it)
     for i, x in enumerate(gpt.get("status", [])):
         where = f"status[{i}] {x.get('m')} {x.get('p')} {x.get('z')}号 {x.get('c')}"
