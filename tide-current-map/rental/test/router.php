@@ -8,8 +8,8 @@ $path = rawurldecode((string)parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 function not_found($root) { require $root . '/_errors/404.php'; return true; }
 
 if (preg_match('#^/api/(current|tide|map-config)$#D', $path, $m)) {
- $script = $root . '/api/' . $m[1] . '/index.php';
- $_SERVER['SCRIPT_FILENAME'] = $script; $_SERVER['SCRIPT_NAME'] = '/api/' . $m[1] . '/index.php';
+ $script = $root . '/api/' . $m[1] . '.php';
+ $_SERVER['SCRIPT_FILENAME'] = $script; $_SERVER['SCRIPT_NAME'] = '/api/' . $m[1] . '.php';
  chdir(dirname($script));
  require $script;
  return true;

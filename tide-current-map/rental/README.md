@@ -38,7 +38,7 @@ GitHub のこのリポジトリで **Settings → Secrets and variables → Acti
 - アップロード先は、アカウントのいちばん上（＝そのサブドメインの公開フォルダ）です。別の場所にしたいときだけ、`FTP_DIR_STAGING` / `FTP_DIR_PRODUCTION` にフォルダを入れます（ふつうは不要）。
 - `GOOGLE_MAPS_ENABLED` は Secrets ではなく **Variables** タブに入れても構いません。
 - Google Cloud 側で、キーの「ウェブサイトの制限」に `https://tide-stg.cutlassfish.tokyo/*` も追加しておくと、テスト用でも Google 地図が出ます。
-- 秘密情報はログに表示されません。キーは `api/map-config/config.php` としてサーバーにだけ置かれ、GitHub には保存されません。
+- 秘密情報はログに表示されません。キーは `api/_lib/map-config.config.php` としてサーバーにだけ置かれ、GitHub には保存されません。
 
 ## 2. サーバー側の準備
 

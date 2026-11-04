@@ -290,7 +290,7 @@ function request_origin() {
 
 function handle_map_config() {
  $config = array();
- $file = dirname(__DIR__) . '/map-config/config.php';
+ $file = __DIR__ . '/map-config.config.php';
  if (is_file($file)) { $c = include $file; if (is_array($c)) $config = $c; }
  $key = isset($config['GOOGLE_MAPS_BROWSER_KEY']) && is_string($config['GOOGLE_MAPS_BROWSER_KEY']) ? js_trim($config['GOOGLE_MAPS_BROWSER_KEY']) : '';
  $en = isset($config['GOOGLE_MAPS_ENABLED']) ? $config['GOOGLE_MAPS_ENABLED'] : '';

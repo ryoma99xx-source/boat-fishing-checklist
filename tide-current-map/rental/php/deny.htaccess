@@ -1,1 +1,6 @@
-Require all denied
+# Implementation files: never served. (Uses mod_rewrite instead of "Require", which
+# needs AuthConfig/Limit overrides that shared hosts may not allow.)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^ - [R=404,L]
+</IfModule>

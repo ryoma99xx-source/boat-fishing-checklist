@@ -75,8 +75,8 @@ jobs:
           GOOGLE_MAPS_ENABLED: ${{ secrets.GOOGLE_MAPS_ENABLED || vars.GOOGLE_MAPS_ENABLED }}
         # var_export writes a safe PHP literal; nothing is printed to the log.
         run: |
-          php -r 'echo "<?php\n// Written by the deploy workflow. Do not commit.\nreturn ", var_export(array("GOOGLE_MAPS_BROWSER_KEY" => (string)getenv("GOOGLE_MAPS_BROWSER_KEY"), "GOOGLE_MAPS_ENABLED" => (string)getenv("GOOGLE_MAPS_ENABLED")), true), ";\n";' > site/api/map-config/config.php
-          php -l site/api/map-config/config.php > /dev/null
+          php -r 'echo "<?php\n// Written by the deploy workflow. Do not commit.\nreturn ", var_export(array("GOOGLE_MAPS_BROWSER_KEY" => (string)getenv("GOOGLE_MAPS_BROWSER_KEY"), "GOOGLE_MAPS_ENABLED" => (string)getenv("GOOGLE_MAPS_ENABLED")), true), ";\n";' > site/api/_lib/map-config.config.php
+          php -l site/api/_lib/map-config.config.php > /dev/null
 
       # Each target uses its own FTP account, created for that subdomain only, so a staging
       # run can never write into production (or into WordPress). The account's home is the

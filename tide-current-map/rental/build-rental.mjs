@@ -99,9 +99,12 @@ export async function buildRental(appDir, outDir) {
  const tpl = f => fs.readFileSync(path.join(HERE, 'php', f));
  write(lib + 'common.php', tpl('common.php'));
  write(lib + '.htaccess', tpl('deny.htaccess'));
- write('api/current/index.php', tpl('current.php'));
- write('api/tide/index.php', tpl('tide.php'));
- write('api/map-config/index.php', tpl('map-config.php'));
+ // Plain files (api/<name>.php), not api/<name>/index.php: a folder named like the URL makes
+ // Apache redirect /api/current to /api/current/, and turning that off (DirectorySlash) is not
+ // allowed in .htaccess on shared hosts.
+ write('api/current.php', tpl('current.php'));
+ write('api/tide.php', tpl('tide.php'));
+ write('api/map-config.php', tpl('map-config.php'));
  write('_errors/404.php', tpl('404.php'));
  write('.htaccess', tpl('root.htaccess'));
  write('api/harmonic/.htaccess', tpl('harmonic.htaccess'));

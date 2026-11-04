@@ -52,7 +52,7 @@ async function workerGet(p, headers = {}, method = 'GET', host = 'tide-current-m
 // ---------- rental build ----------
 const out = path.join(tmp, 'site');
 const info = await buildRental(appDir, out);
-fs.writeFileSync(path.join(out, 'api/map-config/config.php'), "<?php\nreturn array('GOOGLE_MAPS_BROWSER_KEY' => 'TEST-KEY', 'GOOGLE_MAPS_ENABLED' => 'true');\n");
+fs.writeFileSync(path.join(out, 'api/_lib/map-config.config.php'), "<?php\nreturn array('GOOGLE_MAPS_BROWSER_KEY' => 'TEST-KEY', 'GOOGLE_MAPS_ENABLED' => 'true');\n");
 execFileSync('chmod', ['-R', 'a+rX', out]);
 
 function get(port, p, headers = {}, method = 'GET') {
@@ -93,7 +93,7 @@ for (const g of index.grids) {
  harmonicRoutes.push(g.tileBase + '.t' + missing + '.gz', g.tileBase + '.t' + missing + '.bin');
 }
 const notFound = ['/nope', '/app.html', '/data/TK-2026.txt', '/api/', '/api/harmonic/', '/api/harmonic', '/api/harmonic/nope.bin', '/api/harmonic/nope.json',
- '/api/current/', '/api/current/index.php', '/api/map-config/config.php', '/api/_lib/common.php', '/api/_lib/tide/TK-2026.txt', '/api/_lib/stations.json',
+ '/api/current/', '/api/current.php', '/api/map-config.php', '/api/_lib/map-config.config.php', '/api/_lib/common.php', '/api/_lib/tide/TK-2026.txt', '/api/_lib/stations.json',
  '/.htaccess', '/api/harmonic/.htaccess', '/cache/', '/_errors/404.php', '/app.js/', '/index.php'];
 const apiRoutes = ['/api/tide?date=2026-11-03&station=TK&v=2', '/api/tide?date=2026-11-03&station=Z1&v=2', '/api/tide?date=2026-06-15&station=CS&v=2',
  '/api/tide?date=2026-12-31&station=MR&v=2', '/api/tide?date=2026-01-01&station=TT', '/api/tide?date=2026-03-01&station=ZF', '/api/tide?date=2026-05-01',
@@ -190,7 +190,7 @@ else {
   // A deliberately unfriendly shared-host setup: .gz announced as Content-Encoding, DEFLATE on.
   'AddEncoding x-gzip .gz', 'AddType application/x-gzip .gz', 'AddDefaultCharset UTF-8',
   'AddOutputFilterByType DEFLATE text/html text/css text/javascript application/json application/octet-stream application/x-gzip',
-  `DocumentRoot ${out}`, `<Directory ${out}>`, '  AllowOverride All', '  Require all granted', '</Directory>',
+  `DocumentRoot ${out}`, `<Directory ${out}>`, `  AllowOverride ${process.env.APACHE_ALLOW_OVERRIDE || 'All'}`, '  Require all granted', '</Directory>',
   '<FilesMatch "\\.php$">', '  SetHandler application/x-httpd-php', '</FilesMatch>',
  ].join('\n'));
  const ap = start(apacheBin, ['-X', '-f', path.join(run, 'httpd.conf')], {env: {...process.env, APACHE_RUN_DIR: run}});

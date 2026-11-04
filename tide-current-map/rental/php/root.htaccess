@@ -1,18 +1,15 @@
 # 東京湾の潮と流れ — rental server rules (mirrors the headers of the original Worker).
-# Static files are served as-is; /api/current, /api/tide and /api/map-config are
-# api/<name>/index.php and also work without mod_rewrite (via the directory index,
-# after Apache's trailing-slash redirect). The rewrites below avoid that redirect.
+# Static files are served as-is; /api/current, /api/tide and /api/map-config are rewritten
+# to api/<name>.php (mod_rewrite is required, as for WordPress on the same server).
 
-Options -Indexes -MultiViews
-DirectoryIndex index.html index.php
+# No Options / DirectoryIndex / DirectorySlash here: shared hosts (お名前.com RS) usually
+# allow only FileInfo-type overrides, and those directives turn every request into a 500.
+# Directory listings are prevented by the 404 rule for directories below.
 ErrorDocument 404 /_errors/404.php
 ErrorDocument 403 /_errors/404.php
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  <IfModule mod_dir.c>
-    DirectorySlash Off
-  </IfModule>
   # Error documents (internal redirects) are served as they are.
   RewriteCond %{ENV:REDIRECT_STATUS} !^$
   RewriteRule ^ - [END]
@@ -21,8 +18,8 @@ ErrorDocument 403 /_errors/404.php
   RewriteRule (^|/)\. - [R=404,L]
   # Implementation files: the Worker has no such paths.
   RewriteRule ^(api/_lib|cache|_errors)(/|$) - [R=404,L]
-  RewriteRule ^api/[^/]+/(index\.php|config\.php)?$ - [R=404,L]
-  RewriteRule ^api/(current|tide|map-config)$ api/$1/index.php [END]
+  RewriteRule ^api/(current|tide|map-config)\.php$ - [R=404,L]
+  RewriteRule ^api/(current|tide|map-config)$ api/$1.php [END]
   # Directories (other than the site root) are 404 in the Worker.
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^.+$ - [R=404,L]
