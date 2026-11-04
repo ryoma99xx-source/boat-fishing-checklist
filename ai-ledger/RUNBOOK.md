@@ -15,6 +15,10 @@
 4. `requests/<id>` を `{status:'sent',sessionId,sentAt}` に更新。コメントのスレッドには一言返して resolve
 5. **3分後の確認を予約する**（`send_later`、`delay_minutes:3`、メッセージ「<fid> のセッション <sessionId> を確認」）。終わるまで3分おきに繰り返す
 
+### 1-a. 添付画像
+
+依頼文に「## 添付画像」があれば、画像は台帳の保管庫（assets）にある。`Artifact` ツールの `read` で `url` に台帳の URL、`path` に書かれた id を渡すと画像ファイルが保存される（1枚ずつ）。自分で作業するときは必ず見てから始める。子セッションに渡すときは依頼文にそのまま含める（取り出し方も書いてある）。
+
 ## 2. 進み具合の確認（3分おき）
 
 1. `get_session` で `status_bucket` を見る。`list_events`（kinds: assistant / result）で最新の文を読む
