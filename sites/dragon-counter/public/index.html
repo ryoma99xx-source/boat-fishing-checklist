@@ -538,6 +538,10 @@ details.fold[open] .fold-ic::after{top:11px;transform:rotate(-135deg)}
 .st2 em{font-style:normal;color:var(--teal);font-weight:700}
 .st2.done i{background:transparent;border:2px solid var(--teal);color:var(--teal)}
 .st2:disabled{opacity:.45}
+.st2box{background:var(--surface2);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.st2box .st2{width:100%;border:none;border-radius:0;background:transparent}
+.st2link{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:44px;padding:8px 12px 8px 54px;border:none;border-top:1px solid var(--line);background:transparent;color:var(--teal);font-size:14px;font-weight:700;text-align:left}
+.st2link em{font-style:normal}
 .hgrid .hg-c{display:grid;place-items:center;opacity:.8}
 .autobox{display:flex;flex-direction:column;gap:8px;background:var(--surface2);border:1px solid #24405c;border-radius:14px;padding:12px}
 .ab-h{display:flex;justify-content:space-between;align-items:baseline}.ab-h span{color:var(--teal);font-weight:700;font-size:14px}
@@ -1060,7 +1064,7 @@ function methodSwitchHTML(tr){const sp=tr.cur.sp;if(!spOf(sp).catalog)return '';
   return `<button class="btn sm" data-act="setMethod" data-d="${o}">${METHOD_JP[o]}に切り替える</button>`}
 function setPickHTML(sel,act){const sets=TEN().sets;const items=setItems(sel);const own=myTenya().length;
   const guide=!sets.length?`<div class="steps2"><b>当日使うテンヤのリストがまだありません</b><span>2ステップで作ると、釣れたときにテンヤのボタンを押すだけで記録できます（作らなくても記録はできます）。</span>
-     <button class="st2 ${own?'done':''}" data-act="tbOpen" data-mode="mine"><i>${own?'✓':'1'}</i><span><b>所有テンヤを登録</b><small>${own?`${own}本 登録済み・追加する`:'カタログから、持っているテンヤにチェック'}</small></span><em>→</em></button>
+     ${own?`<div class="st2box"><button class="st2 done" data-act="tbOpen" data-mode="mine"><i>✓</i><span><b>所有テンヤを登録</b><small>${own}本 登録済み・追加する</small></span><em>→</em></button><button class="st2link" data-act="tbOpen" data-mode="mine" data-only="mine">所有テンヤリストを見る（${own}本）<em>→</em></button></div>`:`<button class="st2" data-act="tbOpen" data-mode="mine"><i>1</i><span><b>所有テンヤを登録</b><small>カタログから、持っているテンヤにチェック</small></span><em>→</em></button>`}
      <button class="st2" data-act="setAdd" ${own?'':'disabled'}><i>2</i><span><b>当日使うリストを作る</b><small>${own?'所有テンヤの中から、その日に持っていく分を選ぶ':'先に1を済ませてください'}</small></span><em>→</em></button></div>`:'';
   return `<div class="gearpick"><div class="gp-lbl">今日のテンヤのリスト</div>${sets.length||own?`<div class="chips wrap">${sets.map(x=>`<button class="chip ${x.id===sel?'on':''}" data-act="${act}" data-id="${x.id}">${esc(x.name)}（${setItems(x.id).length}）</button>`).join('')}
    <button class="chip ${sel==='mine'?'on':''}" data-act="${act}" data-id="mine">所有テンヤ全部（${own}）</button>${sets.length?'<button class="chip add" data-act="setAdd">＋ リストを作る</button>':''}</div>`:''}
@@ -1713,7 +1717,7 @@ const acts={
   setMethod:b=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);g.method=b.dataset.d;g.rig='';curGear(tr);S.prefs.g[sp]={...(S.prefs.g[sp]||{}),method:g.method};logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();toast(`仕掛けを${METHOD_JP[g.method]}にしました`)},
   setDaySet:b=>{const tr=active();const g=curGear(tr);g.set=b.dataset.id;g.rig=dayTenya(tr,tr.cur.sp)[0]||'';S.prefs.g[tr.cur.sp]={...(S.prefs.g[tr.cur.sp]||{}),set:g.set};logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();toast(`今日のリストを「${setName(g.set)}」にしました`)},
   tenyaOther:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'catch'};openTenyaSheet()},
-  tbOpen:b=>{tb={q:'',z:'',m:'',only:b.dataset.mode==='set'&&myTenya().length?'mine':'all',mode:b.dataset.mode,setId:b.dataset.set||''};openTenyaSheet()},
+  tbOpen:b=>{tb={q:'',z:'',m:'',only:b.dataset.only||(b.dataset.mode==='set'&&myTenya().length?'mine':'all'),mode:b.dataset.mode,setId:b.dataset.set||''};openTenyaSheet()},
   tbDone:()=>{closeSheet()},
   tbClear:()=>{tb.q='';const i=$('#tbQ');if(i){i.value='';i.focus()}tbRefresh();const x=$('.sb-x');if(x)x.hidden=true},
   tbZ:b=>{tb.z=b.dataset.d;tbRefresh()},tbOnly:b=>{tb.only=b.dataset.d;tbRefresh()},
