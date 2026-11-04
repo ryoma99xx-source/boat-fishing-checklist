@@ -1009,7 +1009,7 @@ function fixPeople(f){f.people=clampP(f.people);f.seats=perSide(f.people);if(f.s
 function newForm0(){const p=S.prefs,b=S.cfg.boats.find(x=>x.name===p.boat);const sp=SOLO||(spOf(p.sp).id!=='?'?p.sp:spVisible()[0].id);
   const spot=S.cfg.spots.find(x=>x.id===p.spotId)||S.cfg.spots[0]||null;
   return {mode:'new',date:ymd(Date.now()),boat:p.boat||'',people:b?(b.people||b.seats*2):(p.people||(p.seats||8)*2),seats:0,side:p.side||'R',seat:p.seat||null,
-    spotId:spot?spot.id:'',spot:spot?spotCopy(spot):null,station:spot?spotSt(spot):'',sp,g:clone(p.g||{}),start:(b&&b.start)||'07:15',end:(b&&b.end)||'13:00',memo:''}}
+    spotId:spot?spot.id:'',spot:spot?spotCopy(spot):null,station:spot?spotSt(spot):'',sp,g:clone(p.g||{}),start:(b&&b.start)||'07:20',end:(b&&b.end)||'13:30',memo:''}}
 function formFromTrip(tr){return {mode:'edit',id:tr.id,date:tr.date,boat:tr.boat,people:tr.people||tr.seats*2,seats:tr.seats,side:tr.side,seat:tr.seat,spotId:tr.spotId||'',spot:tr.spot?{...tr.spot}:null,station:tr.station||'',
   start:hm2(tr.start),end:tr.end?hm2(tr.end):(tr.planEnd?hm2(tr.planEnd):''),memo:tr.memo||''}}
 /* ---------- fishing spots: the tide station is the nearest JMA station unless the user picks one ---------- */
