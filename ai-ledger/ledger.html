@@ -102,6 +102,8 @@ pre.out{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-body);fo
 .msg.tool{align-self:flex-start;font-size:11.5px;color:var(--muted);background:none;padding:0 4px}
 .chat-input{border-top:1px solid var(--line);padding:10px 14px;display:flex;flex-direction:column;gap:6px}
 .chat-input textarea{min-height:60px;max-height:160px}
+.planchat{display:flex;flex-direction:column;gap:6px;margin:10px 0 8px} .planchat:empty{display:none}
+.planchat .msg{max-width:94%}
 .pickrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 2px}
 .logpics{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px} .logpics img{width:84px;height:84px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 .chat-pics{display:flex;gap:6px;flex-wrap:wrap} .chat-pics:empty{display:none}
@@ -306,7 +308,7 @@ let ccMsg={}, runOut='';
 const LEDGER_URL='https://claude.ai/artifact/T4YTywvucGbbGSaWmu3VFQ';
 let meta={},prog={};
 let db=null, sample=null, loaded=false, feats=[], inbox=[], route={v:'list',id:null};
-let ui={filter:'all',site:'',q:'',ho:{fid:'',target:'ChatGPT',req:'',rules:null,extra:'',split:false,text:''},rep:{text:'',fid:''},inboxText:''};
+let ui={filter:'all',site:'',q:'',ho:{fid:'',target:'ChatGPT',req:'',rules:null,extra:'',split:false,text:''},rep:{text:'',fid:''},inboxText:'',planChat:[],planBusy:false,planLive:'',planAnswer:''};
 try{const s=JSON.parse(localStorage.getItem('ledger-ui')||'null'); if(s){ui.filter=s.filter||'all';ui.site=s.site||'';}}catch(e){}
 const saveUi=()=>{try{localStorage.setItem('ledger-ui',JSON.stringify({filter:ui.filter,site:ui.site}))}catch(e){}};
 
@@ -901,9 +903,11 @@ function planHtml(pl){
     <div class="meta" style="display:flex;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--muted)"><span class="tag">${esc(siteName(pl.site))}</span>${pl.featureId&&feats.some(f=>f.id===pl.featureId)?`<span>既存の機能に追加</span>`:'<span>新しい機能として登録</span>'}</div>
     ${pl.summary?`<p style="font-size:14px;margin:8px 0">${esc(pl.summary)}</p>`:''}
     <div class="list" style="gap:6px">${(pl.steps||[]).map((st,i)=>`<div class="role ai-${whoCls(st.who)}" style="cursor:default;flex:none"><span class="stp">手順${i+1}${AUTO(st.who)?'・自動':'・あなたの番'}</span><span class="ai">${esc(st.who)}</span><span class="pl">${esc(st.what)}</span></div>`).join('')}</div>
-    ${pl.question?`<div class="banner" style="margin-bottom:6px">確認：${esc(pl.question)}</div>
-    <label for="plAnswer">答え（普段の言葉で。キーボードのマイクで話しても入力できます）</label><textarea id="plAnswer" placeholder="例：6番の「私の棚は12mです」を「棚は12m」に直す／分からなければ「おまかせ」">${esc(ui.planAnswer||'')}</textarea>`:''}
-    <div class="actions"><button class="primary" id="plStart">${(pl.steps||[]).some(x=>AUTO(x.who))?'この計画で始める（Claude Code に送る）':'この計画で登録する'}</button><button id="plRedo">作り直す</button><button id="plDrop">やめる</button></div>
+    <div class="planchat">${[...(pl.question&&!ui.planChat.some(m=>m.role==='assistant'&&m.content===pl.question)?[{role:'assistant',content:pl.question}]:[]),...ui.planChat].map(m=>`<div class="msg ${m.role==='user'?'user':'assistant'}">${esc(m.content)}</div>`).join('')}${ui.planBusy?`<div class="msg assistant">${esc(ui.planLive||'考えています…')}</div>`:''}</div>
+    <label for="plAnswer">${pl.question&&!ui.planChat.some(m=>m.role==='user')?'答え・質問・直してほしい点（普段の言葉で。マイクでも入力できます）':'質問や計画の直しがあればここに（なければそのまま始められます）'}</label>
+    <textarea id="plAnswer" placeholder="例：釣果ログのカタログとは？／手順2は要らない／公開はまだしないで">${esc(ui.planAnswer||'')}</textarea>
+    <div class="actions" style="margin-top:4px"><button id="plAsk" ${sample&&!ui.planBusy?'':'disabled'}>送る（相談して計画を直す）</button></div>
+    <div class="actions"><button class="primary" id="plStart" ${ui.planBusy?'disabled':''}>${(pl.steps||[]).some(x=>AUTO(x.who))?'この計画で始める（Claude Code に送る）':'この計画で登録する'}</button><button id="plRedo">作り直す</button><button id="plDrop">やめる</button></div>
     <div id="plMsg"></div></div>`}
 function viewHome(){
   if(!loaded)return notReady();
@@ -1112,7 +1116,7 @@ function viewMore(){return `<h2>その他</h2>
     <div class="actions" style="margin:0"><button id="dlBackup">台帳のデータをファイルに保存</button></div></div>`}
 async function makePlan(){
   const text=$('#cmdText').value.trim();if(!text)return toast('やりたいことを書いてください');
-  ui.cmd=text;ui.cmdSite=$('#cmdSite').value;ui.cmdKind=$('#cmdKind').value;
+  ui.cmd=text;ui.cmdSite=$('#cmdSite').value;ui.cmdKind=$('#cmdKind').value;ui.planChat=[];ui.planAnswer='';
   const b=$('#cmdPlan');b.disabled=true;b.textContent='計画を立てています…';
   const ctx={sites:allSites().map(s=>({key:s.k,name:s.n,url:s.u})),
     roles:roles.map(r=>`${siteName(r.site)}｜${r.step}｜${r.ai}（${r.place||'場所未確認'}）${r.detail?'：'+r.detail:''}`),
@@ -1188,29 +1192,60 @@ async function relayDispatch(f,text){
   toast('依頼を Claude に渡しました。数分で Claude Code が動き始めます');
   return ''}
 async function ccDispatch(f,text){return relayDispatch(f,text)}
+const PLAN_SHAPE='{"kind":"機能追加|ツール追加|記事作成|修正|公開|その他","site":"サイトのkey","featureId":"既存の機能に当たるならそのid、無ければ null","title":"機能名（短く）","summary":"何をするかを1〜2文","steps":[{"who":"Claude Code|GPT（API経由）|ChatGPT（手作業）|自分","what":"やること"}],"question":"オーナーに確認が必要なら質問文、無ければ null"}';
+async function planAsk(){
+  const ta=$('#plAnswer');const text=(ta?ta.value.trim():'');if(!text)return toast('質問か直してほしい点を書いてください');
+  if(!sample)return toast('この表示では相談できません（claude.ai で開いてください）');
+  const pl=ui.plan;ui.planChat.push({role:'user',content:text});ui.planAnswer='';if(ta)ta.value='';clean('pl');ui.planBusy=true;ui.planLive='';render();
+  const ctx={roles:roles.map(r=>`${siteName(r.site)}｜${r.step}｜${r.ai}（${r.place||'場所未確認'}）${r.detail?'：'+r.detail:''}`),
+    features:feats.map(f=>({id:f.id,site:siteName(f.site),title:f.title,status:f.status,owner:f.owner,next:f.next||'',lastLog:((f.logs||[]).slice(-1)[0]||{}).text||''}))};
+  const thread=[{role:'assistant',content:pl.question||'計画を立てました。質問や直しがあればどうぞ。'},...ui.planChat];
+  const input=[{role:'user',content:`あなたは釣りサイト群（cutlassfish.tokyo と関連ツール）の制作司令塔です。オーナーの依頼から計画を立て、いまオーナーと「始める前のやりとり」をしています。
+オーナーの質問にはまず分かりやすく答える（台帳にある情報は下に全部ある。無いことは「台帳には記録が無い」と言う。推測で断定しない）。
+オーナーが直しを指示したら計画を直す。計画を変えないなら plan は null。
+返事は必ず次の JSON だけ：{"reply":"オーナーへの返事（日本語、長くても5文）","plan":${PLAN_SHAPE} または null}
+plan.question は、まだオーナーに確認が要ることがあるときだけ入れる。答えがもらえた確認は入れない。
+
+## 依頼
+${ui.cmd}
+## 今の計画
+${JSON.stringify(pl)}
+## 分担
+${ctx.roles.join('\n')||'（未登録）'}
+## 台帳の機能一覧（id・サイト・名前・状態・担当・次の一手・最後のログ）
+${JSON.stringify(ctx.features)}
+## ここまでのやりとり（古い順）
+${thread.map(m=>(m.role==='user'?'オーナー：':'司令塔：')+m.content).join('\n')}`}];
+  try{const r=await sample.json(input,{modelTier:'complex',cache:false,...((picks.cmd||[]).length&&chatImgCaps?{images:picks.cmd.map(p=>p.file)}:{}),onText:u=>{ui.planLive=(u.text||'').slice(0,80);render()}});
+    const reply=(r&&r.reply)||'（返事が空でした）';ui.planChat.push({role:'assistant',content:String(reply)});
+    const np=r&&r.plan;if(np&&Array.isArray(np.steps)&&np.steps.length){np.steps=np.steps.filter(x=>x&&x.what).map(x=>({who:WHO.includes(x.who)?x.who:'自分',what:String(x.what)}));if(!allSites().some(x=>x.k===np.site))np.site=pl.site;ui.plan={...pl,...np,question:np.question||null};if(ui.plan.question)ui.planChat.push({role:'assistant',content:ui.plan.question})}}
+  catch(e){ui.planChat.push({role:'assistant',content:'うまく答えられませんでした（'+(e.code||e.message||'')+'）。もう一度送ってみてください。'})}
+  ui.planBusy=false;ui.planLive='';render()}
 async function startPlan(){
   const pl=ui.plan,b=$('#plStart'),msg=$('#plMsg');
-  const answer=($('#plAnswer')?$('#plAnswer').value.trim():'');ui.planAnswer=answer;
-  if(pl.question&&!answer){toast('上の「確認」に答えてから始めてください（分からなければ「おまかせ」と書く）');const t=$('#plAnswer');if(t)t.focus();return}
+  const typed=($('#plAnswer')?$('#plAnswer').value.trim():'');
+  if(typed){ui.planChat.push({role:'user',content:typed});ui.planAnswer='';clean('pl')}
+  if(pl.question&&!ui.planChat.some(m=>m.role==='user')){toast('上の「確認」に答えてから始めてください（分からなければ「おまかせ」と書く）');const t=$('#plAnswer');if(t)t.focus();return}
+  const answer=ui.planChat.length?ui.planChat.map(m=>(m.role==='user'?'オーナー：':'司令塔：')+m.content).join('\n'):'';
   b.disabled=true;
   try{
     let f=pl.featureId&&feats.find(x=>x.id===pl.featureId);let fid=f&&f.id;
     const planText=pl.steps.map((x,i)=>`${i+1}. ${x.who}：${x.what}`).join('\n');
     const auto=pl.steps.some(x=>AUTO(x.who));
     msg.innerHTML=(picks.cmd||[]).length?'<div class="banner">画像を上げています…</div>':'';const up=await uploadPicks('cmd');
-    const logs=[...((f&&f.logs)||[]),{at:nowIso(),by:'自分',text:`司令塔からの依頼：${ui.cmd}${picsLog(up.pics)}\n計画：\n${planText}${pl.question?`\n確認：${pl.question}\n答え：${answer}`:''}`,...(up.pics.length?{pics:up.pics}:{})}];
+    const logs=[...((f&&f.logs)||[]),{at:nowIso(),by:'自分',text:`司令塔からの依頼：${ui.cmd}${picsLog(up.pics)}\n計画：\n${planText}${answer?`\nやりとり：\n${answer}`:''}`,...(up.pics.length?{pics:up.pics}:{})}];
     if(!f){fid=newId();await createFeat(fid,{title:pl.title,site:pl.site,kind:pl.kind||'',status:'作業中',owner:auto?'Claude':'自分',next:pl.steps[0].what,logs,plan:pl.steps});}
     else await saveFeat(fid,{status:'作業中',next:pl.steps[0].what,logs,plan:pl.steps});
     f={...(f||{}),id:fid,title:pl.title,site:pl.site,status:'作業中',owner:auto?'Claude':(f&&f.owner)||'自分',logs,src:(f&&f.src)||{},chats:(f&&f.chats)||[],deploy:(f&&f.deploy)||''};
     if(auto){
       msg.innerHTML='<div class="banner">Claude Code に送っています…</div>';
-      const req=`${ui.cmd}\n\n## 計画（あなたは「Claude Code」と「GPT（API経由）」の工程を担当）\n${planText}${pl.question?`\n\n## 確認事項とオーナーの答え\n確認：${pl.question}\n答え：${answer}\n（この答えに沿って進める。それでも判断できない所だけ報告の「確認したいこと」へ）`:''}${up.text}`;
+      const req=`${ui.cmd}\n\n## 計画（あなたは「Claude Code」と「GPT（API経由）」の工程を担当）\n${planText}${answer?`\n\n## 始める前のオーナーとのやりとり（この内容に沿って進める。それでも判断できない所だけ報告の「確認したいこと」へ）\n${pl.question?`司令塔の確認：${pl.question}\n`:''}${answer}`:''}${up.text}`;
       const text=promptFor(fid,'Claude Code',req,GPT_RULES.join('\n'));
       const sid=await ccDispatch(f,text);const url=sid?`https://claude.ai/code/${sid}`:'';
       await saveFeat(fid,{cc:{sessionId:sid,url,sentAt:nowIso(),state:'作業中'},chats:url?[...f.chats,{tool:'Claude Code',name:pl.title,url}]:f.chats});
       toast('Claude Code が作業を始めました')}
     else{toast('登録しました');}
-    ui.plan=null;ui.cmd='';ui.planAnswer='';clearPicks('cmd');clean('cmd');clean('pl');render()}
+    ui.plan=null;ui.cmd='';ui.planAnswer='';ui.planChat=[];clearPicks('cmd');clean('cmd');clean('pl');render()}
   catch(e){msg.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;b.disabled=false}}
 async function ccFetch(f){const pr=prog[f.id]||{};ccMsg[f.id]={msg:pr.msg||f.cc.relayMsg||'Claude が Claude Code に中継中',text:pr.reportText||f.cc.reportText||'',report:pr.reportText||f.cc.reportText||'',bucket:pr.state==='報告'?'COMPLETED':''}}
 async function downloadBackup(){const b=$('#dlBackup');if(b)b.disabled=true;
@@ -1224,8 +1259,10 @@ function bindHome(){
   bindArticles(on);
   on('#cmdPlan','click',makePlan);
   on('#plStart','click',startPlan);
+  on('#plAsk','click',planAsk);
+  on('#plAnswer','keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();planAsk()}});
   on('#plRedo','click',makePlan);
-  on('#plDrop','click',()=>{ui.plan=null;render()});
+  on('#plDrop','click',()=>{ui.plan=null;ui.planChat=[];ui.planAnswer='';render()});
   document.querySelectorAll('[data-gptcopy]').forEach(a=>a.addEventListener('click',()=>{const f=feats.find(x=>x.id===a.dataset.gptcopy);try{navigator.clipboard.writeText(f.gptAsk.text).then(()=>toast('コピーしました。ChatGPT に貼ってください'),()=>toast('コピーできませんでした。依頼文を開いて長押しでコピーしてください'))}catch(e){}}));
   document.querySelectorAll('[data-gptdone]').forEach(b=>b.onclick=async()=>{const f=feats.find(x=>x.id===b.dataset.gptdone);await saveFeat(f.id,{gptAsk:{...f.gptAsk,done:true},status:'確認・公開待ち',logs:[...(f.logs||[]),{at:nowIso(),by:'自分',text:'ChatGPT に依頼文を渡した'}]});toast('記録しました。ChatGPT の返事は「報告」に貼ってください')});
   document.querySelectorAll('[data-takerep]').forEach(b=>b.onclick=()=>{const m=ccMsg[b.dataset.takerep],f=feats.find(x=>x.id===b.dataset.takerep);ui.rep={text:(m&&m.report)||(f&&f.cc&&f.cc.reportText)||'',fid:b.dataset.takerep};go('report')});
