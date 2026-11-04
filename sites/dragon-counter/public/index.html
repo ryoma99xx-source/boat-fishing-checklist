@@ -770,7 +770,7 @@ function buildCat(){const by={},list=[];const add=(m,p,u,h,z,c,st,a)=>{const id=
 buildCat();
 /* site mode: new products are added monthly to a JSON file next to the page; the last copy is kept for offline use */
 if(SITE&&SITE.catalogExtraUrl){const KX='dragon-counter.catalog-extra';
-  const apply=j=>{if(!j||!Array.isArray(j.items))return false;SITE.catalogExtra=j.items;SITE.catalogUpdated=j.updated||SITE.catalogUpdated||'';buildCat();return true};
+  const apply=j=>{if(!j||!Array.isArray(j.items))return false;SITE.catalogExtra=j.items;SITE.catalogUpdated=j.updated||SITE.catalogUpdated||'';buildCat();if(S&&snapOwned())cfgTouch();return true};
   try{const c=JSON.parse(localStorage.getItem(KX)||'null');if(c)apply(c)}catch(e){}
   fetch(SITE.catalogExtraUrl,{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(apply(j)){try{localStorage.setItem(KX,JSON.stringify(j))}catch(e){}if(typeof render==='function'&&$('#sheet').hidden)render()}}).catch(()=>{})}
 function prodShort(p){const t=String(p||'').replace(/[（(][A-Z]{2,3}\d{3,4}[)）]/g,'').replace(/船タチウオテンヤ|船太刀魚テンヤ|タチウオ専用テンヤ|太刀魚テンヤ|サーベルマスター\s*/g,'').replace(/\s+/g,' ').trim();return t||p}
@@ -784,13 +784,21 @@ function tenyaAbbr(t){if(!t)return '';if(t.ab)return t.ab;if(t.name)return '';co
   const rest=p.replace(/船タチウオテンヤ|船太刀魚テンヤ|タチウオ専用テンヤ|太刀魚テンヤ|タチウオテンヤ|テンヤ|サーベルマスター/g,' ').trim();
   const latin=rest.match(/[A-Za-zβ]+/g);if(latin&&latin.length)return latin.join(' ').slice(0,10);return rest.replace(/\s+/g,'').slice(0,4)}
 const tenyaShort=t=>t.name?t.name:`${tenyaAbbr(t)} ${t.c||''}`.trim();
-const tenyaOf=id=>CAT.by[id]||((S&&S.cfg&&S.cfg.tenya&&S.cfg.tenya.custom)||[]).find(x=>x.id===id)||null;
+const tenyaOf=id=>CAT.by[id]||((S&&S.cfg&&S.cfg.tenya&&S.cfg.tenya.custom)||[]).find(x=>x.id===id)||((S&&S.cfg&&S.cfg.tenya&&S.cfg.tenya.snap)||{})[id]||null;
+/* 名前の控え：所有・リスト・記録で使ったカタログのテンヤは、名前をこの端末にも控えておく。
+   カタログ側で表記が変わったり外れたりしても、所有テンヤや過去の記録から消えない */
+function snapOwned(){if(!S||!S.cfg||!S.cfg.tenya)return false;const T=S.cfg.tenya;T.snap=T.snap||{};let ch=false;
+  const ids=new Set([...(T.mine||[]),...(T.sets||[]).flatMap(x=>x.items||[])]);
+  Object.values(S.trips||{}).forEach(tr=>{(tr.events||[]).forEach(e=>e.rig&&ids.add(e.rig));(tr.gearLog||[]).forEach(g=>g.rig&&ids.add(g.rig))});
+  ids.forEach(id=>{const t=CAT.by[id];if(!t)return;const o=T.snap[id];
+    if(!o||o.m!==t.m||o.p!==t.p||o.z!==t.z||o.c!==t.c||o.s!==t.s||o.h!==t.h){T.snap[id]={id,m:t.m,p:t.p,u:t.u||'',h:!!t.h,z:t.z,c:t.c,s:t.s||'',a:t.a||''};ch=true}});
+  return ch}
 const tenyaMain=t=>t.name?t.name:`${t.z?t.z+'号 ':''}${t.c||''}`.trim();
 const tenyaSub=t=>t.name?'':`${MK[t.m]||t.m||''} ${prodShort(t.p)}`.trim();
 function tenyaLabel(id){const t=tenyaOf(id);if(!t)return null;return tenyaShort(t)}
 function tenyaFull(id){const t=tenyaOf(id);if(!t)return '';const a=tenyaMain(t),b=tenyaSub(t);return b?`${b} ${a}`:a}
 const isNewTenya=t=>t&&t.a&&(Date.now()-new Date(t.a).getTime())<60*864e5;
-function tenyaBadges(t){const b=[];if(isNewTenya(t))b.push('<span class="tb new">新商品</span>');if(t.s)b.push(`<span class="tb">${esc(t.s)}</span>`);if(t.h)b.push('<span class="tb">替えヘッド</span>');if(t.custom)b.push('<span class="tb own">自分で追加</span>');return b.join('')}
+function tenyaBadges(t){const b=[];if(isNewTenya(t))b.push('<span class="tb new">新商品</span>');if(t.s)b.push(`<span class="tb">${esc(t.s)}</span>`);if(t.h)b.push('<span class="tb">替えヘッド</span>');if(t.custom)b.push('<span class="tb own">自分で追加</span>');else if(t.id&&!CAT.by[t.id])b.push('<span class="tb">カタログから外れました（控えから表示）</span>');return b.join('')}
 const TEN=()=>S.cfg.tenya;
 const myTenya=()=>TEN().mine.filter(id=>tenyaOf(id));
 const qtyOf=id=>Math.max(1,+((TEN().qty||{})[id])||1); // 所有している個数
@@ -874,6 +882,7 @@ function makeSampleFugu(){
   return tr}
 function defaults(){return {v:2,trips:{},activeId:null,prefs:{port:'',boat:'',seats:8,side:'R',seat:null,sp:'tachiuo',g:{}},dirty:{trips:[],cfg:false},ui:{tab:'rec'}}}
 S=migrateState(loadLocal()||defaults());
+setTimeout(()=>{if(snapOwned())cfgTouch()},0); // after every top-level declaration has run
 
 const active=()=>S.activeId&&S.trips[S.activeId]&&!S.trips[S.activeId].deleted?S.trips[S.activeId]:null;
 const trips=()=>Object.values(S.trips).filter(t=>!t.deleted).sort((a,b)=>b.start-a.start);
@@ -920,7 +929,7 @@ const stName=c=>TIDE.st[c]?TIDE.st[c].n:'';
 
 function markDirty(id){if(!S.dirty.trips.includes(id))S.dirty.trips.push(id)}
 function touch(tr){tr.updatedAt=Date.now();if(!tr.sample)markDirty(tr.id);saveLocal();scheduleFlush()}
-function cfgTouch(){S.cfg.updatedAt=Date.now();S.dirty.cfg=true;saveLocal();scheduleFlush()}
+function cfgTouch(){snapOwned();S.cfg.updatedAt=Date.now();S.dirty.cfg=true;saveLocal();scheduleFlush()}
 
 /* ---------- cloud sync (db capability) ---------- */
 let DB=null,sync='init',flushing=false,flushTimer=null;
