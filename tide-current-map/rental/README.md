@@ -53,6 +53,12 @@ GitHub のこのリポジトリで **Settings → Secrets and variables → Acti
 
 ## 3. アップロード（デプロイ）する
 
+**テスト用（staging）**：作業ブランチの `tide-current-map/rental/STAGING_DEPLOY` が更新されると自動で走ります（Claude Code が更新します）。テスト用には検索エンジンに載らない設定（robots.txt と noindex）が自動で付きます。
+
+**手動実行（本番を含む）**：GitHub の仕様で、手動実行ボタンはこのワークフローがメインのブランチに入ってから表示されます。本番切り替えの前にメインへ取り込みます。
+
+
+
 1. GitHub の **Actions** タブを開く。
 2. 左の一覧から **Deploy tide map to rental server** を選ぶ。
 3. 右の **Run workflow** を押す。

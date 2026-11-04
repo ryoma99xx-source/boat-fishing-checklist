@@ -1,9 +1,13 @@
 # Deploys 東京湾の潮と流れ (tide-current-map) to the お名前.com rental server over FTPS.
-# Manual only: Actions → "Deploy tide map to rental server" → Run workflow (staging first).
+# Staging: runs automatically when tide-current-map/rental/STAGING_DEPLOY changes on the work branch.
+# Manual: Actions → "Deploy tide map to rental server" → Run workflow (needs this file on the default branch).
 # See tide-current-map/rental/README.md. The ChatGPT Sites deployment is not touched.
 name: Deploy tide map to rental server
 
 on:
+  push:
+    branches: [claude/relaxed-mayer-1u2nhq]
+    paths: [tide-current-map/rental/STAGING_DEPLOY]
   workflow_dispatch:
     inputs:
       app_ref:
@@ -20,7 +24,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: deploy-tide-rental-${{ inputs.target }}
+  group: deploy-tide-rental-${{ inputs.target || 'staging' }}
   cancel-in-progress: false
 
 jobs:
@@ -34,10 +38,10 @@ jobs:
           path: tools
           persist-credentials: false
 
-      - name: Check out the app (${{ inputs.app_ref }})
+      - name: Check out the app (${{ inputs.app_ref || 'claude/funny-dijkstra-n8oyg0' }})
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: ${{ inputs.app_ref }}
+          ref: ${{ inputs.app_ref || 'claude/funny-dijkstra-n8oyg0' }}
           path: app-src
           sparse-checkout: tide-current-map/app
           persist-credentials: false
@@ -59,6 +63,12 @@ jobs:
       - name: Compare the rental site with the Worker build (php -S)
         run: node tools/tide-current-map/rental/test/compare.mjs app-src/tide-current-map/app --no-apache
 
+      - name: Keep the staging copy out of search engines
+        if: ${{ (inputs.target || 'staging') == 'staging' }}
+        run: |
+          printf 'User-agent: *\nDisallow: /\n' > site/robots.txt
+          printf '\n<IfModule mod_headers.c>\nHeader always set X-Robots-Tag "noindex, nofollow"\n</IfModule>\n' >> site/.htaccess
+
       - name: Write config.php (Google Maps key)
         env:
           GOOGLE_MAPS_BROWSER_KEY: ${{ secrets.GOOGLE_MAPS_BROWSER_KEY }}
@@ -74,7 +84,7 @@ jobs:
       - name: Choose the FTP account and directory
         id: dir
         env:
-          TARGET: ${{ inputs.target }}
+          TARGET: ${{ inputs.target || 'staging' }}
           USER_STAGING: ${{ secrets.FTP_USERNAME_STAGING }}
           USER_PRODUCTION: ${{ secrets.FTP_USERNAME_PRODUCTION }}
           DIR_STAGING: ${{ secrets.FTP_DIR_STAGING }}
