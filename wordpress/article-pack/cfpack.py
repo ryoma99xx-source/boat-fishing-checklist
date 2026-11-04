@@ -127,7 +127,8 @@ def build(folder, out):
         z.writestr("article.html", open(os.path.join(folder, "article.html"), encoding="utf-8").read())
         z.writestr(zipfile.ZipInfo("images/"), b"")
         for im in m.get("images", []):
-            z.writestr(im["file"], shrink(os.path.join(folder, im["file"])), compress_type=zipfile.ZIP_STORED)
+            # Deflate images too: the host's firewall (SiteGuard) rejects some uploads that carry raw image bytes.
+            z.writestr(im["file"], shrink(os.path.join(folder, im["file"])), compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
     data = buf.getvalue()
     meta, n = check_pack(data, allow_media=True)
     open(out, "wb").write(data)
