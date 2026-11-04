@@ -1471,7 +1471,7 @@ function listCard(sp,k,title,ph){const s=spOf(sp);return `<div class="card"><h2>
   <div class="grow"><input type="text" id="add-${sp}-${k}" placeholder="${esc(ph)}"><button class="btn sm primary" data-act="itemAdd" data-sp="${sp}" data-kind="${k}">追加</button></div></div>`}
 function tchip(id,act,extra){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}${act?`<button class="tx" data-act="${act}" data-id="${id}"${extra||''} aria-label="外す">×</button>`:''}</span>`}
 function tenyaSectionHTML(){const T=TEN();
-  return `<div class="card" id="tenyaSec"><h2>① 所有テンヤ（${myTenya().length}種・${ownTotal()}個）</h2><p class="muted">自分が持っているテンヤ（所有テンヤ）に、カタログ（${CAT.list.length}件${CAT.ver?'・'+esc(CAT.ver)+'時点':''}）からチェックを付けます。この中から、下の「その日のリスト」を作ります。${SITE?'新商品は毎月自動でカタログに追加されます。':''}</p>
+  return `<div class="card" id="tenyaSec"><h2>① 所有テンヤ（${myTenya().length}種・${ownTotal()}個）</h2><p class="muted">自分が持っているテンヤ（所有テンヤ）に、カタログ（${CAT.list.length}件${CAT.ver?'・'+esc(CAT.ver)+'時点':''}）からチェックを付けます。この中から、下の「その日のリスト」を作ります。${SITE?'カタログには今販売されている多くのテンヤが入っていて、月に一度更新する予定です（更新しても所有テンヤはそのまま残ります）。':''}</p>
     <div class="tlist">${myTenya().map(id=>mineChip(id)).join('')||'<span class="muted">まだありません</span>'}</div>
     <button class="btn sm primary" data-act="tbOpen" data-mode="mine">カタログから選ぶ</button></div>
    <div class="card"><h2>② 当日使うテンヤのリスト</h2><p class="muted">「一軍リスト」のように組み合わせを作っておき、出船のときにその日のリストを選びます。釣れたときは、そのリストのテンヤのボタンを押すだけで記録できます。</p>
