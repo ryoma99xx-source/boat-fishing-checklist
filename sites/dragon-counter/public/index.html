@@ -319,6 +319,9 @@ h2{font-size:18px}
 body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom,0px))}
 .dock{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:6;background:rgba(6,10,17,.96);border-top:1px solid var(--line);
   padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-block:10px 8px;display:flex;flex-direction:column;gap:8px}
+.tbgh{display:flex;align-items:center;gap:8px;width:100%;margin:14px 0 2px;padding:10px 8px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font-weight:800;font-size:17px;text-align:left;font-family:inherit}
+.tbgh i{font-style:normal;color:var(--teal);width:14px} .tbgh small{margin-left:auto;font-weight:600;color:var(--muted);font-size:13px}
+.tbph{padding:10px 4px 2px;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.02em}
 .timg{flex:none;object-fit:contain;border-radius:6px;background:rgba(255,255,255,.05)}
 .timg.row{width:64px;height:48px} .timg.chip{width:40px;height:30px;margin-right:2px}
 .timg.dkimg{position:absolute;right:8px;bottom:8px;width:56px;height:42px;pointer-events:none} .dk-t:has(.dkimg) .dk-c,.dk-t:has(.dkimg) .dk-a{padding-right:66px}
@@ -1521,8 +1524,11 @@ function tbRows(){const T=TEN();const mine=new Set(myTenya());const inSet=tb.mod
   if(tb.q.trim()){const terms=normQ(tb.q).split(/\s+/).filter(Boolean);
     list=list.filter(t=>{const h=normQ(`${t.m} ${MK[t.m]||''} ${t.p} ${tenyaAbbr(t)} ${t.z}号 ${t.c} ${t.name||''} ${t.s||''} ${t.custom?'自分で追加':''}`),h2=h.replace(/[\s・･\-]/g,'');return terms.every(q=>{const n=q.replace(/号$/,'');if(/^\d+$/.test(n))return String(t.z)===n; return h.includes(q)||h2.includes(q.replace(/[・･\-]/g,''))})})}
   list.sort((a,b)=>(a.z||0)-(b.z||0)||String(a.m).localeCompare(String(b.m))||String(a.p).localeCompare(String(b.p))||String(a.c).localeCompare(String(b.c)));
-  const n=list.length;list=list.slice(0,300);
-  const rows=list.map(t=>{const lbl=`${timg(t.id,'row')}<span class="tl"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}<span class="tbs">${tenyaBadges(t)}</span></span>`;
+  const n=list.length;list=list.slice(0,300);tb.fold=tb.fold||{};
+  // 号数ごとのまとまり（畳める）→ その中をメーカー・製品ごとに小見出しで区切る
+  const perZ={};list.forEach(t=>{const z=t.z||'?';perZ[z]=(perZ[z]||0)+1});
+  let lastZ=null,lastP=null,out=[];
+  const rowOf=t=>{const lbl=`${timg(t.id,'row')}<span class="tl"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}<span class="tbs">${tenyaBadges(t)}</span></span>`;
     if(tb.mode==='catch')return `<button class="trow pick" data-act="tbCatch" data-id="${t.id}">${lbl}<span class="go">これで釣れた</span></button>`;
     if(tb.mode==='cur')return `<button class="trow pick" data-act="tbCur" data-id="${t.id}">${lbl}<span class="go">これを使う</span></button>`;
     const on=tb.mode==='set'?inSet.has(t.id):mine.has(t.id);
@@ -1530,8 +1536,14 @@ function tbRows(){const T=TEN();const mine=new Set(myTenya());const inSet=tb.mod
     const q=tb.mode==='mine'&&on?qtyHTML(t.id):'';const ed=t.custom?`<button class="btn sm tedit" data-act="ctEdit" data-id="${t.id}" data-from="tb">編集</button>`:'';
     const ls=tb.mode==='mine'&&on?'<div class="tsets"><span class="townd">✓ 所有テンヤに入っています</span></div>':'';
     const add=tb.mode==='mine'&&!on?`<button class="tadd" data-act="tbMine" data-id="${t.id}">＋ 所有に追加</button>`:'';
-    return t.custom?`<div class="trow-own">${row}${q}${add}${ed}${ls}</div>`:(q||add)?`<div class="trow-q ${on?'is-own':''}">${row}${q}${add}${ls}</div>`:row}).join('');
-  return `<p class="muted">${n}件${n>300?'（先頭の300件を表示。号数やメーカーで絞り込んでください）':''}</p>${rows||'<p class="muted">見つかりません</p>'}${tb.mode!=='catch'&&tb.mode!=='cur'?'<button class="btn sm" data-act="ctEdit" data-from="tb">＋ カタログにないテンヤを自分で追加</button>':''}`}
+    return t.custom?`<div class="trow-own">${row}${q}${add}${ed}${ls}</div>`:(q||add)?`<div class="trow-q ${on?'is-own':''}">${row}${q}${add}${ls}</div>`:row};
+  list.forEach(t=>{const z=t.z||'?';
+    if(z!==lastZ){lastZ=z;lastP=null;const fold=!!tb.fold[z];out.push(`<button class="tbgh" data-act="tbFold" data-z="${z}" aria-expanded="${!fold}"><i>${fold?'▸':'▾'}</i>${z==='?'?'号数なし':z+'号'}<small>${perZ[z]}件</small></button>`)}
+    if(tb.fold[z])return;
+    const pk=`${t.m}|${t.p}`;if(pk!==lastP){lastP=pk;out.push(`<div class="tbph">${esc(MK[t.m]||t.m)}　${esc(t.p)}</div>`)}
+    out.push(rowOf(t))});
+  const rows=out.join('');
+  return `<p class="muted">${n}件${n>300?'（先頭の300件を表示。号数やメーカーで絞り込んでください）':''}${Object.keys(perZ).length>1?'　号数の行を押すと畳めます':''}</p>${rows||'<p class="muted">見つかりません</p>'}${tb.mode!=='catch'&&tb.mode!=='cur'?'<button class="btn sm" data-act="ctEdit" data-from="tb">＋ カタログにないテンヤを自分で追加</button>':''}`}
 // 所有テンヤを選ぶ画面で、チェックした行の下に「当日のリストに入れる」ボタンを出す
 function tbSetChips(id){const sets=TEN().sets;
   const ownTag='<span class="townd">✓ 所有テンヤに入っています</span>';
@@ -1748,7 +1760,7 @@ const acts={
   tbOpen:b=>{tb={q:'',z:'',m:'',only:b.dataset.only||(b.dataset.mode==='set'&&myTenya().length?'mine':'all'),mode:b.dataset.mode,setId:b.dataset.set||''};openTenyaSheet()},
   tbDone:()=>{closeSheet()},
   tbClear:()=>{tb.q='';const i=$('#tbQ');if(i){i.value='';i.focus()}tbRefresh();const x=$('.sb-x');if(x)x.hidden=true},
-  tbZ:b=>{tb.z=b.dataset.d;tbRefresh()},tbOnly:b=>{tb.only=b.dataset.d;tbRefresh()},
+  tbZ:b=>{tb.z=b.dataset.d;tbRefresh()},tbFold:b=>{tb.fold=tb.fold||{};const z=b.dataset.z;tb.fold[z]=!tb.fold[z];tbRefresh()},tbOnly:b=>{tb.only=b.dataset.d;tbRefresh()},
   tbSetQuick:b=>{const T=TEN(),st=T.sets.find(x=>x.id===b.dataset.set),id=b.dataset.id;if(!st)return;const add=!st.items.includes(id);st.items=add?st.items.concat([id]):st.items.filter(x=>x!==id);cfgTouch();tbRefresh();toast(add?`「${st.name}」に入れました`:`「${st.name}」から外しました`)},
   tbSetNew:b=>{const T=TEN();const st={id:uid(),name:SET_NAMES[0],items:[b.dataset.id]};T.sets.push(st);cfgTouch();tbRefresh();toast(`「${st.name}」を作って入れました`)},
   tbMine:b=>{const T=TEN(),id=b.dataset.id;const add=!T.mine.includes(id);T.mine=add?T.mine.concat([id]):T.mine.filter(x=>x!==id);cfgTouch();tbRefresh();const t=tenyaOf(id);toast(`${t?tenyaMain(t):'テンヤ'}を所有テンヤ${add?'に追加しました':'から外しました'}（${myTenya().length}種）`)},
