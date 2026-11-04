@@ -1038,8 +1038,11 @@ function recentHtml(){
   <div class="actions" style="margin:6px 0 0"><button class="small" id="recentAll">${ui.recentAll?'少なく表示':'もっと見る'}</button></div>`}
 
 // Is the relay Claude alive? meta/heartbeat is written by the relay session and the hourly watchdog.
-function heartbeatHtml(){const h=meta.heartbeat;if(!h||!h.at)return '';const m=Math.round((Date.now()-new Date(h.at))/60000);const bad=m>180,warn=m>90;
-  return `<div class="hb ${bad?'bad':warn?'warn':''}"><b></b>司令塔の Claude：最終確認 ${esc(ago(h.at))}${h.note?`・${esc(h.note)}`:''}${bad?'　— 3時間以上止まっています。依頼は見回りが拾いますが、相談チャットで知らせてください':''}</div>`}
+// Patrol runs at 9/12/15/18/21 JST (none 0–8), and once a day when nothing has moved for 24h, so the thresholds follow that.
+function heartbeatHtml(){const h=meta.heartbeat;if(!h||!h.at)return '';const m=Math.round((Date.now()-new Date(h.at))/60000);
+  const jst=(new Date().getUTCHours()+9)%24,night=jst<9,quiet=!!(meta.patrol&&meta.patrol.quiet);
+  const W=quiet?26*60:night?12*60:4*60,B=quiet?30*60:night?14*60:7*60;const bad=m>B,warn=m>W;
+  return `<div class="hb ${bad?'bad':warn?'warn':''}"><b></b>司令塔の Claude：最終確認 ${esc(ago(h.at))}${h.note?`・${esc(h.note)}`:''}${quiet?'・静かな日（見回りは1日1回）':''}${bad?'　— 見回りが予定どおり動いていません。相談チャットで知らせてください':''}</div>`}
 // One combined tree: what you must do, what Claude is doing, grouped under the parent feature
 function turnRow(f,kind){
   if(kind==='gpt')return {badge:'<span class="pill now-you">あなたの番：ChatGPT へ渡す</span>',body:`<details><summary>依頼文を見る</summary><pre class="out">${esc(f.gptAsk.text)}</pre></details>`,act:`<a class="btn small primary" href="https://chatgpt.com/" target="_blank" rel="noopener" data-gptcopy="${esc(f.id)}">コピーして ChatGPT を開く ↗</a><button class="small" data-gptdone="${esc(f.id)}">渡した</button>`};
@@ -1107,7 +1110,7 @@ function viewMore(){return `<h2>その他</h2>
   <a class="card" href="#howto"><div class="title">仕組みと使い方</div><div class="next">GPT と Claude のつながり方</div></a></div>
   <h2>連携の状態</h2>
   <div class="box legend">
-    <b>司令塔の Claude</b><span>${meta.heartbeat&&meta.heartbeat.at?`最終確認 ${esc(ago(meta.heartbeat.at))}。`:''}台帳からの依頼は Claude が受け取って Claude Code に渡し、進み具合と報告を台帳に書き戻します。1時間ごとの見回りもあり、Claude が止まっていても依頼は拾われます。</span>
+    <b>司令塔の Claude</b><span>${meta.heartbeat&&meta.heartbeat.at?`最終確認 ${esc(ago(meta.heartbeat.at))}。`:''}台帳からの依頼は Claude が受け取って Claude Code に渡し、進み具合と報告を台帳に書き戻します。日本時間 9・12・15・18・21時の見回り（動きが24時間無い日は朝1回）もあり、Claude が止まっていても依頼は拾われます。</span>
     <b>台帳内の Claude（相談・計画）</b><span>${sample?`使えます${chatImgCaps?'（画像も送れます）':'（画像は送れません）'}`:'この表示では使えません（claude.ai で開いてください）'}</span>
     <b>GPT（API経由）</b><span>Claude Code の作業環境に <span class="mono">OPENAI_API_KEY</span> が設定済み（2026-11-04 に画像生成を確認）。記事の修正で「GPT に画像を作らせる」を選ぶと使われます。使った分だけ OpenAI に課金。</span>
     <b>ChatGPT（手作業）</b><span>今は決まった役目はありません。ChatGPT に何か作らせたときは、返事（【完了報告】や【カタログ追加】）を「報告」タブに貼れば、台帳が取り込んで処理に回します。</span>
