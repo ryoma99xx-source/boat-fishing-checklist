@@ -1,65 +1,61 @@
 <title>釣りサイト制作台帳</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Dela+Gothic+One&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout: one narrow column (phone first), sticky header, fixed bottom tab bar; detail opens as its own view. */
+/* One look in both themes: the palette of cutlassfish.tokyo (theme tokyobay-tachiuo). */
 :root{
-  --bg:#eef2f3; --surface:#ffffff; --ink:#14262d; --muted:#5b6f76; --line:#d5dee1;
-  --accent:#0b6e78; --accent-ink:#ffffff; --accent-soft:#d8eeef;
-  --s-idea:#6b7a80; --s-work:#1f63c6; --s-wait:#b26a00; --s-done:#227a3d; --s-hold:#7a4f9a;
-  --warn-bg:#fff4dc; --warn-ink:#7a4a00; --bad:#b3261e;
-  --f-display:"Dela Gothic One","Zen Kaku Gothic New",system-ui,sans-serif;
-  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+  --bg:#06080f; --bg-2:#0b1020; --surface:#111a30; --ink:#e9eef6; --muted:#93a4bd; --silver:#c8d6e6; --line:rgba(180,210,235,.14);
+  --accent:#4fd0d6; --accent-2:#2b7cff; --accent-ink:#04121a; --accent-soft:rgba(79,208,214,.14); --gold:#e7b765;
+  --s-idea:#93a4bd; --s-work:#6fa6ff; --s-wait:#e7b765; --s-done:#7bdcb5; --s-hold:#c39af0;
+  --warn-bg:rgba(231,183,101,.14); --warn-ink:#e7b765; --bad:#ff8a80;
+  --f-display:"Oswald","Bebas Neue",Impact,sans-serif;
+  --f-body:"Noto Sans JP","Hiragino Kaku Gothic ProN",-apple-system,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
-  --ai-claude:#b8501f; --ai-gpt:#0f7a5a; --ai-codex:#3a4fb8; --ai-me:#66767c;
+  --ai-claude:#ff9d6e; --ai-gpt:#4fd1a5; --ai-codex:#9fb0ff; --ai-me:#a9b6ba;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0d171b; --surface:#152329; --ink:#e3ecee; --muted:#93a8ae; --line:#26383f;
-  --accent:#4fc0c9; --accent-ink:#06262a; --accent-soft:#173a3f;
-  --s-idea:#9aa8ad; --s-work:#6fa6ff; --s-wait:#f0a63a; --s-done:#5cc77a; --s-hold:#c79ae6;
-  --warn-bg:#3a2d10; --warn-ink:#f5d38a; --bad:#ff8a80; --ai-claude:#ff9d6e; --ai-gpt:#4fd1a5; --ai-codex:#9fb0ff; --ai-me:#a9b6ba; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0d171b; --surface:#152329; --ink:#e3ecee; --muted:#93a8ae; --line:#26383f;
-  --accent:#4fc0c9; --accent-ink:#06262a; --accent-soft:#173a3f;
-  --s-idea:#9aa8ad; --s-work:#6fa6ff; --s-wait:#f0a63a; --s-done:#5cc77a; --s-hold:#c79ae6;
-  --warn-bg:#3a2d10; --warn-ink:#f5d38a; --bad:#ff8a80; --ai-claude:#ff9d6e; --ai-gpt:#4fd1a5; --ai-codex:#9fb0ff; --ai-me:#a9b6ba; color-scheme:dark}
 html{background:var(--bg)}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+body{background:var(--bg);background-image:radial-gradient(1200px 600px at 80% -10%,rgba(43,124,255,.10),transparent 60%),radial-gradient(900px 500px at -10% 10%,rgba(79,208,214,.08),transparent 60%);background-attachment:fixed;color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.75;letter-spacing:.02em;-webkit-font-smoothing:antialiased;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
   padding-block:0 calc(76px + env(safe-area-inset-bottom,0px))}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 .wrap{max-width:720px;margin:0 auto}
-header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px 8px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line)}
-h1{font-family:var(--f-display);font-weight:400;font-size:20px;margin:0;letter-spacing:.02em;text-wrap:balance}
-h1 small{font-family:var(--f-body);font-size:12px;color:var(--muted);font-weight:500;margin-left:6px}
-h2{font-size:17px;margin:18px 0 8px;text-wrap:balance}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(6,8,15,.92);backdrop-filter:blur(8px);padding-block:12px 8px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line)}
+h1{font-family:var(--f-display);font-weight:500;font-size:19px;margin:0;letter-spacing:.14em;text-transform:uppercase;color:#fff;text-wrap:balance;line-height:1.2}
+h1 .ja{display:block;font-family:var(--f-body);font-size:11px;letter-spacing:.18em;color:var(--accent);text-transform:none;font-weight:500}
+h1 small{font-family:var(--f-body);font-size:11px;color:var(--muted);font-weight:400;letter-spacing:.06em;text-transform:none;margin-left:8px}
+h2{font-size:16px;margin:26px 0 10px;color:#fff;font-weight:700;letter-spacing:.08em;text-wrap:balance}
+h2[data-en]::before{content:attr(data-en);display:inline-block;margin-right:10px;font-family:var(--f-display);font-weight:500;font-size:13px;letter-spacing:.2em;color:var(--accent)}
 h3{font-size:15px;margin:14px 0 6px}
 .sync{font-size:12px;color:var(--muted);white-space:nowrap}
 .sync b{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:4px;vertical-align:1px}
 .sync.ok b{background:var(--s-done)}
 .banner{background:var(--warn-bg);color:var(--warn-ink);padding:10px 12px;border-radius:8px;margin:12px 0;font-size:14px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.stat{background:linear-gradient(120deg,rgba(79,208,214,.10),rgba(43,124,255,.06));border:1px solid rgba(79,208,214,.28);border-radius:14px;padding:8px 10px;text-align:left;font:inherit;color:inherit;cursor:pointer}
 .stat .n{font-family:var(--f-display);font-size:22px;line-height:1.1;font-variant-numeric:tabular-nums}
 .stat .l{font-size:12px;color:var(--muted)}
 .stat[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
 .filters input,.filters select{flex:1 1 150px;min-width:0}
-input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%;box-sizing:border-box}
+input,select,textarea{font:inherit;color:var(--ink);background:rgba(11,16,32,.9);border:1px solid rgba(180,210,235,.2);border-radius:10px;padding:9px 10px;width:100%;box-sizing:border-box}
 textarea{min-height:90px;resize:vertical}
 input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;letter-spacing:.04em}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .row2>div{min-width:0}
-button,.btn{font:inherit;font-size:14px;border-radius:8px;padding:9px 14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;display:inline-block}
-button.primary,.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+button,.btn{font:inherit;font-size:13px;letter-spacing:.06em;border-radius:40px;padding:9px 18px;border:1px solid rgba(200,214,230,.4);background:transparent;color:var(--silver);transition:background .25s,color .25s,border-color .25s;cursor:pointer;text-decoration:none;display:inline-block}
+button.primary,.btn.primary{background:transparent;border-color:var(--accent);color:var(--accent);font-weight:700}
+button.primary:hover,.btn.primary:hover,button.primary:focus-visible{background:var(--accent);color:var(--accent-ink)}
+button:hover,.btn:hover{border-color:var(--silver);color:#fff}
 button.danger{color:var(--bad);border-color:var(--bad);background:transparent}
 button.small{padding:5px 10px;font-size:13px}
 button:disabled{opacity:.5;cursor:default}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
 .list{display:flex;flex-direction:column;gap:8px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:block;color:inherit;text-decoration:none;min-width:0}
+.card{background:linear-gradient(120deg,rgba(79,208,214,.07),rgba(43,124,255,.05) 60%,rgba(17,26,48,.6));border:1px solid rgba(79,208,214,.22);border-radius:14px;padding:12px 14px;display:block;color:inherit;text-decoration:none;min-width:0}
 .card .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
 .card .title{font-weight:700;margin:4px 0 2px;overflow-wrap:anywhere}
 .card .next{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
@@ -72,7 +68,7 @@ button:disabled{opacity:.5;cursor:default}
 .stale{color:var(--warn-ink);background:var(--warn-bg);border-radius:4px;padding:0 6px}
 .empty{color:var(--muted);text-align:center;padding:28px 8px;border:1px dashed var(--line);border-radius:10px}
 .mono{font-family:var(--f-mono);font-size:12.5px;overflow-wrap:anywhere}
-.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}
+.box{background:rgba(17,26,48,.75);border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}
 .chat{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
 .chat:first-child{border-top:0}
 .chat .c{flex:1;min-width:0}
@@ -87,6 +83,14 @@ pre.out{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-body);fo
 .checks input{width:auto;margin-top:4px}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.recent{display:flex;flex-direction:column;gap:0;border:1px solid rgba(79,208,214,.22);border-radius:14px;overflow:hidden;background:rgba(17,26,48,.6)}
+.recent a,.recent div.ri{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;padding:9px 12px;border-top:1px solid var(--line);color:inherit;text-decoration:none}
+.recent > :first-child{border-top:0}
+.recent .when{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);white-space:nowrap;padding-top:2px}
+.recent .what{min-width:0;font-size:13.5px;overflow-wrap:anywhere}
+.recent .what b{color:#fff;font-weight:700}
+.recent .who{font-size:11px;color:var(--accent);letter-spacing:.08em}
+.new{display:inline-block;font-family:var(--f-display);font-size:10.5px;letter-spacing:.14em;color:var(--accent-ink);background:var(--accent);border-radius:4px;padding:0 5px;margin-right:6px;vertical-align:1px}
 .chatfab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:15;border-radius:999px;padding:10px 16px;font-weight:700;background:var(--accent);color:var(--accent-ink);border:0;box-shadow:0 4px 14px #0003}
 .chat-panel{position:fixed;z-index:30;background:var(--surface);display:flex;flex-direction:column;border-left:1px solid var(--line);box-shadow:-8px 0 24px #0002;top:0;bottom:0;right:0;width:min(440px,100vw);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 .chat-panel header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line)}
@@ -103,7 +107,7 @@ pre.out{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-body);fo
 @media (max-width:520px){.chat-panel{width:100vw;border-left:0}}
 .chat-panel[hidden],.chatfab[hidden]{display:none}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:14px;z-index:20;max-width:90vw;z-index:40}
-nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:8;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:8;background:rgba(6,8,15,.94);backdrop-filter:blur(8px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);
   padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
 nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 6px;font-size:11px;color:var(--muted);text-decoration:none}
 nav.tabs a svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
@@ -219,7 +223,7 @@ nav.tabs a[aria-current="page"]{color:var(--accent);font-weight:700}
 
 <div class="wrap">
   <header class="top">
-    <h1>制作台帳<small>cutlassfish.tokyo</small></h1>
+    <h1>Production Ledger<span class="ja">制作台帳<small>cutlassfish.tokyo</small></span></h1>
     <span class="sync" id="sync"><b></b>接続中…</span>
   </header>
   <div id="conn" class="banner" hidden></div>
@@ -284,6 +288,10 @@ const saveUi=()=>{try{localStorage.setItem('ledger-ui',JSON.stringify({filter:ui
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let artDoc=null,reqs=[];
+let prevSeen='';try{prevSeen=localStorage.getItem('ledger-seen')||''}catch(e){}
+setTimeout(()=>{try{localStorage.setItem('ledger-seen',new Date().toISOString())}catch(e){}},4000);
+const isNew=iso=>!!iso&&!!prevSeen&&String(iso)>prevSeen;
+const ago=iso=>{const m=Math.round((Date.now()-new Date(iso))/60000);return m<1?'たった今':m<60?m+'分前':m<1440?Math.round(m/60)+'時間前':Math.round(m/1440)+'日前'};
 let extraSites=[],roles=[],smap=null,treeOpen=new Set(['root','tools']);
 try{const t=JSON.parse(localStorage.getItem('ledger-tree')||'null');if(Array.isArray(t))treeOpen=new Set(t)}catch(e){}
 const saveTree=()=>{try{localStorage.setItem('ledger-tree',JSON.stringify([...treeOpen]))}catch(e){}};
@@ -356,7 +364,7 @@ function cardHtml(f){
     ${(f.chats||[]).length?`<span>チャット${f.chats.length}</span>`:''}
     ${f.cc&&f.cc.state==='作業中'?`<span class="tag">Claude Code 作業中</span>`:''}
     ${f.status!=='公開済み'&&d>=STALE_DAYS&&d<999?`<span class="stale">${d}日動きなし</span>`:''}</div>
-    <div class="title">${esc(f.title)}</div>
+    <div class="title">${isNew(lastTouch(f))?'<span class="new">NEW</span>':''}${esc(f.title)}</div>
     ${f.next?`<div class="next">次：<b>${esc(f.next)}</b></div>`:''}
     <div class="next">更新 ${esc(fmt(lastTouch(f)))}</div></a>`}
 
@@ -868,14 +876,15 @@ function viewHome(){
   if(!loaded)return notReady();
   const yt=yourTurn(),running=feats.filter(f=>f.cc&&f.cc.state==='作業中');
   const kinds=['自動で判断','機能追加','ツール追加','記事作成','修正','公開'];
-  return `<h2 style="margin-top:14px">何をしますか</h2>
+  return `${recentHtml()}
+  <h2 data-en="REQUEST">何をしますか</h2>
   <textarea id="cmdText" placeholder="例：潮と流れマップに、釣り場ごとのおすすめ時間帯を表示する機能を足したい&#10;例：今週の釣行をもとに記事を1本作ってWordPressに下書き登録まで">${esc(ui.cmd||'')}</textarea>
   <div class="row2"><div><label for="cmdSite">サイト</label><select id="cmdSite"><option value="">自動で判断</option>${allSites().map(s=>`<option value="${esc(s.k)}" ${ui.cmdSite===s.k?'selected':''}>${esc(s.n)}</option>`).join('')}</select></div>
   <div><label for="cmdKind">種類</label><select id="cmdKind">${opts(kinds,ui.cmdKind||'自動で判断')}</select></div></div>
   <div class="actions"><button class="primary" id="cmdPlan" ${sample?'':'disabled'}>計画を立てる</button>${sample?'':'<span class="next" style="font-size:12px">claude.ai で開くと使えます</span>'}</div>
   ${ui.plan?planHtml(ui.plan):''}
   ${articlesHtml()}
-  <h2>あなたの番 <span style="font-size:13px;color:var(--muted)">${yt.length}件</span></h2>
+  <h2 data-en="YOUR TURN">あなたの番 <span style="font-size:13px;color:var(--muted)">${yt.length}件</span></h2>
   <div class="list">${yt.length?yt.map(({f,kind})=>{
     if(kind==='gpt')return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-作業中">ChatGPT へ渡す</span></div><div class="title">${esc(f.title)}</div>
       <details><summary>依頼文を見る</summary><pre class="out">${esc(f.gptAsk.text)}</pre></details>
@@ -884,7 +893,7 @@ function viewHome(){
     if(kind==='blocked')return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-保留">Claude Code が返事待ち</span></div><div class="title">${esc(f.title)}</div><div class="actions"><a class="btn primary" href="${esc(f.cc.url)}" target="_blank" rel="noopener">セッションを開いて答える ↗</a></div></div>`;
     return cardHtml(f)}).join(''):'<div class="empty">今あなたがやることはありません。</div>'}</div>
   ${requestsHtml()}
-  <h2>動いている作業 <span style="font-size:13px;color:var(--muted)">${running.length}件</span></h2>
+  <h2 data-en="RUNNING">動いている作業 <span style="font-size:13px;color:var(--muted)">${running.length}件</span></h2>
   <div class="list">${running.length?running.map(f=>{const m=ccMsg[f.id];return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-作業中">Claude Code</span><span>送信 ${esc(fmt(f.cc.sentAt))}</span></div><div class="title"><a href="#${esc(f.id)}" style="color:inherit">${esc(f.title)}</a></div><div class="next">${esc(m?m.msg:(f.cc.relayMsg||(f.cc.sessionId?'まだ確認していません':'Claude が Claude Code に中継中')))}</div><div class="actions"><button class="small" data-check="${esc(f.id)}" ${mcp?'':'disabled'}>確認</button>${f.cc.url?`<a class="btn small" href="${esc(f.cc.url)}" target="_blank" rel="noopener">開く ↗</a>`:''}</div></div>`}).join(''):'<div class="empty">動いている作業はありません。</div>'}</div>`}
 // ---------- articles (WordPress) ----------
 function parseArticles(text){
@@ -902,7 +911,7 @@ function articlesHtml(){
   const drafts=items.filter(a=>a.status!=='publish'),pubs=items.filter(a=>a.status==='publish');
   const shown=ui.artAll?items:[...drafts,...pubs.slice(0,3)];
   const job=artDoc&&artDoc.job,jm=ccMsg['__art'];
-  return `<h2>記事 <span style="font-size:13px;color:var(--muted)">下書き${drafts.length}・公開${pubs.length}${artDoc&&artDoc.fetchedAt?`・${esc(fmt(artDoc.fetchedAt).slice(5))} 時点`:''}</span></h2>
+  return `<h2 data-en="ARTICLES">記事 <span style="font-size:13px;color:var(--muted)">下書き${drafts.length}・公開${pubs.length}${artDoc&&artDoc.fetchedAt?`・${esc(fmt(artDoc.fetchedAt).slice(5))} 時点`:''}</span></h2>
   <div class="actions" style="margin-top:0"><button class="small" id="artSync">記事の状況を更新</button>${job&&job.state==='作業中'?`<span class="next" style="font-size:12px;align-self:center">更新中（${esc(jm?jm.msg:'Claude Code に依頼済み')}）</span><button class="small" id="artCheck">確認</button>`:''}${pubs.length>3?`<button class="small" id="artAll">${ui.artAll?'下書き中心に戻す':'公開済みをすべて表示'}</button>`:''}</div>
   <div class="list">${shown.length?shown.map(a=>{const td=artTodo(a),open=ui.artOpen===String(a.id);
     return `<div class="card" style="${open?'border-color:var(--accent)':''}"><div class="meta"><span class="pill st-${a.status==='publish'?'公開済み':'確認・公開待ち'}">${esc(ART_ST[a.status]||a.status||'')}</span><span>ID ${esc(a.id)}</span>${a.modified?`<span>更新 ${esc(fmt(a.modified).slice(5))}</span>`:''}${td.length?`<span class="tnew">未記入・要確認 ${td.length}</span>`:''}</div>
@@ -984,6 +993,19 @@ function bindArticles(on){
   on('#artSend','click',()=>{const a=((artDoc&&artDoc.items)||[]).find(x=>String(x.id)===$('#artSend').dataset.art);if(a)sendArticle(a)});
 }
 
+// Latest changes across the ledger (logs, requests, articles), newest first
+function recentHtml(){
+  const ev=[];
+  feats.forEach(f=>(f.logs||[]).forEach(l=>ev.push({at:l.at,who:l.by,title:f.title,text:String(l.text||'').split('\n')[0],href:'#'+f.id})));
+  reqs.forEach(r=>ev.push({at:r.doneAt||r.sentAt||r.at,who:'依頼',title:r.title,text:r.status==='done'?'完了・報告あり':r.status==='sent'?'Claude Code が作業中':r.status==='not_sent'?'送れませんでした':'受け取り待ち',href:'#home'}));
+  ((artDoc&&artDoc.items)||[]).forEach(a=>a.modified&&ev.push({at:a.modified,who:'記事',title:a.title,text:(ART_ST[a.status]||a.status)+'を更新',href:a.edit_link||'#home',ext:!!a.edit_link}));
+  const list=ev.filter(e=>e.at).sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,ui.recentAll?20:6);
+  const nNew=ev.filter(e=>isNew(e.at)).length;
+  if(!list.length)return '';
+  return `<h2 data-en="RECENT">最近の更新${nNew?` <span class="new">${nNew} NEW</span>`:''}</h2>
+  <div class="recent">${list.map(e=>`<a href="${esc(e.href)}"${e.ext?' target="_blank" rel="noopener"':''}><span class="when">${esc(ago(e.at))}</span><span class="what">${isNew(e.at)?'<span class="new">NEW</span>':''}<b>${esc(String(e.title||'').slice(0,46))}</b><br><span class="who">${esc(e.who)}</span>　${esc(String(e.text).slice(0,70))}</span></a>`).join('')}</div>
+  <div class="actions" style="margin:6px 0 0"><button class="small" id="recentAll">${ui.recentAll?'少なく表示':'もっと見る'}</button></div>`}
+
 // Progress of requests relayed through Claude (pending → sent to Claude Code → report)
 function requestsHtml(){
   const recent=reqs.filter(r=>r.status!=='done'||daysSince(r.at)<1).sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,6);
@@ -993,7 +1015,7 @@ function requestsHtml(){
     const mins=Math.max(0,Math.round((Date.now()-new Date(r.at))/60000));
     const label=st<0?'送れませんでした（コピーして貼る方法で送ってください）':st===1?(mins>=3?`Claude の受け取り待ち（${mins}分経過。遅いときは相談チャットで知らせてください）`:'Claude の受け取り待ち（通常1分以内）'):st===2?((f&&f.cc&&f.cc.relayMsg)||'Claude Code が作業中'):'完了・報告が届いています';
     return {st,label,f}};
-  return `<h2>依頼の進み具合</h2><div class="list">${recent.map(r=>{const x=steps(r);const dot=(i,t)=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:${x.st>=i?'var(--ink)':'var(--muted)'}"><span style="width:9px;height:9px;border-radius:50%;background:${x.st>=i?'var(--accent)':'var(--line)'}"></span>${t}</span>`;
+  return `<h2 data-en="PROGRESS">依頼の進み具合</h2><div class="list">${recent.map(r=>{const x=steps(r);const dot=(i,t)=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:${x.st>=i?'var(--ink)':'var(--muted)'}"><span style="width:9px;height:9px;border-radius:50%;background:${x.st>=i?'var(--accent)':'var(--line)'}"></span>${t}</span>`;
     return `<div class="card"><div class="meta"><span>${esc(fmt(r.at).slice(5))} 送信</span></div><div class="title" style="font-size:14px">${esc(r.title||'依頼')}</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:4px 0">${dot(1,'受付')}<span style="color:var(--muted)">→</span>${dot(2,'Claude Code 作業中')}<span style="color:var(--muted)">→</span>${dot(3,'報告')}</div>
       <div class="next" style="font-size:13px">${esc(x.label)}</div>
@@ -1107,6 +1129,7 @@ async function autoCheck(){
   render()}
 function bindHome(){
   const on=(sel,ev,fn)=>{const e=$(sel);if(e)e.addEventListener(ev,fn)};
+  on('#recentAll','click',()=>{ui.recentAll=!ui.recentAll;render()});
   bindArticles(on);
   on('#cmdPlan','click',makePlan);
   on('#plStart','click',startPlan);
