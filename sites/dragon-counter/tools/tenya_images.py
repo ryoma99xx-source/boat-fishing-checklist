@@ -214,15 +214,17 @@ def cut_masked(im, mask):
     layer = Image.new("RGBA", (nw, nh)); layer.paste(im, (0, 0)); layer.putalpha(m)
     out = Image.new("RGBA", (W, H), (0, 0, 0, 0)); out.alpha_composite(layer, ((W - nw) // 2, (H - nh) // 2)); return out
 
-def defringe(im, m, band=3):
+def defringe(im, m, band=4, erode=2, hi=235.0, lo=190.0):
     """Store JPEGs on white: the pixels along the edge are a blend of head and white paper, and on the app's dark
-    background they show as a ragged white rim. In a thin band along the mask edge, make a pixel as transparent as
-    it is white and take the white back out of its colour (un-premultiply against white)."""
-    mk = np.asarray(m) > 127; k = 2 * band + 1
+    background they show as a ragged white rim. Pull the mask in by `erode` px, then in a band along the edge make a
+    pixel as transparent as it is white and take the white back out of its colour (un-premultiply against white)."""
+    mk = np.asarray(m) > 127
+    if erode: mk = np.asarray(Image.fromarray((mk * 255).astype("uint8")).filter(ImageFilter.MinFilter(2 * erode + 1))) > 0
+    k = 2 * band + 1
     inner = np.asarray(Image.fromarray((mk * 255).astype("uint8")).filter(ImageFilter.MinFilter(k))) > 0
     ring = mk & ~inner
     a = np.asarray(im).astype(float); mn = a.min(axis=2)
-    alpha = np.where(mk, 1.0, 0.0); alpha[ring] = np.clip((250.0 - mn[ring]) / 45.0, 0.0, 1.0)   # white → 0, ≤205 → 1
+    alpha = np.where(mk, 1.0, 0.0); alpha[ring] = np.clip((hi - mn[ring]) / (hi - lo), 0.0, 1.0)   # white -> 0, <=lo -> 1
     out = a.copy(); sel = ring & (alpha > 0.15)
     aa = alpha[sel][:, None]; out[sel] = np.clip((a[sel] - 255.0 * (1.0 - aa)) / aa, 0, 255)
     return Image.fromarray(out.astype("uint8")), Image.fromarray((alpha * 255).astype("uint8"))
