@@ -82,6 +82,19 @@ def cut_masked(im, mask):
     box = INSET.get((globals().get("_maker", ""), im.size))
     if box:
         mask = mask.copy(); mask[box[1]:box[3], box[0]:box[2]] = False
+        # the inset is a filled disc: find columns whose longest vertical run is disc-sized, right of the head, and drop them
+        runs = []
+        for x in range(mask.shape[1]):
+            col = mask[:, x]; best = cur = 0
+            for v in col:
+                cur = cur + 1 if v else 0; best = max(best, cur)
+            runs.append(best)
+        tall = [x for x, r in enumerate(runs) if r >= 105]
+        if tall:
+            cov = mask.sum(axis=0); head_x = int(cov[: mask.shape[1] // 2].argmax())
+            right = [x for x in tall if x > head_x + 60]
+            if right:
+                x0 = max(0, min(right) - 70); mask[:, x0:] = False
     mask = drop_dark_inset(im, mask)
     mask = head_component(mask)
     x0, y0, x1, y1 = head_box(mask, globals().get('_maxw', 1.7)); pad = int((y1 - y0) * 0.06)
