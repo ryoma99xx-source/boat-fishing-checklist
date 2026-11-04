@@ -26,6 +26,8 @@ jobs:
             key: DFA
           - site: tenya-simulator
             key: TENYA
+          - site: dragon-counter
+            key: DRAGON
     concurrency:
       group: deploy-sites-rental-${{ matrix.site }}
       cancel-in-progress: false

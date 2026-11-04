@@ -91,3 +91,15 @@ GitHub のこのリポジトリで **Settings → Secrets and variables → Acti
 ## 7. 写し直すとき（ChatGPT Sites 側を更新した場合）
 
 ChatGPT Sites 側でツールを更新したら、切り替え前であれば `python3 sites/mirror.py <サブドメイン>` で写し直せます（Claude に頼めば実行・確認・アップロードまで行います）。切り替え後は ChatGPT Sites 側の URL がこちらを向かなくなるので、更新はこのリポジトリで行います。
+
+
+## ドラゴンカウンター（TOOL 05）
+
+`sites/dragon-counter/public/` は、Claude で作った公開一式（dragon-counter-release.zip）の `dragon-counter/` をそのまま置いたものです（中身は無変更。`sites/dragon-counter/SHA256SUMS` で確認できます）。
+ChatGPT Sites（dragon-counter.ryoma99xx.chatgpt.site）は使わず、お名前.com に直接置きます。
+
+- お名前.com の手順は他のツールと同じです。ただし **dragon-counter にはまだ CNAME が無いので、CNAME の削除は不要** です（ChatGPT の引き継ぎ資料にある CNAME・TXT の3レコードも **追加しません**）。
+- FTP アカウント：`deploy@dragon-counter.cutlassfish.tokyo`（接続先ディレクトリ `public_html/dragon-counter.cutlassfish.tokyo/`）
+- GitHub Secrets：`FTP_USERNAME_DRAGON` / `FTP_PASSWORD_DRAGON`
+- 公開後、WordPress に `dragon-counter-tool.zip`（リンク追加プラグイン v1.0.0）を入れると、ツール一覧とメニューにリンクが付きます。
+- 記録はブラウザ内に保存されるため、chatgpt.site の URL で付けた記録は自動では移りません。アプリの「バックアップと復元」で移せます。

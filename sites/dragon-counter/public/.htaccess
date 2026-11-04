@@ -1,0 +1,36 @@
+# ドラゴンカウンター (TOOL 05) — the app files are the original release, unchanged
+# (see sites/dragon-counter/SHA256SUMS). Headers follow the release's hosting notes.
+# Only FileInfo-type directives: no Options / DirectoryIndex / DirectorySlash / Require,
+# which お名前.com RS does not allow in .htaccess (they turn every request into a 500).
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{ENV:REDIRECT_STATUS} !^$
+  RewriteRule ^ - [END]
+  RewriteRule ^\.well-known/ - [END]
+  RewriteRule (^|/)\. - [R=404,L]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^.+$ - [R=404,L]
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType text/html .html
+  AddType application/javascript .js
+  AddType application/json .json
+  AddType application/manifest+json .webmanifest
+  AddType image/png .png
+  AddType text/plain .txt
+  AddCharset utf-8 .html .js .json .webmanifest .txt
+</IfModule>
+
+# index.html, sw.js, catalog-extra.json and the manifest are revalidated on every load
+# (the service worker caches the app for offline use); images are kept for a day.
+<IfModule mod_headers.c>
+  Header set Cache-Control "public, max-age=86400"
+  <FilesMatch "^(index\.html|sw\.js|catalog-extra\.json|manifest\.webmanifest|robots\.txt)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <Files "sw.js">
+    Header set Service-Worker-Allowed "/"
+  </Files>
+</IfModule>

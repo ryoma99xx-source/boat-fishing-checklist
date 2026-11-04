@@ -34,6 +34,8 @@ def expected_cache(sub, path):
     name = path.rsplit('/', 1)[-1]
     if path.endswith(('/', '.html')) or path.startswith('/versions/') or name in ('service-worker.js', 'manifest.json') and sub != 'tenya-simulator':
         return 'no-cache'
+    if sub == 'dragon-counter' and name in ('sw.js', 'catalog-extra.json', 'manifest.webmanifest', 'robots.txt'):
+        return 'no-cache'
     return 'public, max-age=86400'
 
 
