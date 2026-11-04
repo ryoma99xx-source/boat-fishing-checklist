@@ -5,6 +5,11 @@
     python3 sites/dragon-counter/tools/tenya_images.py cut            # work/src/*.jpg → public/tenya/<id>.webp (+ index.json)
     python3 sites/dragon-counter/tools/tenya_images.py add <id> <file> # one photo (e.g. from a retail page) for one catalog id
 
+RULE (owner, 2026-11-05): this tool only CUTS OUT. It never changes the pixels of the source photo: no colour
+correction, no repainting, no inpainting, no sharpening, no generative-AI "clean-up" (that redraws eyes and
+patterns). Allowed: background → transparent, crop to the head, resize, and the edge-band de-fringe that only
+takes the white-paper blend back out of edge pixels. See CATALOG-UPDATE.md「写真の鉄則」.
+
 The cut keeps the photo as is (no posterizing): it removes the white background by flood fill from the
 border (white stripes on the head survive), crops to the head, and fits it into a fixed 480x360 frame.
 Images are derived from maker photos; see CATALOG-UPDATE.md for the owner's decision on that.
