@@ -283,7 +283,7 @@ const saveUi=()=>{try{localStorage.setItem('ledger-ui',JSON.stringify({filter:ui
 
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let artDoc=null;
+let artDoc=null,reqs=[];
 let extraSites=[],roles=[],smap=null,treeOpen=new Set(['root','tools']);
 try{const t=JSON.parse(localStorage.getItem('ledger-tree')||'null');if(Array.isArray(t))treeOpen=new Set(t)}catch(e){}
 const saveTree=()=>{try{localStorage.setItem('ledger-tree',JSON.stringify([...treeOpen]))}catch(e){}};
@@ -883,6 +883,7 @@ function viewHome(){
     if(kind==='report')return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-確認・公開待ち">報告が届いています</span></div><div class="title">${esc(f.title)}</div><div class="actions"><button class="small primary" data-takerep="${esc(f.id)}">確認して取り込む</button></div></div>`;
     if(kind==='blocked')return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-保留">Claude Code が返事待ち</span></div><div class="title">${esc(f.title)}</div><div class="actions"><a class="btn primary" href="${esc(f.cc.url)}" target="_blank" rel="noopener">セッションを開いて答える ↗</a></div></div>`;
     return cardHtml(f)}).join(''):'<div class="empty">今あなたがやることはありません。</div>'}</div>
+  ${requestsHtml()}
   <h2>動いている作業 <span style="font-size:13px;color:var(--muted)">${running.length}件</span></h2>
   <div class="list">${running.length?running.map(f=>{const m=ccMsg[f.id];return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-作業中">Claude Code</span><span>送信 ${esc(fmt(f.cc.sentAt))}</span></div><div class="title"><a href="#${esc(f.id)}" style="color:inherit">${esc(f.title)}</a></div><div class="next">${esc(m?m.msg:(f.cc.relayMsg||(f.cc.sessionId?'まだ確認していません':'Claude が Claude Code に中継中')))}</div><div class="actions"><button class="small" data-check="${esc(f.id)}" ${mcp?'':'disabled'}>確認</button>${f.cc.url?`<a class="btn small" href="${esc(f.cc.url)}" target="_blank" rel="noopener">開く ↗</a>`:''}</div></div>`}).join(''):'<div class="empty">動いている作業はありません。</div>'}</div>`}
 // ---------- articles (WordPress) ----------
@@ -982,6 +983,21 @@ function bindArticles(on){
   on('#artPublish','change',e=>{ui.artText=$('#artText').value;ui.artPublish=e.target.checked;render()});
   on('#artSend','click',()=>{const a=((artDoc&&artDoc.items)||[]).find(x=>String(x.id)===$('#artSend').dataset.art);if(a)sendArticle(a)});
 }
+
+// Progress of requests relayed through Claude (pending → sent to Claude Code → report)
+function requestsHtml(){
+  const recent=reqs.filter(r=>r.status!=='done'||daysSince(r.at)<1).sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,6);
+  if(!recent.length)return '';
+  const steps=r=>{const f=feats.find(x=>x.id===r.fid);const rep=f&&f.cc&&(f.cc.reportText||f.cc.state==='取込済み');
+    const st=r.status==='not_sent'?-1:rep||r.status==='done'?3:r.status==='sent'?2:1;
+    const mins=Math.max(0,Math.round((Date.now()-new Date(r.at))/60000));
+    const label=st<0?'送れませんでした（コピーして貼る方法で送ってください）':st===1?(mins>=3?`Claude の受け取り待ち（${mins}分経過。遅いときは相談チャットで知らせてください）`:'Claude の受け取り待ち（通常1分以内）'):st===2?((f&&f.cc&&f.cc.relayMsg)||'Claude Code が作業中'):'完了・報告が届いています';
+    return {st,label,f}};
+  return `<h2>依頼の進み具合</h2><div class="list">${recent.map(r=>{const x=steps(r);const dot=(i,t)=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:${x.st>=i?'var(--ink)':'var(--muted)'}"><span style="width:9px;height:9px;border-radius:50%;background:${x.st>=i?'var(--accent)':'var(--line)'}"></span>${t}</span>`;
+    return `<div class="card"><div class="meta"><span>${esc(fmt(r.at).slice(5))} 送信</span></div><div class="title" style="font-size:14px">${esc(r.title||'依頼')}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:4px 0">${dot(1,'受付')}<span style="color:var(--muted)">→</span>${dot(2,'Claude Code 作業中')}<span style="color:var(--muted)">→</span>${dot(3,'報告')}</div>
+      <div class="next" style="font-size:13px">${esc(x.label)}</div>
+      ${r.sessionId?`<div class="actions" style="margin:6px 0 0"><a class="btn small" href="https://claude.ai/code/${esc(r.sessionId)}" target="_blank" rel="noopener">作業の様子を見る ↗</a>${x.f&&x.st>=3?`<button class="small primary" data-takerep="${esc(x.f.id)}">確認して取り込む</button>`:''}</div>`:''}</div>`}).join('')}</div>`}
 
 function viewMore(){return `<h2>その他</h2>
   <div class="list"><a class="card" href="#inbox"><div class="title">未整理のチャット ${inbox.length?`<span class="badge-n">${inbox.length}</span>`:''}</div><div class="next">履歴の取り込みと振り分け</div></a>
@@ -1306,6 +1322,7 @@ readHash();
     const a=document.activeElement;if(!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&route.v!=='list'))render()},fail);
   db.collection('roles').onSnapshot(s=>{roles=s.docs.map(d=>({id:d.id,...d.data()}));if(loaded)render()},fail);
   db.collection('chat').onSnapshot(s=>{const d=s.docs.find(x=>x.id==='main');if(!chatBusy){chatMsgs=(d&&d.data().messages)||[];renderChat()}},fail);
+  db.collection('requests').onSnapshot(s=>{reqs=s.docs.map(d=>({id:d.id,...d.data()}));if(loaded)render()},fail);
   db.collection('articles').onSnapshot(s=>{const d=s.docs.find(x=>x.id==='list');artDoc=d?d.data():null;if(loaded)render()},fail);
   db.collection('sitemap').onSnapshot(s=>{const d=s.docs.find(x=>x.id==='wp');smap=d?d.data():null;if(loaded)render()},fail);
   db.collection('sites').onSnapshot(s=>{extraSites=s.docs.map(d=>({k:d.id,...d.data()}));if(loaded)render()},fail);
