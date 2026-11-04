@@ -351,6 +351,8 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 .dk-sub b{font-family:var(--f-num);font-size:18px;font-weight:600}
 .dk-sub button[data-act=bite] b{color:var(--amber)}.dk-sub button[data-act=lost] b{color:var(--pink)}
 .tabs{background:#070c15;border-top:1px solid var(--line)}
+/* iOS: while the on-screen keyboard is up, fixed bars are drawn against the shrunken viewport and end up mid-screen → hide them until it closes */
+body.kbd .tabs,body.kbd .dock{display:none}
 .tab{font-size:13px}
 .tab.on{color:var(--teal);background:transparent}
 .sheet-panel{background:var(--surface)}
@@ -2024,6 +2026,10 @@ document.addEventListener('keydown',e=>{const el=$('#tut');if(!el||el.hidden)ret
 /* ---------- boot ---------- */
 saveLocal();render();keepAwake();
 if(!S.ui.tutDone)setTimeout(()=>openTut(0),250);else if(!S.ui.tutApp)setTimeout(()=>openTut(5),250); // 追加した「アプリとして使う」だけ一度見せる
+(()=>{const vv=window.visualViewport;const isField=el=>el&&/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)&&!/^(checkbox|radio|range|button)$/.test(el.type||'');
+  const upd=()=>{const kb=vv?(window.innerHeight-vv.height)>120:isField(document.activeElement);document.body.classList.toggle('kbd',!!kb)};
+  if(vv){vv.addEventListener('resize',upd);vv.addEventListener('scroll',upd)}
+  document.addEventListener('focusin',()=>setTimeout(upd,60));document.addEventListener('focusout',()=>setTimeout(()=>{upd();window.scrollTo(window.scrollX,window.scrollY)},200))})();
 if(SITE&&SITE.sw&&'serviceWorker' in navigator){addEventListener('load',()=>{navigator.serviceWorker.register(SITE.sw,{scope:SITE.scope}).catch(()=>{})})}
 setInterval(()=>{if(S.ui.tab==='rec'&&active()){const el=$('#since');if(el&&!el.querySelector('br'))el.textContent=sinceText(active())}},30000);
 
