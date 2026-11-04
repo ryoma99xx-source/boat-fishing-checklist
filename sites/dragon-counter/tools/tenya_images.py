@@ -17,12 +17,17 @@ PUB = os.path.join(SITE, "public"); OUT = os.path.join(PUB, "tenya"); WORK = os.
 sys.path.insert(0, HERE); import catalog_add as ca
 W, H = 480, 360
 
-def bg_mask(im, white=236):
+def bg_mask(im, white=240):
+    """Background = white connected to the border. The white image is eroded before the flood fill so that
+    light anti-aliased edge pixels cannot bridge into white paint on the head, then grown back."""
     a = np.asarray(im).astype(int); nw = (a.min(axis=2) > white)
-    L = Image.fromarray((nw * 255).astype("uint8")).copy(); w, h = L.size
-    for pt in [(0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1), (w // 2, 0), (w // 2, h - 1), (0, h // 2), (w - 1, h // 2)]:
+    L = Image.fromarray((nw * 255).astype("uint8")).copy().filter(ImageFilter.MinFilter(5))  # erode white by 2px
+    w, h = L.size
+    seeds = [(x, y) for x in (0, w // 4, w // 2, 3 * w // 4, w - 1) for y in (0, h // 2, h - 1)]
+    for pt in seeds:
         if L.getpixel(pt) == 255: ImageDraw.floodfill(L, pt, 128)
-    return np.asarray(L) != 128
+    bg = Image.fromarray(((np.asarray(L) == 128) * 255).astype("uint8")).filter(ImageFilter.MaxFilter(5))  # grow back 2px
+    return np.asarray(bg) == 0
 
 def head_box(mask):
     cov = mask.mean(axis=0); thr = 0.35 * cov.max(); cols = np.where(cov > thr)[0]
@@ -31,7 +36,8 @@ def head_box(mask):
         if c != p + 1: runs.append((s, p)); s = c
         p = c
     runs.append((s, p)); x0, x1 = max(runs, key=lambda r: r[1] - r[0])
-    while x1 + 1 < mask.shape[1] and cov[x1 + 1] > 0.12 * cov.max(): x1 += 1
+    while x1 + 1 < mask.shape[1] and cov[x1 + 1] > 0.12 * cov.max(): x1 += 1   # ring / eye side
+    while x0 - 1 >= 0 and cov[x0 - 1] > 0.02 * cov.max(): x0 -= 1              # the nose tapers: keep it
     sub = mask[:, x0:x1 + 1]; ys = np.where(sub.any(axis=1))[0]; return x0, ys.min(), x1, ys.max()
 
 def cut(path):
