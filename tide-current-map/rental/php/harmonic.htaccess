@@ -1,0 +1,29 @@
+# /api/harmonic/: content-hashed tiles of the harmonic current grids.
+# <tile>.gz holds raw gzip bytes that the browser inflates itself (DecompressionStream), so it
+# must go out as application/octet-stream WITHOUT Content-Encoding, exactly like the Worker.
+# Shared hosts often map ".gz" to "Content-Encoding: x-gzip" (AddEncoding). A plain
+# RemoveEncoding at .htaccess level does not undo a server-wide AddEncoding (tested on
+# Apache 2.4.58); inside <FilesMatch> it does, because file sections are merged last.
+# mod_deflate is switched off for these files too (no-gzip).
+# (If a proxy still inflated them, the app copes: it checks the gzip magic bytes first.)
+<FilesMatch "\.(gz|bin)$">
+  <IfModule mod_mime.c>
+    RemoveEncoding .gz .bin
+    ForceType application/octet-stream
+  </IfModule>
+  <IfModule mod_env.c>
+    SetEnv no-gzip 1
+  </IfModule>
+</FilesMatch>
+<IfModule mod_mime.c>
+  AddType application/json .json
+  AddCharset utf-8 .json
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(gz|bin|json)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "^index\.json$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

@@ -1,0 +1,108 @@
+# Deploys 東京湾の潮と流れ (tide-current-map) to the お名前.com rental server over FTPS.
+# Manual only: Actions → "Deploy tide map to rental server" → Run workflow (staging first).
+# See tide-current-map/rental/README.md. The ChatGPT Sites deployment is not touched.
+name: Deploy tide map to rental server
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_ref:
+        description: Branch / tag / commit that holds tide-current-map/app
+        required: true
+        default: claude/funny-dijkstra-n8oyg0
+      target:
+        description: Where to deploy
+        type: choice
+        options: [staging, production]
+        default: staging
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-tide-rental-${{ inputs.target }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out the rental build scripts
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          path: tools
+          persist-credentials: false
+
+      - name: Check out the app (${{ inputs.app_ref }})
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ inputs.app_ref }}
+          path: app-src
+          sparse-checkout: tide-current-map/app
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+
+      - name: Make sure PHP is available (for the comparison test)
+        run: command -v php || (sudo apt-get update && sudo apt-get install -y php-cli)
+
+      - name: Test the app
+        working-directory: app-src/tide-current-map/app
+        run: npm test
+
+      - name: Build the rental site
+        run: node tools/tide-current-map/rental/build-rental.mjs app-src/tide-current-map/app site
+
+      - name: Compare the rental site with the Worker build (php -S)
+        run: node tools/tide-current-map/rental/test/compare.mjs app-src/tide-current-map/app --no-apache
+
+      - name: Write config.php (Google Maps key)
+        env:
+          GOOGLE_MAPS_BROWSER_KEY: ${{ secrets.GOOGLE_MAPS_BROWSER_KEY }}
+          GOOGLE_MAPS_ENABLED: ${{ secrets.GOOGLE_MAPS_ENABLED || vars.GOOGLE_MAPS_ENABLED }}
+        # var_export writes a safe PHP literal; nothing is printed to the log.
+        run: |
+          php -r 'echo "<?php\n// Written by the deploy workflow. Do not commit.\nreturn ", var_export(array("GOOGLE_MAPS_BROWSER_KEY" => (string)getenv("GOOGLE_MAPS_BROWSER_KEY"), "GOOGLE_MAPS_ENABLED" => (string)getenv("GOOGLE_MAPS_ENABLED")), true), ";\n";' > site/api/map-config/config.php
+          php -l site/api/map-config/config.php > /dev/null
+
+      - name: Choose the server directory
+        id: dir
+        env:
+          TARGET: ${{ inputs.target }}
+          DIR_STAGING: ${{ secrets.FTP_DIR_STAGING }}
+          DIR_PRODUCTION: ${{ secrets.FTP_DIR_PRODUCTION }}
+        run: |
+          if [ "$TARGET" = production ]; then d="$DIR_PRODUCTION"; else d="$DIR_STAGING"; fi
+          d="${d%/}/"
+          case "$d" in
+            /|./|"") echo "::error::FTP_DIR_${TARGET^^} is not set (refusing to deploy to the FTP root)"; exit 1;;
+            *..*) echo "::error::FTP_DIR_${TARGET^^} must not contain '..'"; exit 1;;
+          esac
+          if [ -n "$DIR_STAGING" ] && [ -n "$DIR_PRODUCTION" ] && [ "${DIR_STAGING%/}" = "${DIR_PRODUCTION%/}" ]; then
+            echo "::error::FTP_DIR_STAGING and FTP_DIR_PRODUCTION must differ"; exit 1
+          fi
+          echo "server_dir=$d" >> "$GITHUB_OUTPUT"
+
+      # Uploads only changed files. Files are deleted on the server only when an earlier run of
+      # this workflow uploaded them and they no longer exist in the build, and only inside the
+      # target directory. cache/ (PHP file cache) and .well-known/ (SSL validation) are never
+      # touched; config.php is written on every run, so it is never deleted.
+      - name: Deploy over FTPS
+        uses: SamKirkland/FTP-Deploy-Action@a51268f67f6605236975928ae28b0f7e9971d50a # v4.3.6
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./site/
+          server-dir: ${{ steps.dir.outputs.server_dir }}
+          dangerous-clean-slate: false
+          log-level: standard
+          exclude: |
+            **/cache/**
+            **/.well-known/**
+            **/.git*
+            **/.git*/**

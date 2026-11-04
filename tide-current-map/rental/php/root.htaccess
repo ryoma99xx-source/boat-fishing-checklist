@@ -1,0 +1,63 @@
+# 東京湾の潮と流れ — rental server rules (mirrors the headers of the original Worker).
+# Static files are served as-is; /api/current, /api/tide and /api/map-config are
+# api/<name>/index.php and also work without mod_rewrite (via the directory index,
+# after Apache's trailing-slash redirect). The rewrites below avoid that redirect.
+
+Options -Indexes -MultiViews
+DirectoryIndex index.html index.php
+ErrorDocument 404 /_errors/404.php
+ErrorDocument 403 /_errors/404.php
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  <IfModule mod_dir.c>
+    DirectorySlash Off
+  </IfModule>
+  # Error documents (internal redirects) are served as they are.
+  RewriteCond %{ENV:REDIRECT_STATUS} !^$
+  RewriteRule ^ - [END]
+  # Keep free-SSL validation working; hide every other dot file (state files, .htaccess).
+  RewriteRule ^\.well-known/ - [END]
+  RewriteRule (^|/)\. - [R=404,L]
+  # Implementation files: the Worker has no such paths.
+  RewriteRule ^(api/_lib|cache|_errors)(/|$) - [R=404,L]
+  RewriteRule ^api/[^/]+/(index\.php|config\.php)?$ - [R=404,L]
+  RewriteRule ^api/(current|tide|map-config)$ api/$1/index.php [END]
+  # Directories (other than the site root) are 404 in the Worker.
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^.+$ - [R=404,L]
+</IfModule>
+
+# --- content types (identical to the Worker) ---
+<IfModule mod_mime.c>
+  AddType text/javascript .js
+  AddType text/css .css
+  AddType text/html .html
+  AddType application/json .json
+  AddType application/manifest+json .webmanifest
+  AddType image/x-icon .ico
+  AddType image/png .png
+  AddType image/webp .webp
+  AddCharset utf-8 .js .css .html .json .webmanifest
+</IfModule>
+
+# --- cache and security headers (identical to the Worker) ---
+<IfModule mod_headers.c>
+  <FilesMatch "^(index\.html|app\.js|geometry\.js|coverage\.js|chart\.js|tide\.js|clock\.js|google-guard\.js|map-gestures\.js|harmonic\.js|currents\.js|spots\.js|flow-layer\.js|site\.webmanifest)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "^index\.html$">
+    Header set X-Content-Type-Options "nosniff"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+  </FilesMatch>
+  <FilesMatch "^(favicon\.ico|favicon-32\.png|apple-touch-icon\.png|icon-192\.png|icon-512\.png)$">
+    Header set Cache-Control "public, max-age=86400"
+    Header set X-Content-Type-Options "nosniff"
+  </FilesMatch>
+  <FilesMatch "^brand-logo\.png$">
+    Header set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+  <FilesMatch "^(coastal-map\.json|overview-map\.webp|coastal-map\.webp)$">
+    Header set Cache-Control "public, max-age=3600"
+  </FilesMatch>
+</IfModule>
