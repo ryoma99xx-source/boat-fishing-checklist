@@ -235,6 +235,13 @@ nav.tabs a[aria-current="page"]{color:var(--accent);font-weight:700}
   <a href="#more" data-v="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>その他 <span id="inboxN"></span></span></a>
 </nav>
 <button class="chatfab" id="chatFab" aria-label="相談チャットを開く">相談</button>
+<div class="chat-panel" id="ccFb" hidden role="dialog" aria-label="Claude Code に貼る" style="z-index:35">
+  <header><b>Claude Code に貼って送る</b><span style="flex:1"></span><button class="small" id="ccFbClose">閉じる</button></header>
+  <div class="chat-log"><div class="banner" id="ccFbWhy"></div>
+    <ol style="margin:0;padding-left:20px;font-size:14px;line-height:1.8"><li>「依頼文をコピー」を押す</li><li>「Claude Code を開く」で新しいセッションを開く（リポジトリは <b>boat-fishing-checklist</b>、ブランチは <b>claude/relaxed-mayer-1u2nhq</b> を選ぶ）</li><li>入力欄に貼って送る</li><li>終わったら、返ってきた【完了報告】を台帳の「報告」に貼る</li></ol>
+    <div class="actions"><button class="primary" id="ccFbCopy">依頼文をコピー</button><a class="btn" href="https://claude.ai/code" target="_blank" rel="noopener">Claude Code を開く ↗</a></div>
+    <details><summary>依頼文を見る</summary><pre class="out" id="ccFbText"></pre></details></div>
+</div>
 <div class="chat-panel" id="chatPanel" hidden role="dialog" aria-label="相談">
   <header><b>相談</b><span class="next" style="font-size:11.5px;flex:1">台帳を見ながら答えます</span><button class="small" id="chatClear">新しい話題</button><button class="small" id="chatClose" aria-label="閉じる">閉じる</button></header>
   <div class="chat-log" id="chatLog"></div>
@@ -562,7 +569,7 @@ function ccSendBox(f){
   const sess=(f.chats||[]).filter(c=>sessFromUrl(c.url));
   return `<div class="box"><b>Claude Code に直接送る</b><p class="next" style="font-size:13px;margin:4px 0">コピペ不要。送ったあとは機能の画面の「結果を確認」で【完了報告】を取り込めます。</p>
     <label for="ccTo">送り先</label><select id="ccTo"><option value="new">新しいセッションで始める${(f.src||{}).repo?'（'+esc(f.src.repo)+'）':''}</option>${sess.map(c=>`<option value="${esc(sessFromUrl(c.url))}">既存：${esc(c.name||sessFromUrl(c.url))}</option>`).join('')}</select>
-    <div class="actions" style="margin:8px 0 0"><button class="primary" id="ccSend" ${mcp?'':'disabled'}>Claude Code に送る</button></div>
+    <div class="actions" style="margin:8px 0 0"><button class="primary" id="ccSend">Claude Code に送る</button></div>
     ${mcp?'':'<div class="next" style="font-size:12px">この表示では使えません。claude.ai で開いてください。</div>'}<div id="ccSendMsg"></div></div>`}
 function ccStatusBox(f){const c=f.cc,m=ccMsg[f.id];
   return `<div class="box"><b>Claude Code 連携</b> <span class="tag">${esc(c.state||'')}</span>
@@ -570,7 +577,7 @@ function ccStatusBox(f){const c=f.cc,m=ccMsg[f.id];
     <div class="actions" style="margin:8px 0 0"><button class="primary" id="ccCheck" ${mcp?'':'disabled'}>結果を確認</button></div>
     ${m?`<div class="banner" style="margin:6px 0 0">${esc(m.msg)}</div>${m.text?`<details><summary>最後の返答を見る</summary><pre class="out">${esc(m.text)}</pre></details><div class="actions"><button id="ccLog">返答をログに残す</button></div>`:''}`:''}</div>`}
 async function ccSend(){
-  const f=feats.find(x=>x.id===ui.ho.fid),btn=$('#ccSend'),out=$('#ccSendMsg');if(!f||!mcp)return;
+  const f=feats.find(x=>x.id===ui.ho.fid),btn=$('#ccSend'),out=$('#ccSendMsg');if(!f)return;if(!mcp){ccFallback(ui.ho.text,{code:'no_mcp'});return}
   const to=$('#ccTo').value,text=ui.ho.text;btn.disabled=true;out.innerHTML='<div class="banner">送信中…</div>';
   try{let sid=to,isNew=to==='new';
     if(isNew){const s=f.src||{};const input={prompt:text,title:`${siteName(f.site)}｜${f.title}`.slice(0,120),environment_id:ENV_ID};
@@ -583,7 +590,7 @@ async function ccSend(){
     if(f.status==='構想'||f.status==='保留')patch.status='作業中';
     if(isNew&&url)patch.chats=[...(f.chats||[]),{tool:'Claude Code',name:f.title,url}];
     await saveFeat(f.id,patch);toast('Claude Code に送りました');go(f.id)}
-  catch(e){out.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;btn.disabled=false}}
+  catch(e){if(e&&e.code!=='server_unavailable'&&e.code!=='upstream_error')ccFallback(ui.ho.text,e);out.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;btn.disabled=false}}
 async function ccCheck(f){
   const btn=$('#ccCheck');btn.disabled=true;btn.textContent='確認中…';
   try{const sid=f.cc.sessionId;if(!sid)throw{message:'セッションIDが分かりません。セッションを開いて報告をコピーしてください。'};
@@ -777,10 +784,10 @@ function viewTree(){
       ${siteWide.length&&!q?branch('site-wide','サイト全体の機能・修正',siteWide.length,siteWide.map(featLeaf).join(''),''):''}
       ${branch('tools','ツール',tools.length,toolHtml,'',!!q)}
     </ul></details></li></ul></div>
-  <div class="actions"><button id="treeSync" ${mcp?'':'disabled'}>サイトの情報を最新にする</button><span class="next" style="font-size:12px;align-self:center">${smap?`${esc(fmt(smap.fetchedAt))} 時点（公開中の記事・ページ）`:''}</span></div>
+  <div class="actions"><button id="treeSync">サイトの情報を最新にする</button><span class="next" style="font-size:12px;align-self:center">${smap?`${esc(fmt(smap.fetchedAt))} 時点（公開中の記事・ページ）`:''}</span></div>
   <p class="next" style="font-size:12px">記事は普段は畳んであります。台帳の機能に「対象ページのURL」を入れると、その記事の葉に担当と履歴が付きます。作成中の記事は「記事 → 作成中・修正中」に出て、公開後に最新にすると正式な葉になります。</p>`}
 async function treeSync(){
-  const b=$('#treeSync');if(!mcp)return;b.disabled=true;b.textContent='Claude Code に依頼中…';
+  const b=$('#treeSync');b.disabled=true;b.textContent='Claude Code に依頼中…';
   const f={id:'',title:'サイトマップの更新',site:'main',src:{repo:TOOLS_REPO,branch:TOOLS_BRANCH},chats:[]};
   const text=`制作台帳のサイトマップを最新にしてください。\n1. リポジトリ ${TOOLS_REPO} のブランチ ${TOOLS_BRANCH} で python3 wordpress/sitemap/sync.py -o /tmp/sitemap.json を実行（公開ページを読むだけ）\n2. 結果を制作台帳（${location.href.split('#')[0].includes('claude.ai')?location.href.split('#')[0]:'https://claude.ai/artifact/T4YTywvucGbbGSaWmu3VFQ'}）のデータベースに保存：ArtifactData ツールで collection "sitemap"、doc_id "wp" を、file_path に /tmp/sitemap.json を指定して set（既存の版番号を読んで if_version を付ける）\n3. ツールが無い・失敗した場合は、その旨と件数だけを短く報告\n最後に「記事◯件・釣果◯件…で更新しました」と一言だけ報告してください。コードの変更・push はしないこと。`;
   try{await ccDispatch(f,text);toast('Claude Code に更新を頼みました。数分で反映されます')}
@@ -898,7 +905,7 @@ function articlesHtml(){
   const shown=ui.artAll?items:[...drafts,...pubs.slice(0,3)];
   const job=artDoc&&artDoc.job,jm=ccMsg['__art'];
   return `<h2>記事 <span style="font-size:13px;color:var(--muted)">下書き${drafts.length}・公開${pubs.length}${artDoc&&artDoc.fetchedAt?`・${esc(fmt(artDoc.fetchedAt).slice(5))} 時点`:''}</span></h2>
-  <div class="actions" style="margin-top:0"><button class="small" id="artSync" ${mcp?'':'disabled'}>記事の状況を更新</button>${job&&job.state==='作業中'?`<span class="next" style="font-size:12px;align-self:center">更新中（${esc(jm?jm.msg:'Claude Code に依頼済み')}）</span><button class="small" id="artCheck">確認</button>`:''}${pubs.length>3?`<button class="small" id="artAll">${ui.artAll?'下書き中心に戻す':'公開済みをすべて表示'}</button>`:''}</div>
+  <div class="actions" style="margin-top:0"><button class="small" id="artSync">記事の状況を更新</button>${job&&job.state==='作業中'?`<span class="next" style="font-size:12px;align-self:center">更新中（${esc(jm?jm.msg:'Claude Code に依頼済み')}）</span><button class="small" id="artCheck">確認</button>`:''}${pubs.length>3?`<button class="small" id="artAll">${ui.artAll?'下書き中心に戻す':'公開済みをすべて表示'}</button>`:''}</div>
   <div class="list">${shown.length?shown.map(a=>{const td=artTodo(a),open=ui.artOpen===String(a.id);
     return `<div class="card" style="${open?'border-color:var(--accent)':''}"><div class="meta"><span class="pill st-${a.status==='publish'?'公開済み':'確認・公開待ち'}">${esc(ART_ST[a.status]||a.status||'')}</span><span>ID ${esc(a.id)}</span>${a.modified?`<span>更新 ${esc(fmt(a.modified).slice(5))}</span>`:''}${td.length?`<span class="tnew">未記入・要確認 ${td.length}</span>`:''}</div>
       <div class="title">${esc(a.title||'(無題)')}</div>
@@ -917,7 +924,7 @@ function artComposer(a){
       <label><input type="checkbox" id="artPublish" ${ui.artPublish?'checked':''}>${pub?'公開中の記事を直接書き換える（すぐ公開ページに反映）':'仕上げたら公開する'}</label>
     </div>
     ${ui.artPublish&&!pub?`<div class="row2"><div><label for="artSlug">スラッグ（URL の末尾）</label><input id="artSlug" value="${esc(ui.artSlug||a.slug||'')}" placeholder="例：dragon-counter"></div><div><label>トピック</label><div class="checks" id="artTopics">${(cats.length?cats:[{slug:'resources',name:'RESOURCES'}]).map(c=>`<label><input type="checkbox" value="${esc(c.slug)}" ${(ui.artTopics||a.topics||['resources']).includes(c.slug)?'checked':''}>${esc(c.name)}</label>`).join('')}</div></div></div>`:''}
-    <div class="actions"><button class="primary" id="artSend" data-art="${esc(a.id)}" ${mcp?'':'disabled'}>Claude Code に送る</button></div>
+    <div class="actions"><button class="primary" id="artSend" data-art="${esc(a.id)}">Claude Code に送る</button></div>
     ${ui.artPublish?`<div class="banner" style="margin:6px 0 0">${pub?'公開中の記事を書き換えます。送る前に指示をもう一度確認してください。':'下書きを仕上げたあと、そのまま公開します。公開前に確認したい場合はチェックを外し、下書きで確認してから改めて「公開する」と送ってください。'}</div>`:''}
     <div id="artMsg"></div></div>`}
 function artPrompt(a,fid){
@@ -958,7 +965,7 @@ async function sendArticle(a){
     ui.artText='';ui.artOpen=null;ui.artPublish=false;clean('art');toast('Claude Code が記事の修正を始めました');render()}
   catch(e){msg.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;b.disabled=false}}
 async function syncArticles(){
-  const b=$('#artSync');if(!mcp)return;b.disabled=true;b.textContent='依頼中…';
+  const b=$('#artSync');b.disabled=true;b.textContent='依頼中…';
   const text=`cutlassfish.tokyo（WordPress）の記事の状況を取ってきてください。変更は一切しないこと。\n1. リポジトリ ${TOOLS_REPO} のブランチ ${TOOLS_BRANCH} で \`python3 wordpress/article-pack/cfpack.py list --status any --per-page 50\`（オプション名は --help で確認）を実行\n2. 結果を次の形で報告（記事ごとに id, title, status, modified, slug, topics, link, edit_link, preview_link, todo）。todo は未記入・要確認の目印の短い抜き出しの配列：\n【記事状況】\n\`\`\`json\n[ ... ]\n\`\`\`\n3. 失敗したら（記事取り込み API が v1.1 未満で list が無い等）、その理由だけを短く報告。\nWP_USER / WP_APP_PASSWORD の値は表示しないこと。コードの変更・commit・push はしないこと。`;
   try{const sid=await ccDispatch({id:'',title:'記事の状況の取得',site:'main',src:{repo:TOOLS_REPO,branch:TOOLS_BRANCH}},text);
     await write('articles','list',r=>r.set({...(artDoc||{items:[]}),job:{sessionId:sid,url:sid?`https://claude.ai/code/${sid}`:'',sentAt:nowIso(),state:'作業中'}}));toast('記事の状況を取りに行きました。1〜2分で反映されます')}
@@ -1018,11 +1025,17 @@ ${ctx.roles.join('\n')||'（未登録）'}
   catch(e){toast('計画を作れませんでした：'+(e.code||e.message||''))}
   render()}
 function promptFor(fid,target,req,extra){const keep=ui.ho;ui.ho={fid,target,req,rules:null,extra:extra||'',split:false,text:''};const t=buildPrompt();ui.ho=keep;return t}
+function ccFallback(text,e){
+  const box=$('#ccFb');if(!box)return;box.hidden=false;
+  $('#ccFbWhy').textContent=e&&e.code==='no_mcp'?'この画面では、台帳から Claude Code に直接送れません。':'Claude Code に直接送れませんでした（'+(e&&(e.code||e.message)||'')+'）。';
+  $('#ccFbText').textContent=text;
+  $('#ccFbCopy').onclick=()=>{try{navigator.clipboard.writeText(text).then(()=>toast('コピーしました。開いた Claude Code に貼って送ってください'),()=>toast('コピーできませんでした。下の文を長押しでコピーしてください'))}catch(err){}}}
 async function ccDispatch(f,text){
+  if(!mcp){ccFallback(text,{code:'no_mcp'});throw {code:'no_mcp',message:'台帳から直接送れないため、コピーして Claude Code に貼る方法を出しました'}}
   const s=f.src||{};const input={prompt:text,title:`${siteName(f.site)}｜${f.title}`.slice(0,120),environment_id:ENV_ID};
   if(s.repo){input.source_url=`https://github.com/${s.repo}`;if(s.branch)input.source_revision=s.branch}
   else{input.source_url=`https://github.com/${TOOLS_REPO}`;input.source_revision=TOOLS_BRANCH}
-  const p=payloadOf(await mcp.callTool(CCR,'create_session',input));
+  let p;try{p=payloadOf(await mcp.callTool(CCR,'create_session',input))}catch(e){if(e&&e.code!=='server_unavailable'&&e.code!=='upstream_error')ccFallback(text,e);throw e}
   return (p&&(p.session_id||p.id||(p.session&&p.session.id)))||((JSON.stringify(p||'').match(/session_[A-Za-z0-9]+/)||[''])[0])}
 async function startPlan(){
   const pl=ui.plan,b=$('#plStart'),msg=$('#plMsg');b.disabled=true;
@@ -1034,14 +1047,13 @@ async function startPlan(){
     if(!f){fid=newId();await createFeat(fid,{title:pl.title,site:pl.site,kind:pl.kind||'',status:'作業中',owner:auto?'Claude':'自分',next:pl.steps[0].what,logs,plan:pl.steps});}
     else await saveFeat(fid,{status:'作業中',next:pl.steps[0].what,logs,plan:pl.steps});
     f={...(f||{}),id:fid,title:pl.title,site:pl.site,status:'作業中',owner:auto?'Claude':(f&&f.owner)||'自分',logs,src:(f&&f.src)||{},chats:(f&&f.chats)||[],deploy:(f&&f.deploy)||''};
-    if(auto&&mcp){
+    if(auto){
       msg.innerHTML='<div class="banner">Claude Code に送っています…</div>';
       const req=`${ui.cmd}\n\n## 計画（あなたは「Claude Code」と「GPT（API経由）」の工程を担当）\n${planText}${pl.question?`\n\n確認事項：${pl.question}（判断できなければ報告の「確認したいこと」へ）`:''}`;
       const text=promptFor(fid,'Claude Code',req,GPT_RULES.join('\n'));
       const sid=await ccDispatch(f,text);const url=sid?`https://claude.ai/code/${sid}`:'';
       await saveFeat(fid,{cc:{sessionId:sid,url,sentAt:nowIso(),state:'作業中'},chats:url?[...f.chats,{tool:'Claude Code',name:pl.title,url}]:f.chats});
       toast('Claude Code が作業を始めました')}
-    else if(auto&&!mcp){toast('Claude Code に送れない表示です。指示文画面から送ってください');ui.ho={...ui.ho,fid,target:'Claude Code',req:ui.cmd+'\n\n'+planText,rules:null,text:''};ui.plan=null;ui.cmd='';go('handoff');return}
     else{toast('登録しました');}
     ui.plan=null;ui.cmd='';clean('cmd');render()}
   catch(e){msg.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;b.disabled=false}}
@@ -1259,6 +1271,7 @@ async function chatSend(){
   chatBusy=false;chatLive='';chatTools=[];renderChat();chatSave()}
 function chatInit(){
   const panel=$('#chatPanel');
+  $('#ccFbClose').onclick=()=>{$('#ccFb').hidden=true};
   $('#chatFab').onclick=()=>{panel.hidden=false;$('#chatFab').hidden=true;renderChat();setTimeout(()=>$('#chatText').focus(),50)};
   $('#chatClose').onclick=()=>{panel.hidden=true;$('#chatFab').hidden=false};
   $('#chatClear').onclick=async()=>{if(chatBusy)return;chatMsgs=[];renderChat();await chatSave()};
