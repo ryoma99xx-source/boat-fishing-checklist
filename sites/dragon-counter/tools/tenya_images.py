@@ -16,49 +16,61 @@ HERE = os.path.dirname(os.path.abspath(__file__)); SITE = os.path.dirname(HERE)
 PUB = os.path.join(SITE, "public"); OUT = os.path.join(PUB, "tenya"); WORK = os.path.join(SITE, "work", "src")
 sys.path.insert(0, HERE); import catalog_add as ca
 W, H = 480, 360
+try:
+    from scipy import ndimage as _nd
+except ImportError:   # pip install scipy — without it the PIL flood fill below is used (same result, much slower)
+    _nd = None
+
+def label(mask):
+    """Connected components (4-neighbour) of a boolean mask → (labels array, count)."""
+    if _nd is not None: return _nd.label(mask)
+    lab = np.zeros(mask.shape, dtype=np.int32); L = Image.fromarray((mask * 255).astype("uint8")).copy(); n = 0
+    while True:
+        rest = (np.asarray(L) == 255)
+        if not rest.any(): break
+        y, x = np.argwhere(rest)[0]; n += 1; ImageDraw.floodfill(L, (int(x), int(y)), 1 + n % 200)
+        lab[(np.asarray(L) == 1 + n % 200) & (lab == 0)] = n
+    return lab, n
+
+def blobs(mask, limit=None, min_px=50):
+    """Blobs of a mask as boolean arrays, biggest first."""
+    lab, n = label(mask)
+    if n == 0: return []
+    sizes = np.bincount(lab.ravel())[1:]; order = np.argsort(-sizes)
+    out = [lab == (i + 1) for i in order if sizes[i] >= min_px]
+    return out[:limit] if limit else out
 
 def bg_mask(im, white=240, store=False):
-    """Background = white connected to the border. The white image is eroded before the flood fill so that
-    light anti-aliased edge pixels cannot bridge into white paint on the head, then grown back."""
+    """Background = white connected to the border, plus enclosed white regions that are big enough. The white image
+    is eroded before labelling so that light anti-aliased edge pixels cannot bridge into white paint on the head,
+    then grown back. Maker photos: an enclosed region counts only if huge (inside a drawn frame). Store shots: also
+    the inside of a hook holder or a leader loop (a white head is shaded, so its own white patches stay small)."""
     a = np.asarray(im).astype(int); mn = a.min(axis=2)
     if store and (mn >= 254).mean() > 0.5: white = max(white, 251)   # pure white backdrop: a white head is only a little darker
-    nw = (mn > white)
-    L = Image.fromarray((nw * 255).astype("uint8")).copy().filter(ImageFilter.MinFilter(5))  # erode white by 2px
-    w, h = L.size
-    seeds = [(x, y) for x in (0, w // 4, w // 2, 3 * w // 4, w - 1) for y in (0, h // 2, h - 1)]
-    for pt in seeds:
-        if L.getpixel(pt) == 255: ImageDraw.floodfill(L, pt, 128)
-    # enclosed white is background too. Maker photos: only the inside of a drawn frame (huge). Store shots: also the
-    # inside of a hook holder or a leader loop (a white head is shaded, so its own white patches stay below the limit)
-    lim = 0.015 if store else 0.2
-    for _ in range(8):
-        inner = (np.asarray(L) == 255)
-        if inner.sum() < lim * inner.size: break
-        rows = inner.sum(axis=1); y = int(rows.argmax()); xs = np.where(inner[y])[0]
-        M = L.copy(); ImageDraw.floodfill(M, (int(xs[len(xs) // 2]), y), 128)
-        if (np.asarray(M) == 128).sum() - (np.asarray(L) == 128).sum() < lim * inner.size: break   # biggest region is small
-        L = M
-    bg = Image.fromarray(((np.asarray(L) == 128) * 255).astype("uint8")).filter(ImageFilter.MaxFilter(5))  # grow back 2px
-    return np.asarray(bg) == 0
+    nw = np.asarray(Image.fromarray(((mn > white) * 255).astype("uint8")).filter(ImageFilter.MinFilter(5))) > 0   # erode 2px
+    lab, n = label(nw)
+    if n == 0: return np.ones(mn.shape, bool)
+    border = np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]])); border = border[border > 0]
+    sizes = np.bincount(lab.ravel()); lim = (0.015 if store else 0.2) * mn.size
+    big = np.where(sizes >= lim)[0]; big = big[big > 0]
+    keep = np.zeros(n + 1, bool); keep[border] = True; keep[big] = True
+    bg = keep[lab]
+    bg = np.asarray(Image.fromarray((bg * 255).astype("uint8")).filter(ImageFilter.MaxFilter(5))) > 0   # grow back 2px
+    return ~bg
 
 def head_component(mask):
     """Keep only the biggest *solid* blob (the head, with any hook attached to it). Glow insets, captions, loose rig
     parts are separate, smaller blobs and drop out; the hook is trimmed later by head_box. Store photos also carry
     a drawn frame (a huge but hollow outline) and a pasted glow photo (a filled rectangle): both are skipped by
     their fill ratio."""
-    L = Image.fromarray((mask * 255).astype("uint8")).copy(); best = None; val = 100
-    for _ in range(10):
-        arr = np.asarray(L); rest = arr == 255
-        if rest.sum() < 50: break
-        cov = rest.sum(axis=0); x = int(cov.argmax()); ys = np.where(rest[:, x])[0]; y = int(ys[len(ys) // 2])
-        ImageDraw.floodfill(L, (x, y), val); comp = np.asarray(L) == val; val += 1
+    for comp in blobs(mask, 10):
         yy, xx = np.where(comp); bbox = float((yy.max() - yy.min() + 1) * (xx.max() - xx.min() + 1)); fill = comp.sum() / bbox
-        if globals().get("_maker", "") in THICK:
+        if globals().get("_store"):
             if fill < 0.2 and bbox > 0.1 * mask.size: continue          # hollow frame drawn around the product shot
             if fill > 0.9 and comp.sum() > 0.01 * mask.size: continue   # pasted rectangular (glow) photo
             if comp.sum() > 0.01 * mask.size and rectish(comp[yy.min():yy.max() + 1, xx.min():xx.max() + 1]): continue
-        if best is None or comp.sum() > best.sum(): best = comp
-    return best if best is not None else mask
+        return comp
+    return mask
 
 def rectish(c):
     """A pasted photo touches all four sides of its bbox along most of their length; a head touches each at a point."""
@@ -74,61 +86,50 @@ def head_box(mask, maxw=1.7):
     core = mask[:, x0:x1 + 1]; cy = np.where(core.any(axis=1))[0]; hh = max(1, cy.max() - cy.min())
     lim = x0 + int(maxw * hh)                                                     # a head is never much wider than tall
     while x1 + 1 < min(mask.shape[1], lim) and cov[x1 + 1] > 0.12 * cov.max(): x1 += 1   # ring / eye side
-    nose = x0 - int(0.6 * hh) if globals().get("_maker", "") in THICK else 0     # ...but a leader line is not a nose
+    nose = x0 - int(0.6 * hh) if globals().get("_store") else 0                  # ...but a leader line is not a nose
     while x0 - 1 >= max(0, nose) and cov[x0 - 1] > 0.02 * cov.max(): x0 -= 1     # the nose tapers: keep it
     sub = mask[:, x0:x1 + 1]; ys = np.where(sub.any(axis=1))[0]; return x0, ys.min(), x1, ys.max()
 
 MAXW = {"START": 1.25, "DUO": 1.3, "SHIMANO": 1.45}   # START: long mole shank; DUO: glow inset at the right; SHIMANO: hook holder behind the head
-FIXED = {   # store shots are template photos: one composition per product, only the head colour changes → fixed head box
-    ("SHIMANO", "サーベルマスター 船テンヤ"): (50, 235, 280, 368),
-    ("SHIMANO", "サーベルマスター 船テンヤ ゲキハヤ"): (82, 222, 270, 314),
-    ("SHIMANO", "サーベルマスター 船テンヤ β ゲキハヤ"): (105, 252, 295, 354),
+FIXED = {   # store shots are template photos: one composition per store and product, only the head colour changes → fixed head box
+    ("fishing-sagamiya", "サーベルマスター 船テンヤ"): (50, 235, 280, 368),
+    ("fishing-sagamiya", "サーベルマスター 船テンヤ ゲキハヤ"): (82, 222, 270, 314),
+    ("fishing-sagamiya", "サーベルマスター 船テンヤ β ゲキハヤ"): (105, 252, 295, 354),
+    ("f-marunishi", "サーベルマスター 船テンヤ β"): (195, 290, 350, 425),   # 680x680 (logo, SALE and size overlays)
 }
-def cut(path, maker="", product=""):
-    global _maxw, _maker, _fixed; _maxw = MAXW.get(maker, 1.7); _maker = maker; _fixed = FIXED.get((maker, product))
+def cut(path, maker="", product="", store=None):
+    """store: name of the store the photo came from (or True) → a retail shot (frame, badges, glow photo, snap and
+    leader in the picture): the head is found by its eye, or by a fixed box known for that store and product"""
+    global _maxw, _maker, _fixed, _store
+    _maxw = 1.45 if store else MAXW.get(maker, 1.7); _maker = maker; _store = bool(store); _fixed = FIXED.get((store, product)) if store else None
     src = Image.open(path)
     if src.mode in ("RGBA", "LA") or (src.mode == "P" and "transparency" in src.info):
         src = src.convert("RGBA"); al = np.asarray(src)[:, :, 3]
         if (al < 128).mean() > 0.05:   # real transparency: use it as the mask, flatten onto white for the pixels
             bgw = Image.new("RGB", src.size, (255, 255, 255)); bgw.paste(src, mask=src.split()[3]); im = bgw; mask = al >= 128
             return cut_masked(im, mask)
-    im = src.convert("RGB"); mask = bg_mask(im, store=maker in THICK)
+    im = src.convert("RGB"); mask = bg_mask(im, store=store)
     return cut_masked(im, mask)
 
 def drop_dark_inset(im, mask):
     """Some makers paste a round glow-in-the-dark inset over the photo. It is a big, nearly square, almost black
-    blob; a black head is oval and is the main blob, so it is left alone."""
+    blob; a black head is oval and is the main blob, so it is left alone. Store shots paste a rectangular one."""
     a = np.asarray(im).astype(int); dark = (a.max(axis=2) < 40) & mask
     if dark.mean() < 0.03: return mask
-    cov = dark.sum(axis=0); x = int(cov.argmax()); ys = np.where(dark[:, x])[0]
-    if not len(ys): return mask
-    L = Image.fromarray((dark * 255).astype("uint8")).copy(); ImageDraw.floodfill(L, (x, int(ys[len(ys) // 2])), 128)
-    comp = np.asarray(L) == 128; yy, xx = np.where(comp)
-    if not len(yy): return mask
-    hgt, wid = yy.max() - yy.min() + 1, xx.max() - xx.min() + 1; fill = comp.sum() / float(hgt * wid)
-    crop = comp[yy.min():yy.max() + 1, xx.min():xx.max() + 1]
-    rect = globals().get("_maker", "") in THICK and rectish(crop)
-    if comp.sum() > 0.015 * mask.size and ((0.85 <= wid / hgt <= 1.2 and fill > 0.3) or rect):
-        grown = np.asarray(Image.fromarray((comp * 255).astype("uint8")).filter(ImageFilter.MaxFilter(9))) > 0
-        return mask & ~grown
+    for comp in blobs(dark, 3):
+        yy, xx = np.where(comp); hgt, wid = yy.max() - yy.min() + 1, xx.max() - xx.min() + 1; fill = comp.sum() / float(hgt * wid)
+        crop = comp[yy.min():yy.max() + 1, xx.min():xx.max() + 1]
+        rect = globals().get("_store") and rectish(crop)
+        if comp.sum() > 0.015 * mask.size and ((0.85 <= wid / hgt <= 1.2 and fill > 0.3) or rect):
+            grown = np.asarray(Image.fromarray((comp * 255).astype("uint8")).filter(ImageFilter.MaxFilter(9))) > 0
+            mask = mask & ~grown
     return mask
-
-THICK = {"SHIMANO": 0.1}   # store shots: the head is wired to a snap, a leader and a hook holder; keep the thick part only
-def components(mask, limit=10):
-    """Flood-fill blobs of a boolean mask, biggest column first; returns boolean arrays."""
-    L = Image.fromarray((mask * 255).astype("uint8")).copy(); out = []; val = 100
-    for _ in range(limit):
-        rest = np.asarray(L) == 255
-        if rest.sum() < 50: break
-        cov = rest.sum(axis=0); x = int(cov.argmax()); ys = np.where(rest[:, x])[0]
-        ImageDraw.floodfill(L, (x, int(ys[len(ys) // 2])), val); out.append(np.asarray(L) == val); val += 1
-    return out
 
 def find_eye(im, mask):
     """The head is the one part of a store shot with an eye: a small, compact, near-black blob that sits inside the
     object (a caption letter is as dark and compact, but white paper surrounds it). Returns (x, y) or None."""
-    a = np.asarray(im).astype(int); dark = (a.max(axis=2) < 70) & mask; best = None
-    for c in components(dark, 60):
+    a = np.asarray(im).astype(int); dark = (a.max(axis=2) < 70) & mask; best = None; lab = None
+    for c in blobs(dark, 120, min_px=int(0.0002 * mask.size)):
         n = c.sum()
         if not 0.0002 * mask.size <= n <= 0.006 * mask.size: continue
         yy, xx = np.where(c); h, w = yy.max() - yy.min() + 1, xx.max() - xx.min() + 1
@@ -137,8 +138,8 @@ def find_eye(im, mask):
         if mask[ring].mean() < 0.6: continue
         # a letter in a line of small print passes the ring test (the gaps between letters close up): the blob it
         # sits in is a short, wide line, while the head's blob is several times taller than the eye
-        L = Image.fromarray((mask * 255).astype("uint8")).copy(); ImageDraw.floodfill(L, (int(xx[0]), int(yy[0])), 128)
-        by, bx = np.where(np.asarray(L) == 128); bh, bw = by.max() - by.min() + 1, bx.max() - bx.min() + 1
+        if lab is None: lab = label(mask)[0]
+        by, bx = np.where(lab == lab[yy[0], xx[0]]); bh, bw = by.max() - by.min() + 1, bx.max() - bx.min() + 1
         if bh < 3 * max(h, w) or bw > 6 * bh: continue
         if best is None or n > best[0]: best = (n, int(xx.mean()), int(yy.mean()), int(max(h, w)))
     return best[1:] if best else None
@@ -163,13 +164,13 @@ def eye_box(im, mask, frac):
         x0, x1 = max(0, x - int(0.9 * hh)), min(mask.shape[1], x + int(1.6 * hh))
         y0, y1 = max(0, y - int(0.65 * hh)), min(mask.shape[0], y + int(0.65 * hh))
     else:
-        blobs = components(mask); blob = max(blobs, key=lambda c: c.sum()) if blobs else mask
+        bl = blobs(mask, 1); blob = bl[0] if bl else mask
         yy = np.where(blob.any(axis=1))[0]; r = max(2, int(frac * (yy.max() - yy.min() + 1)))
         M = Image.fromarray((blob * 255).astype("uint8"))
         for _ in range(r): M = M.filter(ImageFilter.MinFilter(3))
-        cores = components(np.asarray(M) > 0)
+        cores = blobs(np.asarray(M) > 0, 1)
         if not cores: return None
-        cy, cx = np.where(max(cores, key=lambda c: c.sum()))
+        cy, cx = np.where(cores[0])
         x0, x1 = max(0, cx.min() - int(2.5 * r)), min(mask.shape[1], cx.max() + int(2.5 * r) + 1)
         y0, y1 = max(0, cy.min() - int(1.5 * r)), min(mask.shape[0], cy.max() + int(1.5 * r) + 1)
     box = np.zeros_like(mask); box[y0:y1, x0:x1] = True; return box
@@ -195,8 +196,8 @@ def cut_masked(im, mask):
     mask = drop_dark_inset(im, mask)
     if globals().get("_fixed"):
         x0, y0, x1, y1 = _fixed; box = np.zeros_like(mask); box[y0:y1, x0:x1] = True; mask = mask & box
-    elif globals().get("_maker", "") in THICK:
-        box = eye_box(im, mask, THICK[_maker])
+    elif globals().get("_store"):
+        box = eye_box(im, mask, 0.1)
         if box is not None: mask = mask & box
     mask = head_component(mask)
     x0, y0, x1, y1 = head_box(mask, globals().get('_maxw', 1.7)); pad = int((y1 - y0) * 0.06)
@@ -318,6 +319,8 @@ def export():
     os.makedirs(OUT, exist_ok=True); n = 0; ids = []
     items, _ = catalog(); maker_of = {ca.key(i["m"], i["p"], i["z"], i["c"]): i["m"] for i in items}
     product_of = {ca.key(i["m"], i["p"], i["z"], i["c"]): i["p"] for i in items}
+    retail = os.path.join(SITE, "work", "retail.json")   # ids whose source is a store photo (kept out of git with the sources)
+    stores = {k: (v.get("src") or True) for k, v in json.load(open(retail, encoding="utf-8")).items()} if os.path.exists(retail) else {}
     only = set(sys.argv[2:])
     for f in sorted(os.listdir(WORK)):
         if not f.lower().endswith((".jpg", ".jpeg", ".png", ".webp")): continue
@@ -325,7 +328,7 @@ def export():
         if only and maker_of.get(iid) not in only and iid not in only:
             if os.path.exists(os.path.join(OUT, iid + ".webp")): ids.append(iid)
             continue
-        try: im = cut(os.path.join(WORK, f), maker_of.get(iid, ""), product_of.get(iid, ""))
+        try: im = cut(os.path.join(WORK, f), maker_of.get(iid, ""), product_of.get(iid, ""), stores.get(iid))
         except Exception as e: print("切り出し失敗", f, e); continue
         im.resize((240, 180), Image.LANCZOS).save(os.path.join(OUT, iid + ".webp"), "WEBP", quality=82, method=6); ids.append(iid); n += 1
     json.dump({"v": 1, "ids": sorted(ids)}, open(os.path.join(OUT, "index.json"), "w"))
