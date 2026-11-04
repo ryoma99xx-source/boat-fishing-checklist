@@ -102,6 +102,8 @@ pre.out{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-body);fo
 .msg.tool{align-self:flex-start;font-size:11.5px;color:var(--muted);background:none;padding:0 4px}
 .chat-input{border-top:1px solid var(--line);padding:10px 14px;display:flex;flex-direction:column;gap:6px}
 .chat-input textarea{min-height:60px;max-height:160px}
+.pickrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 2px}
+.logpics{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px} .logpics img{width:84px;height:84px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 .chat-pics{display:flex;gap:6px;flex-wrap:wrap} .chat-pics:empty{display:none}
 .chat-pics span{position:relative;display:inline-block} .chat-pics img{width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 .chat-pics button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;padding:0;border-radius:50%;font-size:12px;line-height:1}
@@ -395,7 +397,7 @@ function renderInner(){
   else if(route.v==='more')v.innerHTML=viewMore();
   else v.innerHTML=viewHome();
   const hn=yourTurn().length;$('#homeN').innerHTML=hn?`<span class="badge-n">${hn}</span>`:'';
-  bind();
+  bind();bindPicks();
   const dlb=$('#dlBackup');if(dlb)dlb.onclick=downloadBackup;
 }
 function notReady(){return !loaded?`<div class="empty">台帳を読み込んでいます…<br>表示されない場合は claude.ai にログインした状態で開き直してください。</div>`:''}
@@ -492,7 +494,7 @@ function viewDetail(){
   <h2>作業ログ</h2>
   <div class="box"><label for="lText">ログを追加</label><textarea id="lText" placeholder="やったこと・決めたこと"></textarea>
     <div class="row2"><div><label for="lBy">誰が</label><select id="lBy">${opts(['自分',...AIS],'自分')}</select></div><div style="align-self:end"><button class="primary" id="lAdd" style="width:100%">記録</button></div></div></div>
-  <div class="box">${logs.length?logs.map(l=>`<div class="log"><div class="when">${esc(fmt(l.at))}・${esc(l.by)}</div>${(l.text||'').length>220?`<details><summary>${esc(l.text.slice(0,120))}…</summary><div class="txt">${esc(l.text)}</div></details>`:`<div class="txt">${esc(l.text)}</div>`}</div>`).join(''):'<div class="next">ログはまだありません。</div>'}</div>
+  <div class="box">${logs.length?logs.map(l=>`<div class="log"><div class="when">${esc(fmt(l.at))}・${esc(l.by)}</div>${(l.text||'').length>220?`<details><summary>${esc(l.text.slice(0,120))}…</summary><div class="txt">${esc(l.text)}</div></details>`:`<div class="txt">${esc(l.text)}</div>`}${l.pics&&l.pics.length?`<div class="logpics">${l.pics.map(p=>`<a href="${esc(p.url||('/_blob/'+p.id))}" target="_blank" rel="noopener"><img src="${esc(p.url||('/_blob/'+p.id))}" alt="添付画像" loading="lazy"></a>`).join('')}</div>`:''}</div>`).join(''):'<div class="next">ログはまだありません。</div>'}</div>
 
   <div class="actions" id="delZone"><button class="danger" id="dDel">この機能を削除</button></div>`}
 
@@ -909,6 +911,7 @@ function viewHome(){
   return `${recentHtml()}
   <h2 data-en="REQUEST">何をしますか</h2>
   <textarea id="cmdText" placeholder="例：潮と流れマップに、釣り場ごとのおすすめ時間帯を表示する機能を足したい&#10;例：今週の釣行をもとに記事を1本作ってWordPressに下書き登録まで">${esc(ui.cmd||'')}</textarea>
+  ${picHtml('cmd')}
   <div class="row2"><div><label for="cmdSite">サイト</label><select id="cmdSite"><option value="">自動で判断</option>${allSites().map(s=>`<option value="${esc(s.k)}" ${ui.cmdSite===s.k?'selected':''}>${esc(s.n)}</option>`).join('')}</select></div>
   <div><label for="cmdKind">種類</label><select id="cmdKind">${opts(kinds,ui.cmdKind||'自動で判断')}</select></div></div>
   <div class="actions"><button class="primary" id="cmdPlan" ${sample?'':'disabled'}>計画を立てる</button>${sample?'':'<span class="next" style="font-size:12px">claude.ai で開くと使えます</span>'}</div>
@@ -944,7 +947,8 @@ function artComposer(a){
   return `<div class="box" style="margin:8px 0 0">
     <label for="artText">どう直す？（普段の言葉で）</label>
     <textarea id="artText" placeholder="例：オーナー記入の1つ目は「去年の秋、釣果を紙にメモしていたら…」という話を入れて。2つ目は使ってみた感想を3行くらいで。大漁のイメージ画像を1枚足して。">${esc(ui.artText||'')}</textarea>
-    <div class="next" style="font-size:12px">キーボードの音声入力（マイクのボタン）で話して入力できます。</div>
+    <div class="next" style="font-size:12px">キーボードの音声入力（マイクのボタン）で話して入力できます。直したい場所のスクリーンショットも付けられます。</div>
+    ${picHtml('art')}
     <div class="checks">
       <label><input type="checkbox" id="artGptImg" ${ui.artGptImg?'checked':''}>GPT に画像を作らせる（OpenAI の API キーが必要・使った分だけ課金）</label>
       <label><input type="checkbox" id="artGptText" ${ui.artGptText?'checked':''}>GPT にも文章の案を出させて、良い方を使う</label>
@@ -982,14 +986,15 @@ async function sendArticle(a){
   if($('#artTopics'))ui.artTopics=[...document.querySelectorAll('#artTopics input:checked')].map(x=>x.value);
   b.disabled=true;msg.innerHTML='<div class="banner">Claude Code に送っています…</div>';
   try{
+    const up=await uploadPicks('art');
     let f=feats.find(x=>String(x.wpId||'')===String(a.id))||feats.find(x=>x.id==='f-wp-'+a.id);const fid=f?f.id:'f-wp-'+a.id;
-    const log={at:nowIso(),by:'自分',text:`記事の修正を依頼：${ui.artText.trim()}${ui.artGptImg?'（GPT画像）':''}${ui.artPublish?'（公開まで）':''}`};
+    const log={at:nowIso(),by:'自分',text:`記事の修正を依頼：${ui.artText.trim()}${ui.artGptImg?'（GPT画像）':''}${ui.artPublish?'（公開まで）':''}${picsLog(up.pics)}`,...(up.pics.length?{pics:up.pics}:{})};
     if(!f){await createFeat(fid,{wpId:a.id,title:a.title||('記事 '+a.id),site:'main',kind:'記事作成',status:'作業中',owner:'Claude',pageUrl:a.status==='publish'?(a.link||''):'',deploy:a.edit_link?('編集：'+a.edit_link):'',logs:[log]});f={id:fid,title:a.title,site:'main',src:{},chats:[],logs:[log]}}
     else{await saveFeat(fid,{status:'作業中',logs:[...(f.logs||[]),log]})}
-    const sid=await ccDispatch({...f,src:{repo:TOOLS_REPO,branch:TOOLS_BRANCH}},artPrompt(a,fid));
+    const sid=await ccDispatch({...f,src:{repo:TOOLS_REPO,branch:TOOLS_BRANCH}},artPrompt(a,fid)+up.text);
     const url=sid?`https://claude.ai/code/${sid}`:'';
     await saveFeat(fid,{cc:{sessionId:sid,url,sentAt:nowIso(),state:'作業中'},owner:'Claude',chats:[...((f.chats)||[]),...(url?[{tool:'Claude Code',name:'記事の修正',url}]:[])]});
-    ui.artText='';ui.artOpen=null;ui.artPublish=false;clean('art');toast('Claude Code が記事の修正を始めました');render()}
+    ui.artText='';ui.artOpen=null;ui.artPublish=false;clearPicks('art');clean('art');toast('Claude Code が記事の修正を始めました');render()}
   catch(e){msg.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;b.disabled=false}}
 async function syncArticles(){
   const b=$('#artSync');b.disabled=true;b.textContent='依頼中…';
@@ -1126,7 +1131,7 @@ ${ctx.roles.join('\n')||'（未登録）'}
 依頼：${text}
 指定サイト：${ui.cmdSite?siteName(ui.cmdSite):'自動で判断'}／種類：${ui.cmdKind}
 次のJSONだけを返してください：{"kind":"機能追加|ツール追加|記事作成|修正|公開|その他","site":"サイトのkey","featureId":"既存の機能に当たるならそのid、無ければ null","title":"機能名（短く）","summary":"何をするかを1〜2文","steps":[{"who":"上の4つのどれか","what":"具体的に何をするか"}],"question":"判断に迷う点があれば1つ、無ければ空文字"}
-手順は2〜6個。自動で進められる工程（Claude Code・GPT）を先に、ChatGPT（手作業）と自分の確認を後ろに置く。`,{modelTier:'complex',cache:false});
+手順は2〜6個。自動で進められる工程（Claude Code・GPT）を先に、ChatGPT（手作業）と自分の確認を後ろに置く。${(picks.cmd||[]).length?`\nオーナーは参考画像を${picks.cmd.length}枚添付している（添付は Claude Code にも渡る）。画像の内容も踏まえて計画する。`:''}`,{modelTier:'complex',cache:false,...((picks.cmd||[]).length&&chatImgCaps?{images:picks.cmd.map(p=>p.file)}:{})});
     if(!pl||!Array.isArray(pl.steps))throw{message:'計画の形が読めませんでした'};
     pl.steps=pl.steps.filter(x=>x&&x.what).map(x=>({who:WHO.includes(x.who)?x.who:'自分',what:String(x.what)}));
     if(!allSites().some(s=>s.k===pl.site))pl.site=ui.cmdSite||'other';
@@ -1149,6 +1154,25 @@ function progressNote(fid){return `
 台帳に進み具合を書けます。ToolSearch で \`select:ArtifactData\` を読み込み、url ${LEDGER_URL} の collection \`progress\`・doc_id \`${fid}\` に set で書く：
 {"msg":"いま何をしているか（40字まで）","at":"<ISO 8601 の現在時刻>","state":"作業中","sessionId":"<このセッションの ID。分かれば>"}
 取り掛かり・半分・終わりの節目で更新する。最後は {"msg":"完了","at":"…","state":"報告","reportText":"<【記事状況】と【完了報告】の全文>"} を書く。set が version の指定を求めたら get で version を読んで if_version を付ける。書けなくても作業は続け、報告は返事にも必ず書く。`}
+// ---- attached images: uploaded to the artifact's asset store; Claude Code fetches them by id ----
+let assetsNs=null;const picks={};
+function picHtml(key){const L=picks[key]||[];
+  return `<div class="pickrow"><div class="chat-pics">${L.map((p,i)=>`<span><img src="${p.url}" alt="添付する画像"><button type="button" data-pickdel="${key}:${i}" aria-label="外す">×</button></span>`).join('')}</div>
+    <label class="btn small">画像を付ける（スクショ可）<input type="file" accept="image/*" multiple data-pick="${key}" hidden></label>${L.length?`<span class="next" style="font-size:12px">${L.length}枚</span>`:''}</div>`}
+function bindPicks(){
+  document.querySelectorAll('input[data-pick]').forEach(inp=>inp.onchange=e=>{const k=inp.dataset.pick;picks[k]=picks[k]||[];[...e.target.files].forEach(f=>{if(picks[k].length<6)picks[k].push({file:f,url:URL.createObjectURL(f)})});e.target.value='';render()});
+  document.querySelectorAll('[data-pickdel]').forEach(b=>b.onclick=()=>{const [k,i]=b.dataset.pickdel.split(':');const x=(picks[k]||[]).splice(+i,1)[0];if(x)URL.revokeObjectURL(x.url);render()})}
+function clearPicks(key){(picks[key]||[]).forEach(x=>URL.revokeObjectURL(x.url));picks[key]=[]}
+async function uploadPicks(key){const L=picks[key]||[];if(!L.length)return {pics:[],text:''};
+  if(!assetsNs)assetsNs=await window.claude.use('assets');if(!assetsNs)throw {code:'no_assets',message:'この表示では画像を上げられません（claude.ai で開いてください）'};
+  const pics=[];for(const p of L){const r=await assetsNs.upload(p.file);pics.push({id:r.id,url:r.url||('/_blob/'+r.id),name:p.file.name||'',bytes:r.sizeBytes||p.file.size})}
+  const text=`
+
+## 添付画像（${pics.length}枚）
+オーナーが参考に付けた画像です。作業の前に必ず見てください。取り出し方：Artifact ツール（action "read"）で url ${LEDGER_URL}、path に下の id を指定すると、画像ファイルがローカルに保存されます（1枚ずつ）。見られなかったときは、報告の「確認したいこと」にその旨を書いてください。
+${pics.map((p,i)=>`- 画像${i+1}：path "${p.id}"${p.name?`（元のファイル名 ${p.name}）`:''}`).join('\n')}`;
+  return {pics,text}}
+const picsLog=pics=>pics&&pics.length?`（画像${pics.length}枚添付）`:'';
 async function relayDispatch(f,text){
   if(f.id&&!/## 進み具合の共有/.test(text))text+=progressNote(f.id);
   const id='q-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
@@ -1173,19 +1197,20 @@ async function startPlan(){
     let f=pl.featureId&&feats.find(x=>x.id===pl.featureId);let fid=f&&f.id;
     const planText=pl.steps.map((x,i)=>`${i+1}. ${x.who}：${x.what}`).join('\n');
     const auto=pl.steps.some(x=>AUTO(x.who));
-    const logs=[...((f&&f.logs)||[]),{at:nowIso(),by:'自分',text:`司令塔からの依頼：${ui.cmd}\n計画：\n${planText}${pl.question?`\n確認：${pl.question}\n答え：${answer}`:''}`}];
+    msg.innerHTML=(picks.cmd||[]).length?'<div class="banner">画像を上げています…</div>':'';const up=await uploadPicks('cmd');
+    const logs=[...((f&&f.logs)||[]),{at:nowIso(),by:'自分',text:`司令塔からの依頼：${ui.cmd}${picsLog(up.pics)}\n計画：\n${planText}${pl.question?`\n確認：${pl.question}\n答え：${answer}`:''}`,...(up.pics.length?{pics:up.pics}:{})}];
     if(!f){fid=newId();await createFeat(fid,{title:pl.title,site:pl.site,kind:pl.kind||'',status:'作業中',owner:auto?'Claude':'自分',next:pl.steps[0].what,logs,plan:pl.steps});}
     else await saveFeat(fid,{status:'作業中',next:pl.steps[0].what,logs,plan:pl.steps});
     f={...(f||{}),id:fid,title:pl.title,site:pl.site,status:'作業中',owner:auto?'Claude':(f&&f.owner)||'自分',logs,src:(f&&f.src)||{},chats:(f&&f.chats)||[],deploy:(f&&f.deploy)||''};
     if(auto){
       msg.innerHTML='<div class="banner">Claude Code に送っています…</div>';
-      const req=`${ui.cmd}\n\n## 計画（あなたは「Claude Code」と「GPT（API経由）」の工程を担当）\n${planText}${pl.question?`\n\n## 確認事項とオーナーの答え\n確認：${pl.question}\n答え：${answer}\n（この答えに沿って進める。それでも判断できない所だけ報告の「確認したいこと」へ）`:''}`;
+      const req=`${ui.cmd}\n\n## 計画（あなたは「Claude Code」と「GPT（API経由）」の工程を担当）\n${planText}${pl.question?`\n\n## 確認事項とオーナーの答え\n確認：${pl.question}\n答え：${answer}\n（この答えに沿って進める。それでも判断できない所だけ報告の「確認したいこと」へ）`:''}${up.text}`;
       const text=promptFor(fid,'Claude Code',req,GPT_RULES.join('\n'));
       const sid=await ccDispatch(f,text);const url=sid?`https://claude.ai/code/${sid}`:'';
       await saveFeat(fid,{cc:{sessionId:sid,url,sentAt:nowIso(),state:'作業中'},chats:url?[...f.chats,{tool:'Claude Code',name:pl.title,url}]:f.chats});
       toast('Claude Code が作業を始めました')}
     else{toast('登録しました');}
-    ui.plan=null;ui.cmd='';ui.planAnswer='';clean('cmd');clean('pl');render()}
+    ui.plan=null;ui.cmd='';ui.planAnswer='';clearPicks('cmd');clean('cmd');clean('pl');render()}
   catch(e){msg.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;b.disabled=false}}
 async function ccFetch(f){const pr=prog[f.id]||{};ccMsg[f.id]={msg:pr.msg||f.cc.relayMsg||'Claude が Claude Code に中継中',text:pr.reportText||f.cc.reportText||'',report:pr.reportText||f.cc.reportText||'',bucket:pr.state==='報告'?'COMPLETED':''}}
 async function downloadBackup(){const b=$('#dlBackup');if(b)b.disabled=true;
