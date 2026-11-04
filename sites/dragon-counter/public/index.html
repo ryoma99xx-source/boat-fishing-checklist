@@ -319,6 +319,9 @@ h2{font-size:18px}
 body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom,0px))}
 .dock{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:6;background:rgba(6,10,17,.96);border-top:1px solid var(--line);
   padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-block:10px 8px;display:flex;flex-direction:column;gap:8px}
+.timg{flex:none;object-fit:contain;border-radius:6px;background:rgba(255,255,255,.05)}
+.timg.row{width:64px;height:48px} .timg.chip{width:40px;height:30px;margin-right:2px}
+.timg.dock{position:absolute;right:8px;bottom:8px;width:56px;height:42px;pointer-events:none}
 .dk-row{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;max-width:600px;margin:0 auto;width:100%;scroll-snap-type:x proximity}
 .dk-row::-webkit-scrollbar{display:none}
 .dk-t{position:relative;flex:0 0 calc(50% - 5px);min-height:92px;border-radius:16px;border:2px solid var(--teal);background:var(--surface);color:var(--ink);text-align:left;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;gap:2px;scroll-snap-align:start;box-shadow:0 3px 0 rgba(0,0,0,.4)}
@@ -799,6 +802,10 @@ function tenyaLabel(id){const t=tenyaOf(id);if(!t)return null;return tenyaShort(
 function tenyaFull(id){const t=tenyaOf(id);if(!t)return '';const a=tenyaMain(t),b=tenyaSub(t);return b?`${b} ${a}`:a}
 const isNewTenya=t=>t&&t.a&&(Date.now()-new Date(t.a).getTime())<60*864e5;
 function tenyaBadges(t){const b=[];if(isNewTenya(t))b.push('<span class="tb new">新商品</span>');if(t.s)b.push(`<span class="tb">${esc(t.s)}</span>`);if(t.h)b.push('<span class="tb">替えヘッド</span>');if(t.custom)b.push('<span class="tb own">自分で追加</span>');else if(t.id&&!CAT.by[t.id])b.push('<span class="tb">カタログから外れました（控えから表示）</span>');return b.join('')}
+/* head photos: public/tenya/<id>.webp, listed in tenya/index.json (derived from maker photos, see tools/tenya_images.py) */
+let TIMG=new Set();
+if(SITE){fetch('/tenya/index.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&Array.isArray(j.ids)){TIMG=new Set(j.ids);if(typeof render==='function'&&$('#sheet').hidden)render()}}).catch(()=>{})}
+const timg=(id,cls)=>TIMG.has(id)?`<img class="timg ${cls||''}" src="/tenya/${id}.webp" alt="" loading="lazy" decoding="async">`:'';
 const TEN=()=>S.cfg.tenya;
 const myTenya=()=>TEN().mine.filter(id=>tenyaOf(id));
 const qtyOf=id=>Math.max(1,+((TEN().qty||{})[id])||1); // 所有している個数
@@ -1224,7 +1231,7 @@ function dockHTML(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);let main='';
   if(isTenya(sp,g)){const ids=dayTenya(tr,sp);const c=catchesOf(tr,sp);
     const dupe=id=>{const t=tenyaOf(id);return ids.some(o=>o!==id&&tenyaOf(o)&&tenyaShort(tenyaOf(o))===tenyaShort(t))};
     main=ids.map(id=>{const t=tenyaOf(id);const k=c.filter(e=>e.rig===id).length;
-      return `<button class="dk-t ${id===g.rig?'cur':''}" data-act="catchT" data-rig="${id}" aria-label="${esc(tenyaFull(id))}で釣れた"><span class="dk-a">${esc(t.name?'':tenyaAbbr(t))}${dupe(id)&&t.z?` ${t.z}号`:''}</span><span class="dk-c">${esc(t.name||t.c||'')}</span><span class="dk-n">${k||''}</span></button>`}).join('')
+      return `<button class="dk-t ${id===g.rig?'cur':''}" data-act="catchT" data-rig="${id}" aria-label="${esc(tenyaFull(id))}で釣れた">${timg(id,'dock')}<span class="dk-a">${esc(t.name?'':tenyaAbbr(t))}${dupe(id)&&t.z?` ${t.z}号`:''}</span><span class="dk-c">${esc(t.name||t.c||'')}</span><span class="dk-n">${k||''}</span></button>`}).join('')
       +`<button class="dk-t dk-plus" data-act="tenyaOther"><span class="dk-c">${ids.length?'ほかのテンヤ':'テンヤを選ぶ'}</span><span class="dk-a">＋1</span></button>`;
     if(!ids.length)main=''}
   else{const vs=s.variants.filter(v=>!v.hidden);main=vs.map(v=>`<button class="dk-t" data-act="catch" data-v="${v.id}"><span class="dk-a">${esc(s.name)}</span><span class="dk-c">${esc(vs.length>1?v.short||v.name:'釣れた')}</span><span class="dk-n">${catchesOf(tr,sp).filter(e=>e.v===v.id).length||''}</span></button>`).join('')}
@@ -1478,7 +1485,7 @@ function listCard(sp,k,title,ph){const s=spOf(sp);return `<div class="card"><h2>
    ${k==='variants'&&i>0?`<button class="btn sm" data-act="vMain" data-sp="${sp}" data-id="${g.id}">大きいボタンに</button>`:''}${k==='variants'&&i===0?'<span class="badge">大きいボタン</span>':''}
    <button class="btn sm" data-act="itemHide" data-sp="${sp}" data-kind="${k}" data-id="${g.id}">${g.hidden?'表示する':'隠す'}</button></div>`).join('')}
   <div class="grow"><input type="text" id="add-${sp}-${k}" placeholder="${esc(ph)}"><button class="btn sm primary" data-act="itemAdd" data-sp="${sp}" data-kind="${k}">追加</button></div></div>`}
-function tchip(id,act,extra){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}${act?`<button class="tx" data-act="${act}" data-id="${id}"${extra||''} aria-label="外す">×</button>`:''}</span>`}
+function tchip(id,act,extra){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip">${timg(id,'chip')}<b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}${act?`<button class="tx" data-act="${act}" data-id="${id}"${extra||''} aria-label="外す">×</button>`:''}</span>`}
 function tenyaSectionHTML(){const T=TEN();
   return `<div class="card" id="tenyaSec"><h2>① 所有テンヤ（${myTenya().length}種・${ownTotal()}個）</h2><p class="muted">自分が持っているテンヤ（所有テンヤ）に、カタログ（${CAT.list.length}件${CAT.ver?'・'+esc(CAT.ver)+'時点':''}）からチェックを付けます。この中から、下の「その日のリスト」を作ります。${SITE?'カタログには今販売されている多くのテンヤが入っていて、月に一度更新する予定です（更新しても所有テンヤはそのまま残ります）。':''}</p>
     <div class="tlist">${myTenya().map(id=>mineChip(id)).join('')||'<span class="muted">まだありません</span>'}</div>
@@ -1492,7 +1499,7 @@ function tenyaSectionHTML(){const T=TEN();
     <div class="fold-b">${ctFieldsHTML({})}
     <button class="btn sm primary" data-act="customAdd">登録する</button>
     ${T.custom.filter(x=>!x.hidden).length?`<div class="tlist">${T.custom.filter(x=>!x.hidden).map(x=>ownChip(x.id)).join('')}</div>`:''}</div></details>`}
-function mineChip(id){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip mine ${t.custom?'own':''}"><span class="mc-n"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}</span>${qtyHTML(id)}<button class="tx" data-act="mineDel" data-id="${id}" aria-label="所有から外す">×</button></span>`}
+function mineChip(id){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip mine ${t.custom?'own':''}">${timg(id,'chip')}<span class="mc-n"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}</span>${qtyHTML(id)}<button class="tx" data-act="mineDel" data-id="${id}" aria-label="所有から外す">×</button></span>`}
 function ctFieldsHTML(t){return `<div class="grid2"><label class="field"><span>メーカー</span><input type="text" id="ct-m" value="${esc(t.m||'')}" placeholder="例：DAIWA"></label><label class="field"><span>製品名</span><input type="text" id="ct-p" value="${esc(t.p||'')}" placeholder="例：船タチウオテンヤSS"></label></div>
     <div class="grid2"><label class="field"><span>号数</span><input type="number" inputmode="numeric" id="ct-z" value="${esc(t.z||'')}" placeholder="40"></label><label class="field"><span>カラー</span><input type="text" id="ct-c" value="${esc(t.c||'')}" placeholder="例：パープルグロー"></label></div>`}
 function ownChip(id){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip own"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}<button class="tx2" data-act="ctEdit" data-id="${id}">編集</button><button class="tx" data-act="customDel" data-id="${id}" aria-label="消す">×</button></span>`}
@@ -1515,7 +1522,7 @@ function tbRows(){const T=TEN();const mine=new Set(myTenya());const inSet=tb.mod
     list=list.filter(t=>{const h=normQ(`${t.m} ${MK[t.m]||''} ${t.p} ${tenyaAbbr(t)} ${t.z}号 ${t.c} ${t.name||''} ${t.s||''} ${t.custom?'自分で追加':''}`),h2=h.replace(/[\s・･\-]/g,'');return terms.every(q=>{const n=q.replace(/号$/,'');if(/^\d+$/.test(n))return String(t.z)===n; return h.includes(q)||h2.includes(q.replace(/[・･\-]/g,''))})})}
   list.sort((a,b)=>(a.z||0)-(b.z||0)||String(a.m).localeCompare(String(b.m))||String(a.p).localeCompare(String(b.p))||String(a.c).localeCompare(String(b.c)));
   const n=list.length;list=list.slice(0,300);
-  const rows=list.map(t=>{const lbl=`<span class="tl"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}<span class="tbs">${tenyaBadges(t)}</span></span>`;
+  const rows=list.map(t=>{const lbl=`${timg(t.id,'row')}<span class="tl"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}<span class="tbs">${tenyaBadges(t)}</span></span>`;
     if(tb.mode==='catch')return `<button class="trow pick" data-act="tbCatch" data-id="${t.id}">${lbl}<span class="go">これで釣れた</span></button>`;
     if(tb.mode==='cur')return `<button class="trow pick" data-act="tbCur" data-id="${t.id}">${lbl}<span class="go">これを使う</span></button>`;
     const on=tb.mode==='set'?inSet.has(t.id):mine.has(t.id);
