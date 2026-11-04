@@ -317,7 +317,11 @@ h2{font-size:18px}
 .fd-ic svg{display:block;color:var(--ink)}
 .feed-foot{display:flex;flex-direction:column;gap:12px;margin-top:6px}
 body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom,0px))}
-.dock{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:6;background:rgba(6,10,17,.96);border-top:1px solid var(--line);
+.dock{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:6;background:rgba(6,10,17,.96);
+  /* no hard line: the page fades out above the dock instead of being cut */
+  border-top:0;}
+.dock::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:28px;background:linear-gradient(to bottom,rgba(6,10,17,0),rgba(6,10,17,.96));pointer-events:none}
+.dock{
   padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-block:10px 8px;display:flex;flex-direction:column;gap:8px}
 .tbgh{display:flex;align-items:center;gap:8px;width:100%;margin:14px 0 2px;padding:10px 8px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font-weight:800;font-size:17px;text-align:left;font-family:inherit}
 .tbgh i{font-style:normal;color:var(--teal);width:14px} .tbgh small{margin-left:auto;font-weight:600;color:var(--muted);font-size:13px}
@@ -406,7 +410,10 @@ body.has-dock .sync span{display:none}
 .td-tenya{flex:1;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;align-items:center;text-align:left;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-width:0;min-height:62px}
 .td-tenya span{grid-column:1;font-size:12px;color:var(--muted)}
 .td-tenya b{grid-column:1;font-size:16px;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-all}
-.td-tenya i{grid-column:2;grid-row:1/3;font-style:normal;color:var(--teal);font-size:18px;padding-left:6px}
+.td-tenya i{grid-column:3;grid-row:1/3;font-style:normal;color:var(--teal);font-size:18px;padding-left:6px}
+/* with a photo: row 1 = small photo + label, row 2 = the name across the full width (the box is narrow) */
+.td-tenya.has-img{grid-template-columns:auto 1fr auto;column-gap:6px;row-gap:2px} .timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}
+.td-tenya.has-img span{grid-column:2;grid-row:1;white-space:nowrap;align-self:center} .td-tenya.has-img b{grid-column:1/3;grid-row:2;font-size:15px}
 .td-dragon{flex:1;display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-height:62px;cursor:pointer}
 .td-dragon input{width:24px;height:24px;flex:none;accent-color:var(--amber)}
 .td-dragon span{display:flex;flex-direction:column;line-height:1.25;min-width:0}
@@ -1259,7 +1266,7 @@ function viewActive(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);const c=catc
    <section class="today" aria-label="本日の釣果">
     <div class="td-top"><span class="td-h">本日の釣果${isTairyo(tr.date)?tairyoTag():''}</span><span class="td-n"><b id="cnum">${c.length}</b>${esc(s.unit)}${SOLO?'':`<small>${esc(s.name)}</small>`}${sp==='tachiuo'?`<small class="td-dn"><i class="ic ic-dragon"></i>ドラゴン <b>${nd}</b></small>`:''}</span></div>
     <div class="td-row"><button class="td-catch" data-act="catchCur"><b>釣れた</b><small>＋1</small></button>
-     <div class="td-side"><button class="td-tenya" data-act="${ten?'curTenya':'rigPick'}"><span>${ten?'使用テンヤ':'仕掛け'}</span><b>${esc(curRigLabel(tr))}</b><i aria-hidden="true">▾</i></button>
+     <div class="td-side"><button class="td-tenya ${ten&&curGear(tr).rig&&TIMG.has(curGear(tr).rig)?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):''}<span>${ten?'使用テンヤ':'仕掛け'}</span><b>${esc(curRigLabel(tr))}</b><i aria-hidden="true">▾</i></button>
       ${sp==='tachiuo'?`<label class="td-dragon ${dragonNext?'on':''}"><input type="checkbox" id="dragonChk" ${dragonNext?'checked':''}><i class="ic ic-dragon lg"></i><span><b>ドラゴン</b><small>指5以上</small></span></label>`:''}</div></div>
    </section>
    <div class="panel tidepanel">${tideCardSVG(tr)}</div>
