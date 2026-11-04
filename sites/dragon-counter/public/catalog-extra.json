@@ -1,5 +1,1646 @@
 {
- "updated": "2026-11-03",
+ "updated": "2026-11-04",
  "note": "カタログに後から足すテンヤ。月1回ここに追記する（指示書の「毎月の新商品追加」を参照）",
- "items": []
+ "items": [
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 30,
+   "c": "グロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 30,
+   "c": "ゼブラグローチャート",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 30,
+   "c": "ゼブラパープル",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 30,
+   "c": "Nブラック",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 30,
+   "c": "フラッシュゴールド",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 30,
+   "c": "フラッシュグリキン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 30,
+   "c": "Nアジ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 30,
+   "c": "Nイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 30,
+   "c": "Nアカキン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 30,
+   "c": "Nパープル",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 30,
+   "c": "スーパー夜光",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 30,
+   "c": "紫ゼブラ夜光K",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 30,
+   "c": "ピンクゴールド",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 30,
+   "c": "Aイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 30,
+   "c": "Aアカキン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 30,
+   "c": "Aブラック",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 30,
+   "c": "Aパープル",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 30,
+   "c": "フラッシュグリキン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 30,
+   "c": "ブルーグロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 30,
+   "c": "ゼブラチャート",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ ゲキハヤ",
+   "u": "https://fish.shimano.com/ja-JP/product/othergears/hooks_rigs_sinkers/tachiuo/a155f00000c53rjqar_p.html",
+   "h": false,
+   "z": 30,
+   "c": "スーパー夜光",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ ゲキハヤ",
+   "u": "https://fish.shimano.com/ja-JP/product/othergears/hooks_rigs_sinkers/tachiuo/a155f00000c53rjqar_p.html",
+   "h": false,
+   "z": 30,
+   "c": "紫ゼブラ夜光",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ ゲキハヤ",
+   "u": "https://fish.shimano.com/ja-JP/product/othergears/hooks_rigs_sinkers/tachiuo/a155f00000c53rjqar_p.html",
+   "h": false,
+   "z": 30,
+   "c": "タチウオシルバー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ ゲキハヤ",
+   "u": "https://fish.shimano.com/ja-JP/product/othergears/hooks_rigs_sinkers/tachiuo/a155f00000c53rjqar_p.html",
+   "h": false,
+   "z": 30,
+   "c": "フラッシュゴールド",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ ゲキハヤ",
+   "u": "https://fish.shimano.com/ja-JP/product/othergears/hooks_rigs_sinkers/tachiuo/a155f00000c53rjqar_p.html",
+   "h": false,
+   "z": 30,
+   "c": "フラッシュピンク夜光",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ ゲキハヤ",
+   "u": "https://fish.shimano.com/ja-JP/product/othergears/hooks_rigs_sinkers/tachiuo/a155f00000c53rjqar_p.html",
+   "h": false,
+   "z": 30,
+   "c": "紫ゼブラ夜光K",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β ゲキハヤ",
+   "u": "https://fish.shimano.com/ja-JP/product/othergears/hooks_rigs_sinkers/tachiuo/a155f00000c53syqar_p.html",
+   "h": false,
+   "z": 30,
+   "c": "スーパー夜光",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β ゲキハヤ",
+   "u": "https://fish.shimano.com/ja-JP/product/othergears/hooks_rigs_sinkers/tachiuo/a155f00000c53syqar_p.html",
+   "h": false,
+   "z": 30,
+   "c": "紫ゼブラ夜光K",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β ゲキハヤ",
+   "u": "https://fish.shimano.com/ja-JP/product/othergears/hooks_rigs_sinkers/tachiuo/a155f00000c53syqar_p.html",
+   "h": false,
+   "z": 30,
+   "c": "ピンクゴールド",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 30,
+   "c": "マイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 30,
+   "c": "夜光シルバーフレーク",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 30,
+   "c": "紫ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 30,
+   "c": "ケイムラ赤金",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 30,
+   "c": "ケイムラ白夜光",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 30,
+   "c": "夜光シルバーフレーク",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 30,
+   "c": "紫ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 30,
+   "c": "赤金ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "OWNER",
+   "p": "掛獲船太刀魚テンヤ",
+   "u": "https://www.owner.co.jp/products/40194/",
+   "h": false,
+   "z": 40,
+   "c": "パチャゴ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "OWNER",
+   "p": "掛獲船太刀魚テンヤ",
+   "u": "https://www.owner.co.jp/products/40194/",
+   "h": false,
+   "z": 40,
+   "c": "腹黒ピンク",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "OWNER",
+   "p": "掛獲船太刀魚テンヤ",
+   "u": "https://www.owner.co.jp/products/40194/",
+   "h": false,
+   "z": 40,
+   "c": "ラテングリーン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "グロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "ゼブラグローチャート",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "ゼブラパープル",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "Nブラック",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "フラッシュゴールド",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "フラッシュグリキン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "Nアジ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "Nイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "Nアカキン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "Nパープル",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "インビジブルブルー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "イエローグリーン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 40,
+   "c": "パッションイエロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 40,
+   "c": "スーパー夜光",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 40,
+   "c": "紫ゼブラ夜光K",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 40,
+   "c": "タチウオシルバー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 40,
+   "c": "イワシ微夜光",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 40,
+   "c": "ピンクゴールド",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 40,
+   "c": "Aイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 40,
+   "c": "Aアカキン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 40,
+   "c": "Aブラック",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 40,
+   "c": "Aパープル",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 40,
+   "c": "フラッシュグリキン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 40,
+   "c": "ブルーグロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 40,
+   "c": "ゼブラチャート",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "マイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "夜光シルバーフレーク",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "紫ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "ケイムラ赤金",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "ケイムラ白夜光",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "イエローゼブラ赤エラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "ゴールド赤ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "ハワイアングロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "マットブラックサンライズ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 40,
+   "c": "夜光シルバーフレーク",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 40,
+   "c": "紫ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 40,
+   "c": "赤金ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS MH ミドルフック（旧型）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "夜光シルバーフレーク",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS MH ミドルフック（旧型）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "紫ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS MH ミドルフック（旧型）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "不夜城",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS 早掛スペシャル（旧型）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "マイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS 早掛スペシャル（旧型）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "夜光シルバーフレーク",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS 早掛スペシャル（旧型）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 40,
+   "c": "紫ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS 速攻SP（旧型）",
+   "u": "",
+   "h": false,
+   "z": 40,
+   "c": "ゴージャスゴールド",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS 速攻SP（旧型）",
+   "u": "",
+   "h": false,
+   "z": 40,
+   "c": "ゴージャスシルバー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS 速攻SP（旧型）",
+   "u": "",
+   "h": false,
+   "z": 40,
+   "c": "ゴールデンオレンジ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS 速攻SP（旧型）",
+   "u": "",
+   "h": false,
+   "z": 40,
+   "c": "ブルピンイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG（旧型）",
+   "u": "https://www.daiwa.com/jp/product/support/qr/k-tachiuotenya_ss_ag",
+   "h": false,
+   "z": 40,
+   "c": "ルミノーバグリーングロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG（旧型）",
+   "u": "https://www.daiwa.com/jp/product/support/qr/k-tachiuotenya_ss_ag",
+   "h": false,
+   "z": 40,
+   "c": "明滅ルミノーバブルーグロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG（旧型）",
+   "u": "https://www.daiwa.com/jp/product/support/qr/k-tachiuotenya_ss_ag",
+   "h": false,
+   "z": 40,
+   "c": "紫ゼブラ ルミノーバブルーグロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG（旧型）",
+   "u": "https://www.daiwa.com/jp/product/support/qr/k-tachiuotenya_ss_ag",
+   "h": false,
+   "z": 40,
+   "c": "黄ゼブラ ルミノーバグリーングロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG（旧型）",
+   "u": "https://www.daiwa.com/jp/product/support/qr/k-tachiuotenya_ss_ag",
+   "h": false,
+   "z": 40,
+   "c": "アデルマイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG（旧型）",
+   "u": "https://www.daiwa.com/jp/product/support/qr/k-tachiuotenya_ss_ag",
+   "h": false,
+   "z": 40,
+   "c": "アデルケイムラ赤金",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "船タチウオテンヤSS TG 早掛けショート",
+   "u": "https://www.daiwa.com/jp/product/dvc7774",
+   "h": false,
+   "z": 40,
+   "c": "フルグリーングロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "船タチウオテンヤSS TG 早掛けショート",
+   "u": "https://www.daiwa.com/jp/product/dvc7774",
+   "h": false,
+   "z": 40,
+   "c": "フルブルーグローイエローゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "船タチウオテンヤSS TG 早掛けショート",
+   "u": "https://www.daiwa.com/jp/product/dvc7774",
+   "h": false,
+   "z": 40,
+   "c": "紫グリーングローゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "船タチウオテンヤSS TG 早掛けショート",
+   "u": "https://www.daiwa.com/jp/product/dvc7774",
+   "h": false,
+   "z": 40,
+   "c": "ホロマイワシブルーグローゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "船タチウオテンヤSS TG 早掛けショート",
+   "u": "https://www.daiwa.com/jp/product/dvc7774",
+   "h": false,
+   "z": 40,
+   "c": "Kホロ赤イエローグローゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "船タチウオテンヤSS TG 早掛けショート",
+   "u": "https://www.daiwa.com/jp/product/dvc7774",
+   "h": false,
+   "z": 40,
+   "c": "黄グリーンGZ・グリーンG TT",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "OWNER",
+   "p": "掛獲船太刀魚テンヤ",
+   "u": "https://www.owner.co.jp/products/40194/",
+   "h": false,
+   "z": 50,
+   "c": "パチャゴ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "OWNER",
+   "p": "掛獲船太刀魚テンヤ",
+   "u": "https://www.owner.co.jp/products/40194/",
+   "h": false,
+   "z": 50,
+   "c": "腹黒ピンク",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "OWNER",
+   "p": "掛獲船太刀魚テンヤ",
+   "u": "https://www.owner.co.jp/products/40194/",
+   "h": false,
+   "z": 50,
+   "c": "ラテングリーン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "グロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "ゼブラグローチャート",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "ゼブラパープル",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "Nブラック",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "フラッシュゴールド",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "フラッシュグリキン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "Nアジ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "Nイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "Nアカキン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "Nパープル",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "インビジブルブルー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "イエローグリーン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/220831/index.html",
+   "h": false,
+   "z": 50,
+   "c": "パッションイエロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 50,
+   "c": "スーパー夜光",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 50,
+   "c": "紫ゼブラ夜光K",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 50,
+   "c": "タチウオシルバー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 50,
+   "c": "イワシ微夜光",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 50,
+   "c": "ピンクゴールド",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 50,
+   "c": "Aイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 50,
+   "c": "Aアカキン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 50,
+   "c": "Aブラック",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 50,
+   "c": "Aパープル",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 50,
+   "c": "フラッシュグリキン",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 50,
+   "c": "ブルーグロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "SHIMANO",
+   "p": "サーベルマスター 船テンヤ β",
+   "u": "https://fish.shimano.com/ja-JP/content/fishingstyle/article/fun/230324/index.html",
+   "h": false,
+   "z": 50,
+   "c": "ゼブラチャート",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 50,
+   "c": "マイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 50,
+   "c": "夜光シルバーフレーク",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 50,
+   "c": "紫ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 50,
+   "c": "ケイムラ赤金",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 50,
+   "c": "ケイムラ白夜光",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 50,
+   "c": "イエローゼブラ赤エラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 50,
+   "c": "ゴールド赤ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 50,
+   "c": "ハワイアングロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS（旧型・シングル）",
+   "u": "https://daiwa-funesaizensen.com/blog-takatuki/2020/08/22/2774/",
+   "h": false,
+   "z": 50,
+   "c": "マットブラックサンライズ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "イエローゼブラ赤エラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "ゴールド赤ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "ハワイアングロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "マイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "マットブラックサンライズ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "夜光シルバーフレーク",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS ダブル（旧型）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "紫ゼブラ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS 速攻SP（旧型）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "ゴージャスゴールド",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS 速攻SP（旧型）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "ゴージャスシルバー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS 速攻SP（旧型）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "ゴールデンオレンジ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS 速攻SP（旧型）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "ブルピンイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG（旧型）",
+   "u": "https://www.daiwa.com/jp/product/support/qr/k-tachiuotenya_ss_ag",
+   "h": false,
+   "z": 50,
+   "c": "ルミノーバグリーングロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG（旧型）",
+   "u": "https://www.daiwa.com/jp/product/support/qr/k-tachiuotenya_ss_ag",
+   "h": false,
+   "z": 50,
+   "c": "明滅ルミノーバブルーグロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG（旧型）",
+   "u": "https://www.daiwa.com/jp/product/support/qr/k-tachiuotenya_ss_ag",
+   "h": false,
+   "z": 50,
+   "c": "紫ゼブラ ルミノーバブルーグロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG（旧型）",
+   "u": "https://www.daiwa.com/jp/product/support/qr/k-tachiuotenya_ss_ag",
+   "h": false,
+   "z": 50,
+   "c": "黄ゼブラ ルミノーバグリーングロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG（旧型）",
+   "u": "https://www.daiwa.com/jp/product/support/qr/k-tachiuotenya_ss_ag",
+   "h": false,
+   "z": 50,
+   "c": "アデルマイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG（旧型）",
+   "u": "https://www.daiwa.com/jp/product/support/qr/k-tachiuotenya_ss_ag",
+   "h": false,
+   "z": 50,
+   "c": "アデルケイムラ赤金",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG W（旧型・ダブル）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "ルミノーバグリーングロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG W（旧型・ダブル）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "紫ゼブラ ルミノーバブルーグロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG W（旧型・ダブル）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "黄ゼブラ ルミノーバグリーングロー",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG W（旧型・ダブル）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "アデルマイワシ",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "快適船タチウオテンヤSS AG W（旧型・ダブル）",
+   "u": "",
+   "h": false,
+   "z": 50,
+   "c": "アデルケイムラ赤金",
+   "s": "",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "船タチウオテンヤ Rhythm 替えヘッド",
+   "u": "https://www.daiwa.com/jp/product/qsw8oko",
+   "h": true,
+   "z": 40,
+   "c": "ミドキンゼブラ",
+   "s": "発売予定",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "船タチウオテンヤ Rhythm 替えヘッド",
+   "u": "https://www.daiwa.com/jp/product/qsw8oko",
+   "h": true,
+   "z": 40,
+   "c": "マットレモンオレンジゼブラ",
+   "s": "発売予定",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "船タチウオテンヤ Rhythm 替えヘッド",
+   "u": "https://www.daiwa.com/jp/product/qsw8oko",
+   "h": true,
+   "z": 40,
+   "c": "不夜城",
+   "s": "発売予定",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "船タチウオテンヤ Rhythm 替えヘッド",
+   "u": "https://www.daiwa.com/jp/product/qsw8oko",
+   "h": true,
+   "z": 50,
+   "c": "ミドキンゼブラ",
+   "s": "発売予定",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "船タチウオテンヤ Rhythm 替えヘッド",
+   "u": "https://www.daiwa.com/jp/product/qsw8oko",
+   "h": true,
+   "z": 50,
+   "c": "マットレモンオレンジゼブラ",
+   "s": "発売予定",
+   "a": "2026-11-04"
+  },
+  {
+   "m": "DAIWA",
+   "p": "船タチウオテンヤ Rhythm 替えヘッド",
+   "u": "https://www.daiwa.com/jp/product/qsw8oko",
+   "h": true,
+   "z": 50,
+   "c": "不夜城",
+   "s": "発売予定",
+   "a": "2026-11-04"
+  }
+ ]
 }
