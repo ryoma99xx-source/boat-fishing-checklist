@@ -34,8 +34,11 @@
 
 ## テンヤの頭の写真（色見本）
 
-`public/tenya/<id>.webp` に、各テンヤの頭だけを切り出した写真を置いている（`public/tenya/index.json` が一覧）。アプリはこの一覧にある id だけ写真を出す。
+`public/tenya/<id>.webp` に、各テンヤの頭だけを切り出した写真を置いている（`public/tenya/index.json` が一覧。2026-11-04 時点で 646 件中 644 件。無いのは HAYABUSA ベーシックシングル 夜光（SW405）40/50 号＝公式・販売店とも写真なし）。アプリはこの一覧にある id だけ写真を出す。
 
-- 元はメーカー公式の色別写真（ダイワは製品ページから `tools/tenya_images.py daiwa` で取得）。写真の加工・掲載はオーナーの判断（2026-11-04）
-- 公式に無いものは、販売サイトなどの画像を `tools/tenya_images.py add <id> <file>` で1枚ずつ足す
-- 月次更新で新しいテンヤを足したら、同じ手順で写真も足す（`daiwa` → `cut`）
+- 元画像は `work/src/<id>.jpg|png`（git には入れない）。出どころは `work/retail.json`（id → url / page / src / name。手で切り抜いたものは `cropped`、頭だけに切り抜き済みで通常処理にするものは `plain: true`）
+- メーカー公式の色別写真：DAIWA（現行品）・JACKALL・START・DUO・HAYABUSA（`tools/tenya_images.py daiwa|jackall|start|duo|hayabusa` で取得）、Major Craft・YAMASHITA・マルシン・HAYABUSA SW409 は公式ページから手動取得
+- 公式に無いもの（SHIMANO 全部・DAIWA 旧型・OWNER・がまかつ・PRO MARINE など）は釣具店の色別商品写真（相模屋・マルニシ・ポイント・ポイント東日本・フィッシングマックス・キャスティング・釣人館 などの Yahoo!店）。店の写真は `retail.json` に載せると「店写真モード」で切り出す（枠線・GLOW バッジ・夜光写真・スナップ・リーダー・フックホルダーを除き、目の位置から頭を探す。同じ店×製品で構図が固定のものは `FIXED` の固定枠）。写真の加工・掲載はオーナーの判断（2026-11-04）
+- シマノ公式サイトと Amazon はこの環境から取得できない（403 / 確認ページ）。回避はしない
+- 新しい色を足したら：公式があれば上の取得コマンド、無ければ販売店の写真を `tools/tenya_images.py add <id> <file>` で足す（店の写真なら `work/retail.json` にも id と出どころを書く）。全件書き出しは `tools/tenya_images.py cut`（`cut <id…>` / `cut <メーカー>` で一部だけ）。`pip install scipy` があると速い（無くても動く）
+- 切り出し結果は必ず目で確認する（確認シートを作って見る）。頭の一部が欠ける・枠や文字が混ざる場合は、元画像を頭だけに手で切り抜いて `plain: true` にするのが早い

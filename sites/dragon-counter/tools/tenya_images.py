@@ -320,7 +320,7 @@ def export():
     items, _ = catalog(); maker_of = {ca.key(i["m"], i["p"], i["z"], i["c"]): i["m"] for i in items}
     product_of = {ca.key(i["m"], i["p"], i["z"], i["c"]): i["p"] for i in items}
     retail = os.path.join(SITE, "work", "retail.json")   # ids whose source is a store photo (kept out of git with the sources)
-    stores = {k: (v.get("src") or True) for k, v in json.load(open(retail, encoding="utf-8")).items()} if os.path.exists(retail) else {}
+    stores = {k: (None if v.get("plain") else (v.get("src") or True)) for k, v in json.load(open(retail, encoding="utf-8")).items()} if os.path.exists(retail) else {}   # "plain": hand-cropped to the head already
     only = set(sys.argv[2:])
     for f in sorted(os.listdir(WORK)):
         if not f.lower().endswith((".jpg", ".jpeg", ".png", ".webp")): continue
