@@ -115,7 +115,7 @@ textarea{min-height:140px;font-family:ui-monospace,Menlo,monospace;font-size:14p
 .lr-gear{font-size:13px;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .empty{padding:16px 2px;color:var(--muted);font-size:14px}
 /* figures */
-.figsel{display:flex;gap:8px;align-items:center}
+.figsel{display:flex;gap:8px;align-items:center;position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--topH,64px));z-index:4;background:var(--bg);padding:8px 0;margin-top:-8px}
 .figsel select{flex:1;min-width:0}
 .badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--surface2);color:var(--muted);border:1px solid var(--line)}
 .badge.live{color:var(--catch);border-color:currentColor}
@@ -1677,6 +1677,8 @@ function helpHTML(){return `<div class="sheet-h"><h2>ボタンで数える<small
    <p class="muted">リモコンをつないでいる間は、iPhoneの画面キーボードが出なくなります。文字を入れるときは接続を切ってください。</p></div>`}
 
 /* ---------- actions ---------- */
+// keep the trip picker on the 図 tab just under the sticky header
+(()=>{const set=()=>{const h=document.querySelector('header.top');if(h)document.documentElement.style.setProperty('--topH',h.offsetHeight+'px')};set();addEventListener('resize',set);if(window.ResizeObserver){const h=document.querySelector('header.top');if(h)new ResizeObserver(set).observe(h)}})();
 const acts={
   tab:b=>{S.ui.tab=b.dataset.tab;saveLocal();render();scrollTo(0,0)},
   backRec:()=>{const a=document.activeElement;if(a&&a.blur)a.blur(); // commit the field being edited
