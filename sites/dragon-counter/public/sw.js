@@ -1,5 +1,5 @@
 /* ドラゴンカウンター: offline support. Page is network-first (falls back to the cached copy at sea). */
-const VER='dragon-93a89f9480';
+const VER='dragon-fe91bd79be';
 const PAGE='/';
 const ASSETS=["/manifest.webmanifest", "/icon-180.png", "/icon-192.png", "/icon-512.png", "/favicon.png"];
 const EXTRA='/catalog-extra.json';
@@ -11,6 +11,7 @@ self.addEventListener('fetch',e=>{
   const req=e.request;if(req.method!=='GET')return;const url=new URL(req.url);
   if(req.mode==='navigate'){e.respondWith(netFirst(req,PAGE));return}
   if(url.origin===location.origin&&url.pathname===EXTRA){e.respondWith(netFirst(req,EXTRA));return}
+  if(url.origin===location.origin&&url.pathname==='/tenya/index.json'){e.respondWith(netFirst(req,'/tenya/index.json'));return}   // the photo list carries the photos' version: always ask the network first
   if(url.origin===location.origin&&url.pathname.startsWith('/tenya/')){
     e.respondWith((async()=>{const c=await caches.open('dragon-tenya');const hit=await c.match(req);if(hit)return hit;
       try{const r=await fetch(req);if(r.ok){c.put(req,r.clone());
