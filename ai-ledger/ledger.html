@@ -1033,13 +1033,14 @@ function ccFallback(text,e){
 let commentsNs=null;
 async function relayDispatch(f,text){
   const id='q-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
-  await write('requests',id,r=>r.set({prompt:text,fid:f.id||'',title:f.title||'',site:f.site||'',src:f.src||{},at:nowIso(),status:'pending'}));
+  const saved=write('requests',id,r=>r.set({prompt:text,fid:f.id||'',title:f.title||'',site:f.site||'',src:f.src||{},at:nowIso(),status:'pending'}));
   let ok=false,why='';
   try{if(!commentsNs)commentsNs=await window.claude.use('comments');
     if(commentsNs){const can=await commentsNs.canSendToClaude().catch(()=>'off');why=can;
       if(can==='available'){const anchor=await commentsNs.anchorFor($('#view')||document.body);
         await commentsNs.sendToClaude({anchor,text:`【台帳依頼】${id}\n${String(f.title||'').slice(0,80)}\n台帳の requests/${id} にある依頼文を Claude Code に送ってください。`});ok=true}}else why='comments なし'}
   catch(e){why=e&&(e.code||e.message)||'error'}
+  try{await saved}catch(e){}
   if(!ok){try{await write('requests',id,r=>r.update({status:'not_sent',why:String(why)}))}catch(e){}ccFallback(text,{code:'no_relay',message:why});throw {code:'no_relay',message:'Claude への中継ができなかったため、コピーして貼る方法を出しました（'+why+'）'}}
   toast('依頼を Claude に渡しました。数分で Claude Code が動き始めます');
   return ''}
@@ -1048,7 +1049,7 @@ async function ccDispatch(f,text){
   const s=f.src||{};const input={prompt:text,title:`${siteName(f.site)}｜${f.title}`.slice(0,120),environment_id:ENV_ID};
   if(s.repo){input.source_url=`https://github.com/${s.repo}`;if(s.branch)input.source_revision=s.branch}
   else{input.source_url=`https://github.com/${TOOLS_REPO}`;input.source_revision=TOOLS_BRANCH}
-  let p;try{p=payloadOf(await mcp.callTool(CCR,'create_session',input))}catch(e){if(e&&e.code!=='server_unavailable'&&e.code!=='upstream_error')return relayDispatch(f,text);throw e}
+  let p;try{p=payloadOf(await Promise.race([mcp.callTool(CCR,'create_session',input),new Promise((_,rej)=>setTimeout(()=>rej({code:'timeout',message:'応答がありません'}),20000))]))}catch(e){if(!e||e.code!=='server_unavailable')return relayDispatch(f,text);throw e}
   return (p&&(p.session_id||p.id||(p.session&&p.session.id)))||((JSON.stringify(p||'').match(/session_[A-Za-z0-9]+/)||[''])[0])}
 async function startPlan(){
   const pl=ui.plan,b=$('#plStart'),msg=$('#plMsg');b.disabled=true;
