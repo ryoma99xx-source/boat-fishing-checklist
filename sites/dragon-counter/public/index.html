@@ -321,7 +321,7 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
   padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-block:10px 8px;display:flex;flex-direction:column;gap:8px}
 .timg{flex:none;object-fit:contain;border-radius:6px;background:rgba(255,255,255,.05)}
 .timg.row{width:64px;height:48px} .timg.chip{width:40px;height:30px;margin-right:2px}
-.timg.dock{position:absolute;right:8px;bottom:8px;width:56px;height:42px;pointer-events:none}
+.timg.dkimg{position:absolute;right:8px;bottom:8px;width:56px;height:42px;pointer-events:none} .dk-t:has(.dkimg) .dk-c,.dk-t:has(.dkimg) .dk-a{padding-right:66px}
 .dk-row{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;max-width:600px;margin:0 auto;width:100%;scroll-snap-type:x proximity}
 .dk-row::-webkit-scrollbar{display:none}
 .dk-t{position:relative;flex:0 0 calc(50% - 5px);min-height:92px;border-radius:16px;border:2px solid var(--teal);background:var(--surface);color:var(--ink);text-align:left;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;gap:2px;scroll-snap-align:start;box-shadow:0 3px 0 rgba(0,0,0,.4)}
@@ -1231,7 +1231,7 @@ function dockHTML(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);let main='';
   if(isTenya(sp,g)){const ids=dayTenya(tr,sp);const c=catchesOf(tr,sp);
     const dupe=id=>{const t=tenyaOf(id);return ids.some(o=>o!==id&&tenyaOf(o)&&tenyaShort(tenyaOf(o))===tenyaShort(t))};
     main=ids.map(id=>{const t=tenyaOf(id);const k=c.filter(e=>e.rig===id).length;
-      return `<button class="dk-t ${id===g.rig?'cur':''}" data-act="catchT" data-rig="${id}" aria-label="${esc(tenyaFull(id))}で釣れた">${timg(id,'dock')}<span class="dk-a">${esc(t.name?'':tenyaAbbr(t))}${dupe(id)&&t.z?` ${t.z}号`:''}</span><span class="dk-c">${esc(t.name||t.c||'')}</span><span class="dk-n">${k||''}</span></button>`}).join('')
+      return `<button class="dk-t ${id===g.rig?'cur':''}" data-act="catchT" data-rig="${id}" aria-label="${esc(tenyaFull(id))}で釣れた">${timg(id,'dkimg')}<span class="dk-a">${esc(t.name?'':tenyaAbbr(t))}${dupe(id)&&t.z?` ${t.z}号`:''}</span><span class="dk-c">${esc(t.name||t.c||'')}</span><span class="dk-n">${k||''}</span></button>`}).join('')
       +`<button class="dk-t dk-plus" data-act="tenyaOther"><span class="dk-c">${ids.length?'ほかのテンヤ':'テンヤを選ぶ'}</span><span class="dk-a">＋1</span></button>`;
     if(!ids.length)main=''}
   else{const vs=s.variants.filter(v=>!v.hidden);main=vs.map(v=>`<button class="dk-t" data-act="catch" data-v="${v.id}"><span class="dk-a">${esc(s.name)}</span><span class="dk-c">${esc(vs.length>1?v.short||v.name:'釣れた')}</span><span class="dk-n">${catchesOf(tr,sp).filter(e=>e.v===v.id).length||''}</span></button>`).join('')}
