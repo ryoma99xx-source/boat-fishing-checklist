@@ -500,6 +500,7 @@ details.fold[open] .fold-ic::after{top:11px;transform:rotate(-135deg)}
 .td-dragon input{width:22px;height:22px}
 .td-dragon b{white-space:nowrap;font-size:15px}
 .boatnew{display:grid;grid-template-columns:1fr 110px;gap:10px}
+.boattimes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 10px}.boattimes .seatsn{grid-column:1/-1;max-width:140px}.boattimes .field{min-width:0}.boattimes input{width:100%;min-width:0}
 .boatrow{display:flex;flex-direction:column;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
 .boatrow:last-of-type{border-bottom:none}
 .chips.wrap{flex-wrap:wrap;overflow:visible;margin:0;padding:0}
@@ -995,7 +996,7 @@ function fixPeople(f){f.people=clampP(f.people);f.seats=perSide(f.people);if(f.s
 function newForm0(){const p=S.prefs,b=S.cfg.boats.find(x=>x.name===p.boat);const sp=SOLO||(spOf(p.sp).id!=='?'?p.sp:spVisible()[0].id);
   const spot=S.cfg.spots.find(x=>x.id===p.spotId)||S.cfg.spots[0]||null;
   return {mode:'new',date:ymd(Date.now()),boat:p.boat||'',people:b?(b.people||b.seats*2):(p.people||(p.seats||8)*2),seats:0,side:p.side||'R',seat:p.seat||null,
-    spotId:spot?spot.id:'',spot:spot?spotCopy(spot):null,station:spot?spotSt(spot):'',sp,g:clone(p.g||{}),start:'07:15',end:'13:00',memo:''}}
+    spotId:spot?spot.id:'',spot:spot?spotCopy(spot):null,station:spot?spotSt(spot):'',sp,g:clone(p.g||{}),start:(b&&b.start)||'07:15',end:(b&&b.end)||'13:00',memo:''}}
 function formFromTrip(tr){return {mode:'edit',id:tr.id,date:tr.date,boat:tr.boat,people:tr.people||tr.seats*2,seats:tr.seats,side:tr.side,seat:tr.seat,spotId:tr.spotId||'',spot:tr.spot?{...tr.spot}:null,station:tr.station||'',
   start:hm2(tr.start),end:tr.end?hm2(tr.end):(tr.planEnd?hm2(tr.planEnd):''),memo:tr.memo||''}}
 /* ---------- fishing spots: the tide station is the nearest JMA station unless the user picks one ---------- */
@@ -1065,8 +1066,10 @@ function refreshTide(){const el=$('#tideInner');if(el)el.innerHTML=tideInnerHTML
 function cleanTides(a){return a.filter(x=>x.hhmm).map(x=>({id:x.id||uid(),type:x.type||'high',hhmm:x.hhmm,cm:x.cm===''||x.cm==null?'':+x.cm}))}
 function boatSpotFollow(f,bt){const ids=boatSpots(bt);f.allSpots=false;if(ids.length&&!ids.includes(f.spotId)){const x=S.cfg.spots.find(y=>y.id===ids[0]);f.spotId=x.id;f.spot=spotCopy(x);f.station=spotSt(x)}}
 function registerBoat(tr){const b=S.cfg.boats.find(x=>x.name===tr.boat);const v={people:tr.people||tr.seats*2,seats:tr.seats,side:tr.side,seat:tr.seat};
+  const t0=tr.start?hm2(tr.start):'',t1=tr.planEnd?hm2(tr.planEnd):'';
+  if(b&&!b.start&&t0){b.start=t0;if(!b.end&&t1)b.end=t1;cfgTouch()}
   if(b){let ch=Object.keys(v).some(k=>b[k]!==v[k]);Object.assign(b,v);if(tr.spotId&&S.cfg.spots.some(x=>x.id===tr.spotId)&&!(b.spots||[]).includes(tr.spotId)){b.spots=(b.spots||[]).concat([tr.spotId]);ch=true}if(ch)cfgTouch()}
-  else{S.cfg.boats.push({id:uid(),name:tr.boat,...v,spots:tr.spotId?[tr.spotId]:[]});cfgTouch()}}
+  else{S.cfg.boats.push({id:uid(),name:tr.boat,...v,...(t0?{start:t0}:{}),...(t1?{end:t1}:{}),spots:tr.spotId?[tr.spotId]:[]});cfgTouch()}}
 function viewStart(){if(!startDraft)startDraft=newForm();curForm=startDraft;
   return `<header class="hero"><p class="eyebrow">TOOL 05 / DRAGON COUNTER</p><div class="hero-h"><h1>ドラゴンカウンター</h1><span class="pill" style="margin-left:0">試験公開</span></div><p class="hero-sub">タチウオの釣果を時間の経過と共に、テンヤ・潮・船の向きと一緒に記録する。<button class="btnlink-s" data-act="tutOpen">使い方を見る</button></p></header>
    <div class="field" style="gap:4px"><h2>出船の準備</h2><p class="muted">釣り場、船と自分の席、今日のテンヤのリストを選んで出船します。</p>${SITE?`<p class="sample-note">記録はこの端末のブラウザの中だけに保存され、サイトには送られません。${standalone()?'':'Safariの「共有 → ホーム画面に追加」でアプリのように使え、電波のない船の上でも開けます。'}</p>`:''}</div>
@@ -1519,15 +1522,15 @@ function viewGear(){const sp=SOLO||(spOf(S.ui.gearSp).id!=='?'?S.ui.gearSp:S.cfg
      <label class="field"><span>潮位の地点<small class="muted">　${llText(x)}・約${Math.round(spotKm(x))}km</small></span><select id="sps-${x.id}" data-spot="${x.id}:st">${stOptions(x.st||'').replace('いちばん近い地点（自動）',`いちばん近い地点（${esc(stName(nearestSt(x.lat,x.lon).st))}）`)}</select></label></div>`).join('')||'<p class="muted">まだありません。</p>'}
    <button class="btn sm primary" data-act="mapOpen" data-from="gear">＋ 地図から釣り場を追加</button></div>
   <h2 class="sec-h" id="secBoats">船</h2>
-  <div class="card"><h2>船を登録する</h2><p class="muted">船の名前・いつもの人数と、その船がよく行くポイントを登録します。出船のときに船を選ぶと、人数とポイントが呼び出されます（当日の人数はそこで直せます）。</p>
-   <div class="boatnew"><label class="field"><span>船の名前</span><input type="text" id="add-boat" placeholder="例：忠彦丸"></label><label class="field"><span>いつもの人数</span><input type="number" id="add-boat-seats" inputmode="numeric" value="16" min="2" max="40"></label></div>
+  <div class="card"><h2>船を登録する</h2><p class="muted">船の名前・いつもの人数・出船と沖上がりの時刻と、その船がよく行くポイントを登録します。出船のときに船を選ぶと、人数・時刻・ポイントが呼び出されます（当日の分はそこで直せます）。</p>
+   <div class="boatnew"><label class="field"><span>船の名前</span><input type="text" id="add-boat" placeholder="例：忠彦丸"></label><label class="field"><span>いつもの人数</span><input type="number" id="add-boat-seats" inputmode="numeric" value="16" min="2" max="40"></label><label class="field"><span>開始時間</span><input type="time" id="add-boat-start" value="07:15"></label><label class="field"><span>終了時間</span><input type="time" id="add-boat-end" value="13:00"></label></div>
    <div class="field"><span>よく行くポイント（複数選べます）</span><div class="chips wrap">${S.cfg.spots.map(x=>`<button class="chip ${newBoatSpots.has(x.id)?'on':''}" data-act="newBoatSpot" data-id="${x.id}" aria-pressed="${newBoatSpots.has(x.id)}">${esc(x.name)}</button>`).join('')}</div></div>
    <button class="btn primary" data-act="boatAdd">この船を登録</button></div>
   <div class="card"><h2>登録した船（${S.cfg.boats.length}）</h2>
    ${S.cfg.boats.map(b=>`<div class="boatrow"><div class="grow"><input type="text" id="bn-${b.id}" data-boat="${b.id}:name" value="${esc(b.name)}" aria-label="船の名前"><button class="btn sm" data-act="boatDel" data-id="${b.id}">消す</button></div>
-     <label class="field seatsn"><span>いつもの人数</span><input type="number" id="bs-${b.id}" data-boat="${b.id}:people" value="${b.people||(b.seats||8)*2}" min="2" max="40" inputmode="numeric"></label>
+     <div class="boattimes"><label class="field seatsn"><span>いつもの人数</span><input type="number" id="bs-${b.id}" data-boat="${b.id}:people" value="${b.people||(b.seats||8)*2}" min="2" max="40" inputmode="numeric"></label><label class="field"><span>開始時間</span><input type="time" id="bst-${b.id}" data-boat="${b.id}:start" value="${esc(b.start||'')}"></label><label class="field"><span>終了時間</span><input type="time" id="ben-${b.id}" data-boat="${b.id}:end" value="${esc(b.end||'')}"></label></div>
      <div class="field"><span>ポイント（タップで付け外し）</span><div class="chips wrap">${S.cfg.spots.map(x=>{const on=(b.spots||[]).includes(x.id);return `<button class="chip ${on?'on':''}" data-act="boatSpot" data-boat="${b.id}" data-id="${x.id}" aria-pressed="${on}">${esc(x.name)}</button>`}).join('')}</div></div></div>`).join('')||'<p class="muted">まだありません。出船した船も自動で登録されます。</p>'}
-   <p class="muted">出船したポイントは、その船に自動で追加されます。</p></div>
+   <p class="muted">名前・人数・時間・ポイントは、ここでいつでも直せます（変えるとすぐ保存されます）。出船したポイントは、その船に自動で追加されます。</p></div>
   <h2 class="sec-h">仕掛けと餌</h2>
   <div class="card"><h2>仕掛け</h2><label class="field"><span>出船のときに最初に選ばれる仕掛け</span><select id="sp-method" data-sp="${sp}:method">${['tenya','tenbin'].map(m=>`<option value="${m}" ${(s.method||'tenya')===m?'selected':''}>${METHOD_JP[m]}</option>`).join('')}</select></label></div>
   ${listCard(sp,'baits','餌（テンヤのとき）','例：イワシ 特大')}
@@ -1671,7 +1674,7 @@ const acts={
   tideDel:b=>{curForm.tides.splice(+b.dataset.i,1);refreshTide()},
   fSp:b=>{startDraft.sp=b.dataset.id;render()},
   fSet:b=>{const g=fGear(startDraft,startDraft.sp);g.set=b.dataset.id;g.setAuto=false;$('#fGear').innerHTML=fGearHTML(startDraft)},
-  pickBoat:b=>{const bt=S.cfg.boats.find(x=>x.id===b.dataset.id);if(!bt)return;const f=curForm;Object.assign(f,{boat:bt.name,people:bt.people||(bt.seats?bt.seats*2:f.people)});fixPeople(f);if(bt.seat){f.side=bt.side||f.side;f.seat=Math.min(bt.seat,f.seats)}boatSpotFollow(f,bt);if(sheetCtx&&sheetCtx.kind==='trip')openTripSheet(sheetCtx.id,f);else render()},
+  pickBoat:b=>{const bt=S.cfg.boats.find(x=>x.id===b.dataset.id);if(!bt)return;const f=curForm;Object.assign(f,{boat:bt.name,people:bt.people||(bt.seats?bt.seats*2:f.people)});if(f.mode!=='edit'){if(bt.start)f.start=bt.start;if(bt.end)f.end=bt.end}fixPeople(f);if(bt.seat){f.side=bt.side||f.side;f.seat=Math.min(bt.seat,f.seats)}boatSpotFollow(f,bt);if(sheetCtx&&sheetCtx.kind==='trip')openTripSheet(sheetCtx.id,f);else render()},
   fRig:b=>{fGear(startDraft,startDraft.sp).rig=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},
   fBait:b=>{fGear(startDraft,startDraft.sp).bait=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},
   depart:()=>{const f=startDraft;if(!f.boat.trim())return toast('船の名前を入れてください');if(!f.seat)return toast('座席の図で自分の席をタップしてください');
@@ -1723,7 +1726,8 @@ const acts={
   ctDel:()=>{const T=TEN();const it=T.custom.find(x=>x.id===ctF.id);if(it)it.hidden=true;T.mine=T.mine.filter(x=>x!==ctF.id);T.sets.forEach(st=>st.items=st.items.filter(x=>x!==ctF.id));cfgTouch();toast('消しました');ctBack()},
   customDel:b=>{const T=TEN();const it=T.custom.find(x=>x.id===b.dataset.id);if(it)it.hidden=true;T.mine=T.mine.filter(x=>x!==b.dataset.id);T.sets.forEach(st=>st.items=st.items.filter(x=>x!==b.dataset.id));cfgTouch();render()},
   boatAdd:()=>{const el=$('#add-boat'),v=el.value.trim();if(!v)return el.focus();if(S.cfg.boats.some(x=>x.name===v))return toast('同じ名前の船が登録されています');const n=clampP(($('#add-boat-seats')||{}).value||16);
-    S.cfg.boats.push({id:uid(),name:v,people:n,seats:perSide(n),spots:[...newBoatSpots]});newBoatSpots=new Set();cfgTouch();render();toast(`「${v}」を登録しました`)},
+    const st=($('#add-boat-start')||{}).value||'',en=($('#add-boat-end')||{}).value||'';
+    S.cfg.boats.push({id:uid(),name:v,people:n,seats:perSide(n),...(st?{start:st}:{}),...(en?{end:en}:{}),spots:[...newBoatSpots]});newBoatSpots=new Set();cfgTouch();render();toast(`「${v}」を登録しました`)},
   newBoatSpot:b=>{const id=b.dataset.id;if(newBoatSpots.has(id))newBoatSpots.delete(id);else newBoatSpots.add(id);b.classList.toggle('on');b.setAttribute('aria-pressed',newBoatSpots.has(id))},
   boatSpot:b=>{const bt=S.cfg.boats.find(x=>x.id===b.dataset.boat);if(!bt)return;const id=b.dataset.id;bt.spots=(bt.spots||[]).includes(id)?bt.spots.filter(x=>x!==id):(bt.spots||[]).concat([id]);cfgTouch();b.classList.toggle('on');b.setAttribute('aria-pressed',bt.spots.includes(id))},
   allSpots:()=>{curForm.allSpots=true;refreshTide()},
