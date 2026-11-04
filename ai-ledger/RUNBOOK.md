@@ -29,13 +29,13 @@
 
 ## 4. 見回り（1時間ごと・新しいセッション）
 
-定期タスク「台帳の見回り」が毎時、新しいセッションでこの手順を回す。
+定期タスク「台帳の見回り」が毎時、新しいセッションでこの手順を回す。見回りのセッションには `create_session` / `get_session` などの道具が無いことがあるので、**他のセッションに頼らず自分で片付ける**。
 
-1. `ArtifactData query requests` で `status=='pending'` を探す。10分以上前のものがあれば 1. の手順で中継する（司令塔本体が止まっている状態）
-2. `features` で `cc.state=='作業中'` のものを 2. の手順で確認する（`cc.sessionId` が空のものは、同じ fid の `progress/<fid>.sessionId` か、`list_sessions` でタイトルが一致する最近のセッションを探す）
+1. `ArtifactData list requests` で `status=='pending'` を探す。10分以上前のものがあれば、司令塔本体が止まっている。古い順に1件ずつ、**その依頼文を自分がそのまま実行する**（依頼文は Claude Code 向けの作業指示になっている）。取り掛かる前に `features/<fid>.cc` を `{state:'作業中', sentAt, relayMsg:'見回りのセッションが作業中（HH:MM 開始）', sessionId:<自分のセッション ID が分かれば>}` に、`requests/<id>` を `{status:'sent'}` に更新。終わったら 2-3 のとおり報告を書き戻し、`requests/<id>` を `done` に
+2. `features` で `cc.state=='作業中'` のものを見る。`progress/<fid>` に `reportText` があれば 2-3 のとおり `cc` に書き戻す。`progress` も `relayMsg` も2時間以上更新が無ければ `cc.relayMsg` を「2時間以上動きがありません。セッションを開いて確認してください」にする（セッションの中身は見られないので、それ以上は触らない）
 3. 1日1回（`backups/latest.at` が20時間より古いとき）：全コレクション（features, roles, requests, articles, sitemap, sites, inbox, chat, progress, meta）を `list` で読み、`backups/latest` と `backups/<YYYY-MM-DD>` に `{at, data:{...}}` で `set`。`backups/<日付>` は新しい7件だけ残して古いものは `delete`
 4. `meta/heartbeat` を `{at, note:'見回り'}` で更新
-5. 何もなければ一言「異常なし」で終える。中継・再実行・エラーがあったときだけ、やったことを短く報告する
+5. 何もなければ一言「異常なし」で終える。代わりに作業した・エラーがあったときだけ、やったことを短く報告する。`ArtifactData` が使えなかったときは、その旨を最後に書く
 
 ## 5. 守ること
 
