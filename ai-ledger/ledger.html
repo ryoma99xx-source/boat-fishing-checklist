@@ -102,6 +102,11 @@ pre.out{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-body);fo
 .msg.tool{align-self:flex-start;font-size:11.5px;color:var(--muted);background:none;padding:0 4px}
 .chat-input{border-top:1px solid var(--line);padding:10px 14px;display:flex;flex-direction:column;gap:6px}
 .chat-input textarea{min-height:60px;max-height:160px}
+.chat-pics{display:flex;gap:6px;flex-wrap:wrap} .chat-pics:empty{display:none}
+.chat-pics span{position:relative;display:inline-block} .chat-pics img{width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.chat-pics button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;padding:0;border-radius:50%;font-size:12px;line-height:1}
+.msg .pics{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px} .msg .pics img{width:72px;height:72px;object-fit:cover;border-radius:6px}
+.msg .picnote{display:block;font-size:12px;opacity:.8;margin-top:4px}
 .chat-chips{display:flex;gap:6px;flex-wrap:wrap}
 .chat-chips button{font-size:12px;padding:3px 9px;border-radius:999px}
 @media (max-width:520px){.chat-panel{width:100vw;border-left:0}}
@@ -266,7 +271,8 @@ nav.tabs a[aria-current="page"]{color:var(--accent);font-weight:700}
   <div class="chat-input">
     <div class="chat-chips" id="chatChips"></div>
     <textarea id="chatText" placeholder="例：今日は何をすれば良い？／ドラゴンカウンターの記事はどうなってる？（キーボードのマイクで話しても入力できます）"></textarea>
-    <div style="display:flex;gap:8px;justify-content:flex-end"><button class="primary" id="chatSend">送る</button></div>
+    <div class="chat-pics" id="chatPics"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;align-items:center"><label class="btn small" id="chatPicBtn" hidden>画像を付ける<input type="file" id="chatPic" accept="image/*" multiple hidden></label><span style="flex:1"></span><button class="primary" id="chatSend">送る</button></div>
   </div>
 </div>
 
@@ -1339,7 +1345,7 @@ async function tidy(){
   finally{const b=$('#hTidy');if(b)b.disabled=false}}
 
 // ---------- 相談チャット（台帳に組み込みの Claude） ----------
-let chatMsgs=[],chatBusy=false,chatLive='',chatTools=[];
+let chatMsgs=[],chatBusy=false,chatLive='',chatTools=[],chatPics=[],chatImgCaps=null,chatThumbs={};
 const GUIDE={
  '司令塔':'開くと最初の画面。「何をしますか」に普段の言葉で書く→「計画を立てる」→手順ごとの担当（Claude Code／GPT／ChatGPT 手作業／自分）が出る→「この計画で始める」で台帳に機能登録し、自動の手順は Claude Code に送る。下の「あなたの番」に、報告の取り込み・ChatGPT へ渡す依頼文・Claude Code の返事待ちが出る。「動いている作業」で進み具合を確認。初回は Claude Code Remote へのアクセス許可を押す。',
  '記事':'司令塔の「記事」欄。「記事の状況を更新」で Claude Code が WordPress から記事一覧（下書き・公開中・未記入の目印）を取得（1〜2分後に「確認」）。記事の「直す・仕上げる」で、どう直すかを書いて送る。チェック：GPT に画像を作らせる／GPT にも文章案／仕上げたら公開する（スラッグ・トピック）。公開中の記事は「公開中の記事を直接書き換える」にした時だけ書き換える。書き換え前の控えは WordPress に残る。',
@@ -1376,25 +1382,40 @@ function chatToolDefs(){const obj=(props,req)=>({type:'object',properties:props,
 const TOOL_JA={overview:'台帳の全体を見ています',find_features:'機能を探しています',feature_detail:'機能の詳細を見ています',roles:'担当を見ています',articles:'記事を見ています',guide:'使い方を調べています',open_screen:'画面を開きました',prepare_request:'司令塔に下書きしました',prepare_article_edit:'記事の修正欄に下書きしました',add_log:'ログに記録しました',set_feature:'機能を更新しました'};
 function renderChat(){
   const log=$('#chatLog');if(!log)return;
-  const items=chatMsgs.map(m=>`<div class="msg ${m.role==='user'?'user':'assistant'}">${esc(m.content)}</div>`).join('')
+  const last=chatMsgs[chatMsgs.length-1];
+  const items=chatMsgs.map(m=>{const th=chatThumbs[m.at]||[];return `<div class="msg ${m.role==='user'?'user':'assistant'}">${esc(m.content)}${th.length?`<div class="pics">${th.map(u=>`<img src="${u}" alt="送った画像">`).join('')}</div>`:m.pics?`<span class="picnote">画像${m.pics}枚を添付</span>`:''}</div>`}).join('')
+   +(last&&last.role==='user'&&!chatBusy?`<div class="msg assistant">この質問への返事が届いていません（途中で画面が閉じた可能性があります）。<div class="actions" style="margin:6px 0 0"><button class="small primary" id="chatRetry">もう一度送る</button></div></div>`:'')
    +chatTools.map(t=>`<div class="msg tool">${esc(t)}</div>`).join('')
    +(chatBusy?`<div class="msg assistant">${esc(chatLive||'考えています…')}</div>`:'');
   log.innerHTML=items||`<div class="msg assistant">台帳の中身を見ながら答えます。今日やること、作業の状況、使い方、設定のしかたなど、何でも聞いてください。作業の依頼も、ここから司令塔に用意できます。</div>`;
   log.scrollTop=log.scrollHeight;
   const chips=$('#chatChips');if(chips)chips.innerHTML=chatMsgs.length?'':['今日は何をすれば良い？','動いている作業の状況は？','記事の未記入はどこ？','司令塔の使い方は？'].map(t=>`<button data-chip="${esc(t)}">${esc(t)}</button>`).join('');
   document.querySelectorAll('[data-chip]').forEach(b=>b.onclick=()=>{$('#chatText').value=b.dataset.chip;chatSend()});
-  const sb=$('#chatSend');if(sb)sb.disabled=chatBusy||!sample}
+  const sb=$('#chatSend');if(sb)sb.disabled=chatBusy||!sample;
+  const rb=$('#chatRetry');if(rb)rb.onclick=()=>chatAsk([]);
+  const pp=$('#chatPics');if(pp){pp.innerHTML=chatPics.map((p,i)=>`<span><img src="${p.url}" alt="添付する画像"><button data-picdel="${i}" aria-label="外す">×</button></span>`).join('');
+    pp.querySelectorAll('[data-picdel]').forEach(b=>b.onclick=()=>{const x=chatPics.splice(+b.dataset.picdel,1)[0];if(x)URL.revokeObjectURL(x.url);renderChat()})}
+  const pb=$('#chatPicBtn');if(pb)pb.hidden=!(chatImgCaps&&chatImgCaps.maxCount)}
 async function chatSave(){if(!db)return;try{await write('chat','main',r=>r.set({messages:chatMsgs.slice(-40),updatedAt:nowIso()}))}catch(e){}}
 async function chatSend(){
-  const ta=$('#chatText');const text=ta.value.trim();if(!text||chatBusy)return;
+  const ta=$('#chatText');const text=ta.value.trim();if((!text&&!chatPics.length)||chatBusy)return;
   if(!sample){toast('この表示ではチャットを使えません（claude.ai で開いてください）');return}
-  ta.value='';chatMsgs.push({role:'user',content:text,at:nowIso()});chatBusy=true;chatLive='';chatTools=[];renderChat();
-  const hist=chatMsgs.slice(-16).map(m=>({role:m.role,content:m.content}));
+  const pics=chatPics.map(p=>p.file);const at=nowIso();
+  if(pics.length)chatThumbs[at]=chatPics.map(p=>p.url);chatPics=[];
+  ta.value='';try{localStorage.removeItem('ledger-chat-draft')}catch(e){}
+  chatMsgs.push({role:'user',content:text||'（画像を送りました）',at,...(pics.length?{pics:pics.length}:{})});
+  chatSave(); // keep the question even if the page reloads before the answer
+  await chatAsk(pics)}
+async function chatAsk(pics){
+  if(chatBusy||!sample)return;chatBusy=true;chatLive='';chatTools=[];renderChat();
+  const hist=chatMsgs.slice(-16).map(m=>({role:m.role,content:m.content+(m.pics&&!(pics&&pics.length&&m===chatMsgs[chatMsgs.length-1])?`（この時に画像${m.pics}枚を送った。画像そのものはもう見られない）`:'')}));
+  while(hist.length&&hist[hist.length-1].role!=='user')hist.pop();
   const input=[{role:'user',content:chatSystem()+'\n\n（ここから会話）'},{role:'assistant',content:'了解しました。台帳を見ながら答えます。'},...hist];
+  if(pics&&pics.length)input[input.length-1]={...input[input.length-1],content:input[input.length-1].content+`\n\n（オーナーが画像を${pics.length}枚添付しています。画像を見て答えてください。スクリーンショットなら、どの画面のどこの話かを読み取ってください）`};
   const tools=chatToolDefs().map(t=>({...t,execute:async(inp)=>{chatTools.push(TOOL_JA[t.name]||t.name);renderChat();try{return await t.execute(inp||{})}catch(e){return {error:e.message||String(e)}}}}));
-  try{const r=await sample(input,{tools,modelTier:'complex',cache:false,onText:u=>{chatLive=u.text;renderChat()}});
+  try{const r=await sample(input,{tools,modelTier:'complex',cache:false,...(pics&&pics.length?{images:pics}:{}),onText:u=>{chatLive=u.text;renderChat()}});
     chatMsgs.push({role:'assistant',content:(r.text||'').trim()||'（返事が空でした）',at:nowIso()})}
-  catch(e){chatMsgs.push({role:'assistant',content:e.code==='rate_limited'?'少し混み合っています。しばらくしてからもう一度送ってください。':e.code==='not_granted'?'台帳の中の Claude の使用が許可されていません。台帳の「権限」から許可してください。':'うまく答えられませんでした（'+(e.code||e.message||'')+'）。もう一度送ってみてください。',at:nowIso()})}
+  catch(e){chatMsgs.push({role:'assistant',content:e.code==='rate_limited'?'少し混み合っています。しばらくしてからもう一度送ってください。':e.code==='not_granted'?'台帳の中の Claude の使用が許可されていません。台帳の「権限」から許可してください。':e.code==='image_rejected'?'この画像は送れませんでした（JPEG・PNG・WebP・GIF、20MB まで）。':e.code==='images_unavailable'?'この表示では画像を送れません。':'うまく答えられませんでした（'+(e.code||e.message||'')+'）。もう一度送ってみてください。',at:nowIso()})}
   chatBusy=false;chatLive='';chatTools=[];renderChat();chatSave()}
 function chatInit(){
   const panel=$('#chatPanel');
@@ -1403,6 +1424,10 @@ function chatInit(){
   $('#chatClose').onclick=()=>{panel.hidden=true;$('#chatFab').hidden=false};
   $('#chatClear').onclick=async()=>{if(chatBusy)return;chatMsgs=[];renderChat();await chatSave()};
   $('#chatSend').onclick=chatSend;
+  try{const d=localStorage.getItem('ledger-chat-draft');if(d)$('#chatText').value=d}catch(e){}
+  $('#chatText').addEventListener('input',e=>{try{localStorage.setItem('ledger-chat-draft',e.target.value)}catch(_){}});
+  $('#chatPic').addEventListener('change',e=>{const max=(chatImgCaps&&chatImgCaps.maxCount)||1;[...e.target.files].forEach(f=>{if(chatPics.length<max)chatPics.push({file:f,url:URL.createObjectURL(f)})});
+    if(e.target.files.length+chatPics.length>max+e.target.files.length)toast(`画像は1回に${max}枚までです`);e.target.value='';renderChat()});
   $('#chatText').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();chatSend()}});
 }
 chatInit();
@@ -1425,6 +1450,7 @@ readHash();
   db.collection('sites').onSnapshot(s=>{extraSites=s.docs.map(d=>({k:d.id,...d.data()}));if(loaded)render()},fail);
   db.collection('inbox').onSnapshot(s=>{inbox=s.docs.map(d=>({id:d.id,...d.data()}));if(loaded)render()},fail);
   try{sample=await window.claude.use('sample')}catch(e){sample=null}
+  try{const L=sample&&await sample.limits();chatImgCaps=L&&L.images||null;if(chatImgCaps&&chatImgCaps.mediaTypes)$('#chatPic').accept=chatImgCaps.mediaTypes.join(',');renderChat()}catch(e){chatImgCaps=null}
   try{mcp=await window.claude.use('mcp')}catch(e){mcp=null}
   render();
   const waitLoad=setInterval(()=>{if(loaded){clearInterval(waitLoad);autoCheck()}},500);setTimeout(()=>clearInterval(waitLoad),15000);
