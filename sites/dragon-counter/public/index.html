@@ -329,6 +329,7 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
   padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-block:10px 8px;display:flex;flex-direction:column;gap:8px}
 .tbgh{display:flex;align-items:center;gap:8px;width:100%;margin:14px 0 2px;padding:10px 8px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font-weight:800;font-size:17px;text-align:left;font-family:inherit}
 .tbgh i{font-style:normal;color:var(--teal);width:14px} .tbgh small{margin-left:auto;font-weight:600;color:var(--muted);font-size:13px}
+.chip .chip-ed{margin-left:6px;font-size:12px;font-weight:600;opacity:.9}
 .tbph{padding:10px 4px 2px;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.02em}
 .timg{flex:none;object-fit:contain;border-radius:6px;background:rgba(255,255,255,.05)}
 .timg.row{width:64px;height:48px} .timg.chip{width:40px;height:30px;margin-right:2px}
@@ -1103,8 +1104,9 @@ function setPickHTML(sel,act){const sets=TEN().sets;const items=setItems(sel);co
   const guide=!sets.length?`<div class="steps2"><b>当日使うテンヤのリストがまだありません</b><span>2ステップで作ると、釣れたときにテンヤのボタンを押すだけで記録できます（作らなくても記録はできます）。</span>
      ${own?`<div class="st2box"><button class="st2 done" data-act="tbOpen" data-mode="mine"><i>✓</i><span><b>所有テンヤを登録</b><small>${own}本 登録済み・追加する</small></span><em>→</em></button><button class="st2link" data-act="tbOpen" data-mode="mine" data-only="mine">所有テンヤリストを見る（${own}本）<em>→</em></button></div>`:`<button class="st2" data-act="tbOpen" data-mode="mine"><i>1</i><span><b>所有テンヤを登録</b><small>カタログから、持っているテンヤにチェック</small></span><em>→</em></button>`}
      <button class="st2" data-act="setAdd" ${own?'':'disabled'}><i>2</i><span><b>当日使うリストを作る</b><small>${own?'所有テンヤの中から、その日に持っていく分を選ぶ':'先に1を済ませてください'}</small></span><em>→</em></button></div>`:'';
-  return `<div class="gearpick"><div class="gp-lbl">今日のテンヤのリスト</div>${sets.length||own?`<div class="chips wrap">${sets.map(x=>`<button class="chip ${x.id===sel?'on':''}" data-act="${act}" data-id="${x.id}">${esc(x.name)}（${setItems(x.id).length}）</button>`).join('')}
-   <button class="chip ${sel==='mine'?'on':''}" data-act="${act}" data-id="mine">所有テンヤ全部（${own}）</button>${sets.length?'<button class="chip add" data-act="setAdd">＋ リストを作る</button>':''}</div>`:''}
+  return `<div class="gearpick"><div class="gp-lbl">今日のテンヤのリスト</div>${sets.length||own?`<div class="chips wrap">${sets.map(x=>{const on=x.id===sel;return `<button class="chip ${on?'on':''}" data-act="${on?'setEdit':act}" data-id="${x.id}" data-set="${x.id}">${esc(x.name)}（${setItems(x.id).length}）${on?'<small class="chip-ed">✎ 編集</small>':''}</button>`}).join('')}
+   <button class="chip ${sel==='mine'?'on':''}" data-act="${sel==='mine'?'tbOpen':act}" data-mode="mine" data-only="mine" data-id="mine">所有テンヤ全部（${own}）${sel==='mine'?'<small class="chip-ed">✎ 見る</small>':''}</button>${sets.length?'<button class="chip add" data-act="setAdd">＋ リストを作る</button>':''}</div>
+   ${sets.length?'<p class="muted" style="margin:2px 0 0;font-size:12px">選んでいるリストをもう一度押すと、中身を編集できます</p>':''}`:''}
    ${guide}${items.length?`<div class="tlist">${items.map(id=>{const t=tenyaOf(id);return `<span class="tchip"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}</span>`}).join('')}</div>`:sets.length?`<p class="muted">このリストにはテンヤが入っていません。</p>`:''}${sets.length?`<div class="st2box" style="margin-top:10px"><button class="st2 done" data-act="tbOpen" data-mode="mine"><i>✓</i><span><b>所有テンヤを登録</b><small>${own}本 登録済み・カタログから追加する</small></span><em>→</em></button><button class="st2link" data-act="tbOpen" data-mode="mine" data-only="mine">所有テンヤリストを見る（${own}本）<em>→</em></button><button class="st2link" data-act="goTenya">今日のリストの中身を直す（「登録」へ）<em>→</em></button></div>`:''}</div>`}
 function refreshSeat(){const f=curForm;const p=$('#seatPick');if(!p)return;p.innerHTML=seatPickerSVG(f);$('#seatNote').innerHTML=seatNoteHTML(f);$('#seatsN').textContent=f.people}
 function refreshTide(){const el=$('#tideInner');if(el)el.innerHTML=tideInnerHTML(curForm);const c=$('#spotChips');if(c)c.innerHTML=spotChipsHTML(curForm)}
@@ -1777,6 +1779,7 @@ const acts={
   tbOpen:b=>{tb={q:'',z:'',m:'',only:b.dataset.only||(b.dataset.mode==='set'&&myTenya().length?'mine':'all'),mode:b.dataset.mode,setId:b.dataset.set||''};openTenyaSheet()},
   tbDone:()=>{closeSheet()},
   tbClear:()=>{tb.q='';const i=$('#tbQ');if(i){i.value='';i.focus()}tbRefresh();const x=$('.sb-x');if(x)x.hidden=true},
+  setEdit:b=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'set',setId:b.dataset.set};openTenyaSheet()},
   tbZ:b=>{tb.z=b.dataset.d;tbRefresh()},tbFold:b=>{tb.fold=tb.fold||{};const z=b.dataset.z;tb.fold[z]=!tb.fold[z];tbRefresh()},tbOnly:b=>{tb.only=b.dataset.d;tbRefresh()},
   tbSetQuick:b=>{const T=TEN(),st=T.sets.find(x=>x.id===b.dataset.set),id=b.dataset.id;if(!st)return;const add=!st.items.includes(id);st.items=add?st.items.concat([id]):st.items.filter(x=>x!==id);cfgTouch();tbRefresh();toast(add?`「${st.name}」に入れました`:`「${st.name}」から外しました`)},
   tbSetNew:b=>{const T=TEN();const st={id:uid(),name:SET_NAMES[0],items:[b.dataset.id]};T.sets.push(st);cfgTouch();tbRefresh();toast(`「${st.name}」を作って入れました`)},
