@@ -577,20 +577,17 @@ function ccStatusBox(f){const c=f.cc,m=ccMsg[f.id];
     <div class="actions" style="margin:8px 0 0"><button class="primary" id="ccCheck" ${mcp?'':'disabled'}>結果を確認</button></div>
     ${m?`<div class="banner" style="margin:6px 0 0">${esc(m.msg)}</div>${m.text?`<details><summary>最後の返答を見る</summary><pre class="out">${esc(m.text)}</pre></details><div class="actions"><button id="ccLog">返答をログに残す</button></div>`:''}`:''}</div>`}
 async function ccSend(){
-  const f=feats.find(x=>x.id===ui.ho.fid),btn=$('#ccSend'),out=$('#ccSendMsg');if(!f)return;if(!mcp){ccFallback(ui.ho.text,{code:'no_mcp'});return}
+  const f=feats.find(x=>x.id===ui.ho.fid),btn=$('#ccSend'),out=$('#ccSendMsg');if(!f)return;if(!mcp&&$('#ccTo').value!=='new'){ccFallback(ui.ho.text,{code:'no_mcp'});return}
   const to=$('#ccTo').value,text=ui.ho.text;btn.disabled=true;out.innerHTML='<div class="banner">送信中…</div>';
   try{let sid=to,isNew=to==='new';
-    if(isNew){const s=f.src||{};const input={prompt:text,title:`${siteName(f.site)}｜${f.title}`.slice(0,120),environment_id:ENV_ID};
-      if(s.repo){input.source_url=`https://github.com/${s.repo}`;if(s.branch)input.source_revision=s.branch}
-      const p=payloadOf(await mcp.callTool(CCR,'create_session',input));
-      sid=(p&&(p.session_id||p.id||(p.session&&p.session.id)))||((JSON.stringify(p||'').match(/session_[A-Za-z0-9]+/)||[''])[0])}
+    if(isNew){sid=await ccDispatch(f,text)}
     else await mcp.callTool(CCR,'send_message',{session_id:sid,message:text});
     const url=sid?`https://claude.ai/code/${sid}`:'';
     const patch={cc:{sessionId:sid,url,sentAt:nowIso(),state:'作業中'},owner:'Claude',logs:[...(f.logs||[]),{at:nowIso(),by:'自分',text:`Claude Code へ送信（${isNew?'新しいセッション':'既存セッション'}）：${ui.ho.req.trim()||'(依頼内容なし)'}`}]};
     if(f.status==='構想'||f.status==='保留')patch.status='作業中';
     if(isNew&&url)patch.chats=[...(f.chats||[]),{tool:'Claude Code',name:f.title,url}];
     await saveFeat(f.id,patch);toast('Claude Code に送りました');go(f.id)}
-  catch(e){if(e&&e.code!=='server_unavailable'&&e.code!=='upstream_error')ccFallback(ui.ho.text,e);out.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;btn.disabled=false}}
+  catch(e){out.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;btn.disabled=false}}
 async function ccCheck(f){
   const btn=$('#ccCheck');btn.disabled=true;btn.textContent='確認中…';
   try{const sid=f.cc.sessionId;if(!sid)throw{message:'セッションIDが分かりません。セッションを開いて報告をコピーしてください。'};
@@ -855,7 +852,7 @@ const GPT_RULES=['「GPT（API経由）」の工程は、環境変数 OPENAI_API
 function yourTurn(){const L=[];
   feats.forEach(f=>{
     if(f.gptAsk&&!f.gptAsk.done)L.push({f,kind:'gpt'});
-    const m=ccMsg[f.id];if(m&&m.report)L.push({f,kind:'report'});else if(m&&m.bucket==='BLOCKED')L.push({f,kind:'blocked'});
+    const m=ccMsg[f.id];if((m&&m.report)||(f.cc&&f.cc.reportText&&f.cc.state!=='取込済み'))L.push({f,kind:'report'});else if(m&&m.bucket==='BLOCKED')L.push({f,kind:'blocked'});
     if(f.status==='確認・公開待ち'&&!(f.gptAsk&&!f.gptAsk.done))L.push({f,kind:'wait'})});
   return L}
 function planHtml(pl){
@@ -887,7 +884,7 @@ function viewHome(){
     if(kind==='blocked')return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-保留">Claude Code が返事待ち</span></div><div class="title">${esc(f.title)}</div><div class="actions"><a class="btn primary" href="${esc(f.cc.url)}" target="_blank" rel="noopener">セッションを開いて答える ↗</a></div></div>`;
     return cardHtml(f)}).join(''):'<div class="empty">今あなたがやることはありません。</div>'}</div>
   <h2>動いている作業 <span style="font-size:13px;color:var(--muted)">${running.length}件</span></h2>
-  <div class="list">${running.length?running.map(f=>{const m=ccMsg[f.id];return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-作業中">Claude Code</span><span>送信 ${esc(fmt(f.cc.sentAt))}</span></div><div class="title"><a href="#${esc(f.id)}" style="color:inherit">${esc(f.title)}</a></div><div class="next">${esc(m?m.msg:'まだ確認していません')}</div><div class="actions"><button class="small" data-check="${esc(f.id)}" ${mcp?'':'disabled'}>確認</button>${f.cc.url?`<a class="btn small" href="${esc(f.cc.url)}" target="_blank" rel="noopener">開く ↗</a>`:''}</div></div>`}).join(''):'<div class="empty">動いている作業はありません。</div>'}</div>`}
+  <div class="list">${running.length?running.map(f=>{const m=ccMsg[f.id];return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-作業中">Claude Code</span><span>送信 ${esc(fmt(f.cc.sentAt))}</span></div><div class="title"><a href="#${esc(f.id)}" style="color:inherit">${esc(f.title)}</a></div><div class="next">${esc(m?m.msg:(f.cc.relayMsg||(f.cc.sessionId?'まだ確認していません':'Claude が Claude Code に中継中')))}</div><div class="actions"><button class="small" data-check="${esc(f.id)}" ${mcp?'':'disabled'}>確認</button>${f.cc.url?`<a class="btn small" href="${esc(f.cc.url)}" target="_blank" rel="noopener">開く ↗</a>`:''}</div></div>`}).join(''):'<div class="empty">動いている作業はありません。</div>'}</div>`}
 // ---------- articles (WordPress) ----------
 function parseArticles(text){
   const i=String(text||'').indexOf('【記事状況】');if(i<0)return [];
@@ -1030,12 +1027,28 @@ function ccFallback(text,e){
   $('#ccFbWhy').textContent=e&&e.code==='no_mcp'?'この画面では、台帳から Claude Code に直接送れません。':'Claude Code に直接送れませんでした（'+(e&&(e.code||e.message)||'')+'）。';
   $('#ccFbText').textContent=text;
   $('#ccFbCopy').onclick=()=>{try{navigator.clipboard.writeText(text).then(()=>toast('コピーしました。開いた Claude Code に貼って送ってください'),()=>toast('コピーできませんでした。下の文を長押しでコピーしてください'))}catch(err){}}}
+// When the page can't reach Claude Code itself, the request is stored in the ledger and a
+// comment "sent to Claude" wakes the owner's Claude session, which relays it to Claude Code
+// and writes the session link and the report back into the ledger.
+let commentsNs=null;
+async function relayDispatch(f,text){
+  const id='q-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  await write('requests',id,r=>r.set({prompt:text,fid:f.id||'',title:f.title||'',site:f.site||'',src:f.src||{},at:nowIso(),status:'pending'}));
+  let ok=false,why='';
+  try{if(!commentsNs)commentsNs=await window.claude.use('comments');
+    if(commentsNs){const can=await commentsNs.canSendToClaude().catch(()=>'off');why=can;
+      if(can==='available'){const anchor=await commentsNs.anchorFor($('#view')||document.body);
+        await commentsNs.sendToClaude({anchor,text:`【台帳依頼】${id}\n${String(f.title||'').slice(0,80)}\n台帳の requests/${id} にある依頼文を Claude Code に送ってください。`});ok=true}}else why='comments なし'}
+  catch(e){why=e&&(e.code||e.message)||'error'}
+  if(!ok){try{await write('requests',id,r=>r.update({status:'not_sent',why:String(why)}))}catch(e){}ccFallback(text,{code:'no_relay',message:why});throw {code:'no_relay',message:'Claude への中継ができなかったため、コピーして貼る方法を出しました（'+why+'）'}}
+  toast('依頼を Claude に渡しました。数分で Claude Code が動き始めます');
+  return ''}
 async function ccDispatch(f,text){
-  if(!mcp){ccFallback(text,{code:'no_mcp'});throw {code:'no_mcp',message:'台帳から直接送れないため、コピーして Claude Code に貼る方法を出しました'}}
+  if(!mcp)return relayDispatch(f,text);
   const s=f.src||{};const input={prompt:text,title:`${siteName(f.site)}｜${f.title}`.slice(0,120),environment_id:ENV_ID};
   if(s.repo){input.source_url=`https://github.com/${s.repo}`;if(s.branch)input.source_revision=s.branch}
   else{input.source_url=`https://github.com/${TOOLS_REPO}`;input.source_revision=TOOLS_BRANCH}
-  let p;try{p=payloadOf(await mcp.callTool(CCR,'create_session',input))}catch(e){if(e&&e.code!=='server_unavailable'&&e.code!=='upstream_error')ccFallback(text,e);throw e}
+  let p;try{p=payloadOf(await mcp.callTool(CCR,'create_session',input))}catch(e){if(e&&e.code!=='server_unavailable'&&e.code!=='upstream_error')return relayDispatch(f,text);throw e}
   return (p&&(p.session_id||p.id||(p.session&&p.session.id)))||((JSON.stringify(p||'').match(/session_[A-Za-z0-9]+/)||[''])[0])}
 async function startPlan(){
   const pl=ui.plan,b=$('#plStart'),msg=$('#plMsg');b.disabled=true;
@@ -1058,7 +1071,7 @@ async function startPlan(){
     ui.plan=null;ui.cmd='';clean('cmd');render()}
   catch(e){msg.innerHTML=`<div class="banner">${esc(mcpErr(e))}</div>`;b.disabled=false}}
 async function ccFetch(f){
-  const sid=f.cc.sessionId;
+  const sid=f.cc.sessionId;if(!sid||!mcp){ccMsg[f.id]={msg:f.cc.relayMsg||'Claude が Claude Code に中継中',text:f.cc.reportText||'',report:f.cc.reportText||'',bucket:''};return}
   const g=payloadOf(await mcp.callTool(CCR,'get_session',{session_id:sid}));
   const bucket=((JSON.stringify(g||'').match(/(?:SESSION_STATUS_BUCKET_)?(WORKING|BLOCKED|REVIEW_READY|COMPLETED|FAILED)/i)||[])[1]||'').toUpperCase();
   const ev=payloadOf(await mcp.callTool(CCR,'list_events',{session_id:sid,kinds:['result'],limit:100}));
@@ -1084,7 +1097,7 @@ function bindHome(){
   on('#plDrop','click',()=>{ui.plan=null;render()});
   document.querySelectorAll('[data-gptcopy]').forEach(a=>a.addEventListener('click',()=>{const f=feats.find(x=>x.id===a.dataset.gptcopy);try{navigator.clipboard.writeText(f.gptAsk.text).then(()=>toast('コピーしました。ChatGPT に貼ってください'),()=>toast('コピーできませんでした。依頼文を開いて長押しでコピーしてください'))}catch(e){}}));
   document.querySelectorAll('[data-gptdone]').forEach(b=>b.onclick=async()=>{const f=feats.find(x=>x.id===b.dataset.gptdone);await saveFeat(f.id,{gptAsk:{...f.gptAsk,done:true},status:'確認・公開待ち',logs:[...(f.logs||[]),{at:nowIso(),by:'自分',text:'ChatGPT に依頼文を渡した'}]});toast('記録しました。ChatGPT の返事は「報告」に貼ってください')});
-  document.querySelectorAll('[data-takerep]').forEach(b=>b.onclick=()=>{const m=ccMsg[b.dataset.takerep];ui.rep={text:m.report,fid:b.dataset.takerep};go('report')});
+  document.querySelectorAll('[data-takerep]').forEach(b=>b.onclick=()=>{const m=ccMsg[b.dataset.takerep],f=feats.find(x=>x.id===b.dataset.takerep);ui.rep={text:(m&&m.report)||(f&&f.cc&&f.cc.reportText)||'',fid:b.dataset.takerep};go('report')});
   document.querySelectorAll('[data-check]').forEach(b=>b.onclick=async()=>{const f=feats.find(x=>x.id===b.dataset.check);b.disabled=true;b.textContent='確認中…';try{await ccFetch(f)}catch(e){ccMsg[f.id]={msg:mcpErr(e),text:''}}render()});
 }
 
