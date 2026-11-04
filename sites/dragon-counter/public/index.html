@@ -1532,7 +1532,8 @@ function tbRows(){const T=TEN();const mine=new Set(myTenya());const inSet=tb.mod
     list=list.filter(t=>{const h=normQ(`${t.m} ${MK[t.m]||''} ${t.p} ${tenyaAbbr(t)} ${t.z}号 ${t.c} ${t.name||''} ${t.s||''} ${t.custom?'自分で追加':''}`),h2=h.replace(/[\s・･\-]/g,'');return terms.every(q=>{const n=q.replace(/号$/,'');if(/^\d+$/.test(n))return String(t.z)===n; return h.includes(q)||h2.includes(q.replace(/[・･\-]/g,''))})})}
   // 製品はシリーズ名で並べる（ダイワの「船タチウオテンヤSS Rhythm …」と「船タチウオテンヤ Rhythm 替えヘッド」が離れないように、共通の頭を外して比べる）
   const series=t=>String(t.p).replace(/^快適船タチウオテンヤSS\s*/,'快適 ').replace(/^船タチウオテンヤSS\s*/,'').replace(/^船タチウオテンヤ\s*/,'');
-  list.sort((a,b)=>(a.z||0)-(b.z||0)||String(a.m).localeCompare(String(b.m))||series(a).localeCompare(series(b))||String(a.p).localeCompare(String(b.p))||String(a.c).localeCompare(String(b.c)));
+  const isTG=t=>/(^|[^A-Za-z])TG([^A-Za-z]|$)|タングステン/.test(String(t.p))?1:0;   // タングステン（TG）の製品はメーカー内で最後に
+  list.sort((a,b)=>(a.z||0)-(b.z||0)||String(a.m).localeCompare(String(b.m))||isTG(a)-isTG(b)||series(a).localeCompare(series(b))||String(a.p).localeCompare(String(b.p))||String(a.c).localeCompare(String(b.c)));
   const n=list.length;list=list.slice(0,300);tb.fold=tb.fold||{};
   // 号数ごとのまとまり（畳める）→ その中をメーカー・製品ごとに小見出しで区切る
   const perZ={};list.forEach(t=>{const z=t.z||'?';perZ[z]=(perZ[z]||0)+1});
