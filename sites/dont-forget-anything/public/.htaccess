@@ -1,0 +1,40 @@
+# 持ち物チェック (Don't forget anything) — static mirror of the published site (see sites/README.md).
+# Only FileInfo-type directives: no Options / DirectoryIndex / DirectorySlash / Require,
+# which お名前.com RS does not allow in .htaccess (they turn every request into a 500).
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Error documents (internal redirects) are served as they are.
+  RewriteCond %{ENV:REDIRECT_STATUS} !^$
+  RewriteRule ^ - [END]
+  # Keep free-SSL validation working; hide every other dot file (.htaccess etc.).
+  RewriteRule ^\.well-known/ - [END]
+  RewriteRule (^|/)\. - [R=404,L]
+  # Folders (other than the site root) are not pages: 404, as on the old host.
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^.+$ - [R=404,L]
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType text/html .html
+  AddType text/javascript .js .mjs
+  AddType text/css .css
+  AddType application/json .json
+  AddType application/manifest+json .webmanifest
+  AddType image/png .png
+  AddType image/x-icon .ico
+  AddType font/woff2 .woff2
+  AddCharset utf-8 .html .js .mjs .css .json .webmanifest
+</IfModule>
+<Files "manifest.json">
+  ForceType application/manifest+json
+</Files>
+
+# Cache: pages, the service worker and the manifest are revalidated on every load
+# (the service worker itself caches the app shell); icons are kept for a day.
+<IfModule mod_headers.c>
+  Header set Cache-Control "public, max-age=86400"
+  <FilesMatch "(\.html|^service-worker\.js|^manifest\.json)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

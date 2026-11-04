@@ -1,0 +1,1686 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>リール糸管理</title><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="リール管理"><meta name="theme-color" content="#06080f"><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon-48.png" type="image/png" sizes="48x48"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" href="/icons/icon-192.png" type="image/png" sizes="192x192"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet"><script>(function() {
+var standalone = window.matchMedia("(display-mode: standalone)").matches ||
+window.matchMedia("(display-mode: fullscreen)").matches ||
+window.navigator.standalone === true;
+if (standalone) document.documentElement.classList.add("app-standalone");
+})();</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-3MCRXM8WJS"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag("js", new Date());
+gtag("config", "G-3MCRXM8WJS");</script><style>:root{--bg:#06080f;--bg-2:#0b1020;--panel:#111a30;--panel-2:#0d1528;--line:rgba(180,210,235,0.14);--text:#e9eef6;--muted:#93a4bd;--silver:#c8d6e6;--accent:#4fd0d6;--accent-2:#2b7cff;--gold:#e7b765;--danger:#ef6464;--ease:cubic-bezier(.22,.61,.36,1)}*{box-sizing:border-box}[hidden]{display:none !important}body{font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN",-apple-system,BlinkMacSystemFont,sans-serif;margin:0;padding:0 18px 150px;background:radial-gradient(900px 420px at 82% -10%,rgba(43,124,255,.18),transparent 62%),radial-gradient(740px 460px at 8% 12%,rgba(79,208,214,.12),transparent 64%),linear-gradient(180deg,var(--bg),var(--bg-2));color:var(--text);line-height:1.75;letter-spacing:.02em;min-height:100vh}body.affiliate-banner-hidden{padding-bottom:28px}body.input-focused .affiliate-banner{transform:translateY(calc(100%+24px))}h2{font-size:28px;margin:26px 0 18px}.en{font-family:"Oswald",Impact,sans-serif;font-weight:500;letter-spacing:.16em;text-transform:uppercase}.app-header{position:sticky;top:0;z-index:30;display:flex;align-items:stretch;flex-direction:column;gap:10px;background:rgba(6,8,15,.86);color:var(--text);padding:14px 22px;border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}.app-standalone .app-header{gap:0;padding:10px 22px}.app-standalone .header-tools{display:none}.app-standalone .site-return-link{display:none}.header-main{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;min-width:0}.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:0}.brand-home{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:0;color:inherit;text-decoration:none;transition:opacity .25s var(--ease)}.brand-home:hover{opacity:.86}.brand-copy{display:flex;flex-direction:column;gap:2px;justify-content:center;min-width:0}.brand-icon{width:44px;height:44px;border-radius:50%;object-fit:cover;background:#fff;border:1px solid rgba(200,214,230,.36);flex:0 0 auto}.brand-title{display:block;color:#fff;font-family:"Oswald",Impact,sans-serif;font-size:17px;font-weight:500;line-height:1;letter-spacing:.12em;text-decoration:none;text-transform:uppercase;white-space:nowrap}.brand-subtitle{display:block;color:var(--silver);font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;line-height:1;margin-top:0;text-transform:none}.brand-provider{display:block;color:var(--muted);font-size:10px;line-height:1;margin-top:0;letter-spacing:.12em;text-decoration:none;transition:color .25s var(--ease);white-space:nowrap}.header-actions{display:grid;flex:0 0 auto;gap:6px;justify-items:stretch;width:124px}.header-help-link,.header-site-link{align-items:center;justify-content:center;background:rgba(79,208,214,.08);border:1px solid rgba(79,208,214,.34);border-radius:999px;color:var(--accent);display:inline-flex;flex:0 0 auto;font-size:12px;font-weight:800;line-height:1.3;min-height:36px;padding:5px 12px;text-align:center;text-decoration:none;transition:.25s var(--ease);white-space:nowrap;width:100%}.header-help-link:hover,.header-site-link:hover{background:rgba(79,208,214,.15);border-color:rgba(79,208,214,.58);color:#8ff4f7}.header-tools{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}.tool-pill,.tool-label{align-items:center;background:transparent;border:1px solid var(--silver);border-radius:999px;color:var(--silver);display:inline-flex;font-size:12px;font-weight:800;justify-content:center;line-height:1;min-height:34px;padding:0 12px;text-decoration:none;text-align:center;transition:.25s var(--ease);white-space:nowrap}.tool-nav{align-items:center;background:rgba(13,21,40,.68);border:1px solid rgba(200,214,230,.12);border-radius:999px;display:inline-flex;flex-wrap:nowrap;gap:5px;min-width:0;padding:2px 4px}.tool-label{align-self:stretch;border:0;color:var(--muted);font-family:"Oswald",Impact,sans-serif;font-size:10px;font-weight:500;justify-content:flex-start;letter-spacing:.18em;padding:0 5px 0 8px}.tool-pill:hover{background:var(--silver);color:var(--bg)}.tool-pill-accent{border-color:var(--accent);color:var(--accent)}.tool-pill-accent:hover{background:var(--accent);color:var(--bg)}.tool-pill.is-active{background:rgba(79,208,214,.14);border-color:rgba(79,208,214,.58);color:var(--accent)}.tool-pill.wrap{line-height:1.08;white-space:normal}.quick-guide{background:rgba(79,208,214,.07);border:1px solid rgba(79,208,214,.24);border-left:3px solid var(--accent);border-radius:12px;color:var(--silver);display:grid;gap:4px;margin:14px 0 12px;padding:12px 14px}.quick-guide-title{color:var(--accent);font-family:"Oswald",Impact,sans-serif;font-size:11px;font-weight:500;letter-spacing:.26em;text-transform:uppercase}.quick-guide-text{font-size:13px;line-height:1.65}.quick-guide-actions{margin-top:10px}.quick-guide-button{align-items:center;background:var(--accent);border:1px solid var(--accent);border-radius:999px;color:var(--bg);display:inline-flex;font-size:12px;font-weight:800;justify-content:center;min-height:34px;padding:0 14px}.first-reel-cta{align-items:center;background:linear-gradient(120deg,rgba(231,183,101,.16),rgba(79,208,214,.08));border:1px solid rgba(231,183,101,.36);border-left:3px solid var(--gold);border-radius:12px;color:var(--silver);display:flex;gap:12px;justify-content:space-between;margin:14px 0 12px;padding:12px 14px}.first-reel-cta[hidden]{display:none}.first-reel-title{color:#fff;font-size:15px;font-weight:800;line-height:1.45}.first-reel-text{color:var(--muted);font-size:12px;line-height:1.55;margin-top:2px}.first-reel-link{background:var(--gold);border-radius:999px;color:#111827;flex:0 0 auto;font-size:13px;font-weight:800;padding:10px 14px;text-decoration:none}.section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:18px 0;box-shadow:0 18px 50px rgba(0,0,0,.24);scroll-margin-top:104px}.section h3{color:#fff;margin:0 0 10px;font-size:20px;line-height:1.35}.section h3::before{content:attr(data-kicker);display:block;color:var(--accent);font-family:"Oswald",Impact,sans-serif;font-size:10px;font-weight:500;letter-spacing:.3em;margin-bottom:4px}.section-heading{align-items:center;display:flex;gap:12px;justify-content:space-between;margin:0 0 10px}.section-heading h3{margin:0;min-width:0}.section-add-link{align-items:center;background:rgba(79,208,214,.08);border:1px solid rgba(79,208,214,.46);border-radius:999px;color:var(--accent);display:inline-flex;flex:0 0 auto;font-size:12px;font-weight:800;justify-content:center;line-height:1;margin-bottom:0;min-height:30px;padding:0 11px;text-decoration:none;white-space:nowrap;width:auto}.section-add-link:hover{background:rgba(79,208,214,.15);border-color:rgba(79,208,214,.68);color:#8ff4f7}.section-list,.section-stock-list,.section-used-stock-list,.section-detail,.section-stock-detail,.section-used-stock-detail,.section-memo,.section-form,.section-stock-form,.section-memo-list{background:var(--panel)}.workspace-divider{align-items:center;color:var(--muted);display:grid;gap:12px;grid-template-columns:1fr auto 1fr;margin:26px 0 20px}.workspace-divider::before,.workspace-divider::after{background:linear-gradient(90deg,transparent,rgba(200,214,230,.36),transparent);content:"";height:1px}.workspace-divider span{border:1px solid rgba(200,214,230,.22);border-radius:999px;color:var(--silver);font-family:"Oswald",Impact,sans-serif;font-size:10px;letter-spacing:.22em;padding:6px 10px;text-transform:uppercase;white-space:nowrap}#status{background:rgba(17,26,48,.82);padding:12px;border-radius:10px;margin-bottom:12px;font-size:16px;border:1px solid var(--line);border-left:3px solid var(--accent);color:var(--silver);min-height:48px;display:flex;align-items:center}#csvBackupBtn{background:#0f766e;margin-bottom:18px}#jsonBackupBtn{background:var(--accent-2)}#csvRestoreBtn{background:#0f766e}#jsonRestoreBtn{background:var(--accent-2)}.file-input{background:var(--panel-2)}.summary{background:rgba(6,8,15,.22);border:1px solid var(--line);border-radius:10px;padding:8px}.summary-row{display:grid;grid-template-columns:42px 1.7fr 0.42fr 0.62fr 0.9fr 0.5fr 0.5fr;gap:4px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line);font-size:13px}.summary-row.header{color:var(--muted);font-weight:bold;font-size:11px;letter-spacing:.08em}.summary-row.sorting{grid-template-columns:1fr 44px 44px;background:rgba(79,208,214,.08);border:1px solid var(--line);border-radius:10px;padding:10px 8px;margin:4px 0}.summary-cell{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.scroll-name-cell{overflow-x:auto;overflow-y:hidden;white-space:nowrap;text-overflow:clip;-webkit-overflow-scrolling:touch;scrollbar-width:none;touch-action:pan-x}.scroll-name-cell::-webkit-scrollbar{display:none}.summary-link{color:var(--text);text-decoration:underline;text-underline-offset:3px;display:inline-block;min-width:100%}.stock-summary-row{display:grid;grid-template-columns:minmax(0,1fr) 32px 44px 32px 76px;gap:4px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line);font-size:13px}.stock-summary-row.header{color:var(--muted);font-weight:bold;font-size:11px}.stock-wind-list-btn{align-self:center;background:transparent;border:1px solid rgba(79,208,214,.78);border-radius:999px;color:var(--accent);justify-self:end;font-size:11px;font-weight:800;margin-bottom:0;padding:6px 8px;white-space:nowrap;width:74px}.used-stock-summary-row{align-items:center;border-bottom:1px solid var(--line);display:grid;font-size:13px;gap:4px;grid-template-columns:minmax(0,1.2fr) 32px 44px minmax(0,.9fr) 58px;padding:10px 4px}.used-stock-summary-row.header{color:var(--muted);font-size:11px;font-weight:bold}.memo-summary-row{display:grid;grid-template-columns:1fr 0.8fr;gap:4px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line);font-size:13px}.memo-summary-row.header{color:var(--muted);font-weight:bold;font-size:11px}.memo-title-link{color:var(--text);text-decoration:underline;text-underline-offset:3px;cursor:pointer}.memo-date{text-align:right;color:var(--muted);font-size:12px}.type-badge{display:inline-block;min-width:28px;padding:3px 4px;border-radius:999px;font-size:10px;font-weight:800;text-align:center;color:white}.type-EL{background:var(--accent-2)}.type-BC{background:var(--gold);color:#111827}.type-SP{background:#13a08f}.type-OT{background:#637083}.sort-name{font-weight:bold;font-size:15px}.center{text-align:center}.flag-cell,.memo-mark{text-align:center;font-weight:bold}.sort-btn{width:40px;height:36px;padding:0;margin:0;border-radius:10px;font-size:20px;line-height:1;background:var(--accent-2)}.sort-btn:disabled{background:rgba(147,164,189,.18);color:var(--muted)}input,textarea,button,select{font-size:18px;padding:12px;width:100%;box-sizing:border-box;margin-bottom:14px;border-radius:8px;border:1px solid var(--line);background:var(--panel-2);color:var(--text);font-family:inherit}input::placeholder,textarea::placeholder{color:rgba(147,164,189,.72)}input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,208,214,.12)}input[type="date"]{width:100%;display:block;box-sizing:border-box;-webkit-appearance:none;appearance:none}textarea{min-height:90px}button{background:var(--accent-2);color:#fff;border:none;font-weight:bold;transition:.25s var(--ease)}button:hover{filter:brightness(1.08)}button.secondary{background:#637083}button.stock-save{background:#0f766e}button.memo-save{background:#6d5bd0}ul{padding:0}li{list-style:none;background:rgba(6,8,15,.22);border:1px solid var(--line);margin:12px 0;padding:14px;border-radius:8px;box-shadow:none;transition:background 0.25s ease,transform 0.25s ease}.title{font-size:20px;font-weight:bold;margin-bottom:8px}.line-block{background:rgba(6,8,15,.2);border-radius:8px;padding:10px;margin:10px 0;border:1px solid var(--line)}.line-label{font-weight:bold;color:var(--accent);margin-bottom:4px}.memo{background:rgba(200,214,230,.07);padding:10px;border-radius:8px;margin-top:8px;white-space:pre-wrap}.row{display:flex;gap:8px;margin-top:10px}.row button{flex:1;font-size:15px;padding:10px}.useBtn{background:#10b981}.editBtn{background:var(--gold);color:#111827}.deleteBtn{background:var(--danger)}.small{color:var(--muted);font-size:13px;margin:4px 0 12px}.sub-section{background:rgba(231,183,101,.08);border:1px solid rgba(231,183,101,.28);border-radius:8px;padding:12px;margin-bottom:14px}.sub-section h4{margin:0 0 10px}.empty-box{background:rgba(6,8,15,.22);border-radius:8px;padding:14px;color:var(--muted);border:1px solid var(--line)}.detail-box{background:rgba(6,8,15,.2);border-radius:8px;padding:12px;border:1px solid var(--line)}.stock-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}.stock-meta-item{background:rgba(200,214,230,.07);border:1px solid var(--line);border-radius:8px;padding:8px 10px}.stock-meta-label{color:var(--muted);font-size:12px;line-height:1.2}.stock-meta-value{color:var(--text);font-size:15px;font-weight:700;line-height:1.35;margin-top:3px}.site-footer{display:grid;justify-items:center;gap:10px;border-top:1px solid var(--line);margin:26px 0 0;padding:22px 0 0;color:var(--muted);text-align:center}.footer-mark{color:var(--accent);font-family:"Oswald",Impact,sans-serif;font-size:12px;font-weight:500;letter-spacing:.08em;line-height:1;text-transform:uppercase}.footer-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}.footer-link{align-items:center;background:transparent;border:1px solid var(--silver);border-radius:999px;color:var(--silver);display:inline-flex;font-size:13px;font-weight:700;justify-content:center;line-height:1;min-height:34px;padding:0 14px;text-align:center;text-decoration:none;transition:.25s var(--ease);white-space:nowrap}.footer-link:hover{background:var(--silver);color:var(--bg)}.footer-note{color:var(--muted);font-size:12px}.footer-warning{color:rgba(200,214,230,.76);font-size:11px;line-height:1.6;margin:8px auto 0;max-width:760px}.affiliate-banner{align-items:center;background:rgba(6,8,15,.94);border:1px solid rgba(231,183,101,.44);border-radius:14px;bottom:12px;box-shadow:0 18px 60px rgba(0,0,0,.52);display:grid;gap:10px;grid-template-columns:minmax(180px,240px) 1fr auto;left:12px;padding:12px;position:fixed;right:12px;z-index:40;transition:transform .25s var(--ease),opacity .25s var(--ease)}.affiliate-banner[hidden]{display:none}.affiliate-kicker{color:var(--gold);font-family:"Oswald",Impact,sans-serif;font-size:10px;letter-spacing:.26em;text-transform:uppercase}.affiliate-title{color:#fff;font-size:14px;font-weight:800;line-height:1.4}.affiliate-note{color:var(--muted);font-size:10px;line-height:1.45;margin-top:2px}.affiliate-ad-slot{min-width:0;overflow:hidden}.affiliate-ad-slot iframe,.affiliate-ad-slot img,.affiliate-ad-slot ins{max-width:100%}.affiliate-close{align-items:center;background:transparent;border:1px solid var(--line);border-radius:999px;color:var(--silver);cursor:pointer;display:flex;font-size:18px;height:34px;justify-content:center;line-height:1;padding:0;width:34px}@media (max-width:640px){body{padding:0 12px 170px}body.affiliate-banner-hidden{padding-bottom:20px}.app-header{padding:10px 12px}.app-standalone .app-header{padding:8px 12px}.header-main{align-items:center}.brand-icon{width:38px;height:38px}.brand-title{font-size:14px;letter-spacing:.09em}.brand-subtitle{font-size:10px;letter-spacing:.06em}.brand-provider{font-size:9px;letter-spacing:.08em}.header-help-link,.header-site-link{font-size:11px;min-height:30px;padding:4px 10px}.header-actions{gap:6px;width:108px}.header-tools{align-items:center;justify-content:space-between}.tool-pill,.tool-label{min-height:32px;padding:0 9px;font-size:11px}.tool-nav{flex:0 1 auto;gap:3px;padding:2px 3px}.tool-label{padding:0 5px 0 7px}.tool-pill.wrap{min-width:58px;padding:0 8px}.first-reel-cta{align-items:stretch;flex-direction:column}.first-reel-link{text-align:center}.affiliate-banner{gap:8px;grid-template-columns:1fr auto;padding:10px}.affiliate-ad-slot{grid-column:1 / -1;overflow-x:auto;padding-bottom:2px}.affiliate-close{grid-column:2;grid-row:1}h2{margin-top:20px}}</style></head><body><div class="app-header"><div class="header-main"><div class="brand"><a class="brand-home" href="./" aria-label="REEL LINE MANAGER トップへ"><img class="brand-icon" src="icons/icon-192.png" alt="Reel Line Manager"><span class="brand-copy"><span class="brand-title">REEL LINE MANAGER</span><span class="brand-subtitle">リール糸管理</span><span class="brand-provider">3rd-Penguin Fishing Lab.</span></span></a></div><div class="header-actions"><a class="header-help-link" href="help.html">使い方を見る</a><a class="header-site-link site-return-link" href="https://cutlassfish.tokyo/">サイトに戻る</a></div></div></div><div id="firstReelCta" class="first-reel-cta" hidden><div><div class="first-reel-title">まずはここからリールを登録</div><div class="first-reel-text">最初の1台を入れると、ラインの号数・長さ・巻き替え日・使用回数を管理できます。</div></div><a class="first-reel-link" href="#newReelSection">リールを登録する</a></div><div id="quickGuide" class="quick-guide" hidden><div class="quick-guide-title">Recommended Use</div><div class="quick-guide-text">スマホではホーム画面に追加して使うのがおすすめです。iPhoneはSafariの共有ボタンから「ホーム画面に追加」、AndroidはChromeのメニューから「ホーム画面に追加」を選びます。</div><div class="quick-guide-actions"><button id="installGuideButton" class="quick-guide-button" type="button">共有メニューを開く</button></div></div><div id="status">読み込み中...</div><section class="section section-list"><div class="section-heading"><h3 data-kicker="REELS">登録リール一覧</h3><a class="section-add-link" href="#newReelSection">新規登録</a></div><p class="small">リール名は左右スクロールで全文確認できます。タップで詳細へ表示。長押しで並び替え。</p><div class="summary" id="summary"></div></section><section class="section section-stock-list"><div class="section-heading"><h3 data-kicker="LINE STOCK">ラインストック一覧</h3><a class="section-add-link" href="#newStockSection">新規登録</a></div><p class="small">タップすると下の詳細/編集エリアに表示します。</p><div class="summary" id="stockSummary"></div></section><section class="section section-used-stock-list"><div class="section-heading"><h3 data-kicker="USED LINE">利用済みライン履歴</h3><button class="section-add-link" id="usedStockToggleBtn" type="button" onclick="toggleUsedStockSummary()" hidden>すべて見る</button></div><p class="small">ラインストックからリールへ巻いた履歴です。タップすると下の詳細/編集エリアに表示します。</p><div class="summary" id="usedStockSummary"></div></section><section class="section section-memo-list"><div class="section-heading"><h3 data-kicker="NOTES">メモ一覧</h3><a class="section-add-link" href="#newMemoSection">新規登録</a></div><p class="small">メモの書き出し10文字程度を表示します。タップすると下の詳細/編集エリアに表示します。</p><div class="summary" id="memoSummary"></div></section><div class="workspace-divider" aria-hidden="true"><span>Edit Area</span></div><section class="section section-detail"><h3 data-kicker="REEL DETAIL">登録リール詳細 / 編集</h3><div id="reelDetail"></div></section><section class="section section-stock-detail"><h3 data-kicker="STOCK DETAIL">ラインストック詳細 / 編集</h3><div id="stockDetail"></div></section><section class="section section-used-stock-detail"><h3 data-kicker="USED LINE DETAIL">利用済みライン履歴詳細 / 編集</h3><div id="usedStockDetail"></div></section><section class="section section-memo"><h3 data-kicker="NOTE DETAIL">メモ詳細 / 編集</h3><div id="memoDetail"></div></section><section id="newReelSection" class="section section-form"><h3 data-kicker="ADD REEL">リール新規登録</h3><input id="newName" placeholder="リール名"><label>リールメーカー</label><select id="newReelMaker" onchange="toggleOtherInput('newReelMaker', 'newReelMakerOther')"></select><input id="newReelMakerOther" placeholder="リールメーカー名を入力" hidden><label>年式</label><input id="newReelYear" inputmode="numeric" maxlength="2" pattern="[0-9]{2}" placeholder="2桁 例：24"><label>リール種類</label><select id="newReelType"><option value="EL">電動 / EL</option><option value="BC">両軸 / BC</option><option value="SP">スピニング / SP</option><option value="OT">その他 / OT</option></select><h4>メインスプール / 糸情報（任意）</h4><input id="newMainSpoolSize" placeholder="メインスプールサイズ 例：100 / 4000"><label>糸メーカー</label><select id="newLineMaker" onchange="toggleOtherInput('newLineMaker', 'newLineMakerOther')"></select><input id="newLineMakerOther" placeholder="糸メーカー名を入力" hidden><label>糸の種類</label><select id="newLineType"></select><input id="newLineProductName" placeholder="糸の商品名（任意） 例：PE X8"><input id="newLineSize" type="number" step="0.1" placeholder="糸の太さ 例：1.2"><input id="newLineLength" type="number" placeholder="長さ 例：200"><label>巻き替え日</label><input id="newSpooledAt" type="date"><label>最終利用日</label><input id="newUsedAt" type="date"><label>使用回数</label><input id="newUsageCount" type="number" min="0" value="0"><label>替えスプール数</label><select id="newSpareSpoolCount"><option value="0">替えスプールなし</option><option value="1">替えスプール1つ</option><option value="2">替えスプール2つ</option></select><div id="newSpare1Fields" class="sub-section" style="display:none;"><h4>替えスプール①</h4><input id="newSpare1SpoolSize" placeholder="替えスプール①サイズ 例：100 / 4000"><label>替えスプール① 糸メーカー</label><select id="newSpare1LineMaker" onchange="toggleOtherInput('newSpare1LineMaker', 'newSpare1LineMakerOther')"></select><input id="newSpare1LineMakerOther" placeholder="糸メーカー名を入力" hidden><label>替えスプール① 糸の種類</label><select id="newSpare1LineType"></select><input id="newSpare1LineProductName" placeholder="替えスプール①の糸の商品名（任意）"><input id="newSpare1LineSize" type="number" step="0.1" placeholder="替えスプール①の糸の太さ 例：1.5"><input id="newSpare1LineLength" type="number" placeholder="替えスプール①の長さ 例：200"><label>替えスプール①巻き替え日</label><input id="newSpare1SpooledAt" type="date"><label>替えスプール①最終利用日</label><input id="newSpare1UsedAt" type="date"><label>替えスプール①使用回数</label><input id="newSpare1UsageCount" type="number" min="0" value="0"></div><div id="newSpare2Fields" class="sub-section" style="display:none;"><h4>替えスプール②</h4><input id="newSpare2SpoolSize" placeholder="替えスプール②サイズ 例：100 / 4000"><label>替えスプール② 糸メーカー</label><select id="newSpare2LineMaker" onchange="toggleOtherInput('newSpare2LineMaker', 'newSpare2LineMakerOther')"></select><input id="newSpare2LineMakerOther" placeholder="糸メーカー名を入力" hidden><label>替えスプール② 糸の種類</label><select id="newSpare2LineType"></select><input id="newSpare2LineProductName" placeholder="替えスプール②の糸の商品名（任意）"><input id="newSpare2LineSize" type="number" step="0.1" placeholder="替えスプール②の糸の太さ 例：2.0"><input id="newSpare2LineLength" type="number" placeholder="替えスプール②の長さ 例：200"><label>替えスプール②巻き替え日</label><input id="newSpare2SpooledAt" type="date"><label>替えスプール②最終利用日</label><input id="newSpare2UsedAt" type="date"><label>替えスプール②使用回数</label><input id="newSpare2UsageCount" type="number" min="0" value="0"></div><textarea id="newMemo" placeholder="メモ"></textarea><button id="createReelBtn">リールを新規保存</button></section><section id="newStockSection" class="section section-stock-form"><h3 data-kicker="ADD STOCK">ラインストック新規登録</h3><label>糸メーカー</label><select id="newStockMaker" onchange="toggleOtherInput('newStockMaker', 'newStockMakerOther')"></select><input id="newStockMakerOther" placeholder="糸メーカー名を入力" hidden><label>糸の種類</label><select id="newStockLineType"></select><input id="newStockName" placeholder="商品名 例：PE X8"><input id="newStockSize" type="number" step="0.1" placeholder="号数 例：1.5"><input id="newStockLength" type="number" placeholder="長さ 例：200"><input id="newStockQuantity" type="number" min="0" value="1" placeholder="個数"><textarea id="newStockMemo" placeholder="ストックメモ"></textarea><button id="createStockBtn" class="stock-save">ラインストックを新規保存</button></section><section id="newMemoSection" class="section section-memo-form"><h3 data-kicker="ADD NOTE">メモ新規登録</h3><p class="small">釣具の買い物メモ、釣行前メモ、注意事項などを1件ずつ登録できます。</p><textarea id="newAppMemo" placeholder="メモ内容"></textarea><button id="createMemoBtn" class="memo-save">メモを新規保存</button></section><section class="section"><h3 data-kicker="BACKUP">バックアップ</h3><button id="csvBackupBtn">CSVでバックアップ</button><button id="jsonBackupBtn">JSONでバックアップ</button><label>CSV復元</label><input id="csvRestoreInput" class="file-input" type="file" accept=".csv,text/csv"><label>JSON復元</label><input id="jsonRestoreInput" class="file-input" type="file" accept=".json,application/json"></section><footer class="site-footer"><div class="footer-mark en">TOKYO BAY FISHING</div><div class="footer-actions"><a class="footer-link" href="https://cutlassfish.tokyo/topic/tools/">ツール一覧</a><a class="footer-link" href="help.html">使い方を見る</a></div><div class="footer-note">© 2026 3rd-Penguin Fishing Lab. All rights reserved.</div><div class="footer-warning">ソースコードの無断コピー・転載・AIによる解析や再生成を含む複製を固く禁じます。AI等によるソースコピーは検知・トラッキングの対象であり、確認できる形で記録されます。</div></footer><template id="amazonRecommendationAdCode"></template><div id="affiliateBanner" class="affiliate-banner" role="complementary" aria-label="Amazonおすすめ広告"><div><div class="affiliate-kicker">Recommended</div><div class="affiliate-title">3rd-Penguinのおすすめ</div><div class="affiliate-note">Amazonアソシエイト・プログラムを利用しています。</div></div><div id="amazonAdSlot" class="affiliate-ad-slot"></div><button id="affiliateCloseBtn" class="affiliate-close" type="button" aria-label="広告を閉じる">×</button></div><script>const DB_NAME = "reelLineManagerPublic";
+const DB_VERSION = 2;
+const STORE_NAMES = ["reels", "lineStocks", "usedLineStocks", "lineMemos", "settings"];
+const OTHER_OPTION = "__other__";
+const REEL_MAKER_OPTIONS = ["", "シマノ", "ダイワ", "アブガルシア", "テイルウォーク", "プロックス", OTHER_OPTION];
+const LINE_MAKER_OPTIONS = ["", "シマノ", "ダイワ", "YGK / よつあみ", "バリバス", "サンライン", "クレハ / シーガー", "デュエル", "ゴーセン", "東レ", "ユニチカ", "バークレー", OTHER_OPTION];
+const LINE_TYPE_OPTIONS = ["", "PE", "融合系PE", "フロロ", "ナイロン", "エステル", "その他"];
+let idb = null;
+function openDatabase() {
+if (idb) return Promise.resolve(idb);
+return new Promise((resolve, reject) => {
+const request = indexedDB.open(DB_NAME, DB_VERSION);
+request.onupgradeneeded = event => {
+const database = event.target.result;
+STORE_NAMES.forEach(storeName => {
+if (!database.objectStoreNames.contains(storeName)) {
+database.createObjectStore(storeName, { keyPath: "id" });
+}
+});
+};
+request.onsuccess = event => {
+idb = event.target.result;
+resolve(idb);
+};
+request.onerror = () => reject(request.error);
+});
+}
+async function getAllFromStore(storeName) {
+const database = await openDatabase();
+return new Promise((resolve, reject) => {
+const transaction = database.transaction(storeName, "readonly");
+const store = transaction.objectStore(storeName);
+const request = store.getAll();
+request.onsuccess = () => resolve(request.result || []);
+request.onerror = () => reject(request.error);
+});
+}
+async function getFromStore(storeName, id) {
+const database = await openDatabase();
+return new Promise((resolve, reject) => {
+const transaction = database.transaction(storeName, "readonly");
+const store = transaction.objectStore(storeName);
+const request = store.get(id);
+request.onsuccess = () => resolve(request.result || null);
+request.onerror = () => reject(request.error);
+});
+}
+async function putInStore(storeName, item) {
+const database = await openDatabase();
+return new Promise((resolve, reject) => {
+const transaction = database.transaction(storeName, "readwrite");
+const store = transaction.objectStore(storeName);
+store.put(item);
+transaction.oncomplete = () => resolve(item);
+transaction.onerror = () => reject(transaction.error);
+});
+}
+async function addToStore(storeName, data) {
+const now = getTimestamp();
+const item = {
+...data,
+id: createId(),
+createdAt: data.createdAt || now,
+updatedAt: data.updatedAt || now
+};
+await putInStore(storeName, item);
+return item;
+}
+async function updateStoreItem(storeName, id, data) {
+const current = await getFromStore(storeName, id);
+if (!current) throw new Error("対象データが見つかりません");
+const updated = {
+...current,
+...data,
+id,
+updatedAt: data.updatedAt || getTimestamp()
+};
+await putInStore(storeName, updated);
+return updated;
+}
+async function deleteFromStore(storeName, id) {
+const database = await openDatabase();
+return new Promise((resolve, reject) => {
+const transaction = database.transaction(storeName, "readwrite");
+const store = transaction.objectStore(storeName);
+store.delete(id);
+transaction.oncomplete = () => resolve();
+transaction.onerror = () => reject(transaction.error);
+});
+}
+async function replaceStore(storeName, items) {
+const database = await openDatabase();
+return new Promise((resolve, reject) => {
+const transaction = database.transaction(storeName, "readwrite");
+const store = transaction.objectStore(storeName);
+store.clear();
+items.forEach(item => store.put(item));
+transaction.oncomplete = () => resolve();
+transaction.onerror = () => reject(transaction.error);
+});
+}
+function createId() {
+if (crypto && crypto.randomUUID) return crypto.randomUUID();
+return `id-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+function getTimestamp() {
+return new Date().toISOString();
+}
+let reels = [];
+let lineStocks = [];
+let usedLineStocks = [];
+let lineMemos = [];
+let usedStockExpanded = false;
+let selectedReelId = null;
+let selectedStockId = null;
+let selectedUsedStockId = null;
+let selectedMemoId = null;
+let sortTargetId = null;
+let longPressTimer = null;
+let longPressTriggered = false;
+let normalizedOnce = false;
+let deferredInstallPrompt = null;
+const today = new Date().toISOString().slice(0, 10);
+const statusEl = document.getElementById("status");
+const affiliateBannerEl = document.getElementById("affiliateBanner");
+const affiliateCloseBtn = document.getElementById("affiliateCloseBtn");
+const amazonAdCodeTemplateEl = document.getElementById("amazonRecommendationAdCode");
+const amazonAdSlotEl = document.getElementById("amazonAdSlot");
+const firstReelCtaEl = document.getElementById("firstReelCta");
+const quickGuideEl = document.getElementById("quickGuide");
+const installGuideButtonEl = document.getElementById("installGuideButton");
+const summaryEl = document.getElementById("summary");
+const stockSummaryEl = document.getElementById("stockSummary");
+const usedStockSummaryEl = document.getElementById("usedStockSummary");
+const usedStockToggleBtn = document.getElementById("usedStockToggleBtn");
+const reelDetailEl = document.getElementById("reelDetail");
+const stockDetailEl = document.getElementById("stockDetail");
+const usedStockDetailEl = document.getElementById("usedStockDetail");
+const memoSummaryEl = document.getElementById("memoSummary");
+const memoDetailEl = document.getElementById("memoDetail");
+const newAppMemoEl = document.getElementById("newAppMemo");
+const newSpareSpoolCountEl = document.getElementById("newSpareSpoolCount");
+const newSpare1FieldsEl = document.getElementById("newSpare1Fields");
+const newSpare2FieldsEl = document.getElementById("newSpare2Fields");
+document.getElementById("csvBackupBtn").addEventListener("click", exportCsv);
+document.getElementById("jsonBackupBtn").addEventListener("click", exportJson);
+document.getElementById("csvRestoreInput").addEventListener("change", importCsv);
+document.getElementById("jsonRestoreInput").addEventListener("change", importJson);
+document.getElementById("createMemoBtn").addEventListener("click", createLineMemo);
+document.getElementById("createReelBtn").addEventListener("click", createReel);
+document.getElementById("createStockBtn").addEventListener("click", createLineStock);
+newSpareSpoolCountEl.addEventListener("change", updateNewSpareFieldsVisibility);
+affiliateCloseBtn.addEventListener("click", closeAffiliateBanner);
+installGuideButtonEl.addEventListener("click", openInstallGuide);
+document.addEventListener("focusin", handleFocusIn);
+document.addEventListener("focusout", handleFocusOut);
+window.addEventListener("beforeinstallprompt", event => {
+event.preventDefault();
+deferredInstallPrompt = event;
+updateInstallGuide();
+});
+initializeOptionSelects();
+clearStoredAffiliateBannerState();
+renderAmazonRecommendationAd();
+function initializeOptionSelects() {
+[
+["newReelMaker", REEL_MAKER_OPTIONS, ""],
+["newLineMaker", LINE_MAKER_OPTIONS, ""],
+["newSpare1LineMaker", LINE_MAKER_OPTIONS, ""],
+["newSpare2LineMaker", LINE_MAKER_OPTIONS, ""],
+["newStockMaker", LINE_MAKER_OPTIONS, ""],
+["newLineType", LINE_TYPE_OPTIONS, ""],
+["newSpare1LineType", LINE_TYPE_OPTIONS, ""],
+["newSpare2LineType", LINE_TYPE_OPTIONS, ""],
+["newStockLineType", LINE_TYPE_OPTIONS, "PE"]
+].forEach(([id, options, selected]) => populateSelect(id, options, selected));
+}
+function setStatus(text) {
+statusEl.innerText = text;
+}
+function isStandaloneApp() {
+return window.matchMedia("(display-mode: standalone)").matches ||
+window.matchMedia("(display-mode: fullscreen)").matches ||
+window.navigator.standalone === true;
+}
+function updateInstallGuide() {
+if (!quickGuideEl || !installGuideButtonEl) return;
+quickGuideEl.hidden = isStandaloneApp();
+installGuideButtonEl.textContent = deferredInstallPrompt ? "アプリとして追加" : "共有メニューを開く";
+}
+async function openInstallGuide() {
+if (deferredInstallPrompt) {
+const promptEvent = deferredInstallPrompt;
+deferredInstallPrompt = null;
+promptEvent.prompt();
+await promptEvent.userChoice.catch(() => null);
+updateInstallGuide();
+return;
+}
+if (navigator.share) {
+try {
+await navigator.share({
+title: document.title,
+text: "リール糸管理をホーム画面に追加して使う",
+url: location.href
+});
+return;
+} catch (error) {
+if (error?.name === "AbortError") return;
+}
+}
+setStatus("iPhoneはSafariの共有ボタンから「ホーム画面に追加」を選んでください。AndroidはChromeのメニューから追加できます。");
+}
+function trackAnalyticsEvent(name, params = {}) {
+if (typeof gtag !== "function") return;
+gtag("event", name, params);
+}
+function clearStoredAffiliateBannerState() {
+localStorage.removeItem("affiliateBannerClosed");
+}
+function closeAffiliateBanner() {
+hideAffiliateBanner();
+}
+function hideAffiliateBanner() {
+affiliateBannerEl.hidden = true;
+document.body.classList.add("affiliate-banner-hidden");
+}
+function renderAmazonRecommendationAd() {
+const adCode = amazonAdCodeTemplateEl.innerHTML.trim();
+if (!adCode) {
+hideAffiliateBanner();
+return;
+}
+affiliateBannerEl.hidden = false;
+document.body.classList.remove("affiliate-banner-hidden");
+amazonAdSlotEl.innerHTML = "";
+appendAdCode(amazonAdSlotEl, adCode);
+}
+function appendAdCode(container, html) {
+const template = document.createElement("template");
+template.innerHTML = html;
+[...template.content.childNodes].forEach(node => {
+if (node.nodeName.toLowerCase() !== "script") {
+container.appendChild(node.cloneNode(true));
+return;
+}
+const script = document.createElement("script");
+[...node.attributes].forEach(attr => script.setAttribute(attr.name, attr.value));
+script.textContent = node.textContent;
+container.appendChild(script);
+});
+}
+function handleFocusIn(event) {
+if (event.target.matches("input, textarea, select")) {
+document.body.classList.add("input-focused");
+}
+}
+function handleFocusOut(event) {
+if (event.target.matches("input, textarea, select")) {
+document.body.classList.remove("input-focused");
+}
+}
+function scrollToAppTop() {
+requestAnimationFrame(() => {
+window.scrollTo({
+top: 0,
+behavior: "smooth"
+});
+});
+}
+function updateNewSpareFieldsVisibility() {
+const count = Number(newSpareSpoolCountEl.value || 0);
+newSpare1FieldsEl.style.display = count >= 1 ? "block" : "none";
+newSpare2FieldsEl.style.display = count >= 2 ? "block" : "none";
+}
+function updateDetailSpareFieldsVisibility() {
+const countEl = document.getElementById("detailSpareSpoolCount");
+if (!countEl) return;
+const count = Number(countEl.value || 0);
+const spare1 = document.getElementById("detailSpare1Fields");
+const spare2 = document.getElementById("detailSpare2Fields");
+if (spare1) spare1.style.display = count >= 1 ? "block" : "none";
+if (spare2) spare2.style.display = count >= 2 ? "block" : "none";
+}
+function getSpareCountFromData(d) {
+if (typeof d.spareSpoolCount === "number") return d.spareSpoolCount;
+if (d.hasSpareSpool) return 1;
+return 0;
+}
+function getOrderValue(item) {
+return typeof item.order === "number" ? item.order : 9999999999999;
+}
+function getTimeValue(value) {
+if (!value) return 0;
+if (value.toMillis) return value.toMillis();
+if (value.toDate) return value.toDate().getTime();
+if (typeof value === "string") return new Date(value).getTime() || 0;
+if (typeof value === "number") return value;
+return 0;
+}
+function sortReelsStable() {
+reels.sort((a, b) => {
+const orderDiff = getOrderValue(a) - getOrderValue(b);
+if (orderDiff !== 0) return orderDiff;
+const aTime = getTimeValue(a.createdAt) || 0;
+const bTime = getTimeValue(b.createdAt) || 0;
+if (aTime !== bTime) return aTime - bTime;
+return String(a.id).localeCompare(String(b.id));
+});
+}
+function needsNormalize() {
+const seen = new Set();
+for (const reel of reels) {
+if (typeof reel.order !== "number") return true;
+if (seen.has(reel.order)) return true;
+seen.add(reel.order);
+}
+return false;
+}
+async function normalizeOrderIfNeeded() {
+if (normalizedOnce) return;
+sortReelsStable();
+if (!needsNormalize()) {
+normalizedOnce = true;
+return;
+}
+setStatus("並び順を整理中...");
+await saveOrder();
+normalizedOnce = true;
+setStatus("並び順を整理しました");
+}
+async function load() {
+try {
+setStatus("読み込み中...");
+const savedReels = await getAllFromStore("reels");
+reels = savedReels.map(data => ({ ...migrateLegacySpoolData(data) }));
+sortReelsStable();
+await normalizeOrderIfNeeded();
+sortReelsStable();
+await loadLineStocks();
+await loadUsedLineStocks();
+await loadLineMemos();
+if (selectedReelId && !reels.find(r => r.id === selectedReelId)) selectedReelId = null;
+if (selectedStockId && !lineStocks.find(s => s.id === selectedStockId)) selectedStockId = null;
+if (selectedUsedStockId && !usedLineStocks.find(s => s.id === selectedUsedStockId)) selectedUsedStockId = null;
+if (selectedMemoId && !lineMemos.find(m => m.id === selectedMemoId)) selectedMemoId = null;
+renderAll();
+setStatus("読み込み完了");
+} catch (e) {
+setStatus("読み込みエラー：" + e.message);
+console.error(e);
+}
+}
+function migrateLegacySpoolData(d) {
+const copy = { ...d };
+if (copy.spareSpoolCount === undefined) {
+copy.spareSpoolCount = copy.hasSpareSpool ? 1 : 0;
+}
+if (copy.spareSpoolCount >= 1 && !copy.spare1LineSize && copy.spareLineSize) {
+copy.spare1SpoolSize = copy.spare1SpoolSize || "";
+copy.spare1LineSize = copy.spareLineSize || "";
+copy.spare1LineLength = copy.spareLineLength || "";
+copy.spare1SpooledAt = copy.spareSpooledAt || "";
+copy.spare1UsedAt = copy.spareUsedAt || "";
+copy.spare1UsageCount = Number(copy.spareUsageCount || 0);
+}
+return copy;
+}
+function renderAll() {
+firstReelCtaEl.hidden = reels.length !== 0;
+updateInstallGuide();
+renderSummary();
+renderStockSummary();
+renderUsedStockSummary();
+renderMemoSummary();
+renderReelDetail();
+renderStockDetail();
+renderUsedStockDetail();
+renderMemoDetail();
+}
+function renderSummary() {
+summaryEl.innerHTML = `
+<div class="summary-row header"><div class="summary-cell">種</div><div class="summary-cell">リール</div><div class="summary-cell center">号</div><div class="summary-cell">長さ</div><div class="summary-cell">巻替日</div><div class="summary-cell flag-cell">替</div><div class="summary-cell memo-mark">メモ</div></div>
+`;
+if (reels.length === 0) {
+summaryEl.innerHTML += `<div class="empty-box">まだリール登録がありません。</div>`;
+return;
+}
+reels.forEach((d, index) => {
+const hasMemo = d.memo && d.memo.trim().length > 0;
+const isActive = sortTargetId === d.id;
+const type = d.reelType || "OT";
+const spareCount = getSpareCountFromData(d);
+if (isActive) {
+summaryEl.innerHTML += `
+<div class="summary-row sorting"
+data-id="${d.id}"
+ontouchstart="startLongPress('${d.id}')"
+ontouchend="cancelLongPress()"
+ontouchmove="cancelLongPress()"
+onmousedown="startLongPress('${d.id}')"
+onmouseup="cancelLongPress()"
+onmouseleave="cancelLongPress()"
+><div class="summary-cell sort-name"><span class="type-badge type-${type}">${type}</span>
+${escapeHtml(d.name || "-")}
+</div><button class="sort-btn" onclick="moveReel('${d.id}', -1)" ${index === 0 ? "disabled" : ""}>↑</button><button class="sort-btn" onclick="moveReel('${d.id}', 1)" ${index === reels.length - 1 ? "disabled" : ""}>↓</button></div>
+`;
+return;
+}
+summaryEl.innerHTML += `
+<div class="summary-row item"
+data-id="${d.id}"
+ontouchstart="startLongPress('${d.id}')"
+ontouchend="cancelLongPress()"
+ontouchmove="cancelLongPress()"
+onmousedown="startLongPress('${d.id}')"
+onmouseup="cancelLongPress()"
+onmouseleave="cancelLongPress()"
+><div class="summary-cell"><span class="type-badge type-${type}">${type}</span></div><div class="summary-cell scroll-name-cell"><span class="summary-link" onclick="selectReel('${d.id}')">${escapeHtml(d.name || "-")}</span></div><div class="summary-cell center">${escapeHtml(d.lineSize || "-")}</div><div class="summary-cell">${escapeHtml(d.lineLength || "-")}</div><div class="summary-cell">${escapeHtml(formatShortDate(d.spooledAt))}</div><div class="summary-cell flag-cell">${spareCount > 0 ? "有" : "-"}</div><div class="summary-cell memo-mark">${hasMemo ? "有" : "-"}</div></div>
+`;
+});
+}
+function renderStockSummary() {
+stockSummaryEl.innerHTML = `
+<div class="stock-summary-row header"><div>商品名</div><div class="center">号</div><div class="center">長さ</div><div class="center">個数</div><div class="center">巻く</div></div>
+`;
+if (lineStocks.length === 0) {
+stockSummaryEl.innerHTML += `<div class="empty-box">まだラインストック登録がありません。</div>`;
+return;
+}
+lineStocks.forEach(s => {
+stockSummaryEl.innerHTML += `
+<div class="stock-summary-row" onclick="selectLineStock('${s.id}')"><div class="summary-cell scroll-name-cell"><span class="summary-link">${escapeHtml(s.name || "-")}</span></div><div class="center">${escapeHtml(s.size || "-")}</div><div class="center">${escapeHtml(s.length || "-")}</div><div class="center">${Number(s.quantity ?? 1)}</div><button class="stock-wind-list-btn" onclick="selectStockForWinding(event, '${s.id}')">糸を巻く</button></div>
+`;
+});
+}
+function renderUsedStockSummary() {
+if (usedLineStocks.length <= 3) usedStockExpanded = false;
+usedStockToggleBtn.hidden = usedLineStocks.length <= 3;
+usedStockToggleBtn.textContent = usedStockExpanded ? "閉じる" : "すべて見る";
+usedStockSummaryEl.innerHTML = `
+<div class="used-stock-summary-row header"><div>商品名</div><div class="center">号</div><div class="center">長さ</div><div>リール/スプール</div><div class="center">日付</div></div>
+`;
+if (usedLineStocks.length === 0) {
+usedStockSummaryEl.innerHTML += `<div class="empty-box">まだ利用済みライン履歴がありません。</div>`;
+return;
+}
+const visibleUsedStocks = usedStockExpanded ? usedLineStocks : usedLineStocks.slice(0, 3);
+visibleUsedStocks.forEach(s => {
+usedStockSummaryEl.innerHTML += `
+<div class="used-stock-summary-row" onclick="selectUsedLineStock('${s.id}')"><div class="summary-cell">${escapeHtml(s.name || "-")}</div><div class="center">${escapeHtml(s.size || "-")}</div><div class="center">${escapeHtml(s.length || "-")}</div><div class="summary-cell">${escapeHtml(formatUsedStockTarget(s))}</div><div class="center">${escapeHtml(formatShortDate(s.usedDate || ""))}</div></div>
+`;
+});
+}
+function toggleUsedStockSummary() {
+usedStockExpanded = !usedStockExpanded;
+renderUsedStockSummary();
+}
+function selectUsedLineStock(id) {
+selectedUsedStockId = id;
+renderUsedStockDetail();
+document.querySelector(".section-used-stock-detail").scrollIntoView({
+behavior: "smooth",
+block: "start"
+});
+}
+function formatUsedStockTarget(stock) {
+const reelName = stock.reelName || "-";
+const spoolLabel = stock.spoolLabel || "";
+return spoolLabel ? `${reelName} / ${spoolLabel}` : reelName;
+}
+function selectReel(id) {
+if (longPressTriggered) {
+longPressTriggered = false;
+return;
+}
+if (sortTargetId === id) return;
+selectedReelId = id;
+renderReelDetail();
+document.querySelector(".section-detail").scrollIntoView({
+behavior: "smooth",
+block: "start"
+});
+}
+function selectLineStock(id) {
+selectedStockId = id;
+renderStockDetail();
+document.querySelector(".section-stock-detail").scrollIntoView({
+behavior: "smooth",
+block: "start"
+});
+}
+function selectStockForWinding(event, id) {
+event.stopPropagation();
+selectedStockId = id;
+renderStockDetail();
+const target = document.getElementById("stockWindSection") || document.querySelector(".section-stock-detail");
+target.scrollIntoView({
+behavior: "smooth",
+block: "start"
+});
+}
+function renderMemoSummary() {
+memoSummaryEl.innerHTML = `
+<div class="memo-summary-row header"><div>メモ</div><div class="memo-date">更新日</div></div>
+`;
+if (lineMemos.length === 0) {
+memoSummaryEl.innerHTML += `<div class="empty-box">まだメモ登録がありません。</div>`;
+return;
+}
+lineMemos.forEach(m => {
+memoSummaryEl.innerHTML += `
+<div class="memo-summary-row" onclick="selectLineMemo('${m.id}')"><div class="summary-cell memo-title-link">${escapeHtml(getMemoTitle(m.text || ""))}</div><div class="memo-date">${escapeHtml(formatMemoDate(m.updatedAt || m.createdAt))}</div></div>
+`;
+});
+}
+function selectLineMemo(id) {
+selectedMemoId = id;
+renderMemoDetail();
+document.querySelector(".section-memo").scrollIntoView({
+behavior: "smooth",
+block: "start"
+});
+}
+function renderMemoDetail() {
+const m = lineMemos.find(x => x.id === selectedMemoId);
+if (!m) {
+memoDetailEl.innerHTML = `<div class="empty-box">一覧からメモを選択すると詳細と編集フォームが表示されます。</div>`;
+return;
+}
+memoDetailEl.innerHTML = `
+<div class="detail-box"><textarea id="detailMemoText" placeholder="メモ内容">${escapeHtml(m.text || "")}</textarea><div class="row"><button class="editBtn" onclick="saveSelectedLineMemo()">編集内容を保存</button><button class="deleteBtn" onclick="deleteLineMemo('${m.id}')">削除</button></div></div>
+`;
+}
+function renderReelDetail() {
+const d = reels.find(x => x.id === selectedReelId);
+if (!d) {
+reelDetailEl.innerHTML = `<div class="empty-box">一覧からリールを選択すると詳細と編集フォームが表示されます。</div>`;
+return;
+}
+const type = d.reelType || "OT";
+const spareCount = getSpareCountFromData(d);
+const reelMakerSelect = optionSelectValue(d.reelMaker || "", REEL_MAKER_OPTIONS);
+const lineMakerSelect = optionSelectValue(d.lineMaker || "", LINE_MAKER_OPTIONS);
+const spare1LineMakerSelect = optionSelectValue(d.spare1LineMaker || d.spareLineMaker || "", LINE_MAKER_OPTIONS);
+const spare2LineMakerSelect = optionSelectValue(d.spare2LineMaker || "", LINE_MAKER_OPTIONS);
+const lineType = d.lineType || "";
+const spare1LineType = d.spare1LineType || d.spareLineType || "";
+const spare2LineType = d.spare2LineType || "";
+reelDetailEl.innerHTML = `
+<div class="detail-box"><div class="title"><span class="type-badge type-${type}">${type}</span>
+${escapeHtml(d.name || "")}
+</div><input id="detailName" placeholder="リール名" value="${escapeAttr(d.name || "")}"><label>リールメーカー</label><select id="detailReelMaker" onchange="toggleOtherInput('detailReelMaker', 'detailReelMakerOther')">
+${optionsHtml(REEL_MAKER_OPTIONS, reelMakerSelect)}
+</select><input id="detailReelMakerOther" placeholder="リールメーカー名を入力" value="${escapeAttr(optionOtherValue(d.reelMaker || "", REEL_MAKER_OPTIONS))}" ${reelMakerSelect === OTHER_OPTION ? "" : "hidden"}><label>年式</label><input id="detailReelYear" inputmode="numeric" maxlength="2" pattern="[0-9]{2}" placeholder="2桁 例：24" value="${escapeAttr(d.reelYear || "")}"><label>リール種類</label><select id="detailReelType">
+${typeOption("EL", "電動 / EL", type)}
+${typeOption("BC", "両軸 / BC", type)}
+${typeOption("SP", "スピニング / SP", type)}
+${typeOption("OT", "その他 / OT", type)}
+</select><h4>メインスプール / 糸情報（任意）</h4><input id="detailMainSpoolSize" placeholder="メインスプールサイズ" value="${escapeAttr(d.mainSpoolSize || "")}"><label>糸メーカー</label><select id="detailLineMaker" onchange="toggleOtherInput('detailLineMaker', 'detailLineMakerOther')">
+${optionsHtml(LINE_MAKER_OPTIONS, lineMakerSelect)}
+</select><input id="detailLineMakerOther" placeholder="糸メーカー名を入力" value="${escapeAttr(optionOtherValue(d.lineMaker || "", LINE_MAKER_OPTIONS))}" ${lineMakerSelect === OTHER_OPTION ? "" : "hidden"}><label>糸の種類</label><select id="detailLineType">
+${optionsHtml(LINE_TYPE_OPTIONS, lineType)}
+</select><input id="detailLineProductName" placeholder="糸の商品名（任意）" value="${escapeAttr(d.lineProductName || "")}"><input id="detailLineSize" type="number" step="0.1" placeholder="糸の太さ" value="${escapeAttr(d.lineSize || "")}"><input id="detailLineLength" type="number" placeholder="長さ" value="${escapeAttr(d.lineLength || "")}"><label>巻き替え日</label><input id="detailSpooledAt" type="date" value="${escapeAttr(d.spooledAt || "")}"><label>最終利用日</label><input id="detailUsedAt" type="date" value="${escapeAttr(d.usedAt || "")}"><label>使用回数</label><input id="detailUsageCount" type="number" min="0" value="${Number(d.usageCount || 0)}"><label>替えスプール数</label><select id="detailSpareSpoolCount" onchange="updateDetailSpareFieldsVisibility()"><option value="0" ${spareCount === 0 ? "selected" : ""}>替えスプールなし</option><option value="1" ${spareCount === 1 ? "selected" : ""}>替えスプール1つ</option><option value="2" ${spareCount === 2 ? "selected" : ""}>替えスプール2つ</option></select><div id="detailSpare1Fields" class="sub-section" style="display:${spareCount >= 1 ? "block" : "none"};"><h4>替えスプール①</h4><input id="detailSpare1SpoolSize" placeholder="替えスプール①サイズ" value="${escapeAttr(d.spare1SpoolSize || "")}"><label>替えスプール① 糸メーカー</label><select id="detailSpare1LineMaker" onchange="toggleOtherInput('detailSpare1LineMaker', 'detailSpare1LineMakerOther')">
+${optionsHtml(LINE_MAKER_OPTIONS, spare1LineMakerSelect)}
+</select><input id="detailSpare1LineMakerOther" placeholder="糸メーカー名を入力" value="${escapeAttr(optionOtherValue(d.spare1LineMaker || d.spareLineMaker || "", LINE_MAKER_OPTIONS))}" ${spare1LineMakerSelect === OTHER_OPTION ? "" : "hidden"}><label>替えスプール① 糸の種類</label><select id="detailSpare1LineType">
+${optionsHtml(LINE_TYPE_OPTIONS, spare1LineType)}
+</select><input id="detailSpare1LineProductName" placeholder="替えスプール①の糸の商品名（任意）" value="${escapeAttr(d.spare1LineProductName || d.spareLineProductName || "")}"><input id="detailSpare1LineSize" type="number" step="0.1" placeholder="替えスプール①の糸の太さ" value="${escapeAttr(d.spare1LineSize || d.spareLineSize || "")}"><input id="detailSpare1LineLength" type="number" placeholder="替えスプール①の長さ" value="${escapeAttr(d.spare1LineLength || d.spareLineLength || "")}"><label>替えスプール①巻き替え日</label><input id="detailSpare1SpooledAt" type="date" value="${escapeAttr(d.spare1SpooledAt || d.spareSpooledAt || "")}"><label>替えスプール①最終利用日</label><input id="detailSpare1UsedAt" type="date" value="${escapeAttr(d.spare1UsedAt || d.spareUsedAt || "")}"><label>替えスプール①使用回数</label><input id="detailSpare1UsageCount" type="number" min="0" value="${Number(d.spare1UsageCount ?? d.spareUsageCount ?? 0)}"></div><div id="detailSpare2Fields" class="sub-section" style="display:${spareCount >= 2 ? "block" : "none"};"><h4>替えスプール②</h4><input id="detailSpare2SpoolSize" placeholder="替えスプール②サイズ" value="${escapeAttr(d.spare2SpoolSize || "")}"><label>替えスプール② 糸メーカー</label><select id="detailSpare2LineMaker" onchange="toggleOtherInput('detailSpare2LineMaker', 'detailSpare2LineMakerOther')">
+${optionsHtml(LINE_MAKER_OPTIONS, spare2LineMakerSelect)}
+</select><input id="detailSpare2LineMakerOther" placeholder="糸メーカー名を入力" value="${escapeAttr(optionOtherValue(d.spare2LineMaker || "", LINE_MAKER_OPTIONS))}" ${spare2LineMakerSelect === OTHER_OPTION ? "" : "hidden"}><label>替えスプール② 糸の種類</label><select id="detailSpare2LineType">
+${optionsHtml(LINE_TYPE_OPTIONS, spare2LineType)}
+</select><input id="detailSpare2LineProductName" placeholder="替えスプール②の糸の商品名（任意）" value="${escapeAttr(d.spare2LineProductName || "")}"><input id="detailSpare2LineSize" type="number" step="0.1" placeholder="替えスプール②の糸の太さ" value="${escapeAttr(d.spare2LineSize || "")}"><input id="detailSpare2LineLength" type="number" placeholder="替えスプール②の長さ" value="${escapeAttr(d.spare2LineLength || "")}"><label>替えスプール②巻き替え日</label><input id="detailSpare2SpooledAt" type="date" value="${escapeAttr(d.spare2SpooledAt || "")}"><label>替えスプール②最終利用日</label><input id="detailSpare2UsedAt" type="date" value="${escapeAttr(d.spare2UsedAt || "")}"><label>替えスプール②使用回数</label><input id="detailSpare2UsageCount" type="number" min="0" value="${Number(d.spare2UsageCount || 0)}"></div><textarea id="detailMemo" placeholder="メモ">${escapeHtml(d.memo || "")}</textarea><div class="row"><button class="useBtn" onclick="addUsage('${d.id}', 'main', ${Number(d.usageCount || 0)})">メイン＋1回</button>
+${spareCount >= 1 ? `<button class="useBtn" onclick="addUsage('${d.id}', 'spare1', ${Number(d.spare1UsageCount || 0)})">替①＋1回</button>` : ""}
+</div>
+${spareCount >= 2 ? `
+<div class="row"><button class="useBtn" onclick="addUsage('${d.id}', 'spare2', ${Number(d.spare2UsageCount || 0)})">替②＋1回</button></div>
+` : ""}
+<div class="row"><button class="editBtn" onclick="saveSelectedReel()">編集内容を保存</button><button class="deleteBtn" onclick="deleteReel('${d.id}')">削除</button></div></div>
+`;
+}
+function typeOption(value, label, current) {
+return `<option value="${value}" ${value === current ? "selected" : ""}>${label}</option>`;
+}
+function populateSelect(id, options, selected = "") {
+const select = document.getElementById(id);
+if (!select) return;
+select.innerHTML = options.map(value => optionHtml(value, selected)).join("");
+}
+function optionHtml(value, current = "") {
+const label = value === "" ? "未選択" : value === OTHER_OPTION ? "その他" : value;
+return `<option value="${escapeAttr(value)}" ${value === current ? "selected" : ""}>${escapeHtml(label)}</option>`;
+}
+function optionsHtml(options, current = "") {
+return options.map(value => optionHtml(value, current)).join("");
+}
+function resolveOptionValue(selectId, otherId) {
+const select = document.getElementById(selectId);
+if (!select) return "";
+if (select.value !== OTHER_OPTION) return select.value;
+return document.getElementById(otherId)?.value.trim() || "";
+}
+function optionSelectValue(value, options) {
+if (!value) return "";
+return options.includes(value) ? value : OTHER_OPTION;
+}
+function optionOtherValue(value, options) {
+return value && !options.includes(value) ? value : "";
+}
+function toggleOtherInput(selectId, inputId) {
+const select = document.getElementById(selectId);
+const input = document.getElementById(inputId);
+if (!select || !input) return;
+input.hidden = select.value !== OTHER_OPTION;
+if (input.hidden) input.value = "";
+}
+function validateReelYear(value) {
+const trimmed = String(value || "").trim();
+return trimmed && /^\d{2}$/.test(trimmed) ? trimmed : "";
+}
+function setSelectValue(id, value) {
+const el = document.getElementById(id);
+if (el) el.value = value;
+}
+async function saveSelectedReel() {
+try {
+if (!selectedReelId) return;
+setStatus("リール更新中...");
+const spareCount = Number(document.getElementById("detailSpareSpoolCount").value || 0);
+const reelYear = validateReelYear(document.getElementById("detailReelYear").value);
+const data = {
+name: document.getElementById("detailName").value.trim(),
+reelMaker: resolveOptionValue("detailReelMaker", "detailReelMakerOther"),
+reelYear,
+reelType: document.getElementById("detailReelType").value,
+mainSpoolSize: document.getElementById("detailMainSpoolSize").value,
+lineMaker: resolveOptionValue("detailLineMaker", "detailLineMakerOther"),
+lineType: document.getElementById("detailLineType").value,
+lineProductName: document.getElementById("detailLineProductName").value,
+lineSize: document.getElementById("detailLineSize").value,
+lineLength: document.getElementById("detailLineLength").value,
+spooledAt: document.getElementById("detailSpooledAt").value,
+usedAt: document.getElementById("detailUsedAt").value,
+usageCount: Number(document.getElementById("detailUsageCount").value || 0),
+spareSpoolCount: spareCount,
+hasSpareSpool: spareCount > 0,
+spare1SpoolSize: spareCount >= 1 ? document.getElementById("detailSpare1SpoolSize").value : "",
+spare1LineMaker: spareCount >= 1 ? resolveOptionValue("detailSpare1LineMaker", "detailSpare1LineMakerOther") : "",
+spare1LineType: spareCount >= 1 ? document.getElementById("detailSpare1LineType").value : "",
+spare1LineProductName: spareCount >= 1 ? document.getElementById("detailSpare1LineProductName").value : "",
+spare1LineSize: spareCount >= 1 ? document.getElementById("detailSpare1LineSize").value : "",
+spare1LineLength: spareCount >= 1 ? document.getElementById("detailSpare1LineLength").value : "",
+spare1SpooledAt: spareCount >= 1 ? document.getElementById("detailSpare1SpooledAt").value : "",
+spare1UsedAt: spareCount >= 1 ? document.getElementById("detailSpare1UsedAt").value : "",
+spare1UsageCount: spareCount >= 1 ? Number(document.getElementById("detailSpare1UsageCount").value || 0) : 0,
+spare2SpoolSize: spareCount >= 2 ? document.getElementById("detailSpare2SpoolSize").value : "",
+spare2LineMaker: spareCount >= 2 ? resolveOptionValue("detailSpare2LineMaker", "detailSpare2LineMakerOther") : "",
+spare2LineType: spareCount >= 2 ? document.getElementById("detailSpare2LineType").value : "",
+spare2LineProductName: spareCount >= 2 ? document.getElementById("detailSpare2LineProductName").value : "",
+spare2LineSize: spareCount >= 2 ? document.getElementById("detailSpare2LineSize").value : "",
+spare2LineLength: spareCount >= 2 ? document.getElementById("detailSpare2LineLength").value : "",
+spare2SpooledAt: spareCount >= 2 ? document.getElementById("detailSpare2SpooledAt").value : "",
+spare2UsedAt: spareCount >= 2 ? document.getElementById("detailSpare2UsedAt").value : "",
+spare2UsageCount: spareCount >= 2 ? Number(document.getElementById("detailSpare2UsageCount").value || 0) : 0,
+memo: document.getElementById("detailMemo").value,
+updatedAt: getTimestamp()
+};
+if (!data.name) {
+setStatus("リール名を入力してください");
+return;
+}
+if (document.getElementById("detailReelYear").value.trim() && !data.reelYear) {
+setStatus("年式は2桁の数字で入力してください");
+return;
+}
+await updateStoreItem("reels", selectedReelId, data);
+setStatus("リールを更新しました");
+await load();
+} catch (e) {
+setStatus("リール更新エラー：" + e.message);
+console.error(e);
+}
+}
+function collectNewReelData() {
+const spareCount = Number(document.getElementById("newSpareSpoolCount").value || 0);
+const reelYear = validateReelYear(document.getElementById("newReelYear").value);
+return {
+name: document.getElementById("newName").value.trim(),
+reelMaker: resolveOptionValue("newReelMaker", "newReelMakerOther"),
+reelYear,
+reelType: document.getElementById("newReelType").value,
+mainSpoolSize: document.getElementById("newMainSpoolSize").value,
+lineMaker: resolveOptionValue("newLineMaker", "newLineMakerOther"),
+lineType: document.getElementById("newLineType").value,
+lineProductName: document.getElementById("newLineProductName").value,
+lineSize: document.getElementById("newLineSize").value,
+lineLength: document.getElementById("newLineLength").value,
+spooledAt: document.getElementById("newSpooledAt").value,
+usedAt: document.getElementById("newUsedAt").value,
+usageCount: Number(document.getElementById("newUsageCount").value || 0),
+spareSpoolCount: spareCount,
+hasSpareSpool: spareCount > 0,
+spare1SpoolSize: spareCount >= 1 ? document.getElementById("newSpare1SpoolSize").value : "",
+spare1LineMaker: spareCount >= 1 ? resolveOptionValue("newSpare1LineMaker", "newSpare1LineMakerOther") : "",
+spare1LineType: spareCount >= 1 ? document.getElementById("newSpare1LineType").value : "",
+spare1LineProductName: spareCount >= 1 ? document.getElementById("newSpare1LineProductName").value : "",
+spare1LineSize: spareCount >= 1 ? document.getElementById("newSpare1LineSize").value : "",
+spare1LineLength: spareCount >= 1 ? document.getElementById("newSpare1LineLength").value : "",
+spare1SpooledAt: spareCount >= 1 ? document.getElementById("newSpare1SpooledAt").value : "",
+spare1UsedAt: spareCount >= 1 ? document.getElementById("newSpare1UsedAt").value : "",
+spare1UsageCount: spareCount >= 1 ? Number(document.getElementById("newSpare1UsageCount").value || 0) : 0,
+spare2SpoolSize: spareCount >= 2 ? document.getElementById("newSpare2SpoolSize").value : "",
+spare2LineMaker: spareCount >= 2 ? resolveOptionValue("newSpare2LineMaker", "newSpare2LineMakerOther") : "",
+spare2LineType: spareCount >= 2 ? document.getElementById("newSpare2LineType").value : "",
+spare2LineProductName: spareCount >= 2 ? document.getElementById("newSpare2LineProductName").value : "",
+spare2LineSize: spareCount >= 2 ? document.getElementById("newSpare2LineSize").value : "",
+spare2LineLength: spareCount >= 2 ? document.getElementById("newSpare2LineLength").value : "",
+spare2SpooledAt: spareCount >= 2 ? document.getElementById("newSpare2SpooledAt").value : "",
+spare2UsedAt: spareCount >= 2 ? document.getElementById("newSpare2UsedAt").value : "",
+spare2UsageCount: spareCount >= 2 ? Number(document.getElementById("newSpare2UsageCount").value || 0) : 0,
+memo: document.getElementById("newMemo").value,
+createdAt: getTimestamp(),
+updatedAt: getTimestamp(),
+order: reels.length
+};
+}
+async function createReel() {
+try {
+setStatus("リール保存中...");
+const data = collectNewReelData();
+if (!data.name) {
+setStatus("リール名を入力してください");
+return;
+}
+if (document.getElementById("newReelYear").value.trim() && !data.reelYear) {
+setStatus("年式は2桁の数字で入力してください");
+return;
+}
+await addToStore("reels", data);
+trackAnalyticsEvent("reel_created", {
+reel_type: data.reelType || "unspecified",
+spare_spool_count: Number(data.spareSpoolCount || 0)
+});
+setStatus("リールを保存しました");
+clearNewReelForm();
+await load();
+} catch (e) {
+setStatus("リール保存エラー：" + e.message);
+console.error(e);
+}
+}
+function clearNewReelForm() {
+document.getElementById("newName").value = "";
+setSelectValue("newReelMaker", "");
+document.getElementById("newReelMakerOther").value = "";
+toggleOtherInput("newReelMaker", "newReelMakerOther");
+document.getElementById("newReelYear").value = "";
+document.getElementById("newReelType").value = "EL";
+document.getElementById("newMainSpoolSize").value = "";
+setSelectValue("newLineMaker", "");
+document.getElementById("newLineMakerOther").value = "";
+toggleOtherInput("newLineMaker", "newLineMakerOther");
+setSelectValue("newLineType", "");
+document.getElementById("newLineProductName").value = "";
+document.getElementById("newLineSize").value = "";
+document.getElementById("newLineLength").value = "";
+document.getElementById("newSpooledAt").value = "";
+document.getElementById("newUsedAt").value = "";
+document.getElementById("newUsageCount").value = 0;
+document.getElementById("newSpareSpoolCount").value = "0";
+document.getElementById("newSpare1SpoolSize").value = "";
+setSelectValue("newSpare1LineMaker", "");
+document.getElementById("newSpare1LineMakerOther").value = "";
+toggleOtherInput("newSpare1LineMaker", "newSpare1LineMakerOther");
+setSelectValue("newSpare1LineType", "");
+document.getElementById("newSpare1LineProductName").value = "";
+document.getElementById("newSpare1LineSize").value = "";
+document.getElementById("newSpare1LineLength").value = "";
+document.getElementById("newSpare1SpooledAt").value = "";
+document.getElementById("newSpare1UsedAt").value = "";
+document.getElementById("newSpare1UsageCount").value = 0;
+document.getElementById("newSpare2SpoolSize").value = "";
+setSelectValue("newSpare2LineMaker", "");
+document.getElementById("newSpare2LineMakerOther").value = "";
+toggleOtherInput("newSpare2LineMaker", "newSpare2LineMakerOther");
+setSelectValue("newSpare2LineType", "");
+document.getElementById("newSpare2LineProductName").value = "";
+document.getElementById("newSpare2LineSize").value = "";
+document.getElementById("newSpare2LineLength").value = "";
+document.getElementById("newSpare2SpooledAt").value = "";
+document.getElementById("newSpare2UsedAt").value = "";
+document.getElementById("newSpare2UsageCount").value = 0;
+document.getElementById("newMemo").value = "";
+updateNewSpareFieldsVisibility();
+}
+function startLongPress(id) {
+longPressTriggered = false;
+longPressTimer = setTimeout(() => {
+longPressTriggered = true;
+if (sortTargetId === id) {
+sortTargetId = null;
+setStatus("並び替え選択を解除しました");
+} else {
+sortTargetId = id;
+setStatus("並び替え対象を選択しました");
+}
+renderSummary();
+}, 600);
+}
+function cancelLongPress() {
+clearTimeout(longPressTimer);
+}
+async function moveReel(id, direction) {
+try {
+const index = reels.findIndex(r => r.id === id);
+const targetIndex = index + direction;
+if (index < 0 || targetIndex < 0 || targetIndex >= reels.length) return;
+const temp = reels[index];
+reels[index] = reels[targetIndex];
+reels[targetIndex] = temp;
+setStatus("並び順を保存中...");
+await saveOrder();
+sortTargetId = id;
+renderSummary();
+setStatus("並び順を保存しました");
+} catch (e) {
+setStatus("並び替えエラー：" + e.message);
+console.error(e);
+}
+}
+async function saveOrder() {
+for (let i = 0; i < reels.length; i++) {
+reels[i].order = i;
+await updateStoreItem("reels", reels[i].id, {
+order: i,
+updatedAt: getTimestamp()
+});
+}
+}
+async function addUsage(id, type, count) {
+try {
+setStatus("使用回数を更新中...");
+const updateData = { updatedAt: getTimestamp() };
+if (type === "spare1") {
+updateData.spare1UsageCount = Number(count || 0) + 1;
+updateData.spare1UsedAt = new Date().toISOString().slice(0, 10);
+} else if (type === "spare2") {
+updateData.spare2UsageCount = Number(count || 0) + 1;
+updateData.spare2UsedAt = new Date().toISOString().slice(0, 10);
+} else {
+updateData.usageCount = Number(count || 0) + 1;
+updateData.usedAt = new Date().toISOString().slice(0, 10);
+}
+await updateStoreItem("reels", id, updateData);
+setStatus("使用回数を更新しました");
+await load();
+} catch (e) {
+setStatus("使用回数更新エラー：" + e.message);
+console.error(e);
+}
+}
+async function deleteReel(id) {
+try {
+if (!confirm("このリールを丸ごと削除しますか？")) return;
+setStatus("削除中...");
+await deleteFromStore("reels", id);
+if (selectedReelId === id) selectedReelId = null;
+setStatus("削除しました");
+await load();
+} catch (e) {
+setStatus("削除エラー：" + e.message);
+console.error(e);
+}
+}
+async function loadLineStocks() {
+const savedStocks = await getAllFromStore("lineStocks");
+lineStocks = savedStocks.filter(stock => Number(stock.quantity ?? 1) > 0);
+lineStocks.sort((a, b) => {
+const aTime = getTimeValue(a.createdAt) || 0;
+const bTime = getTimeValue(b.createdAt) || 0;
+return aTime - bTime;
+});
+}
+async function loadUsedLineStocks() {
+usedLineStocks = await getAllFromStore("usedLineStocks");
+usedLineStocks.sort((a, b) => {
+const bTime = getTimeValue(b.usedAt) || getTimeValue(b.createdAt) || 0;
+const aTime = getTimeValue(a.usedAt) || getTimeValue(a.createdAt) || 0;
+return bTime - aTime;
+});
+}
+function renderStockDetail() {
+const s = lineStocks.find(x => x.id === selectedStockId);
+if (!s) {
+stockDetailEl.innerHTML = `<div class="empty-box">一覧からラインストックを選択すると詳細と編集フォームが表示されます。</div>`;
+return;
+}
+const stockMakerSelect = optionSelectValue(s.maker || "", LINE_MAKER_OPTIONS);
+stockDetailEl.innerHTML = `
+<div class="detail-box"><div class="stock-meta"><div class="stock-meta-item"><div class="stock-meta-label">登録日</div><div class="stock-meta-value">${escapeHtml(formatMemoDate(s.createdAt))}</div></div><div class="stock-meta-item"><div class="stock-meta-label">更新日</div><div class="stock-meta-value">${escapeHtml(formatMemoDate(s.updatedAt || s.createdAt))}</div></div></div><label>糸メーカー</label><select id="detailStockMaker" onchange="toggleOtherInput('detailStockMaker', 'detailStockMakerOther')">
+${optionsHtml(LINE_MAKER_OPTIONS, stockMakerSelect)}
+</select><input id="detailStockMakerOther" placeholder="糸メーカー名を入力" value="${escapeAttr(optionOtherValue(s.maker || "", LINE_MAKER_OPTIONS))}" ${stockMakerSelect === OTHER_OPTION ? "" : "hidden"}><label>糸の種類</label><select id="detailStockLineType">
+${optionsHtml(LINE_TYPE_OPTIONS, s.lineType || "PE")}
+</select><input id="detailStockName" placeholder="商品名" value="${escapeAttr(s.name || "")}"><input id="detailStockSize" type="number" step="0.1" placeholder="号数" value="${escapeAttr(s.size || "")}"><input id="detailStockLength" type="number" placeholder="長さ" value="${escapeAttr(s.length || "")}"><input id="detailStockQuantity" type="number" min="0" placeholder="個数" value="${Number(s.quantity ?? 1)}"><textarea id="detailStockMemo" placeholder="ストックメモ">${escapeHtml(s.memo || "")}</textarea><div class="row"><button class="editBtn" onclick="saveSelectedLineStock()">編集内容を保存</button><button class="deleteBtn" onclick="deleteLineStock('${s.id}')">削除</button></div><div id="stockWindSection" class="sub-section"><h4>この糸をリールに巻く</h4><p class="small">選択したリール/スプールの糸の商品名・号数・長さ・巻き替え日を、このストック情報で上書きします。</p>
+${reels.length ? `
+<label>対象リール</label><select id="stockWindReelSelect" onchange="updateStockWindSpoolOptions()">
+${stockWindReelOptions()}
+</select><label>対象スプール</label><select id="stockWindSpoolSelect">
+${stockWindSpoolOptions(reels[0]?.id || "")}
+</select><button class="stock-save" onclick="windSelectedStockToSpool('${s.id}')">糸を巻く</button>
+` : `<div class="empty-box">先にリールを登録してください。</div>`}
+</div></div>
+`;
+}
+function renderUsedStockDetail() {
+const s = usedLineStocks.find(x => x.id === selectedUsedStockId);
+if (!s) {
+usedStockDetailEl.innerHTML = `<div class="empty-box">一覧から利用済みライン履歴を選択すると詳細と編集フォームが表示されます。</div>`;
+return;
+}
+const usedStockMakerSelect = optionSelectValue(s.maker || "", LINE_MAKER_OPTIONS);
+usedStockDetailEl.innerHTML = `
+<div class="detail-box"><label>糸メーカー</label><select id="detailUsedStockMaker" onchange="toggleOtherInput('detailUsedStockMaker', 'detailUsedStockMakerOther')">
+${optionsHtml(LINE_MAKER_OPTIONS, usedStockMakerSelect)}
+</select><input id="detailUsedStockMakerOther" placeholder="糸メーカー名を入力" value="${escapeAttr(optionOtherValue(s.maker || "", LINE_MAKER_OPTIONS))}" ${usedStockMakerSelect === OTHER_OPTION ? "" : "hidden"}><label>糸の種類</label><select id="detailUsedStockLineType">
+${optionsHtml(LINE_TYPE_OPTIONS, s.lineType || "PE")}
+</select><input id="detailUsedStockName" placeholder="商品名" value="${escapeAttr(s.name || "")}"><input id="detailUsedStockSize" type="number" step="0.1" placeholder="号数" value="${escapeAttr(s.size || "")}"><input id="detailUsedStockLength" type="number" placeholder="長さ" value="${escapeAttr(s.length || "")}"><input id="detailUsedStockReelName" placeholder="リール名" value="${escapeAttr(s.reelName || "")}"><input id="detailUsedStockSpoolLabel" placeholder="スプール名" value="${escapeAttr(s.spoolLabel || "")}"><label>巻いた日</label><input id="detailUsedStockUsedDate" type="date" value="${escapeAttr(formatDateInputValue(s.usedDate || ""))}"><textarea id="detailUsedStockMemo" placeholder="利用済みラインメモ">${escapeHtml(s.memo || "")}</textarea><div class="row"><button class="editBtn" onclick="saveSelectedUsedLineStock()">編集内容を保存</button><button class="deleteBtn" onclick="deleteUsedLineStock('${s.id}')">削除</button></div></div>
+`;
+}
+function stockWindReelOptions() {
+return reels.map(reel => `<option value="${escapeAttr(reel.id)}">${escapeHtml(reel.name || "無名リール")}</option>`).join("");
+}
+function stockWindSpoolOptions(reelId) {
+const reel = reels.find(entry => entry.id === reelId);
+if (!reel) return "";
+const spareCount = getSpareCountFromData(reel);
+const options = [
+{ value: "main", label: `メインスプール${reel.mainSpoolSize ? `（${reel.mainSpoolSize}）` : ""}` }
+];
+if (spareCount >= 1) {
+options.push({ value: "spare1", label: `替えスプール①${reel.spare1SpoolSize ? `（${reel.spare1SpoolSize}）` : ""}` });
+}
+if (spareCount >= 2) {
+options.push({ value: "spare2", label: `替えスプール②${reel.spare2SpoolSize ? `（${reel.spare2SpoolSize}）` : ""}` });
+}
+return options.map(option => `<option value="${option.value}">${escapeHtml(option.label)}</option>`).join("");
+}
+function updateStockWindSpoolOptions() {
+const reelSelect = document.getElementById("stockWindReelSelect");
+const spoolSelect = document.getElementById("stockWindSpoolSelect");
+if (!reelSelect || !spoolSelect) return;
+spoolSelect.innerHTML = stockWindSpoolOptions(reelSelect.value);
+}
+async function windSelectedStockToSpool(stockId) {
+try {
+const stock = lineStocks.find(entry => entry.id === stockId);
+const reelId = document.getElementById("stockWindReelSelect")?.value;
+const spoolKey = document.getElementById("stockWindSpoolSelect")?.value;
+const reel = reels.find(entry => entry.id === reelId);
+if (!stock || !reel || !spoolKey) {
+setStatus("巻く対象を選択してください");
+return;
+}
+const targetLabel = getSpoolLabel(reel, spoolKey);
+const currentLine = getSpoolLineSummary(reel, spoolKey);
+const nextLine = `${stock.name || "-"} / ${stock.size || "-"}号 / ${stock.length || "-"}m / ${today}`;
+const currentQuantity = Number(stock.quantity ?? 1);
+const nextQuantity = Math.max(0, currentQuantity - 1);
+const message = [
+`「${reel.name || "無名リール"}」の${targetLabel}に糸を巻きます。`,
+"",
+"現在の糸情報:",
+currentLine,
+"",
+"新しい糸情報:",
+nextLine,
+"",
+"ラインストック:",
+`在庫数 ${currentQuantity} → ${nextQuantity}`,
+"",
+"今登録している糸情報を消して上書きし、利用済みライン履歴に1件追加します。実行しますか？"
+].join("\n");
+if (!confirm(message)) return;
+const updateData = {
+updatedAt: getTimestamp()
+};
+if (spoolKey === "spare1") {
+updateData.spare1LineMaker = stock.maker || "";
+updateData.spare1LineType = stock.lineType || "PE";
+updateData.spare1LineProductName = stock.name || "";
+updateData.spare1LineSize = stock.size || "";
+updateData.spare1LineLength = stock.length || "";
+updateData.spare1SpooledAt = today;
+updateData.spare1UsedAt = "";
+updateData.spare1UsageCount = 0;
+} else if (spoolKey === "spare2") {
+updateData.spare2LineMaker = stock.maker || "";
+updateData.spare2LineType = stock.lineType || "PE";
+updateData.spare2LineProductName = stock.name || "";
+updateData.spare2LineSize = stock.size || "";
+updateData.spare2LineLength = stock.length || "";
+updateData.spare2SpooledAt = today;
+updateData.spare2UsedAt = "";
+updateData.spare2UsageCount = 0;
+} else {
+updateData.lineMaker = stock.maker || "";
+updateData.lineType = stock.lineType || "PE";
+updateData.lineProductName = stock.name || "";
+updateData.lineSize = stock.size || "";
+updateData.lineLength = stock.length || "";
+updateData.spooledAt = today;
+updateData.usedAt = "";
+updateData.usageCount = 0;
+}
+setStatus("糸情報を更新中...");
+await updateStoreItem("reels", reel.id, updateData);
+await updateStoreItem("lineStocks", stock.id, {
+quantity: nextQuantity,
+updatedAt: getTimestamp()
+});
+await addToStore("usedLineStocks", {
+sourceStockId: stock.id,
+maker: stock.maker || "",
+lineType: stock.lineType || "PE",
+name: stock.name || "",
+size: stock.size || "",
+length: stock.length || "",
+quantity: 1,
+memo: stock.memo || "",
+reelId: reel.id,
+reelName: reel.name || "",
+spoolKey,
+spoolLabel: targetLabel,
+usedDate: today,
+usedAt: getTimestamp()
+});
+selectedReelId = reel.id;
+if (nextQuantity === 0 && selectedStockId === stock.id) selectedStockId = null;
+setStatus("糸情報を上書きし、ストックを1つ利用済みにしました");
+await load();
+} catch (e) {
+setStatus("糸情報の上書きエラー：" + e.message);
+console.error(e);
+}
+}
+function getSpoolLabel(reel, spoolKey) {
+if (spoolKey === "spare1") return `替えスプール①${reel.spare1SpoolSize ? `（${reel.spare1SpoolSize}）` : ""}`;
+if (spoolKey === "spare2") return `替えスプール②${reel.spare2SpoolSize ? `（${reel.spare2SpoolSize}）` : ""}`;
+return `メインスプール${reel.mainSpoolSize ? `（${reel.mainSpoolSize}）` : ""}`;
+}
+function getSpoolLineSummary(reel, spoolKey) {
+const line = getSpoolLineData(reel, spoolKey);
+const maker = line.maker ? `${line.maker} / ` : "";
+const type = line.type ? `${line.type} / ` : "";
+return `${maker}${type}${line.productName || "-"} / ${line.size || "-"}号 / ${line.length || "-"}m / ${line.spooledAt || "-"}`;
+}
+function getSpoolLineData(reel, spoolKey) {
+if (spoolKey === "spare1") {
+return {
+maker: reel.spare1LineMaker || reel.spareLineMaker || "",
+type: reel.spare1LineType || reel.spareLineType || "PE",
+productName: reel.spare1LineProductName || reel.spareLineProductName || "",
+size: reel.spare1LineSize || reel.spareLineSize || "",
+length: reel.spare1LineLength || reel.spareLineLength || "",
+spooledAt: reel.spare1SpooledAt || reel.spareSpooledAt || ""
+};
+}
+if (spoolKey === "spare2") {
+return {
+maker: reel.spare2LineMaker || "",
+type: reel.spare2LineType || "PE",
+productName: reel.spare2LineProductName || "",
+size: reel.spare2LineSize || "",
+length: reel.spare2LineLength || "",
+spooledAt: reel.spare2SpooledAt || ""
+};
+}
+return {
+maker: reel.lineMaker || "",
+type: reel.lineType || "PE",
+productName: reel.lineProductName || "",
+size: reel.lineSize || "",
+length: reel.lineLength || "",
+spooledAt: reel.spooledAt || ""
+};
+}
+async function saveSelectedLineStock() {
+try {
+if (!selectedStockId) return;
+setStatus("ストック更新中...");
+const data = {
+maker: resolveOptionValue("detailStockMaker", "detailStockMakerOther"),
+lineType: document.getElementById("detailStockLineType").value,
+name: document.getElementById("detailStockName").value.trim(),
+size: document.getElementById("detailStockSize").value,
+length: document.getElementById("detailStockLength").value,
+quantity: Number(document.getElementById("detailStockQuantity").value || 0),
+memo: document.getElementById("detailStockMemo").value,
+updatedAt: getTimestamp()
+};
+if (!data.name) {
+setStatus("ストックの商品名を入力してください");
+return;
+}
+await updateStoreItem("lineStocks", selectedStockId, data);
+setStatus("ストックを更新しました");
+await load();
+} catch (e) {
+setStatus("ストック更新エラー：" + e.message);
+console.error(e);
+}
+}
+async function saveSelectedUsedLineStock() {
+try {
+if (!selectedUsedStockId) return;
+const current = usedLineStocks.find(x => x.id === selectedUsedStockId);
+if (!current) return;
+setStatus("利用済みライン履歴を更新中...");
+const usedDate = document.getElementById("detailUsedStockUsedDate").value;
+const data = {
+maker: resolveOptionValue("detailUsedStockMaker", "detailUsedStockMakerOther"),
+lineType: document.getElementById("detailUsedStockLineType").value,
+name: document.getElementById("detailUsedStockName").value.trim(),
+size: document.getElementById("detailUsedStockSize").value,
+length: document.getElementById("detailUsedStockLength").value,
+reelName: document.getElementById("detailUsedStockReelName").value.trim(),
+spoolLabel: document.getElementById("detailUsedStockSpoolLabel").value.trim(),
+usedDate,
+usedAt: usedDate ? `${usedDate}T00:00:00.000+09:00` : current.usedAt || "",
+memo: document.getElementById("detailUsedStockMemo").value,
+updatedAt: getTimestamp()
+};
+if (!data.name) {
+setStatus("利用済みラインの商品名を入力してください");
+return;
+}
+await updateStoreItem("usedLineStocks", selectedUsedStockId, data);
+setStatus("利用済みライン履歴を更新しました");
+await load();
+} catch (e) {
+setStatus("利用済みライン履歴更新エラー：" + e.message);
+console.error(e);
+}
+}
+async function deleteUsedLineStock(id) {
+try {
+if (!confirm("この利用済みライン履歴を削除しますか？")) return;
+setStatus("利用済みライン履歴を削除中...");
+await deleteFromStore("usedLineStocks", id);
+if (selectedUsedStockId === id) selectedUsedStockId = null;
+setStatus("利用済みライン履歴を削除しました");
+await load();
+} catch (e) {
+setStatus("利用済みライン履歴削除エラー：" + e.message);
+console.error(e);
+}
+}
+async function createLineStock() {
+try {
+setStatus("ストック保存中...");
+const data = {
+maker: resolveOptionValue("newStockMaker", "newStockMakerOther"),
+lineType: document.getElementById("newStockLineType").value,
+name: document.getElementById("newStockName").value.trim(),
+size: document.getElementById("newStockSize").value,
+length: document.getElementById("newStockLength").value,
+quantity: Number(document.getElementById("newStockQuantity").value || 0),
+memo: document.getElementById("newStockMemo").value,
+createdAt: getTimestamp(),
+updatedAt: getTimestamp()
+};
+if (!data.name) {
+setStatus("ストックの商品名を入力してください");
+return;
+}
+await addToStore("lineStocks", data);
+setStatus("ストックを保存しました");
+clearNewStockForm();
+await load();
+} catch (e) {
+setStatus("ストック保存エラー：" + e.message);
+console.error(e);
+}
+}
+function clearNewStockForm() {
+setSelectValue("newStockMaker", "");
+document.getElementById("newStockMakerOther").value = "";
+toggleOtherInput("newStockMaker", "newStockMakerOther");
+setSelectValue("newStockLineType", "PE");
+document.getElementById("newStockName").value = "";
+document.getElementById("newStockSize").value = "";
+document.getElementById("newStockLength").value = "";
+document.getElementById("newStockQuantity").value = 1;
+document.getElementById("newStockMemo").value = "";
+}
+async function deleteLineStock(id) {
+try {
+if (!confirm("このラインストックを削除しますか？")) return;
+setStatus("ストック削除中...");
+await deleteFromStore("lineStocks", id);
+if (selectedStockId === id) selectedStockId = null;
+setStatus("ストックを削除しました");
+await load();
+} catch (e) {
+setStatus("ストック削除エラー：" + e.message);
+console.error(e);
+}
+}
+async function loadLineMemos() {
+lineMemos = await getAllFromStore("lineMemos");
+lineMemos.sort((a, b) => {
+const bTime = getTimeValue(b.updatedAt) || getTimeValue(b.createdAt) || 0;
+const aTime = getTimeValue(a.updatedAt) || getTimeValue(a.createdAt) || 0;
+return bTime - aTime;
+});
+}
+async function createLineMemo() {
+try {
+setStatus("メモ保存中...");
+const text = newAppMemoEl.value.trim();
+if (!text) {
+setStatus("メモ内容を入力してください");
+return;
+}
+await addToStore("lineMemos", {
+text,
+createdAt: getTimestamp(),
+updatedAt: getTimestamp()
+});
+newAppMemoEl.value = "";
+setStatus("メモを保存しました");
+await load();
+} catch (e) {
+setStatus("メモ保存エラー：" + e.message);
+console.error(e);
+}
+}
+async function saveSelectedLineMemo() {
+try {
+if (!selectedMemoId) return;
+const text = document.getElementById("detailMemoText").value.trim();
+if (!text) {
+setStatus("メモ内容を入力してください");
+return;
+}
+setStatus("メモ更新中...");
+await updateStoreItem("lineMemos", selectedMemoId, {
+text,
+updatedAt: getTimestamp()
+});
+setStatus("メモを更新しました");
+await load();
+} catch (e) {
+setStatus("メモ更新エラー：" + e.message);
+console.error(e);
+}
+}
+async function deleteLineMemo(id) {
+try {
+if (!confirm("このメモを削除しますか？")) return;
+setStatus("メモ削除中...");
+await deleteFromStore("lineMemos", id);
+if (selectedMemoId === id) selectedMemoId = null;
+setStatus("メモを削除しました");
+await load();
+} catch (e) {
+setStatus("メモ削除エラー：" + e.message);
+console.error(e);
+}
+}
+function exportCsv() {
+try {
+if ((!reels || reels.length === 0) && (!lineStocks || lineStocks.length === 0) && (!usedLineStocks || usedLineStocks.length === 0) && (!lineMemos || lineMemos.length === 0)) {
+setStatus("バックアップ対象のデータがありません");
+return;
+}
+const headers = [
+"リール名","種類",
+"メインスプールサイズ","メイン号数","メイン長さ","メイン巻替日","メイン最終利用日","メイン使用回数",
+"替スプール数",
+"替1スプールサイズ","替1号数","替1長さ","替1巻替日","替1最終利用日","替1使用回数",
+"替2スプールサイズ","替2号数","替2長さ","替2巻替日","替2最終利用日","替2使用回数",
+"メモ",
+"メイン商品名","替1商品名","替2商品名",
+"リールメーカー","年式","メイン糸メーカー","メイン糸種類","替1糸メーカー","替1糸種類","替2糸メーカー","替2糸種類"
+];
+const rows = reels.map(r => [
+r.name || "", r.reelType || "",
+r.mainSpoolSize || "", r.lineSize || "", r.lineLength || "", r.spooledAt || "", r.usedAt || "", r.usageCount ?? "",
+getSpareCountFromData(r),
+r.spare1SpoolSize || "", r.spare1LineSize || r.spareLineSize || "", r.spare1LineLength || r.spareLineLength || "", r.spare1SpooledAt || r.spareSpooledAt || "", r.spare1UsedAt || r.spareUsedAt || "", r.spare1UsageCount ?? r.spareUsageCount ?? "",
+r.spare2SpoolSize || "", r.spare2LineSize || "", r.spare2LineLength || "", r.spare2SpooledAt || "", r.spare2UsedAt || "", r.spare2UsageCount ?? "",
+r.memo || "",
+r.lineProductName || "", r.spare1LineProductName || r.spareLineProductName || "", r.spare2LineProductName || "",
+r.reelMaker || "", r.reelYear || "", r.lineMaker || "", r.lineType || "", r.spare1LineMaker || r.spareLineMaker || "", r.spare1LineType || r.spareLineType || "", r.spare2LineMaker || "", r.spare2LineType || ""
+]);
+const stockHeaders = ["商品名","号数","長さ","個数","メモ","メーカー","糸種類"];
+const stockRows = lineStocks.map(s => [
+s.name || "", s.size || "", s.length || "", s.quantity ?? "", s.memo || "", s.maker || "", s.lineType || ""
+]);
+const usedStockHeaders = ["商品名","号数","長さ","リール","スプール","巻いた日","元ストックID","メモ","メーカー","糸種類"];
+const usedStockRows = usedLineStocks.map(s => [
+s.name || "", s.size || "", s.length || "", s.reelName || "", s.spoolLabel || "", s.usedDate || "", s.sourceStockId || "", s.memo || "", s.maker || "", s.lineType || ""
+]);
+const csvMain = [headers, ...rows]
+.map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))
+.join("\n");
+const csvStock = [stockHeaders, ...stockRows]
+.map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))
+.join("\n");
+const csvUsedStock = [usedStockHeaders, ...usedStockRows]
+.map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))
+.join("\n");
+const memoHeaders = ["メモ書き出し","メモ全文"];
+const memoRows = lineMemos.map(m => [
+getMemoTitle(m.text || ""), m.text || ""
+]);
+const csvMemo = [memoHeaders, ...memoRows]
+.map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))
+.join("\n");
+const csv = csvMain + "\n\nラインストック\n" + csvStock + "\n\n利用済みライン\n" + csvUsedStock + "\n\nメモ\n" + csvMemo;
+const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+const url = URL.createObjectURL(blob);
+const date = new Date().toISOString().slice(0, 10);
+const a = document.createElement("a");
+a.href = url;
+a.download = `reel-backup-${date}.csv`;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+setStatus("CSVバックアップを出力しました");
+} catch (e) {
+setStatus("CSV出力エラー：" + e.message);
+}
+}
+function exportJson() {
+try {
+const data = {
+version: 1,
+exportedAt: getTimestamp(),
+reels,
+lineStocks,
+usedLineStocks,
+lineMemos
+};
+const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json;charset=utf-8;" });
+const url = URL.createObjectURL(blob);
+const date = new Date().toISOString().slice(0, 10);
+const a = document.createElement("a");
+a.href = url;
+a.download = `reel-backup-${date}.json`;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+setStatus("JSONバックアップを出力しました");
+} catch (e) {
+setStatus("JSON出力エラー：" + e.message);
+}
+}
+async function importJson(event) {
+const file = event.target.files && event.target.files[0];
+event.target.value = "";
+if (!file) return;
+try {
+const text = await readFileAsText(file);
+const data = JSON.parse(text);
+if (!data || !Array.isArray(data.reels) || !Array.isArray(data.lineStocks) || !Array.isArray(data.lineMemos)) {
+setStatus("JSONの形式が正しくありません");
+return;
+}
+if (!confirm("現在の端末内データをJSONの内容で置き換えますか？")) return;
+await replaceAllData({
+reels: data.reels,
+lineStocks: data.lineStocks,
+usedLineStocks: Array.isArray(data.usedLineStocks) ? data.usedLineStocks : [],
+lineMemos: data.lineMemos
+});
+setStatus("JSONから復元しました");
+await load();
+scrollToAppTop();
+} catch (e) {
+setStatus("JSON復元エラー：" + e.message);
+console.error(e);
+}
+}
+async function importCsv(event) {
+const file = event.target.files && event.target.files[0];
+event.target.value = "";
+if (!file) return;
+try {
+const text = await readFileAsText(file);
+const parsed = parseBackupCsv(text);
+if (!confirm("現在の端末内データをCSVの内容で置き換えますか？")) return;
+await replaceAllData(parsed);
+setStatus("CSVから復元しました");
+await load();
+scrollToAppTop();
+} catch (e) {
+setStatus("CSV復元エラー：" + e.message);
+console.error(e);
+}
+}
+async function replaceAllData(data) {
+const now = getTimestamp();
+const nextReels = normalizeImportedItems(data.reels || [], now).map((item, index) => ({
+...migrateLegacySpoolData(item),
+order: typeof item.order === "number" ? item.order : index
+}));
+const nextStocks = normalizeImportedItems(data.lineStocks || [], now);
+const nextUsedStocks = normalizeImportedItems(data.usedLineStocks || [], now);
+const nextMemos = normalizeImportedItems(data.lineMemos || [], now);
+await replaceStore("reels", nextReels);
+await replaceStore("lineStocks", nextStocks);
+await replaceStore("usedLineStocks", nextUsedStocks);
+await replaceStore("lineMemos", nextMemos);
+selectedReelId = null;
+selectedStockId = null;
+selectedUsedStockId = null;
+selectedMemoId = null;
+sortTargetId = null;
+normalizedOnce = false;
+}
+function normalizeImportedItems(items, now) {
+return items.map(item => ({
+...item,
+id: item.id || createId(),
+createdAt: item.createdAt || now,
+updatedAt: item.updatedAt || now
+}));
+}
+function readFileAsText(file) {
+return new Promise((resolve, reject) => {
+const reader = new FileReader();
+reader.onload = () => resolve(String(reader.result || ""));
+reader.onerror = () => reject(reader.error);
+reader.readAsText(file);
+});
+}
+function parseBackupCsv(text) {
+const normalized = String(text || "").replace(/^\uFEFF/, "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+const blocks = splitCsvSections(normalized);
+if (blocks.length === 0) {
+throw new Error("CSVにデータがありません");
+}
+const result = {
+reels: [],
+lineStocks: [],
+usedLineStocks: [],
+lineMemos: []
+};
+blocks.forEach((block, index) => {
+const lines = block.split("\n").filter(line => line.trim());
+if (lines[0] === "ラインストック") {
+result.lineStocks = parseStockRows(lines.slice(1));
+} else if (lines[0] === "利用済みライン") {
+result.usedLineStocks = parseUsedStockRows(lines.slice(1));
+} else if (lines[0] === "メモ") {
+result.lineMemos = parseMemoRows(lines.slice(1));
+} else if (index === 0 || lines[0].includes("リール名")) {
+result.reels = parseReelRows(lines);
+}
+});
+return result;
+}
+function parseCsvRows(lines) {
+const csv = lines.join("\n");
+const rows = [];
+let row = [];
+let value = "";
+let quoted = false;
+for (let i = 0; i < csv.length; i++) {
+const ch = csv[i];
+const next = csv[i + 1];
+if (ch === '"' && quoted && next === '"') {
+value += '"';
+i++;
+} else if (ch === '"') {
+quoted = !quoted;
+} else if (ch === "," && !quoted) {
+row.push(value);
+value = "";
+} else if (ch === "\n" && !quoted) {
+row.push(value);
+rows.push(row);
+row = [];
+value = "";
+} else {
+value += ch;
+}
+}
+row.push(value);
+rows.push(row);
+return rows.filter(currentRow => currentRow.some(cell => String(cell).trim()));
+}
+function splitCsvSections(text) {
+const sections = [];
+let section = "";
+let quoted = false;
+for (let i = 0; i < text.length; i++) {
+const ch = text[i];
+const next = text[i + 1];
+if (ch === '"' && quoted && next === '"') {
+section += ch + next;
+i++;
+continue;
+}
+if (ch === '"') quoted = !quoted;
+if (!quoted && ch === "\n" && next === "\n") {
+if (section.trim()) sections.push(section.trim());
+section = "";
+i++;
+continue;
+}
+section += ch;
+}
+if (section.trim()) sections.push(section.trim());
+return sections;
+}
+function parseReelRows(lines) {
+const rows = parseCsvRows(lines);
+rows.shift();
+return rows.map((row, index) => ({
+name: row[0] || "",
+reelType: row[1] || "OT",
+mainSpoolSize: row[2] || "",
+lineSize: row[3] || "",
+lineLength: row[4] || "",
+spooledAt: row[5] || "",
+usedAt: row[6] || "",
+usageCount: Number(row[7] || 0),
+spareSpoolCount: Number(row[8] || 0),
+hasSpareSpool: Number(row[8] || 0) > 0,
+spare1SpoolSize: row[9] || "",
+spare1LineSize: row[10] || "",
+spare1LineLength: row[11] || "",
+spare1SpooledAt: row[12] || "",
+spare1UsedAt: row[13] || "",
+spare1UsageCount: Number(row[14] || 0),
+spare2SpoolSize: row[15] || "",
+spare2LineSize: row[16] || "",
+spare2LineLength: row[17] || "",
+spare2SpooledAt: row[18] || "",
+spare2UsedAt: row[19] || "",
+spare2UsageCount: Number(row[20] || 0),
+memo: row[21] || "",
+lineProductName: row[22] || "",
+spare1LineProductName: row[23] || "",
+spare2LineProductName: row[24] || "",
+reelMaker: row[25] || "",
+reelYear: validateReelYear(row[26] || ""),
+lineMaker: row[27] || "",
+lineType: row[28] || "",
+spare1LineMaker: row[29] || "",
+spare1LineType: row[30] || "",
+spare2LineMaker: row[31] || "",
+spare2LineType: row[32] || "",
+order: index
+})).filter(item => item.name);
+}
+function parseStockRows(lines) {
+if (lines.length === 0) return [];
+const rows = parseCsvRows(lines);
+rows.shift();
+return rows.map(row => ({
+name: row[0] || "",
+size: row[1] || "",
+length: row[2] || "",
+quantity: Number(row[3] || 0),
+memo: row[4] || "",
+maker: row[5] || "",
+lineType: row[6] || ""
+})).filter(item => item.name);
+}
+function parseUsedStockRows(lines) {
+if (lines.length === 0) return [];
+const rows = parseCsvRows(lines);
+rows.shift();
+return rows.map(row => ({
+name: row[0] || "",
+size: row[1] || "",
+length: row[2] || "",
+quantity: 1,
+reelName: row[3] || "",
+spoolLabel: row[4] || "",
+usedDate: row[5] || "",
+sourceStockId: row[6] || "",
+memo: row[7] || "",
+maker: row[8] || "",
+lineType: row[9] || "",
+usedAt: row[5] || ""
+})).filter(item => item.name);
+}
+function parseMemoRows(lines) {
+if (lines.length === 0) return [];
+const rows = parseCsvRows(lines);
+rows.shift();
+return rows.map(row => ({
+text: row[1] || row[0] || ""
+})).filter(item => item.text);
+}
+function getMemoTitle(text) {
+const clean = String(text || "").replace(/\s+/g, " ").trim();
+if (!clean) return "無題メモ";
+let result = "";
+let width = 0;
+for (const ch of clean) {
+const w = ch.match(/[ -~]/) ? 1 : 2;
+if (width + w > 20) break;
+result += ch;
+width += w;
+}
+return result;
+}
+function formatMemoDate(value) {
+const time = getTimeValue(value);
+if (!time) return "-";
+const d = new Date(time);
+const year = String(d.getFullYear()).slice(2);
+return `${d.getMonth() + 1}/${d.getDate()}/${year}`;
+}
+function formatShortDate(dateStr) {
+if (!dateStr) return "-";
+const parts = dateStr.split("-");
+if (parts.length !== 3) return dateStr;
+const year = parts[0].slice(2);
+const month = Number(parts[1]);
+const day = Number(parts[2]);
+return month + "/" + day + "/" + year;
+}
+function formatDateInputValue(dateStr) {
+if (!dateStr) return "";
+return /^\d{4}-\d{2}-\d{2}$/.test(dateStr) ? dateStr : "";
+}
+function escapeHtml(str) {
+return String(str).replace(/[&<>'"]/g, function(c) {
+return {
+"&": "&amp;",
+"<": "&lt;",
+">": "&gt;",
+"'": "&#39;",
+'"': "&quot;"
+}[c];
+});
+}
+function escapeAttr(str) {
+return escapeHtml(str).replace(/"/g, "&quot;");
+}
+window.selectReel = selectReel;
+window.selectLineStock = selectLineStock;
+window.selectStockForWinding = selectStockForWinding;
+window.selectUsedLineStock = selectUsedLineStock;
+window.toggleOtherInput = toggleOtherInput;
+window.startLongPress = startLongPress;
+window.cancelLongPress = cancelLongPress;
+window.moveReel = moveReel;
+window.addUsage = addUsage;
+window.deleteReel = deleteReel;
+window.saveSelectedReel = saveSelectedReel;
+window.updateDetailSpareFieldsVisibility = updateDetailSpareFieldsVisibility;
+window.saveSelectedLineStock = saveSelectedLineStock;
+window.deleteLineStock = deleteLineStock;
+window.updateStockWindSpoolOptions = updateStockWindSpoolOptions;
+window.windSelectedStockToSpool = windSelectedStockToSpool;
+window.saveSelectedUsedLineStock = saveSelectedUsedLineStock;
+window.deleteUsedLineStock = deleteUsedLineStock;
+window.selectLineMemo = selectLineMemo;
+window.saveSelectedLineMemo = saveSelectedLineMemo;
+window.deleteLineMemo = deleteLineMemo;
+updateNewSpareFieldsVisibility();
+load();
+if ("serviceWorker" in navigator) {
+window.addEventListener("load", () => {
+navigator.serviceWorker.register("service-worker.js").catch(error => {
+console.warn("Service Worker registration failed", error);
+});
+});
+}</script></body></html>

@@ -1,0 +1,103 @@
+{
+ "origin": "https://reel-line-manager.cutlassfish.tokyo",
+ "user_agent": "cutlassfish-site-mirror/1.0",
+ "mirrored_at": "2026-11-04T03:04:01Z",
+ "files": [
+  {
+   "path": "/",
+   "file": "index.html",
+   "content_type": "text/html; charset=utf-8",
+   "bytes": 101621,
+   "sha256": "1402434a1d52b38cdd7873c37bb99f4b12b076012b101c72791966f1c2e6f948",
+   "found_by": "start",
+   "modifications": [
+    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)"
+   ]
+  },
+  {
+   "path": "/favicon-48.png",
+   "file": "favicon-48.png",
+   "content_type": "image/png",
+   "bytes": 6149,
+   "sha256": "ee6cd9047efaff3aabc304de71b099ccf1109997d337e0fc013650d6d891e1bb",
+   "found_by": "ref from /",
+   "modifications": []
+  },
+  {
+   "path": "/favicon.ico",
+   "file": "favicon.ico",
+   "content_type": "image/x-icon",
+   "bytes": 10089,
+   "sha256": "e227eef2a4483a434692ffa31b2821671491764ddd9cab4669e55bd688b4dab6",
+   "found_by": "probe",
+   "modifications": []
+  },
+  {
+   "path": "/help.html",
+   "file": "help.html",
+   "content_type": "text/html; charset=utf-8",
+   "bytes": 25915,
+   "sha256": "146a1e7061120e25f18064a5ecc173ad75d5d8a45a004587ce363a69c2744602",
+   "found_by": "link from /",
+   "modifications": [
+    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)"
+   ]
+  },
+  {
+   "path": "/icons/apple-touch-icon.png",
+   "file": "icons/apple-touch-icon.png",
+   "content_type": "image/png",
+   "bytes": 59028,
+   "sha256": "3015bf8868dcab969f833cbc9292d0ec8efa50c42027e292f9fba902eb829c5d",
+   "found_by": "ref from /",
+   "modifications": []
+  },
+  {
+   "path": "/icons/icon-192.png",
+   "file": "icons/icon-192.png",
+   "content_type": "image/png",
+   "bytes": 66530,
+   "sha256": "785fab872759275cc0287d45ba5da16035aa6d4f42521ec58eed7f741f633be4",
+   "found_by": "ref from /",
+   "modifications": []
+  },
+  {
+   "path": "/icons/icon-512.png",
+   "file": "icons/icon-512.png",
+   "content_type": "image/png",
+   "bytes": 409239,
+   "sha256": "9bb4d1431d08f5434cfe54fc62b3aa6e04f8cd0f518ea5dec5fa3149810c25a1",
+   "found_by": "ref from /manifest.json",
+   "modifications": []
+  },
+  {
+   "path": "/manifest.json",
+   "file": "manifest.json",
+   "content_type": "application/manifest+json; charset=utf-8",
+   "bytes": 584,
+   "sha256": "f89412675d695d91f25f465978732729aa1473f9b1bf80c70962a4a44a473a1e",
+   "found_by": "probe",
+   "modifications": []
+  },
+  {
+   "path": "/service-worker.js",
+   "file": "service-worker.js",
+   "content_type": "text/javascript; charset=utf-8",
+   "bytes": 1142,
+   "sha256": "4fc9ecb5df48ce2b9a96dfb3647e410de9b5de4a89db50f189a1c425f05e6071",
+   "found_by": "probe",
+   "modifications": []
+  }
+ ],
+ "missing_references": {},
+ "probes_not_present": [
+  "/404.html",
+  "/apple-touch-icon.png",
+  "/index.html",
+  "/manifest.webmanifest",
+  "/robots.txt",
+  "/site.webmanifest",
+  "/sitemap.xml",
+  "/sw.js"
+ ]
+}

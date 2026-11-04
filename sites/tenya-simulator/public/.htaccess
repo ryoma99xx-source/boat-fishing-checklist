@@ -1,0 +1,57 @@
+# テンヤ海中挙動シミュレーター — static mirror of the published site (see sites/README.md).
+# Only FileInfo-type directives: no Options / DirectoryIndex / DirectorySlash / Require,
+# which お名前.com RS does not allow in .htaccess (they turn every request into a 500).
+# The app's own not-found page (saved from the old host's 404 response).
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Error documents (internal redirects) are served as they are.
+  RewriteCond %{ENV:REDIRECT_STATUS} !^$
+  RewriteRule ^ - [END]
+  # Keep free-SSL validation working; hide every other dot file (.htaccess etc.).
+  RewriteRule ^\.well-known/ - [END]
+  RewriteRule (^|/)\. - [R=404,L]
+  # Old version pages: /versions/1.5.4 is stored as versions/1.5.4.html.
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^versions/[^/]+$ %{REQUEST_URI}.html [END]
+  # /versions/1.5.4/ -> /versions/1.5.4 (the old host answered 308 too)
+  RewriteRule ^versions/([^/]+)/$ /versions/$1 [R=308,L]
+  # Folders (other than the site root) are not pages: 404, as on the old host.
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^.+$ - [R=404,L]
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType text/html .html
+  AddType text/javascript .js .mjs
+  AddType text/css .css
+  AddType application/json .json
+  AddType application/manifest+json .webmanifest
+  AddType image/png .png
+  AddType image/x-icon .ico
+  AddType font/woff2 .woff2
+  AddCharset utf-8 .html .js .mjs .css .json .webmanifest
+</IfModule>
+
+# data/*.f64.gz holds raw gzip bytes that the app inflates itself: send it as
+# application/octet-stream WITHOUT Content-Encoding even if the server maps .gz to gzip
+# (RemoveEncoding only wins inside <FilesMatch>), and keep mod_deflate off it.
+<FilesMatch "\.gz$">
+  <IfModule mod_mime.c>
+    RemoveEncoding .gz
+    ForceType application/octet-stream
+  </IfModule>
+  <IfModule mod_env.c>
+    SetEnv no-gzip 1
+  </IfModule>
+</FilesMatch>
+
+# Cache: pages are revalidated on every load; icons, pictures and data for a day.
+# _next/static/ (content-hashed file names) is cached for a year: see _next/static/.htaccess.
+<IfModule mod_headers.c>
+  Header set Cache-Control "public, max-age=86400"
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

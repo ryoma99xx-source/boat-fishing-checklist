@@ -1,0 +1,132 @@
+{
+ "origin": "https://dont-forget-anything.cutlassfish.tokyo",
+ "user_agent": "cutlassfish-site-mirror/1.0",
+ "mirrored_at": "2026-11-04T03:04:15Z",
+ "files": [
+  {
+   "path": "/",
+   "file": "index.html",
+   "content_type": "text/html; charset=utf-8",
+   "bytes": 6580,
+   "sha256": "d5dfe756405913a60e970c6036bbc2f9f7f29cac42879d5acbba08857e65ab48",
+   "found_by": "start",
+   "modifications": [
+    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)"
+   ]
+  },
+  {
+   "path": "/app.js",
+   "file": "app.js",
+   "content_type": "text/javascript; charset=utf-8",
+   "bytes": 41311,
+   "sha256": "716a628e166cb827ead5f3195b8a66334f4e0ab860ee9a98f51867a3952f5791",
+   "found_by": "ref from /",
+   "modifications": []
+  },
+  {
+   "path": "/edit.html",
+   "file": "edit.html",
+   "content_type": "text/html; charset=utf-8",
+   "bytes": 6496,
+   "sha256": "1c4b8e59f87df4bf44854817a290893403d1585f73ad423c2b610295762ddfe2",
+   "found_by": "link from /",
+   "modifications": [
+    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)"
+   ]
+  },
+  {
+   "path": "/favicon-48.png",
+   "file": "favicon-48.png",
+   "content_type": "image/png",
+   "bytes": 5723,
+   "sha256": "1519b6a9ecb885d3d19d888dda48b139b7d862a833af04592ad13b50f95fe885",
+   "found_by": "ref from /",
+   "modifications": []
+  },
+  {
+   "path": "/favicon.ico",
+   "file": "favicon.ico",
+   "content_type": "image/x-icon",
+   "bytes": 9348,
+   "sha256": "15bcc0406750423925744e2e2629d97cf412707ff5653abd7c59295ab05adf3e",
+   "found_by": "probe",
+   "modifications": []
+  },
+  {
+   "path": "/help.html",
+   "file": "help.html",
+   "content_type": "text/html; charset=utf-8",
+   "bytes": 23122,
+   "sha256": "96b99959c0ae99e1cb0b88b834fb9eb765488c31aa824f5c277ef58006a37c29",
+   "found_by": "link from /",
+   "modifications": [
+    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)"
+   ]
+  },
+  {
+   "path": "/icons/apple-touch-icon.png",
+   "file": "icons/apple-touch-icon.png",
+   "content_type": "image/png",
+   "bytes": 52969,
+   "sha256": "cd033651300bb017d9296e00f7c19a1957c7053fe9949f1351d454daab752a31",
+   "found_by": "ref from /",
+   "modifications": []
+  },
+  {
+   "path": "/icons/icon-192.png",
+   "file": "icons/icon-192.png",
+   "content_type": "image/png",
+   "bytes": 59061,
+   "sha256": "c76ba72e8fa8c74d211892ddb669ddbff039f078dbdf11daacd52a83012b19d4",
+   "found_by": "ref from /",
+   "modifications": []
+  },
+  {
+   "path": "/icons/icon-512.png",
+   "file": "icons/icon-512.png",
+   "content_type": "image/png",
+   "bytes": 323481,
+   "sha256": "e53f9b003cf724d654beee33679b29e3b7542461003d8b3e0d0590b2e8f48a60",
+   "found_by": "ref from /manifest.json",
+   "modifications": []
+  },
+  {
+   "path": "/manifest.json",
+   "file": "manifest.json",
+   "content_type": "application/manifest+json; charset=utf-8",
+   "bytes": 557,
+   "sha256": "6a1cb712775b62e412efa58a53b0ba7301c8865e9f627ce140965097c339394e",
+   "found_by": "probe",
+   "modifications": []
+  },
+  {
+   "path": "/service-worker.js",
+   "file": "service-worker.js",
+   "content_type": "text/javascript; charset=utf-8",
+   "bytes": 1188,
+   "sha256": "3db60387926fafc95ba1d17bbee5e6a5f8561d75817cc2041b190728da51ddcd",
+   "found_by": "probe",
+   "modifications": []
+  },
+  {
+   "path": "/styles.css",
+   "file": "styles.css",
+   "content_type": "text/css; charset=utf-8",
+   "bytes": 16714,
+   "sha256": "634a1a0543670be7eaa768aa3f4d9dd5e4d32045d6910eba76a8fe8ec3b94016",
+   "found_by": "ref from /",
+   "modifications": []
+  }
+ ],
+ "missing_references": {},
+ "probes_not_present": [
+  "/404.html",
+  "/apple-touch-icon.png",
+  "/index.html",
+  "/manifest.webmanifest",
+  "/robots.txt",
+  "/site.webmanifest",
+  "/sitemap.xml",
+  "/sw.js"
+ ]
+}

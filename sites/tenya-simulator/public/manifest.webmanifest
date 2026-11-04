@@ -1,0 +1,26 @@
+{
+  "id": "/",
+  "name": "テンヤ海中挙動シミュレーター",
+  "short_name": "テンヤシミュレーター",
+  "description": "テンヤの海中での上下動とひねりをA/B比較する理論シミュレーター。",
+  "lang": "ja",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#06080f",
+  "theme_color": "#06080f",
+  "icons": [
+    {
+      "src": "/icons/tenya-app-v2-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/tenya-app-v2-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+# Deploys the mirrored small sites (sites/<subdomain>/public/) to the お名前.com rental server over FTPS.
+# A site is deployed when a push to the work branch changes its sites/<subdomain>/DEPLOY file.
+# Each site has its own FTP account whose home is that subdomain's web folder (server-dir "./").
+# See sites/README.md. The ChatGPT Sites projects are not touched.
+name: Deploy small sites to rental server
+
+on:
+  push:
+    branches: [claude/relaxed-mayer-1u2nhq]
+    paths: ['sites/*/DEPLOY']
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - site: reel-line-manager
+            key: REEL
+          - site: dont-forget-anything
+            key: DFA
+          - site: tenya-simulator
+            key: TENYA
+    concurrency:
+      group: deploy-sites-rental-${{ matrix.site }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      # Only the sites whose DEPLOY file changed in the pushed commit are deployed.
+      - name: Decide whether ${{ matrix.site }} is deployed
+        id: target
+        env:
+          SITE: ${{ matrix.site }}
+        run: |
+          if git diff --name-only HEAD~1 HEAD | grep -qx "sites/$SITE/DEPLOY"; then
+            echo "sites/$SITE/DEPLOY changed: deploying $SITE"
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "sites/$SITE/DEPLOY did not change: skipping $SITE"
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check the FTP secrets (FTP_SERVER, FTP_USERNAME_${{ matrix.key }}, FTP_PASSWORD_${{ matrix.key }})
+        if: ${{ steps.target.outputs.deploy == 'true' }}
+        env:
+          KEY: ${{ matrix.key }}
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets[format('FTP_USERNAME_{0}', matrix.key)] }}
+          FTP_PASSWORD: ${{ secrets[format('FTP_PASSWORD_{0}', matrix.key)] }}
+        run: |
+          missing=""
+          [ -n "$FTP_SERVER" ] || missing="$missing FTP_SERVER"
+          [ -n "$FTP_USERNAME" ] || missing="$missing FTP_USERNAME_$KEY"
+          [ -n "$FTP_PASSWORD" ] || missing="$missing FTP_PASSWORD_$KEY"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repository secrets:$missing (Settings → Secrets and variables → Actions). See sites/README.md."
+            exit 1
+          fi
+
+      - name: Check the site folder
+        if: ${{ steps.target.outputs.deploy == 'true' }}
+        env:
+          SITE: ${{ matrix.site }}
+        run: |
+          test -f "sites/$SITE/public/index.html" || { echo "::error::sites/$SITE/public/index.html is missing"; exit 1; }
+          test -f "sites/$SITE/public/.htaccess" || { echo "::error::sites/$SITE/public/.htaccess is missing"; exit 1; }
+          find "sites/$SITE/public" -type f | wc -l
+
+      # Uploads only changed files. Files are deleted on the server only when an earlier run of
+      # this workflow uploaded them and they no longer exist here, and only inside the account's
+      # folder; anything else on the server (and .well-known/ for the free SSL) is left alone.
+      - name: Deploy over FTPS
+        if: ${{ steps.target.outputs.deploy == 'true' }}
+        uses: SamKirkland/FTP-Deploy-Action@a51268f67f6605236975928ae28b0f7e9971d50a # v4.3.6
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets[format('FTP_USERNAME_{0}', matrix.key)] }}
+          password: ${{ secrets[format('FTP_PASSWORD_{0}', matrix.key)] }}
+          protocol: ftps
+          local-dir: ./sites/${{ matrix.site }}/public/
+          server-dir: ./
+          dangerous-clean-slate: false
+          log-level: standard
+          exclude: |
+            **/.well-known/**
+            **/.git*
+            **/.git*/**
