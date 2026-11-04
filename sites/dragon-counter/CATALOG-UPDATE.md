@@ -51,7 +51,7 @@
 
 - 元画像は `work/src/<id>.jpg|png`（git には入れない）。出どころは `work/retail.json`（id → url / page / src / name。手で切り抜いたものは `cropped`、頭だけに切り抜き済みで通常処理にするものは `plain: true`）
 - メーカー公式の色別写真：DAIWA（現行品）・JACKALL・START・DUO・HAYABUSA（`tools/tenya_images.py daiwa|jackall|start|duo|hayabusa` で取得）、Major Craft・YAMASHITA・マルシン・HAYABUSA SW409 は公式ページから手動取得
-- SHIMANO サーベルマスター 船テンヤ（10 色）はオーナー提供の公式カラーチャート（透過 PNG）から色ごとに切り出し（`work/retail.json` に出どころ）
+- SHIMANO サーベルマスター 船テンヤ（10 色）・ゲキハヤ（6 色）・β ゲキハヤ（5 色）はオーナー提供の公式カラーチャートから色ごとに切り出し（`work/retail.json` に出どころ）
 - 公式に無いもの（SHIMANO のそれ以外・DAIWA 旧型・OWNER・がまかつ・PRO MARINE など）は釣具店の色別商品写真（相模屋・マルニシ・ポイント・ポイント東日本・フィッシングマックス・キャスティング・釣人館 などの Yahoo!店）。店の写真は `retail.json` に載せると「店写真モード」で切り出す（枠線・GLOW バッジ・夜光写真・スナップ・リーダー・フックホルダーを除き、目の位置から頭を探す。同じ店×製品で構図が固定のものは `FIXED` の固定枠）。写真の加工・掲載はオーナーの判断（2026-11-04）
 - シマノ公式サイトと Amazon はこの環境から取得できない（403 / 確認ページ）。回避はしない
 - 新しい色を足したら：公式があれば上の取得コマンド、無ければ販売店の写真を `tools/tenya_images.py add <id> <file>` で足す（店の写真なら `work/retail.json` にも id と出どころを書く）。全件書き出しは `tools/tenya_images.py cut`（`cut <id…>` / `cut <メーカー>` で一部だけ）。`pip install scipy` があると速い（無くても動く）
