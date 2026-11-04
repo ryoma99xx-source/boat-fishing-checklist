@@ -46,6 +46,15 @@ def export_all(have, updated):
                   key=lambda r: (r["m"], r["p"], r["z"], r["c"]))
     out = {"updated": updated, "count": len(rows), "note": "ドラゴンカウンターのテンヤカタログ全件（表記はこのまま使う）", "items": rows}
     json.dump(out, open(os.path.join(SITE, "public", "catalog-all.json"), "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    # Plain-text twin for ChatGPT (it reads a line-per-item list far better than one long JSON line)
+    lines = [f"ドラゴンカウンター テンヤカタログ 全件（{len(rows)}件・{updated} 時点）", "書式：メーカー｜製品名｜号数｜カラー｜状態（空欄は通常販売）。この表記をそのまま使うこと。", ""]
+    cur = None
+    for r in rows:
+        head = f"{r['m']}｜{r['p']}"
+        if head != cur:
+            cur = head; lines.append(f"## {head}")
+        lines.append(f"{r['m']}｜{r['p']}｜{r['z']}号｜{r['c']}｜{r['s']}")
+    open(os.path.join(SITE, "public", "catalog-all.txt"), "w", encoding="utf-8").write("\n".join(lines) + "\n")
 
 
 def refresh_hashes(name):
@@ -77,7 +86,7 @@ def main():
         have.setdefault(key(x["m"], x["p"], x["z"], x["c"]), x)
     today = datetime.date.today().isoformat()
     if sys.argv[1] == "--export":
-        export_all(have, extra.get("updated", "")); print(f"catalog-all.json を書き出しました（{len(have)} 件）"); return
+        export_all(have, extra.get("updated", "")); print(f"catalog-all.json / catalog-all.txt を書き出しました（{len(have)} 件）"); return
     errs, added, changed, skipped = [], [], [], []
     for i, x in enumerate(gpt.get("new", [])):
         where = f"new[{i}] {x.get('m')} {x.get('p')} {x.get('z')}号 {x.get('c')}"

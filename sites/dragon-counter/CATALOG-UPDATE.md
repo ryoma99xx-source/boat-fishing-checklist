@@ -21,7 +21,8 @@
 あなたは、船のタチウオ釣り用「テンヤ」のカタログ係です。毎月1回、ドラゴンカウンター（https://dragon-counter.cutlassfish.tokyo/）のテンヤカタログに足す分を調べてください。
 
 ## 1. 今のカタログを読む
-https://dragon-counter.cutlassfish.tokyo/catalog-all.json を開いて、今入っているテンヤ（m=メーカー, p=製品名, z=号数, c=カラー, s=状態）を確認する。
+https://dragon-counter.cutlassfish.tokyo/catalog-all.txt を開いて、今入っているテンヤ（メーカー｜製品名｜号数｜カラー｜状態、1行1件）を全部読む。読めない場合は同じ内容の https://dragon-counter.cutlassfish.tokyo/catalog-all.json か、オーナーが添付するファイルを使う。
+照合はオーナー側のプログラムでも行うので、カタログにあるか迷うものは「new」に入れてよい（既にあるものは自動で飛ばされる）。
 
 ## 2. 調べる
 各メーカーの公式サイト（製品ページ・新製品ニュース）で、船のタチウオ用テンヤを調べる。
