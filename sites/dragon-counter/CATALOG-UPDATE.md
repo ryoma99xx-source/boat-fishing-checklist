@@ -47,7 +47,7 @@
 - 頭の形を忠実に：鼻先・ラインアイ・フックアイを欠けさせない。欠けるなら枠や処理を変えるのではなく元写真を手で頭だけに切り抜いて `plain: true`
 - 確認は必ず目で（確認シート）。「頭だけか」「縁が白く荒くないか」「色・目・模様が元写真どおりか」「色の取り違えが無いか」
 
-`public/tenya/<id>.webp` に、各テンヤの頭だけを切り出した写真を置いている（`public/tenya/index.json` が一覧。2026-11-04 時点で 646 件中 644 件。無いのは HAYABUSA ベーシックシングル 夜光（SW405）40/50 号＝公式・販売店とも写真なし）。アプリはこの一覧にある id だけ写真を出す。
+`public/tenya/<id>.webp` に、各テンヤの頭だけを切り出した写真を置いている（`public/tenya/index.json` が一覧。2026-11-05 時点で 646 件すべて。HAYABUSA ベーシックシングル 夜光（SW405）はオーナー提供の写真）。アプリはこの一覧にある id だけ写真を出す。
 
 - 元画像は `work/src/<id>.jpg|png`（git には入れない）。出どころは `work/retail.json`（id → url / page / src / name。手で切り抜いたものは `cropped`、頭だけに切り抜き済みで通常処理にするものは `plain: true`）
 - メーカー公式の色別写真：DAIWA（現行品）・JACKALL・START・DUO・HAYABUSA（`tools/tenya_images.py daiwa|jackall|start|duo|hayabusa` で取得）、Major Craft・YAMASHITA・マルシン・HAYABUSA SW409 は公式ページから手動取得
