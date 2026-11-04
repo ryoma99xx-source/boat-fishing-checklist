@@ -105,6 +105,7 @@ pre.out{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-body);fo
 .planchat{display:flex;flex-direction:column;gap:6px;margin:10px 0 8px} .planchat:empty{display:none}
 .planchat .msg{max-width:94%}
 .pickrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 2px}
+.fchip{display:inline-flex;flex-direction:column;justify-content:center;gap:2px;min-width:72px;max-width:160px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-style:normal;font-size:12px;color:var(--text);text-decoration:none;overflow-wrap:anywhere} .fchip small{color:var(--muted);font-size:11px}
 .logpics{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px} .logpics img{width:84px;height:84px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 .chat-pics{display:flex;gap:6px;flex-wrap:wrap} .chat-pics:empty{display:none}
 .chat-pics span{position:relative;display:inline-block} .chat-pics img{width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
@@ -496,7 +497,7 @@ function viewDetail(){
   <h2>作業ログ</h2>
   <div class="box"><label for="lText">ログを追加</label><textarea id="lText" placeholder="やったこと・決めたこと"></textarea>
     <div class="row2"><div><label for="lBy">誰が</label><select id="lBy">${opts(['自分',...AIS],'自分')}</select></div><div style="align-self:end"><button class="primary" id="lAdd" style="width:100%">記録</button></div></div></div>
-  <div class="box">${logs.length?logs.map(l=>`<div class="log"><div class="when">${esc(fmt(l.at))}・${esc(l.by)}</div>${(l.text||'').length>220?`<details><summary>${esc(l.text.slice(0,120))}…</summary><div class="txt">${esc(l.text)}</div></details>`:`<div class="txt">${esc(l.text)}</div>`}${l.pics&&l.pics.length?`<div class="logpics">${l.pics.map(p=>`<a href="${esc(p.url||('/_blob/'+p.id))}" target="_blank" rel="noopener"><img src="${esc(p.url||('/_blob/'+p.id))}" alt="添付画像" loading="lazy"></a>`).join('')}</div>`:''}</div>`).join(''):'<div class="next">ログはまだありません。</div>'}</div>
+  <div class="box">${logs.length?logs.map(l=>`<div class="log"><div class="when">${esc(fmt(l.at))}・${esc(l.by)}</div>${(l.text||'').length>220?`<details><summary>${esc(l.text.slice(0,120))}…</summary><div class="txt">${esc(l.text)}</div></details>`:`<div class="txt">${esc(l.text)}</div>`}${l.pics&&l.pics.length?`<div class="logpics">${l.pics.map(p=>{const im=p.img||(p.img===undefined&&!p.b64);return `<a href="${esc(p.url||('/_blob/'+p.id))}" target="_blank" rel="noopener"${im?'':' class="fchip"'}>${im?`<img src="${esc(p.url||('/_blob/'+p.id))}" alt="添付画像" loading="lazy">`:`${esc(p.name||'ファイル')}<small>${esc(fmtKB(p.bytes||0))}</small>`}</a>`}).join('')}</div>`:''}</div>`).join(''):'<div class="next">ログはまだありません。</div>'}</div>
 
   <div class="actions" id="delZone"><button class="danger" id="dDel">この機能を削除</button></div>`}
 
@@ -951,7 +952,7 @@ function artComposer(a){
   return `<div class="box" style="margin:8px 0 0">
     <label for="artText">どう直す？（普段の言葉で）</label>
     <textarea id="artText" placeholder="例：オーナー記入の1つ目は「去年の秋、釣果を紙にメモしていたら…」という話を入れて。2つ目は使ってみた感想を3行くらいで。大漁のイメージ画像を1枚足して。">${esc(ui.artText||'')}</textarea>
-    <div class="next" style="font-size:12px">キーボードの音声入力（マイクのボタン）で話して入力できます。直したい場所のスクリーンショットも付けられます。</div>
+    <div class="next" style="font-size:12px">キーボードの音声入力（マイクのボタン）で話して入力できます。直したい場所のスクリーンショットや、差し替え用のファイル（JSON・ZIP など）も付けられます。</div>
     ${picHtml('art')}
     <div class="checks">
       <label><input type="checkbox" id="artGptImg" ${ui.artGptImg?'checked':''}>GPT に画像を作らせる（OpenAI の API キーが必要・使った分だけ課金）</label>
@@ -1135,7 +1136,7 @@ ${ctx.roles.join('\n')||'（未登録）'}
 依頼：${text}
 指定サイト：${ui.cmdSite?siteName(ui.cmdSite):'自動で判断'}／種類：${ui.cmdKind}
 次のJSONだけを返してください：{"kind":"機能追加|ツール追加|記事作成|修正|公開|その他","site":"サイトのkey","featureId":"既存の機能に当たるならそのid、無ければ null","title":"機能名（短く）","summary":"何をするかを1〜2文","steps":[{"who":"上の4つのどれか","what":"具体的に何をするか"}],"question":"判断に迷う点があれば1つ、無ければ空文字"}
-手順は2〜6個。自動で進められる工程（Claude Code・GPT）を先に、ChatGPT（手作業）と自分の確認を後ろに置く。${(picks.cmd||[]).length?`\nオーナーは参考画像を${picks.cmd.length}枚添付している（添付は Claude Code にも渡る）。画像の内容も踏まえて計画する。`:''}`,{modelTier:'complex',cache:false,...((picks.cmd||[]).length&&chatImgCaps?{images:picks.cmd.map(p=>p.file)}:{})});
+手順は2〜6個。自動で進められる工程（Claude Code・GPT）を先に、ChatGPT（手作業）と自分の確認を後ろに置く。${(picks.cmd||[]).length?`\nオーナーは添付を${picks.cmd.length}件付けている（${picks.cmd.map(p=>p.file.name||'画像').join('、')}。添付は Claude Code にも渡る）。画像はここでも見られる。画像以外のファイルの中身はここでは見られないので、計画の手順で Claude Code が取り出して使うようにする。`:''}`,{modelTier:'complex',cache:false,...(picks.cmd&&picks.cmd.some(p=>isImg(p.file))&&chatImgCaps?{images:picks.cmd.filter(p=>isImg(p.file)).map(p=>p.file)}:{})});
     if(!pl||!Array.isArray(pl.steps))throw{message:'計画の形が読めませんでした'};
     pl.steps=pl.steps.filter(x=>x&&x.what).map(x=>({who:WHO.includes(x.who)?x.who:'自分',what:String(x.what)}));
     if(!allSites().some(s=>s.k===pl.site))pl.site=ui.cmdSite||'other';
@@ -1160,23 +1161,27 @@ function progressNote(fid){return `
 取り掛かり・半分・終わりの節目で更新する。最後は {"msg":"完了","at":"…","state":"報告","reportText":"<【記事状況】と【完了報告】の全文>"} を書く。set が version の指定を求めたら get で version を読んで if_version を付ける。書けなくても作業は続け、報告は返事にも必ず書く。`}
 // ---- attached images: uploaded to the artifact's asset store; Claude Code fetches them by id ----
 let assetsNs=null;const picks={};
+const isImg=f=>/^image\//.test((f&&f.type)||'');
+const fmtKB=n=>n>=1048576?(n/1048576).toFixed(1)+'MB':Math.max(1,Math.round(n/1024))+'KB';
 function picHtml(key){const L=picks[key]||[];
-  return `<div class="pickrow"><div class="chat-pics">${L.map((p,i)=>`<span><img src="${p.url}" alt="添付する画像"><button type="button" data-pickdel="${key}:${i}" aria-label="外す">×</button></span>`).join('')}</div>
-    <label class="btn small">画像を付ける（スクショ可）<input type="file" accept="image/*" multiple data-pick="${key}" hidden></label>${L.length?`<span class="next" style="font-size:12px">${L.length}枚</span>`:''}</div>`}
+  return `<div class="pickrow"><div class="chat-pics">${L.map((p,i)=>`<span>${isImg(p.file)?`<img src="${p.url}" alt="添付する画像">`:`<i class="fchip">${esc(p.file.name||'ファイル')}<small>${fmtKB(p.file.size)}</small></i>`}<button type="button" data-pickdel="${key}:${i}" aria-label="外す">×</button></span>`).join('')}</div>
+    <label class="btn small">画像・ファイルを付ける<input type="file" multiple data-pick="${key}" hidden></label>${L.length?`<span class="next" style="font-size:12px">${L.length}件</span>`:''}</div>`}
 function bindPicks(){
   document.querySelectorAll('input[data-pick]').forEach(inp=>inp.onchange=e=>{const k=inp.dataset.pick;picks[k]=picks[k]||[];[...e.target.files].forEach(f=>{if(picks[k].length<6)picks[k].push({file:f,url:URL.createObjectURL(f)})});e.target.value='';render()});
   document.querySelectorAll('[data-pickdel]').forEach(b=>b.onclick=()=>{const [k,i]=b.dataset.pickdel.split(':');const x=(picks[k]||[]).splice(+i,1)[0];if(x)URL.revokeObjectURL(x.url);render()})}
 function clearPicks(key){(picks[key]||[]).forEach(x=>URL.revokeObjectURL(x.url));picks[key]=[]}
 async function uploadPicks(key){const L=picks[key]||[];if(!L.length)return {pics:[],text:''};
   if(!assetsNs)assetsNs=await window.claude.use('assets');if(!assetsNs)throw {code:'no_assets',message:'この表示では画像を上げられません（claude.ai で開いてください）'};
-  const pics=[];for(const p of L){const r=await assetsNs.upload(p.file);pics.push({id:r.id,url:r.url||('/_blob/'+r.id),name:p.file.name||'',bytes:r.sizeBytes||p.file.size})}
-  const text=`
-
-## 添付画像（${pics.length}枚）
-オーナーが参考に付けた画像です。作業の前に必ず見てください。取り出し方：Artifact ツール（action "read"）で url ${LEDGER_URL}、path に下の id を指定すると、画像ファイルがローカルに保存されます（1枚ずつ）。見られなかったときは、報告の「確認したいこと」にその旨を書いてください。
-${pics.map((p,i)=>`- 画像${i+1}：path "${p.id}"${p.name?`（元のファイル名 ${p.name}）`:''}`).join('\n')}`;
+  // The asset store takes images, video, PDF, fonts, CSS/JS and CSV/Markdown/JSON/text. Anything else (ZIP etc.) goes up as base64 text.
+  const direct=f=>/^(image|video)\//.test(f.type)||/^(application\/pdf|application\/json|text\/|font\/|application\/(x-)?font)/.test(f.type)||/\.(json|md|txt|csv|html|css|js|pdf|png|jpe?g|webp|gif|svg|mp4|webm)$/i.test(f.name||'');
+  const pics=[];
+  for(const p of L){const f=p.file;let blob=f,b64=false;
+    if(!direct(f)){const buf=new Uint8Array(await f.arrayBuffer());let bin='';for(let i=0;i<buf.length;i+=0x8000)bin+=String.fromCharCode.apply(null,buf.subarray(i,i+0x8000));blob=new Blob([btoa(bin)],{type:'text/plain'});b64=true}
+    const r=await assetsNs.upload(blob);pics.push({id:r.id,url:r.url||('/_blob/'+r.id),name:f.name||'',bytes:f.size,type:f.type||'',img:isImg(f),b64})}
+  const n=pics.length,ni=pics.filter(p=>p.img).length;
+  const text=`\n\n## 添付ファイル（${n}件${ni?`・うち画像${ni}枚`:''}）\nオーナーが付けたファイルです。作業の前に必ず中身を確認してください。取り出し方：Artifact ツール（action "read"）で url ${LEDGER_URL}、path に下の id を指定すると、そのファイルがローカルに保存されます（1件ずつ）。取り出せなかったときは、報告の「確認したいこと」にその旨を書いてください。\n${pics.map((p,i)=>`- ${i+1}：path "${p.id}"${p.name?`　元の名前 ${p.name}`:''}（${fmtKB(p.bytes)}${p.img?'・画像':''}${p.b64?'・base64 のテキストとして保存。取り出したら `base64 -d 保存先 > '+p.name+'` で元のファイルに戻す':''}）`).join('\n')}`;
   return {pics,text}}
-const picsLog=pics=>pics&&pics.length?`（画像${pics.length}枚添付）`:'';
+const picsLog=pics=>pics&&pics.length?`（添付${pics.length}件：${pics.map(p=>p.name||(p.img?'画像':'ファイル')).join('、').slice(0,80)}）`:'';
 async function relayDispatch(f,text){
   if(f.id&&!/## 進み具合の共有/.test(text))text+=progressNote(f.id);
   const id='q-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
@@ -1216,7 +1221,7 @@ ${ctx.roles.join('\n')||'（未登録）'}
 ${JSON.stringify(ctx.features)}
 ## ここまでのやりとり（古い順）
 ${thread.map(m=>(m.role==='user'?'オーナー：':'司令塔：')+m.content).join('\n')}`}];
-  try{const r=await sample.json(input,{modelTier:'complex',cache:false,...((picks.cmd||[]).length&&chatImgCaps?{images:picks.cmd.map(p=>p.file)}:{}),onText:u=>{ui.planLive=(u.text||'').slice(0,80);render()}});
+  try{const r=await sample.json(input,{modelTier:'complex',cache:false,...(picks.cmd&&picks.cmd.some(p=>isImg(p.file))&&chatImgCaps?{images:picks.cmd.filter(p=>isImg(p.file)).map(p=>p.file)}:{}),onText:u=>{ui.planLive=(u.text||'').slice(0,80);render()}});
     const reply=(r&&r.reply)||'（返事が空でした）';ui.planChat.push({role:'assistant',content:String(reply)});
     const np=r&&r.plan;if(np&&Array.isArray(np.steps)&&np.steps.length){np.steps=np.steps.filter(x=>x&&x.what).map(x=>({who:WHO.includes(x.who)?x.who:'自分',what:String(x.what)}));if(!allSites().some(x=>x.k===np.site))np.site=pl.site;ui.plan={...pl,...np,question:np.question||null};if(ui.plan.question)ui.planChat.push({role:'assistant',content:ui.plan.question})}}
   catch(e){ui.planChat.push({role:'assistant',content:'うまく答えられませんでした（'+(e.code||e.message||'')+'）。もう一度送ってみてください。'})}
