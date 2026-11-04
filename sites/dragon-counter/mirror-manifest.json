@@ -51,8 +51,8 @@
    "path": "/",
    "file": "index.html",
    "content_type": "text/html; charset=utf-8",
-   "bytes": 337548,
-   "sha256": "64125b60a8d3044cbe0039bf3cc158b2246211a30fc0932b9518e9d93ddff9f1",
+   "bytes": 337610,
+   "sha256": "1aaac8f238b34e774f77e8cce4bd8cfe16c60ecaceb962d144bc1fb1c286ef77",
    "found_by": "release zip",
    "modifications": [
     "「はじめに表示した5ステップの説明」→「6ステップ」（実際の案内は6ステップ。オーナー指示 2026-11-04）"
@@ -89,8 +89,8 @@
    "path": "/sw.js",
    "file": "sw.js",
    "content_type": "application/javascript; charset=utf-8",
-   "bytes": 2016,
-   "sha256": "c2e8d464f4595f6cf4b3b04b9ec5c2f1878cd979efd46f5e86c5b4e6e348050a",
+   "bytes": 2280,
+   "sha256": "dc56ef9588660f9cff7406ffa00dd73a3f51990a312736083c2b7e615cfb261d",
    "found_by": "release zip",
    "modifications": []
   }

@@ -1,5 +1,5 @@
 /* ドラゴンカウンター: offline support. Page is network-first (falls back to the cached copy at sea). */
-const VER='dragon-47593d1a45';
+const VER='dragon-93a89f9480';
 const PAGE='/';
 const ASSETS=["/manifest.webmanifest", "/icon-180.png", "/icon-192.png", "/icon-512.png", "/favicon.png"];
 const EXTRA='/catalog-extra.json';
@@ -13,7 +13,10 @@ self.addEventListener('fetch',e=>{
   if(url.origin===location.origin&&url.pathname===EXTRA){e.respondWith(netFirst(req,EXTRA));return}
   if(url.origin===location.origin&&url.pathname.startsWith('/tenya/')){
     e.respondWith((async()=>{const c=await caches.open('dragon-tenya');const hit=await c.match(req);if(hit)return hit;
-      try{const r=await fetch(req);if(r.ok)c.put(req,r.clone());return r}catch(err){return new Response('',{status:404})}})());return}
+      try{const r=await fetch(req);if(r.ok){c.put(req,r.clone());
+          // the photo's URL carries a version (?v=): older copies of the same photo are no longer needed
+          const old=(await c.keys()).filter(k=>k.url!==req.url&&new URL(k.url).pathname===url.pathname);await Promise.all(old.map(k=>c.delete(k)))}
+        return r}catch(err){return new Response('',{status:404})}})());return}
   if(url.hostname==='fonts.googleapis.com'||url.hostname==='fonts.gstatic.com'){
     e.respondWith((async()=>{const c=await caches.open('dragon-fonts');const hit=await c.match(req);
       const net=fetch(req).then(r=>{c.put(req,r.clone());return r}).catch(()=>hit);return hit||net})());return}

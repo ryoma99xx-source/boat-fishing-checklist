@@ -14,7 +14,7 @@ The cut keeps the photo as is (no posterizing): it removes the white background 
 border (white stripes on the head survive), crops to the head, and fits it into a fixed 480x360 frame.
 Images are derived from maker photos; see CATALOG-UPDATE.md for the owner's decision on that.
 """
-import json, os, re, sys, unicodedata, urllib.request, collections
+import json, os, re, sys, unicodedata, urllib.request, collections, hashlib
 from PIL import Image, ImageFilter, ImageDraw
 import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__)); SITE = os.path.dirname(HERE)
@@ -358,7 +358,11 @@ def export():
         try: im = cut(os.path.join(WORK, f), maker_of.get(iid, ""), product_of.get(iid, ""), stores.get(iid), flags.get(iid))
         except Exception as e: print("切り出し失敗", f, e); continue
         im.resize((240, 180), Image.LANCZOS).save(os.path.join(OUT, iid + ".webp"), "WEBP", quality=82, method=6); ids.append(iid); n += 1
-    json.dump({"v": 1, "ids": sorted(ids)}, open(os.path.join(OUT, "index.json"), "w"))
+    # "v" is a stamp of the image contents: the app puts it in the image URLs, so a recut photo replaces the copy
+    # the service worker cached on the phone (cache-first would otherwise keep the old cutout forever)
+    hh = hashlib.sha256()
+    for x in sorted(ids): hh.update(x.encode()); hh.update(open(os.path.join(OUT, x + ".webp"), "rb").read())
+    json.dump({"v": hh.hexdigest()[:10], "ids": sorted(ids)}, open(os.path.join(OUT, "index.json"), "w"))
     size = sum(os.path.getsize(os.path.join(OUT, x)) for x in os.listdir(OUT)); print(f"書き出し {n} 枚、合計 {size/1024:.0f}KB")
 
 if __name__ == "__main__":

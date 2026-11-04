@@ -803,9 +803,9 @@ function tenyaFull(id){const t=tenyaOf(id);if(!t)return '';const a=tenyaMain(t),
 const isNewTenya=t=>t&&t.a&&(Date.now()-new Date(t.a).getTime())<60*864e5;
 function tenyaBadges(t){const b=[];if(isNewTenya(t))b.push('<span class="tb new">新商品</span>');if(t.s)b.push(`<span class="tb">${esc(t.s)}</span>`);if(t.h)b.push('<span class="tb">替えヘッド</span>');if(t.custom)b.push('<span class="tb own">自分で追加</span>');else if(t.id&&!CAT.by[t.id])b.push('<span class="tb">カタログから外れました（控えから表示）</span>');return b.join('')}
 /* head photos: public/tenya/<id>.webp, listed in tenya/index.json (derived from maker photos, see tools/tenya_images.py) */
-let TIMG=new Set();
-if(SITE){fetch('/tenya/index.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&Array.isArray(j.ids)){TIMG=new Set(j.ids);if(typeof render==='function'&&$('#sheet').hidden)render()}}).catch(()=>{})}
-const timg=(id,cls)=>TIMG.has(id)?`<img class="timg ${cls||''}" src="/tenya/${id}.webp" alt="" loading="lazy" decoding="async">`:'';
+let TIMG=new Set(),TV='';
+if(SITE){fetch('/tenya/index.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&Array.isArray(j.ids)){TIMG=new Set(j.ids);TV=String(j.v||'');if(typeof render==='function'&&$('#sheet').hidden)render()}}).catch(()=>{})}
+const timg=(id,cls)=>TIMG.has(id)?`<img class="timg ${cls||''}" src="/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}" alt="" loading="lazy" decoding="async">`:'';
 const TEN=()=>S.cfg.tenya;
 const myTenya=()=>TEN().mine.filter(id=>tenyaOf(id));
 const qtyOf=id=>Math.max(1,+((TEN().qty||{})[id])||1); // 所有している個数
