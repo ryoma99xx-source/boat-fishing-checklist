@@ -215,11 +215,12 @@ def cut_masked(im, mask):
     m = m.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3))
     if globals().get("_store"): im, m = defringe(im, m)
     r = min((W - 24) / im.width, (H - 24) / im.height); nw, nh = int(im.width * r), int(im.height * r)
-    im = im.resize((nw, nh), Image.LANCZOS); m = m.resize((nw, nh), Image.LANCZOS).filter(ImageFilter.GaussianBlur(0.6))
+    # store photos get a softer edge (the owner compared both, 2026-11-05); the blur touches only the alpha, not the pixels
+    im = im.resize((nw, nh), Image.LANCZOS); m = m.resize((nw, nh), Image.LANCZOS).filter(ImageFilter.GaussianBlur(1.8 if globals().get("_store") else 0.6))
     layer = Image.new("RGBA", (nw, nh)); layer.paste(im, (0, 0)); layer.putalpha(m)
     out = Image.new("RGBA", (W, H), (0, 0, 0, 0)); out.alpha_composite(layer, ((W - nw) // 2, (H - nh) // 2)); return out
 
-def defringe(im, m, band=4, erode=2, hi=235.0, lo=190.0):
+def defringe(im, m, band=4, erode=3, hi=232.0, lo=185.0):
     """Store JPEGs on white: the pixels along the edge are a blend of head and white paper, and on the app's dark
     background they show as a ragged white rim. Pull the mask in by `erode` px, then in a band along the edge make a
     pixel as transparent as it is white and take the white back out of its colour (un-premultiply against white)."""
