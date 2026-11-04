@@ -143,6 +143,7 @@ nav.tabs a[aria-current="page"]{color:var(--accent);font-weight:700}
 @media (max-width:420px){.row2{grid-template-columns:1fr}}
 /* Site map tree */
 .now-you{color:var(--gold)} .now-run{color:var(--accent)}
+.nno{display:inline-block;min-width:26px;margin-right:6px;padding:0 6px;border-radius:6px;background:rgba(79,208,214,.16);color:var(--accent);font-family:var(--f-display);font-weight:500;font-size:13px;letter-spacing:.06em;text-align:center;vertical-align:2px}
 .nsum{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 6px}
 .ngroup{padding:10px 12px}
 .nrow{padding:6px 0;min-width:0}
@@ -359,7 +360,7 @@ async function applyReport(f,text){
     await saveFeat(f.id,patch)}
   catch(e){applying.delete(key)}}
 function autoApplyReports(){if(!loaded||!db)return;feats.forEach(f=>{const c=f.cc;if(c&&c.reportText&&c.state!=='取込済み'&&c.state!=='作業中')applyReport(f,c.reportText)})}
-function lastReport(f){const l=(f.logs||[]).slice().reverse().find(x=>String(x.text||'').includes('【完了報告】'));return l?parseReport(l.text):null}
+function lastReport(f){const L=(f.logs||[]).slice().sort((a,b)=>String(a.at).localeCompare(String(b.at)));const l=L[L.length-1];return l&&String(l.text||'').includes('【完了報告】')?parseReport(l.text):null}
 function artFor(f){const items=(artDoc&&artDoc.items)||[];const id=f.wpId||((String(f.deploy||'').match(/post=(\d+)/)||[])[1]);return id?items.find(a=>String(a.id)===String(id))||(f.pageUrl?{id,status:'publish',link:f.pageUrl}:{id,preview_link:`https://cutlassfish.tokyo/?p=${id}&preview=true`}):null}
 function render(){
   setTimeout(autoApplyReports,0);
@@ -1058,21 +1059,21 @@ function nowHtml(){
   live.forEach(r=>{const f=feats.find(x=>x.id===r.fid);if(!f){orphans.push(r);return}
     if(S[f.id]&&S[f.id].req)return;if(r.status==='pending'||isRunning(f))add(f.id,{run:true,req:r})});
   const nYou=Object.values(S).filter(x=>x.turn.length&&!x.run).length,nRun=Object.values(S).filter(x=>x.run).length+orphans.length;
-  const row=(f,top)=>{const st=S[f.id];if(!st)return `<div class="nrow quiet"><a href="#${esc(f.id)}">${esc(f.title)}</a> <span class="pill st-${esc(f.status)}">${esc(f.status)}</span></div>`;
+  const row=(f,top,no)=>{const st=S[f.id];if(!st)return `<div class="nrow quiet"><span class="nno">${no}</span><a href="#${esc(f.id)}">${esc(f.title)}</a> <span class="pill st-${esc(f.status)}">${esc(f.status)}</span></div>`;
     let badge,body='',act='';
     if(st.run){const r=st.req;const n=r?(r.status==='pending'?1:2):2;
       badge='<span class="pill now-run">Claude 作業中</span>';
       body=stepDots(n)+`<div class="next">${esc(r&&r.status==='pending'?'Claude の受け取り待ち（通常1分以内）':(f.cc&&f.cc.relayMsg)||'Claude Code が作業中')}${f.cc&&f.cc.sentAt?`・${esc(ago(f.cc.sentAt))}に開始`:''}</div><div class="next" style="font-size:12px">終わると報告が自動で記録され、「あなたの番」に変わります</div>`;
       const u=(f.cc&&f.cc.url)||(r&&r.sessionId?'https://claude.ai/code/'+r.sessionId:'');if(u)act=`<a class="btn small" href="${esc(u)}" target="_blank" rel="noopener">作業の様子を見る ↗</a>`}
     else{const parts=st.turn.map(k=>turnRow(f,k));badge=parts.map(x=>x.badge).join('');body=(st.turn.includes('report')?stepDots(3):'')+parts.map(x=>x.body).join('');act=parts.map(x=>x.act).join('')}
-    return `<div class="nrow ${st.run?'is-run':'is-you'}"><div class="meta">${badge}${top?`<span class="tag">${esc(siteName(f.site))}</span>`:''}</div><div class="title"><a href="#${esc(f.id)}">${esc(f.title)}</a></div>${body}${act?`<div class="actions">${act}</div>`:''}</div>`};
+    return `<div class="nrow ${st.run?'is-run':'is-you'}"><div class="meta">${badge}${top?`<span class="tag">${esc(siteName(f.site))}</span>`:''}</div><div class="title"><span class="nno">${no}</span><a href="#${esc(f.id)}">${esc(f.title)}</a></div>${body}${act?`<div class="actions">${act}</div>`:''}</div>`};
   const groups={};Object.keys(S).forEach(id=>{const f=feats.find(x=>x.id===id);if(!f)return;const r=rootOf(f);(groups[r.id]=groups[r.id]||[]).push(f)});
   const rank=id=>{const g=groups[id];return g.some(f=>S[f.id].turn.length&&!S[f.id].run)?0:1};
   const kids=(p,set)=>feats.filter(x=>x.parent===p.id&&set.has(x.id));
-  const html=Object.keys(groups).sort((a,b)=>rank(a)-rank(b)).map(rid=>{const root=feats.find(x=>x.id===rid);
+  let gi=0;const html=Object.keys(groups).sort((a,b)=>rank(a)-rank(b)).map(rid=>{const root=feats.find(x=>x.id===rid);
     const need=new Set();groups[rid].forEach(f=>{let c=f,n=0;while(c&&n++<7){need.add(c.id);c=c.parent?feats.find(x=>x.id===c.parent):null}});
-    const sub=(p)=>{const k=kids(p,need);return k.length?`<div class="nkids">${k.map(c=>row(c,false)+sub(c)).join('')}</div>`:''};
-    return `<div class="card ngroup">${row(root,true)}${sub(root)}</div>`}).join('');
+    const sub=(p,pre)=>{const k=kids(p,need);return k.length?`<div class="nkids">${k.map((c,i)=>row(c,false,pre+'-'+(i+1))+sub(c,pre+'-'+(i+1))).join('')}</div>`:''};
+    gi++;return `<div class="card ngroup">${row(root,true,String(gi))}${sub(root,String(gi))}</div>`}).join('');
   const orph=orphans.map(r=>`<div class="card ngroup"><div class="nrow is-run"><div class="meta"><span class="pill now-run">Claude 作業中</span></div><div class="title">${esc(r.title||'依頼')}</div>${stepDots(r.status==='pending'?1:2)}</div></div>`).join('');
   return `<h2 data-en="NOW">いまの作業</h2>
   <div class="nsum"><span class="pill now-you">あなたの番 ${nYou}</span><span class="pill now-run">Claude 作業中 ${nRun}</span></div>
