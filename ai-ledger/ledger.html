@@ -142,6 +142,19 @@ nav.tabs a[aria-current="page"]{color:var(--accent);font-weight:700}
 .sitefoot a{color:var(--accent)}
 @media (max-width:420px){.row2{grid-template-columns:1fr}}
 /* Site map tree */
+.now-you{color:var(--gold)} .now-run{color:var(--accent)}
+.nsum{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 6px}
+.ngroup{padding:10px 12px}
+.nrow{padding:6px 0;min-width:0}
+.nrow .title a{color:inherit;text-decoration:none}
+.nrow.quiet{font-size:14px;color:var(--muted)} .nrow.quiet a{color:var(--silver);text-decoration:none;font-weight:700}
+.nkids{margin:4px 0 0 6px;padding-left:12px;border-left:1px solid rgba(79,208,214,.35)}
+.nkids .nrow{position:relative} .nkids .nrow::before{content:"";position:absolute;left:-12px;top:18px;width:9px;border-top:1px solid rgba(79,208,214,.35)}
+.nrow.is-you{border-left:3px solid var(--gold);padding-left:9px;margin-left:-12px}
+.nkids .nrow.is-you{margin-left:0}
+.dots{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:4px 0;font-size:12px} .dots i{color:var(--muted);font-style:normal}
+.dot{display:inline-flex;align-items:center;gap:4px;color:var(--muted)} .dot::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--line)}
+.dot.on{color:var(--text)} .dot.on::before{background:var(--accent)}
 .tree{padding:10px 8px}
 .tree ul{list-style:none;margin:0;padding:0 0 0 14px;border-left:1px solid var(--line)}
 .tree ul.troot{border-left:0;padding-left:0}
@@ -368,6 +381,10 @@ function cardHtml(f){
     ${f.next?`<div class="next">次：<b>${esc(f.next)}</b></div>`:''}
     <div class="next">更新 ${esc(fmt(lastTouch(f)))}</div></a>`}
 
+function listTree(L){const ids=new Set(L.map(f=>f.id));
+  const kids=p=>L.filter(x=>x.parent===p.id);
+  const one=f=>{const k=kids(f);return k.length?`<div>${cardHtml(f)}<div class="nkids" style="display:flex;flex-direction:column;gap:8px;margin-top:8px">${k.map(one).join('')}</div></div>`:cardHtml(f)};
+  return L.filter(f=>!(f.parent&&ids.has(f.parent))).map(one).join('')}
 function viewList(){
   if(!loaded)return notReady();
   const nAI=feats.filter(isAI).length,nStop=feats.filter(isStopped).length,nWait=feats.filter(f=>f.status==='確認・公開待ち').length;
@@ -390,7 +407,7 @@ function viewList(){
     <input id="fQ" type="search" placeholder="検索（機能名・チャット名・ブランチ等）" value="${esc(ui.q)}">
   </div>
   <div class="actions"><button class="primary" id="newFeat">＋ 機能を追加</button></div>
-  <div class="list">${L.length?L.map(cardHtml).join(''):`<div class="empty">${feats.length?'条件に合う機能はありません。':'まだ機能がありません。「＋ 機能を追加」か「未整理」タブから登録します。'}</div>`}</div>
+  <div class="list">${L.length?listTree(L):`<div class="empty">${feats.length?'条件に合う機能はありません。':'まだ機能がありません。「＋ 機能を追加」か「未整理」タブから登録します。'}</div>`}</div>
   <p class="next" style="font-size:12px;color:var(--muted);margin-top:14px">「止まっている」＝保留、または公開済み以外で${STALE_DAYS}日以上ログ・更新がないもの。</p>`}
 
 function opts(list,cur){return list.map(x=>`<option ${x===cur?'selected':''}>${esc(x)}</option>`).join('')}
@@ -408,6 +425,8 @@ function viewDetail(){
       <div><label for="dStatus">状態</label><select id="dStatus">${opts(STATUS,f.status)}</select></div>
       <div><label for="dOwner">担当</label><select id="dOwner">${opts(OWNERS,f.owner)}</select></div>
     </div>
+    <label for="dParent">親（同じ系列のまとめ先）</label><select id="dParent"><option value="">なし（これが親）</option>${feats.filter(x=>x.id!==f.id&&x.parent!==f.id).map(x=>`<option value="${esc(x.id)}" ${x.id===f.parent?'selected':''}>${esc(x.title)}</option>`).join('')}</select>
+    ${feats.some(x=>x.parent===f.id)?`<p class="next" style="font-size:13px">子：${feats.filter(x=>x.parent===f.id).map(x=>`<a href="#${esc(x.id)}" style="color:var(--accent)">${esc(x.title)}</a>`).join('、')}</p>`:''}
     <label for="dNext">次の一手</label><input id="dNext" value="${esc(f.next)}">
     <label for="dPage">対象ページのURL（記事やページに結びつけるとサイトマップに出ます）</label><input id="dPage" type="url" value="${esc(f.pageUrl)}" placeholder="https://cutlassfish.tokyo/article/…">
     <label for="dDeploy">公開先・戻し方・メモ</label><textarea id="dDeploy" placeholder="例：ChatGPT Sites 既存プロジェクト appgprj_… / 戻す場合は保存版 appgver_…">${esc(f.deploy)}</textarea>
@@ -857,11 +876,13 @@ const GPT_RULES=['「GPT（API経由）」の工程は、環境変数 OPENAI_API
  '「ChatGPT（手作業）」の工程（ChatGPT Sites での公開、GPTs・プラグインでの WordPress 登録など）は自分で行わない。必要なファイル（ZIP名・SHA256）を用意し、ChatGPT にそのまま貼れる依頼文を報告の「ChatGPTへの依頼文」に書く',
  'オーナーの判断が必要な所は、推測で進めず「確認したいこと」に書いて止まる',
  `WordPress（cutlassfish.tokyo）への記事登録は、リポジトリ ${TOOLS_REPO} のブランチ ${TOOLS_BRANCH} にある wordpress/README.md の手順で「下書き」まで行う（公開はしない）。環境変数 WP_USER / WP_APP_PASSWORD が無ければ記事パックZIPを作って形式チェックまで行い、ZIP名とSHA256を報告に書く`];
+const isRunning=f=>!!(f.cc&&f.cc.state==='作業中'&&!(ccMsg[f.id]&&ccMsg[f.id].report));
+function rootOf(f){let r=f,n=0;while(r&&r.parent&&n++<6){const p=feats.find(x=>x.id===r.parent);if(!p)break;r=p}return r}
 function yourTurn(){const L=[];
   feats.forEach(f=>{
     if(f.gptAsk&&!f.gptAsk.done)L.push({f,kind:'gpt'});
-    const m=ccMsg[f.id];if((m&&m.report)||(f.cc&&f.cc.reportText&&f.cc.state!=='取込済み'))L.push({f,kind:'report'});else if(m&&m.bucket==='BLOCKED')L.push({f,kind:'blocked'});
-    if(f.status==='確認・公開待ち'&&!(f.gptAsk&&!f.gptAsk.done))L.push({f,kind:'wait'})});
+    const m=ccMsg[f.id],run=isRunning(f);if((m&&m.report)||(f.cc&&f.cc.reportText&&!run&&f.cc.state!=='取込済み'))L.push({f,kind:'report'});else if(m&&m.bucket==='BLOCKED')L.push({f,kind:'blocked'});
+    else if(f.status==='確認・公開待ち'&&!run&&!(f.gptAsk&&!f.gptAsk.done))L.push({f,kind:'wait'})});
   return L}
 function planHtml(pl){
   return `<div class="box" id="planBox"><div style="font-size:12px;color:var(--muted);letter-spacing:.04em">計画（${esc(pl.kind||'')}）</div>
@@ -874,7 +895,6 @@ function planHtml(pl){
     <div id="plMsg"></div></div>`}
 function viewHome(){
   if(!loaded)return notReady();
-  const yt=yourTurn(),running=feats.filter(f=>f.cc&&f.cc.state==='作業中');
   const kinds=['自動で判断','機能追加','ツール追加','記事作成','修正','公開'];
   return `${recentHtml()}
   <h2 data-en="REQUEST">何をしますか</h2>
@@ -884,17 +904,7 @@ function viewHome(){
   <div class="actions"><button class="primary" id="cmdPlan" ${sample?'':'disabled'}>計画を立てる</button>${sample?'':'<span class="next" style="font-size:12px">claude.ai で開くと使えます</span>'}</div>
   ${ui.plan?planHtml(ui.plan):''}
   ${articlesHtml()}
-  <h2 data-en="YOUR TURN">あなたの番 <span style="font-size:13px;color:var(--muted)">${yt.length}件</span></h2>
-  <div class="list">${yt.length?yt.map(({f,kind})=>{
-    if(kind==='gpt')return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-作業中">ChatGPT へ渡す</span></div><div class="title">${esc(f.title)}</div>
-      <details><summary>依頼文を見る</summary><pre class="out">${esc(f.gptAsk.text)}</pre></details>
-      <div class="actions"><a class="btn primary" href="https://chatgpt.com/" target="_blank" rel="noopener" data-gptcopy="${esc(f.id)}">コピーして ChatGPT を開く ↗</a><button class="small" data-gptdone="${esc(f.id)}">渡した</button></div></div>`;
-    if(kind==='report')return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-確認・公開待ち">報告が届いています</span></div><div class="title">${esc(f.title)}</div><div class="actions"><button class="small primary" data-takerep="${esc(f.id)}">確認して取り込む</button></div></div>`;
-    if(kind==='blocked')return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-保留">Claude Code が返事待ち</span></div><div class="title">${esc(f.title)}</div><div class="actions"><a class="btn primary" href="${esc(f.cc.url)}" target="_blank" rel="noopener">セッションを開いて答える ↗</a></div></div>`;
-    return cardHtml(f)}).join(''):'<div class="empty">今あなたがやることはありません。</div>'}</div>
-  ${requestsHtml()}
-  <h2 data-en="RUNNING">動いている作業 <span style="font-size:13px;color:var(--muted)">${running.length}件</span></h2>
-  <div class="list">${running.length?running.map(f=>{const m=ccMsg[f.id];return `<div class="card"><div class="meta"><span class="tag">${esc(siteName(f.site))}</span><span class="pill st-作業中">Claude Code</span><span>送信 ${esc(fmt(f.cc.sentAt))}</span></div><div class="title"><a href="#${esc(f.id)}" style="color:inherit">${esc(f.title)}</a></div><div class="next">${esc(m?m.msg:(f.cc.relayMsg||(f.cc.sessionId?'まだ確認していません':'Claude が Claude Code に中継中')))}</div><div class="actions"><button class="small" data-check="${esc(f.id)}" ${mcp?'':'disabled'}>確認</button>${f.cc.url?`<a class="btn small" href="${esc(f.cc.url)}" target="_blank" rel="noopener">開く ↗</a>`:''}</div></div>`}).join(''):'<div class="empty">動いている作業はありません。</div>'}</div>`}
+  ${nowHtml()}`}
 // ---------- articles (WordPress) ----------
 function parseArticles(text){
   const i=String(text||'').indexOf('【記事状況】');if(i<0)return [];
@@ -962,9 +972,9 @@ async function sendArticle(a){
   if($('#artTopics'))ui.artTopics=[...document.querySelectorAll('#artTopics input:checked')].map(x=>x.value);
   b.disabled=true;msg.innerHTML='<div class="banner">Claude Code に送っています…</div>';
   try{
-    const fid='f-wp-'+a.id;let f=feats.find(x=>x.id===fid);
+    let f=feats.find(x=>String(x.wpId||'')===String(a.id))||feats.find(x=>x.id==='f-wp-'+a.id);const fid=f?f.id:'f-wp-'+a.id;
     const log={at:nowIso(),by:'自分',text:`記事の修正を依頼：${ui.artText.trim()}${ui.artGptImg?'（GPT画像）':''}${ui.artPublish?'（公開まで）':''}`};
-    if(!f){await createFeat(fid,{title:a.title||('記事 '+a.id),site:'main',kind:'記事作成',status:'作業中',owner:'Claude',pageUrl:a.status==='publish'?(a.link||''):'',deploy:a.edit_link?('編集：'+a.edit_link):'',logs:[log]});f={id:fid,title:a.title,site:'main',src:{},chats:[],logs:[log]}}
+    if(!f){await createFeat(fid,{wpId:a.id,title:a.title||('記事 '+a.id),site:'main',kind:'記事作成',status:'作業中',owner:'Claude',pageUrl:a.status==='publish'?(a.link||''):'',deploy:a.edit_link?('編集：'+a.edit_link):'',logs:[log]});f={id:fid,title:a.title,site:'main',src:{},chats:[],logs:[log]}}
     else{await saveFeat(fid,{status:'作業中',logs:[...(f.logs||[]),log]})}
     const sid=await ccDispatch({...f,src:{repo:TOOLS_REPO,branch:TOOLS_BRANCH}},artPrompt(a,fid));
     const url=sid?`https://claude.ai/code/${sid}`:'';
@@ -1005,6 +1015,44 @@ function recentHtml(){
   return `<h2 data-en="RECENT">最近の更新${nNew?` <span class="new">${nNew} NEW</span>`:''}</h2>
   <div class="recent">${list.map(e=>`<a href="${esc(e.href)}"${e.ext?' target="_blank" rel="noopener"':''}><span class="when">${esc(ago(e.at))}</span><span class="what">${isNew(e.at)?'<span class="new">NEW</span>':''}<b>${esc(String(e.title||'').slice(0,46))}</b><br><span class="who">${esc(e.who)}</span>　${esc(String(e.text).slice(0,70))}</span></a>`).join('')}</div>
   <div class="actions" style="margin:6px 0 0"><button class="small" id="recentAll">${ui.recentAll?'少なく表示':'もっと見る'}</button></div>`}
+
+// One combined tree: what you must do, what Claude is doing, grouped under the parent feature
+function turnRow(f,kind){
+  if(kind==='gpt')return {badge:'<span class="pill now-you">あなたの番：ChatGPT へ渡す</span>',body:`<details><summary>依頼文を見る</summary><pre class="out">${esc(f.gptAsk.text)}</pre></details>`,act:`<a class="btn small primary" href="https://chatgpt.com/" target="_blank" rel="noopener" data-gptcopy="${esc(f.id)}">コピーして ChatGPT を開く ↗</a><button class="small" data-gptdone="${esc(f.id)}">渡した</button>`};
+  if(kind==='report')return {badge:'<span class="pill now-you">あなたの番：報告を確認</span>',body:'',act:`<button class="small primary" data-takerep="${esc(f.id)}">確認して取り込む</button>`};
+  if(kind==='blocked')return {badge:'<span class="pill now-you">あなたの番：Claude Code が質問中</span>',body:'',act:`<a class="btn small primary" href="${esc(f.cc.url)}" target="_blank" rel="noopener">開いて答える ↗</a>`};
+  return {badge:'<span class="pill now-you">あなたの番：確認・公開</span>',body:f.next?`<div class="next">次：<b>${esc(f.next)}</b></div>`:'',act:''}}
+function stepDots(st){const dot=(i,t)=>`<span class="dot ${st>=i?'on':''}">${t}</span>`;return `<div class="dots">${dot(1,'受付')}<i>→</i>${dot(2,'Claude Code 作業中')}<i>→</i>${dot(3,'報告')}</div>`}
+function nowHtml(){
+  const yt=yourTurn(),S={};
+  const add=(id,x)=>{(S[id]=S[id]||{turn:[],run:false,req:null});Object.assign(S[id],x)};
+  yt.forEach(({f,kind})=>{add(f.id,{});S[f.id].turn.push(kind)});
+  feats.forEach(f=>{if(isRunning(f))add(f.id,{run:true})});
+  const live=reqs.filter(r=>r.status==='pending'||(r.status==='sent'&&daysSince(r.at)<1)).sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  const orphans=[];
+  live.forEach(r=>{const f=feats.find(x=>x.id===r.fid);if(!f){orphans.push(r);return}
+    if(S[f.id]&&S[f.id].req)return;if(r.status==='pending'||isRunning(f))add(f.id,{run:true,req:r})});
+  const nYou=Object.values(S).filter(x=>x.turn.length&&!x.run).length,nRun=Object.values(S).filter(x=>x.run).length+orphans.length;
+  const row=(f,top)=>{const st=S[f.id];if(!st)return `<div class="nrow quiet"><a href="#${esc(f.id)}">${esc(f.title)}</a> <span class="pill st-${esc(f.status)}">${esc(f.status)}</span></div>`;
+    let badge,body='',act='';
+    if(st.run){const r=st.req;const n=r?(r.status==='pending'?1:2):2;
+      badge='<span class="pill now-run">Claude 作業中</span>';
+      body=stepDots(n)+`<div class="next">${esc(r&&r.status==='pending'?'Claude の受け取り待ち（通常1分以内）':(f.cc&&f.cc.relayMsg)||'Claude Code が作業中')}${f.cc&&f.cc.sentAt?`・${esc(ago(f.cc.sentAt))}に開始`:''}</div><div class="next" style="font-size:12px">終わると「あなたの番：報告を確認」に変わります</div>`;
+      const u=(f.cc&&f.cc.url)||(r&&r.sessionId?'https://claude.ai/code/'+r.sessionId:'');if(u)act=`<a class="btn small" href="${esc(u)}" target="_blank" rel="noopener">作業の様子を見る ↗</a>`}
+    else{const parts=st.turn.map(k=>turnRow(f,k));badge=parts.map(x=>x.badge).join('');body=(st.turn.includes('report')?stepDots(3):'')+parts.map(x=>x.body).join('');act=parts.map(x=>x.act).join('')}
+    return `<div class="nrow ${st.run?'is-run':'is-you'}"><div class="meta">${badge}${top?`<span class="tag">${esc(siteName(f.site))}</span>`:''}</div><div class="title"><a href="#${esc(f.id)}">${esc(f.title)}</a></div>${body}${act?`<div class="actions">${act}</div>`:''}</div>`};
+  const groups={};Object.keys(S).forEach(id=>{const f=feats.find(x=>x.id===id);if(!f)return;const r=rootOf(f);(groups[r.id]=groups[r.id]||[]).push(f)});
+  const rank=id=>{const g=groups[id];return g.some(f=>S[f.id].turn.length&&!S[f.id].run)?0:1};
+  const kids=(p,set)=>feats.filter(x=>x.parent===p.id&&set.has(x.id));
+  const html=Object.keys(groups).sort((a,b)=>rank(a)-rank(b)).map(rid=>{const root=feats.find(x=>x.id===rid);
+    const need=new Set();groups[rid].forEach(f=>{let c=f,n=0;while(c&&n++<7){need.add(c.id);c=c.parent?feats.find(x=>x.id===c.parent):null}});
+    const sub=(p)=>{const k=kids(p,need);return k.length?`<div class="nkids">${k.map(c=>row(c,false)+sub(c)).join('')}</div>`:''};
+    return `<div class="card ngroup">${row(root,true)}${sub(root)}</div>`}).join('');
+  const orph=orphans.map(r=>`<div class="card ngroup"><div class="nrow is-run"><div class="meta"><span class="pill now-run">Claude 作業中</span></div><div class="title">${esc(r.title||'依頼')}</div>${stepDots(r.status==='pending'?1:2)}</div></div>`).join('');
+  return `<h2 data-en="NOW">いまの作業</h2>
+  <div class="nsum"><span class="pill now-you">あなたの番 ${nYou}</span><span class="pill now-run">Claude 作業中 ${nRun}</span></div>
+  <p class="next" style="font-size:12px;margin:0 0 8px">流れ：あなたが依頼 → <b style="color:var(--accent)">Claude 作業中</b> → 報告が届くと <b style="color:var(--gold)">あなたの番</b>（確認して取り込む・公開する）。同じ系列の作業は親の下にまとめています。</p>
+  <div class="list">${html||orph?html+orph:'<div class="empty">今あなたがやることも、動いている作業もありません。</div>'}</div>`}
 
 // Progress of requests relayed through Claude (pending → sent to Claude Code → report)
 function requestsHtml(){
@@ -1183,7 +1231,7 @@ function bind(){
   // detail
   const f=route.v==='detail'&&feats.find(x=>x.id===route.id);
   if(f){
-    on('#dSave','click',async()=>{await saveFeat(f.id,{title:$('#dTitle').value.trim()||'無題',site:$('#dSite').value,status:$('#dStatus').value,owner:$('#dOwner').value,next:$('#dNext').value.trim(),deploy:$('#dDeploy').value.trim(),pageUrl:$('#dPage').value.trim()});clean('d');toast('保存しました')});
+    on('#dSave','click',async()=>{await saveFeat(f.id,{title:$('#dTitle').value.trim()||'無題',site:$('#dSite').value,status:$('#dStatus').value,owner:$('#dOwner').value,next:$('#dNext').value.trim(),deploy:$('#dDeploy').value.trim(),pageUrl:$('#dPage').value.trim(),parent:$('#dParent').value});clean('d');toast('保存しました')});
     on('#dHand','click',()=>{ui.ho={...ui.ho,fid:f.id,rules:null,text:''};go('handoff')});
     on('#dRep','click',()=>{ui.rep={text:'',fid:f.id};go('report')});
     on('#cUrl','input',e=>{$('#cTool').value=toolFromUrl(e.target.value)});
