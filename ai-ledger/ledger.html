@@ -345,7 +345,24 @@ let dirty={},lastKey='';
 document.addEventListener('input',e=>{if(e.target.id&&e.target.closest('#view'))dirty[e.target.id]=1});
 document.addEventListener('change',e=>{if(e.target.id&&e.target.closest('#view'))dirty[e.target.id]=1});
 const clean=prefix=>Object.keys(dirty).forEach(k=>{if(k.startsWith(prefix))delete dirty[k]});
+// Reports are recorded automatically; "your turn" only holds decisions for the owner.
+const applying=new Set();
+async function applyReport(f,text){
+  const key=f.id+':'+text.length+':'+text.slice(-40);if(!f||!text||applying.has(key))return;applying.add(key);
+  try{const p=parseReport(text);const by=AIS.find(a=>(p['担当']||'').includes(a))||'Claude';
+    const patch={logs:[...(f.logs||[]),{at:nowIso(),by,text:text.trim()}],cc:{...(f.cc||{}),state:'取込済み',reportText:text,appliedAt:nowIso()}};
+    const st=STATUS.find(x=>(p['状態']||'').includes(x));if(st)patch.status=st;
+    if(p['次の一手'])patch.next=p['次の一手'].split('\n')[0];
+    const sha=((p['SHA256']||'').match(/[0-9a-fA-F]{64}/)||[])[0];if(sha)patch.src={...(f.src||{}),sha:sha.toLowerCase(),...(p['ZIP名']?{zip:p['ZIP名'].split('\n')[0]}:{})};
+    const pu=((p['公開URL']||'').match(/https:\/\/[\w.-]*cutlassfish\.tokyo\/[^\s）)]*/)||[])[0];if(pu&&!f.pageUrl&&!/preview=true/.test(pu))patch.pageUrl=pu;
+    const arts=parseArticles(text);if(arts.length)await upsertArticles(arts);
+    await saveFeat(f.id,patch)}
+  catch(e){applying.delete(key)}}
+function autoApplyReports(){if(!loaded||!db)return;feats.forEach(f=>{const c=f.cc;if(c&&c.reportText&&c.state!=='取込済み'&&c.state!=='作業中')applyReport(f,c.reportText)})}
+function lastReport(f){const l=(f.logs||[]).slice().reverse().find(x=>String(x.text||'').includes('【完了報告】'));return l?parseReport(l.text):null}
+function artFor(f){const items=(artDoc&&artDoc.items)||[];const id=f.wpId||((String(f.deploy||'').match(/post=(\d+)/)||[])[1]);return id?items.find(a=>String(a.id)===String(id))||{id,preview_link:`https://cutlassfish.tokyo/?p=${id}&preview=true`}:null}
 function render(){
+  setTimeout(autoApplyReports,0);
   const key=route.v+(route.id||'');const keep={};
   if(key===lastKey)Object.keys(dirty).forEach(k=>{const el=document.getElementById(k);if(el)keep[k]=el.type==='checkbox'?el.checked:el.value});else dirty={};
   lastKey=key;
@@ -623,7 +640,7 @@ async function ccCheck(f){
     const ev=payloadOf(await mcp.callTool(CCR,'list_events',{session_id:sid,kinds:['result'],limit:100}));
     const texts=((ev&&ev.data)||[]).filter(e=>!f.cc.sentAt||String(e.created_at||'')>=f.cc.sentAt).map(e=>{const r=e.result||{};return (r.internal_anthropic_catchall&&r.internal_anthropic_catchall.result)||r.result}).filter(t=>typeof t==='string'&&t.trim());
     const last=texts[texts.length-1]||'';
-    if(last.includes('【完了報告】')){ui.rep={text:last.slice(last.indexOf('【完了報告】')),fid:f.id};await saveFeat(f.id,{cc:{...f.cc,state:'取込済み'}});toast('完了報告が届いています');go('report');return}
+    if(last.includes('【完了報告】')){await applyReport(f,last.slice(last.indexOf('【完了報告】')));toast('完了報告を台帳に記録しました');render();return}
     const msg=bucket==='WORKING'?'まだ作業中です。少し待ってからもう一度確認してください。':bucket==='BLOCKED'?'Claude Code があなたの返事や許可を待っています。セッションを開いて答えてください。':bucket==='FAILED'?'セッションがエラーで止まっています。セッションを開いて確認してください。':last?'返答はありますが【完了報告】が見つかりません。返答を確認してください。':'まだ返答がありません。';
     ccMsg[f.id]={msg,text:last};render()}
   catch(e){ccMsg[f.id]={msg:mcpErr(e),text:''};render()}}
@@ -927,7 +944,7 @@ function articlesHtml(){
     return `<div class="card" style="${open?'border-color:var(--accent)':''}"><div class="meta"><span class="pill st-${a.status==='publish'?'公開済み':'確認・公開待ち'}">${esc(ART_ST[a.status]||a.status||'')}</span><span>ID ${esc(a.id)}</span>${a.modified?`<span>更新 ${esc(fmt(a.modified).slice(5))}</span>`:''}${td.length?`<span class="tnew">未記入・要確認 ${td.length}</span>`:''}</div>
       <div class="title">${esc(a.title||'(無題)')}</div>
       ${td.length?`<details><summary>未記入・要確認の箇所</summary><ul style="margin:4px 0;padding-left:18px;font-size:13px">${td.map(x=>`<li>${esc(typeof x==='string'?x:(x.snippet||x.marker||JSON.stringify(x)))}</li>`).join('')}</ul></details>`:''}
-      <div class="actions">${a.edit_link?`<a class="btn small" href="${esc(a.edit_link)}" target="_blank" rel="noopener">編集画面 ↗</a>`:''}${a.status==='publish'&&a.link?`<a class="btn small" href="${esc(a.link)}" target="_blank" rel="noopener">記事を見る ↗</a>`:''}<button class="small ${open?'':'primary'}" data-artopen="${esc(a.id)}">${open?'閉じる':'直す・仕上げる'}</button></div>
+      <div class="actions">${a.edit_link?`<a class="btn small" href="${esc(a.edit_link)}" target="_blank" rel="noopener">編集画面 ↗</a>`:''}${a.status==='publish'&&a.link?`<a class="btn small" href="${esc(a.link)}" target="_blank" rel="noopener">記事を見る ↗</a>`:a.preview_link?`<a class="btn small" href="${esc(a.preview_link)}" target="_blank" rel="noopener">プレビュー ↗</a>`:''}<button class="small ${open?'':'primary'}" data-artopen="${esc(a.id)}">${open?'閉じる':'直す・仕上げる'}</button></div>
       ${open?artComposer(a):''}</div>`}).join(''):`<div class="empty">記事の情報がまだありません。「記事の状況を更新」を押すと、Claude Code が WordPress から一覧を取ってきます（記事取り込み API v1.1 が必要）。</div>`}</div>`}
 function artComposer(a){
   const cats=(smap&&smap.cats)||[];const pub=a.status==='publish';
@@ -997,6 +1014,7 @@ function bindArticles(on){
   on('#artSync','click',syncArticles);
   on('#artCheck','click',async()=>{try{await checkArtJob()}catch(e){toast(mcpErr(e))}});
   on('#artAll','click',()=>{ui.artAll=!ui.artAll;render()});
+  document.querySelectorAll('[data-artgo]').forEach(b=>b.onclick=()=>{ui.artOpen=b.dataset.artgo;ui.artPublish=false;render();setTimeout(()=>{const t=$('#artText');if(t){t.scrollIntoView({block:'center',behavior:'smooth'});t.focus()}},50)});
   document.querySelectorAll('[data-artopen]').forEach(b=>b.onclick=()=>{ui.artOpen=ui.artOpen===b.dataset.artopen?null:b.dataset.artopen;ui.artPublish=false;render()});
   on('#artText','input',e=>ui.artText=e.target.value);
   on('#artPublish','change',e=>{ui.artText=$('#artText').value;ui.artPublish=e.target.checked;render()});
@@ -1019,9 +1037,16 @@ function recentHtml(){
 // One combined tree: what you must do, what Claude is doing, grouped under the parent feature
 function turnRow(f,kind){
   if(kind==='gpt')return {badge:'<span class="pill now-you">あなたの番：ChatGPT へ渡す</span>',body:`<details><summary>依頼文を見る</summary><pre class="out">${esc(f.gptAsk.text)}</pre></details>`,act:`<a class="btn small primary" href="https://chatgpt.com/" target="_blank" rel="noopener" data-gptcopy="${esc(f.id)}">コピーして ChatGPT を開く ↗</a><button class="small" data-gptdone="${esc(f.id)}">渡した</button>`};
-  if(kind==='report')return {badge:'<span class="pill now-you">あなたの番：報告を確認</span>',body:'',act:`<button class="small primary" data-takerep="${esc(f.id)}">確認して取り込む</button>`};
+  if(kind==='report')return {badge:'<span class="pill now-run">報告を記録中…</span>',body:'',act:''};
   if(kind==='blocked')return {badge:'<span class="pill now-you">あなたの番：Claude Code が質問中</span>',body:'',act:`<a class="btn small primary" href="${esc(f.cc.url)}" target="_blank" rel="noopener">開いて答える ↗</a>`};
-  return {badge:'<span class="pill now-you">あなたの番：確認・公開</span>',body:f.next?`<div class="next">次：<b>${esc(f.next)}</b></div>`:'',act:''}}
+  const rp=lastReport(f),a=artFor(f);
+  const body=(rp&&rp['やったこと']?`<div class="next">Claude がやったこと：${esc(rp['やったこと'].slice(0,90))}${rp['やったこと'].length>90?'…':''}</div>`:'')
+    +(rp&&rp['確認したいこと']&&!/^なし/.test(rp['確認したいこと'])?`<div class="next" style="color:var(--gold)">Claude からの質問：${esc(rp['確認したいこと'])}</div>`:'')
+    +(f.next&&!a?`<div class="next">次：<b>${esc(f.next)}</b></div>`:'');
+  if(a){const pub=a.status==='publish';
+    return {badge:`<span class="pill now-you">あなたの番：${pub?'公開後の確認':'プレビューで確認して公開'}</span>`,body:body+`<div class="next" style="font-size:12px">プレビューは cutlassfish.tokyo の管理画面にログインしているブラウザで開けます。直したい所があれば「直す・公開する」から普段の言葉で送れます。</div>`,
+      act:`<a class="btn small primary" href="${esc(pub?a.link:a.preview_link)}" target="_blank" rel="noopener">${pub?'記事を見る':'プレビューを見る'} ↗</a><button class="small" data-artgo="${esc(a.id)}">直す・公開する</button>`}}
+  return {badge:'<span class="pill now-you">あなたの番：確認・公開</span>',body,act:''}}
 function stepDots(st){const dot=(i,t)=>`<span class="dot ${st>=i?'on':''}">${t}</span>`;return `<div class="dots">${dot(1,'受付')}<i>→</i>${dot(2,'Claude Code 作業中')}<i>→</i>${dot(3,'報告')}</div>`}
 function nowHtml(){
   const yt=yourTurn(),S={};
@@ -1037,7 +1062,7 @@ function nowHtml(){
     let badge,body='',act='';
     if(st.run){const r=st.req;const n=r?(r.status==='pending'?1:2):2;
       badge='<span class="pill now-run">Claude 作業中</span>';
-      body=stepDots(n)+`<div class="next">${esc(r&&r.status==='pending'?'Claude の受け取り待ち（通常1分以内）':(f.cc&&f.cc.relayMsg)||'Claude Code が作業中')}${f.cc&&f.cc.sentAt?`・${esc(ago(f.cc.sentAt))}に開始`:''}</div><div class="next" style="font-size:12px">終わると「あなたの番：報告を確認」に変わります</div>`;
+      body=stepDots(n)+`<div class="next">${esc(r&&r.status==='pending'?'Claude の受け取り待ち（通常1分以内）':(f.cc&&f.cc.relayMsg)||'Claude Code が作業中')}${f.cc&&f.cc.sentAt?`・${esc(ago(f.cc.sentAt))}に開始`:''}</div><div class="next" style="font-size:12px">終わると報告が自動で記録され、「あなたの番」に変わります</div>`;
       const u=(f.cc&&f.cc.url)||(r&&r.sessionId?'https://claude.ai/code/'+r.sessionId:'');if(u)act=`<a class="btn small" href="${esc(u)}" target="_blank" rel="noopener">作業の様子を見る ↗</a>`}
     else{const parts=st.turn.map(k=>turnRow(f,k));badge=parts.map(x=>x.badge).join('');body=(st.turn.includes('report')?stepDots(3):'')+parts.map(x=>x.body).join('');act=parts.map(x=>x.act).join('')}
     return `<div class="nrow ${st.run?'is-run':'is-you'}"><div class="meta">${badge}${top?`<span class="tag">${esc(siteName(f.site))}</span>`:''}</div><div class="title"><a href="#${esc(f.id)}">${esc(f.title)}</a></div>${body}${act?`<div class="actions">${act}</div>`:''}</div>`};
@@ -1051,7 +1076,7 @@ function nowHtml(){
   const orph=orphans.map(r=>`<div class="card ngroup"><div class="nrow is-run"><div class="meta"><span class="pill now-run">Claude 作業中</span></div><div class="title">${esc(r.title||'依頼')}</div>${stepDots(r.status==='pending'?1:2)}</div></div>`).join('');
   return `<h2 data-en="NOW">いまの作業</h2>
   <div class="nsum"><span class="pill now-you">あなたの番 ${nYou}</span><span class="pill now-run">Claude 作業中 ${nRun}</span></div>
-  <p class="next" style="font-size:12px;margin:0 0 8px">流れ：あなたが依頼 → <b style="color:var(--accent)">Claude 作業中</b> → 報告が届くと <b style="color:var(--gold)">あなたの番</b>（確認して取り込む・公開する）。同じ系列の作業は親の下にまとめています。</p>
+  <p class="next" style="font-size:12px;margin:0 0 8px">流れ：あなたが依頼 → <b style="color:var(--accent)">Claude 作業中</b> → 報告が届くと <b style="color:var(--gold)">あなたの番</b>（プレビューで確認・公開など、あなたが決めること）。同じ系列の作業は親の下にまとめています。</p>
   <div class="list">${html||orph?html+orph:'<div class="empty">今あなたがやることも、動いている作業もありません。</div>'}</div>`}
 
 // Progress of requests relayed through Claude (pending → sent to Claude Code → report)
