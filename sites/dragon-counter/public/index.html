@@ -981,7 +981,7 @@ let recScroll=0,lastTab=null;
 function backBar(){let el=$('#backBar');if(!el){el=document.createElement('div');el.id='backBar';el.className='backbar';document.body.appendChild(el)}
   const on=S.ui.tab==='gear';el.hidden=!on;document.body.classList.toggle('has-back',on);
   if(on){const tb=document.querySelector('.tabs');if(tb)document.documentElement.style.setProperty('--tabs-h',tb.offsetHeight+'px')}
-  if(on)el.innerHTML=`<button data-act="backRec"><span class="bb-a">←</span><span><b>記録に戻る</b><small>${active()?'記録中の釣行へ':'出船の準備へ'}</small></span></button>`}
+  if(on)el.innerHTML=`<button data-act="backRec"><span class="bb-a">←</span><span><b>保存して記録に戻る</b><small>${active()?'記録中の釣行へ':'出船の準備へ'}</small></span></button>`}
 function render(){if(lastTab==='rec'&&S.ui.tab!=='rec')recScroll=scrollY;lastTab=S.ui.tab;renderTabs();renderSync();backBar();const t=S.ui.tab;document.body.classList.toggle('has-dock',t==='rec'&&!!active());const tc=$('#topCatch');if(tc)tc.hidden=!active();
   $('#view').innerHTML=t==='rec'?(active()?viewActive(active()):viewStart()):t==='fig'?viewFig():t==='hist'?viewHist():viewGear()}
 
@@ -1544,7 +1544,7 @@ function viewGear(){const sp=SOLO||(spOf(S.ui.gearSp).id!=='?'?S.ui.gearSp:S.cfg
    <button class="btn sm primary" data-act="mapOpen" data-from="gear">＋ 地図から釣り場を追加</button></div>
   <h2 class="sec-h" id="secBoats">船</h2>
   <div class="card"><h2>船を登録する</h2><p class="muted">船の名前・いつもの人数・出船と沖上がりの時刻と、その船がよく行くポイントを登録します。出船のときに船を選ぶと、人数・時刻・ポイントが呼び出されます（当日の分はそこで直せます）。</p>
-   <div class="boatnew"><label class="field"><span>船の名前</span><input type="text" id="add-boat" placeholder="例：忠彦丸"></label><label class="field"><span>いつもの人数</span><input type="number" id="add-boat-seats" inputmode="numeric" value="16" min="2" max="40"></label><label class="field"><span>開始時間</span><input type="time" id="add-boat-start" value="07:15"></label><label class="field"><span>終了時間</span><input type="time" id="add-boat-end" value="13:00"></label></div>
+   <div class="boatnew"><label class="field"><span>船の名前</span><input type="text" id="add-boat" placeholder="例：忠彦丸"></label><label class="field"><span>いつもの人数</span><input type="number" id="add-boat-seats" inputmode="numeric" value="16" min="2" max="40"></label><label class="field"><span>開始時間</span><input type="time" id="add-boat-start" value="07:20"></label><label class="field"><span>終了時間</span><input type="time" id="add-boat-end" value="13:30"></label></div>
    <div class="field"><span>よく行くポイント（複数選べます）</span><div class="chips wrap">${S.cfg.spots.map(x=>`<button class="chip ${newBoatSpots.has(x.id)?'on':''}" data-act="newBoatSpot" data-id="${x.id}" aria-pressed="${newBoatSpots.has(x.id)}">${esc(x.name)}</button>`).join('')}</div></div>
    <button class="btn primary" data-act="boatAdd">この船を登録</button></div>
   <div class="card"><h2>登録した船（${S.cfg.boats.length}）</h2>
@@ -1679,7 +1679,9 @@ function helpHTML(){return `<div class="sheet-h"><h2>ボタンで数える<small
 /* ---------- actions ---------- */
 const acts={
   tab:b=>{S.ui.tab=b.dataset.tab;saveLocal();render();scrollTo(0,0)},
-  backRec:()=>{S.ui.tab='rec';saveLocal();render();const y=recScroll;requestAnimationFrame(()=>scrollTo(0,y))},
+  backRec:()=>{const a=document.activeElement;if(a&&a.blur)a.blur(); // commit the field being edited
+    const nb=$('#add-boat');if(nb&&nb.value.trim()&&!S.cfg.boats.some(x=>x.name===nb.value.trim()))acts.boatAdd(); // a boat typed but not yet registered
+    S.ui.tab='rec';saveLocal();render();const y=recScroll;requestAnimationFrame(()=>scrollTo(0,y))},
   closeSheet:()=>closeSheet(),
   goGear:()=>{const tr=active();S.ui.gearSp=tr?tr.cur.sp:(startDraft?startDraft.sp:S.ui.gearSp);S.ui.tab='gear';if(!$('#sheet').hidden)$('#sheet').hidden=true;render();scrollTo(0,0)},
   seats:b=>{const f=curForm;f.people=clampP(f.people+(+b.dataset.d));fixPeople(f);refreshSeat()},
