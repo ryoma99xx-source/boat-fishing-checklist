@@ -689,8 +689,8 @@ function viewReport(){
   const by=AIS.find(a=>(p['担当']||'').includes(a))||ui.ho.target.replace(' チャット','').replace(' Code','')||'自分';
   const cat=/【カタログ追加】/.test(r.text||'');
   return `<h2>完了報告を取り込む</h2>
-  <p class="next" style="font-size:14px">相手のAIが返した【完了報告】をそのまま貼り付けます。機能IDから自動で機能を選びます。ChatGPT の<b>【カタログ追加】</b>（テンヤカタログの月次調査）もここに貼れます。</p>
-  ${cat?`<div class="box"><b>ChatGPT のテンヤカタログ調査の結果です</b><p class="next" style="font-size:13px">Claude Code がチェック用のプログラムに通し、問題がなければカタログに追加して公開します（既にあるテンヤは飛ばし、表記は変えません）。</p><div class="actions" style="margin:0"><button class="primary" id="rCat">カタログに追加する（Claude Code に送る）</button></div><div id="rCatMsg"></div></div>`:''}
+  <p class="next" style="font-size:14px">相手のAIが返した【完了報告】をそのまま貼り付けます。機能IDから自動で機能を選びます。テンヤカタログに足す一覧（<b>【カタログ追加】</b>の JSON）もここに貼れます。</p>
+  ${cat?`<div class="box"><b>テンヤカタログに足す一覧です</b><p class="next" style="font-size:13px">Claude Code がチェック用のプログラムに通し、問題がなければカタログに追加して公開します（既にあるテンヤは飛ばし、表記は変えません）。</p><div class="actions" style="margin:0"><button class="primary" id="rCat">カタログに追加する（Claude Code に送る）</button></div><div id="rCatMsg"></div></div>`:''}
   <textarea id="rText" style="min-height:160px" placeholder="【完了報告】&#10;機能ID：f-…&#10;状態：…">${esc(r.text)}</textarea>
   <label for="rFeat">記録する機能</label><select id="rFeat"><option value="">— 選ぶ —</option>${feats.map(x=>`<option value="${esc(x.id)}" ${x.id===r.fid?'selected':''}>${esc(siteName(x.site))}｜${esc(x.title)}</option>`).join('')}</select>
   ${r.text&&f?`<div class="box"><b>保存すると</b><div class="checks">
@@ -1099,7 +1099,7 @@ function viewMore(){return `<h2>その他</h2>
     <b>司令塔の Claude</b><span>${meta.heartbeat&&meta.heartbeat.at?`最終確認 ${esc(ago(meta.heartbeat.at))}。`:''}台帳からの依頼は Claude が受け取って Claude Code に渡し、進み具合と報告を台帳に書き戻します。1時間ごとの見回りもあり、Claude が止まっていても依頼は拾われます。</span>
     <b>台帳内の Claude（相談・計画）</b><span>${sample?`使えます${chatImgCaps?'（画像も送れます）':'（画像は送れません）'}`:'この表示では使えません（claude.ai で開いてください）'}</span>
     <b>GPT（API経由）</b><span>Claude Code の作業環境に <span class="mono">OPENAI_API_KEY</span> が設定済み（2026-11-04 に画像生成を確認）。記事の修正で「GPT に画像を作らせる」を選ぶと使われます。使った分だけ OpenAI に課金。</span>
-    <b>ChatGPT（手作業）</b><span>毎月のテンヤカタログ調査など。ChatGPT の返事（【カタログ追加】や【完了報告】）は「報告」タブに貼れば、台帳が自動で取り込んで処理に回します。</span>
+    <b>ChatGPT（手作業）</b><span>今は決まった役目はありません。ChatGPT に何か作らせたときは、返事（【完了報告】や【カタログ追加】）を「報告」タブに貼れば、台帳が取り込んで処理に回します。</span>
   </div>
   <h2>台帳のデータ</h2>
   <div class="box"><p class="next" style="font-size:13px;margin:0 0 8px">機能・ログ・記事の状況などを1つのファイルに保存します。毎日の控えは台帳の中にも自動で残ります（7日分）。</p>
@@ -1319,13 +1319,13 @@ async function sendCatalog(){
   if(!Array.isArray(j.new)&&!Array.isArray(j.status))return toast('new / status がありません');
   b.disabled=true;msg.innerHTML='<div class="banner">Claude Code に送っています…</div>';
   try{const fid='f-dragon-catalog';let f=feats.find(x=>x.id===fid);const n=(j.new||[]).length,k=(j.status||[]).length;
-    const log={at:nowIso(),by:'自分',text:`ChatGPT のカタログ調査（${j.checked||''}）：新規 ${n} 件・状態の変更 ${k} 件 を取り込みに回した`};
+    const log={at:nowIso(),by:'自分',text:`カタログに足す一覧（${j.checked||''}）：新規 ${n} 件・状態の変更 ${k} 件 を取り込みに回した`};
     if(!f){await createFeat(fid,{title:'テンヤカタログの月次更新',site:'s-dragon',kind:'運用',status:'作業中',owner:'Claude',parent:'f-dragon-launch',pageUrl:'https://dragon-counter.cutlassfish.tokyo/catalog-all.json',deploy:'手順：sites/dragon-counter/CATALOG-UPDATE.md',logs:[log]});f={id:fid,title:'テンヤカタログの月次更新',site:'s-dragon',src:{},chats:[],logs:[log]}}
     else await saveFeat(fid,{status:'作業中',logs:[...(f.logs||[]),log]});
-    const text=['# テンヤカタログの月次更新（ChatGPT の調査結果を取り込む）',`リポジトリ ${TOOLS_REPO}・ブランチ ${TOOLS_BRANCH}。手順は sites/dragon-counter/CATALOG-UPDATE.md。`,'',
+    const text=['# テンヤカタログへの追加（渡された一覧を取り込む）',`リポジトリ ${TOOLS_REPO}・ブランチ ${TOOLS_BRANCH}。手順は sites/dragon-counter/CATALOG-UPDATE.md。`,'',
       '1. 下の JSON をそのまま /tmp/gpt.json に保存する','2. `python3 sites/dragon-counter/tools/catalog_add.py /tmp/gpt.json` で確認する。エラーが出たら直さずに止め、エラーの行をそのまま報告の「確認したいこと」に書く',
       '3. エラーがなければ `--write` を付けて実行 → `git add sites/dragon-counter` → commit → push（push で公開される）','4. 数分後に https://dragon-counter.cutlassfish.tokyo/catalog-all.json の updated と count が変わったことを確認する','',
-      '## ChatGPT の結果','```json',JSON.stringify(j,null,1),'```','',
+      '## 渡された一覧','```json',JSON.stringify(j,null,1),'```','',
       '## 報告','【完了報告】',`機能ID：${fid}`,'担当：Claude','状態：（公開済み／確認・公開待ち／保留 から1つ。エラーで止めたら保留）','やったこと：（追加 n 件・状態の更新 n 件・飛ばした n 件）','変更したもの（ブランチ・コミット・ファイル）：','ZIP名：なし','SHA256：なし','公開URL・バージョン：https://dragon-counter.cutlassfish.tokyo/catalog-all.json の updated','次の一手：','確認したいこと：','ChatGPTへの依頼文：なし','',
       '## 守ること','- 既にあるテンヤの表記を変えない・消さない。catalog_add.py 以外の方法でカタログを編集しない','- index.html の TENYA_CAT は触らない','- WP_USER / WP_APP_PASSWORD / OPENAI_API_KEY の値は表示・保存・コミットしない'].join('\n');
     await ccDispatch({...f,src:{repo:TOOLS_REPO,branch:TOOLS_BRANCH}},text);
@@ -1350,7 +1350,7 @@ async function tidy(){
 // ---------- 相談チャット（台帳に組み込みの Claude） ----------
 let chatMsgs=[],chatBusy=false,chatLive='',chatTools=[],chatPics=[],chatImgCaps=null,chatThumbs={};
 const GUIDE={
- 'カタログ更新':'ドラゴンカウンターのテンヤカタログは月1回更新。ChatGPT に調査用の指示（リポジトリの sites/dragon-counter/CATALOG-UPDATE.md にある）を貼る → 返ってきた【カタログ追加】の JSON を台帳の「報告」タブに貼る → 「カタログに追加する」を押す。Claude Code がチェック用のプログラムで確認し、足すだけで公開する。個人の所有テンヤは消えない。',
+ 'カタログ更新':'ドラゴンカウンターのテンヤカタログは、毎月1日 11:43 に Claude Code の定期タスク「テンヤカタログの月次更新」が自動で更新する（メーカー公式を調べ、足すだけで公開。手順は sites/dragon-counter/CATALOG-UPDATE.md）。結果は機能「テンヤカタログの月次更新」のログに残る。誰かが作ったテンヤ一覧を手で取り込むときは、【カタログ追加】の JSON を「報告」タブに貼る → 「カタログに追加する」。個人の所有テンヤは消えない。',
  '司令塔':'開くと最初の画面。「何をしますか」に普段の言葉で書く→「計画を立てる」→手順ごとの担当（Claude Code／GPT／ChatGPT 手作業／自分）が出る→「この計画で始める」で台帳に機能登録し、自動の手順は Claude Code に送る。下の「あなたの番」に、報告の取り込み・ChatGPT へ渡す依頼文・Claude Code の返事待ちが出る。「動いている作業」で進み具合を確認。初回は Claude Code Remote へのアクセス許可を押す。',
  '記事':'司令塔の「記事」欄。「記事の状況を更新」で Claude Code が WordPress から記事一覧（下書き・公開中・未記入の目印）を取得（1〜2分後に「確認」）。記事の「直す・仕上げる」で、どう直すかを書いて送る。チェック：GPT に画像を作らせる／GPT にも文章案／仕上げたら公開する（スラッグ・トピック）。公開中の記事は「公開中の記事を直接書き換える」にした時だけ書き換える。書き換え前の控えは WordPress に残る。',
  '全体図':'3つの表示。体制図：あなた→Claude 側と ChatGPT 側→工程ごとの担当。動いている所の線が光る。サイトマップ：WordPress の記事・ページ・ツールのツリー（記事は普段は畳む）。サイト別：サイトごとの担当の流れ。担当の追加・編集、追加したサイトの削除（2回押し、機能が残っていると不可）ができる。',

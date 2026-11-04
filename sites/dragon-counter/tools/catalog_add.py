@@ -5,7 +5,7 @@
     python3 sites/dragon-counter/tools/catalog_add.py <gpt.json> --write    # write catalog-extra.json, catalog-all.json and DEPLOY
     python3 sites/dragon-counter/tools/catalog_add.py --export              # only rewrite catalog-all.json
 
-<gpt.json> is the 【カタログ追加】 JSON: {"checked":"YYYY-MM-DD","new":[...],"status":[...]}.
+<gpt.json> is the 【カタログ追加】 JSON (from Claude's monthly research, or any list converted to this shape): {"checked":"YYYY-MM-DD","new":[...],"status":[...]}.
 - "new": tenya not in the catalog yet. Ones already there (same maker|product|size|color) are skipped.
 - "status": a status change (s) for a tenya that IS in the catalog, matched by the exact same four fields.
 Nothing already in the catalog is renamed or removed, so every viewer's owned tenya keep working.
@@ -90,15 +90,16 @@ def main():
     errs, added, changed, skipped = [], [], [], []
     for i, x in enumerate(gpt.get("new", [])):
         where = f"new[{i}] {x.get('m')} {x.get('p')} {x.get('z')}号 {x.get('c')}"
-        miss = [k for k in ("m", "p", "z", "c", "u") if not str(x.get(k, "")).strip()]
+        miss = [k for k in ("m", "p", "z", "c") if not str(x.get(k, "")).strip()]
         if miss: errs.append(f"{where}: {','.join(miss)} がありません"); continue
         if x["m"] not in MAKERS: errs.append(f"{where}: メーカー表記は {MAKERS} のどれか"); continue
         if int(x["z"]) not in (20, 30, 40, 50, 60, 80): errs.append(f"{where}: 号数がおかしい"); continue
         if x.get("s", "") not in STATUS: errs.append(f"{where}: 状態は {STATUS} のどれか"); continue
-        if not str(x["u"]).startswith("https://"): errs.append(f"{where}: u はメーカー公式の https URL"); continue
+        if x.get("u") and not str(x["u"]).startswith("https://"): errs.append(f"{where}: u はメーカー公式の https URL"); continue
         k = key(x["m"], x["p"], x["z"], x["c"])
         if k in have: skipped.append(where); continue
-        it = {"m": x["m"], "p": x["p"], "u": x["u"], "h": bool(x.get("h")), "z": int(x["z"]), "c": x["c"], "s": x.get("s", ""), "a": today}
+        u = x.get("u") or next((v.get("u", "") for v in have.values() if v["m"] == x["m"] and v["p"] == x["p"] and v.get("u")), "")
+        it = {"m": x["m"], "p": x["p"], "u": u, "h": bool(x.get("h")), "z": int(x["z"]), "c": x["c"], "s": x.get("s", ""), "a": today}
         have[k] = it; added.append(it)
     for i, x in enumerate(gpt.get("status", [])):
         where = f"status[{i}] {x.get('m')} {x.get('p')} {x.get('z')}号 {x.get('c')}"
