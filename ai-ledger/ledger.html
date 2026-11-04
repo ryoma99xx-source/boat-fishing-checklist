@@ -87,7 +87,22 @@ pre.out{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--f-body);fo
 .checks input{width:auto;margin-top:4px}
 .seg{display:flex;flex-wrap:wrap;gap:6px}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:14px;z-index:20;max-width:90vw}
+.chatfab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:15;border-radius:999px;padding:10px 16px;font-weight:700;background:var(--accent);color:var(--accent-ink);border:0;box-shadow:0 4px 14px #0003}
+.chat-panel{position:fixed;z-index:30;background:var(--surface);display:flex;flex-direction:column;border-left:1px solid var(--line);box-shadow:-8px 0 24px #0002;top:0;bottom:0;right:0;width:min(440px,100vw);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.chat-panel header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.chat-panel header b{font-size:15px}
+.chat-log{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:8px 11px;border-radius:12px;font-size:14px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.user{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px}
+.msg.assistant{align-self:flex-start;background:var(--bg);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.tool{align-self:flex-start;font-size:11.5px;color:var(--muted);background:none;padding:0 4px}
+.chat-input{border-top:1px solid var(--line);padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.chat-input textarea{min-height:60px;max-height:160px}
+.chat-chips{display:flex;gap:6px;flex-wrap:wrap}
+.chat-chips button{font-size:12px;padding:3px 9px;border-radius:999px}
+@media (max-width:520px){.chat-panel{width:100vw;border-left:0}}
+.chat-panel[hidden],.chatfab[hidden]{display:none}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:14px;z-index:20;max-width:90vw;z-index:40}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:8;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);
   padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
 nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 6px;font-size:11px;color:var(--muted);text-decoration:none}
@@ -219,6 +234,16 @@ nav.tabs a[aria-current="page"]{color:var(--accent);font-weight:700}
   <a href="#report" data-v="report"><svg viewBox="0 0 24 24"><path d="M20 12H7M11 7l-5 5 5 5"/></svg>報告</a>
   <a href="#more" data-v="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>その他 <span id="inboxN"></span></span></a>
 </nav>
+<button class="chatfab" id="chatFab" aria-label="相談チャットを開く">相談</button>
+<div class="chat-panel" id="chatPanel" hidden role="dialog" aria-label="相談">
+  <header><b>相談</b><span class="next" style="font-size:11.5px;flex:1">台帳を見ながら答えます</span><button class="small" id="chatClear">新しい話題</button><button class="small" id="chatClose" aria-label="閉じる">閉じる</button></header>
+  <div class="chat-log" id="chatLog"></div>
+  <div class="chat-input">
+    <div class="chat-chips" id="chatChips"></div>
+    <textarea id="chatText" placeholder="例：今日は何をすれば良い？／ドラゴンカウンターの記事はどうなってる？（キーボードのマイクで話しても入力できます）"></textarea>
+    <div style="display:flex;gap:8px;justify-content:flex-end"><button class="primary" id="chatSend">送る</button></div>
+  </div>
+</div>
 
 <script>
 const SITES=[
@@ -1174,6 +1199,74 @@ async function tidy(){
   }catch(e){msg.innerHTML=`<div class="banner">AI整形できませんでした（${esc(e.code||e.message||'')}）。元の指示文はそのまま使えます。</div>`}
   finally{const b=$('#hTidy');if(b)b.disabled=false}}
 
+// ---------- 相談チャット（台帳に組み込みの Claude） ----------
+let chatMsgs=[],chatBusy=false,chatLive='',chatTools=[];
+const GUIDE={
+ '司令塔':'開くと最初の画面。「何をしますか」に普段の言葉で書く→「計画を立てる」→手順ごとの担当（Claude Code／GPT／ChatGPT 手作業／自分）が出る→「この計画で始める」で台帳に機能登録し、自動の手順は Claude Code に送る。下の「あなたの番」に、報告の取り込み・ChatGPT へ渡す依頼文・Claude Code の返事待ちが出る。「動いている作業」で進み具合を確認。初回は Claude Code Remote へのアクセス許可を押す。',
+ '記事':'司令塔の「記事」欄。「記事の状況を更新」で Claude Code が WordPress から記事一覧（下書き・公開中・未記入の目印）を取得（1〜2分後に「確認」）。記事の「直す・仕上げる」で、どう直すかを書いて送る。チェック：GPT に画像を作らせる／GPT にも文章案／仕上げたら公開する（スラッグ・トピック）。公開中の記事は「公開中の記事を直接書き換える」にした時だけ書き換える。書き換え前の控えは WordPress に残る。',
+ '全体図':'3つの表示。体制図：あなた→Claude 側と ChatGPT 側→工程ごとの担当。動いている所の線が光る。サイトマップ：WordPress の記事・ページ・ツールのツリー（記事は普段は畳む）。サイト別：サイトごとの担当の流れ。担当の追加・編集、追加したサイトの削除（2回押し、機能が残っていると不可）ができる。',
+ '報告':'相手の AI が返した【完了報告】を貼ると、機能IDで機能を見つけてログに記録。状態・次の一手・SHA256・公開URL・ChatGPT への依頼文も取り込む。',
+ '指示文':'機能と相手（ChatGPT／Claude チャット／Claude Code／Codex）を選び、やってほしいことを書くと、背景・経過・ソースの受け取り方・守る条件・報告書式入りの指示文ができる。Claude Code には直接送れる。ChatGPT へは「コピーして ChatGPT を開く」。',
+ 'WordPress':'Claude 用ユーザー claude-code（編集者）とアプリケーションパスワードで、Claude Code が記事を下書き登録・修正・公開できる（プラグイン「Cutlassfish 記事取り込み API」v1.1.0）。プラグインのインストールは管理者だけなので、オーナーが行う：プラグイン→新規追加→プラグインのアップロード（既存なら「置き換える」）。下書きのプレビューはログイン中のブラウザで編集画面の「プレビュー」から。差分追加プラグイン（記事末尾に追記）は管理画面のツール→記事に差分追加。',
+ 'APIキー':'GPT の API キーは台帳やチャットには貼らない。platform.openai.com/api-keys で作成→Billing→Limits で月の上限を設定→claude.ai/code の環境名（Default）→編集→環境変数に OPENAI_API_KEY=sk-… の1行（=の前後にスペースなし、カッコ無し）。WP_USER・WP_APP_PASSWORD も同じ場所。# を含む値は途中で切れるので注意。新しいセッションから効く。画像は gpt-image-2（使えなければ 1.5→1 に自動切替）、文章は最新の GPT-5 系を自動選択。API 料金は ChatGPT の月額と別。',
+ 'お名前.com':'ツールは お名前.com レンタルサーバー（www1066.onamae.ne.jp）にサブドメインごとに置く。手順：ドメイン→cutlassfish.tokyo の DNS で該当の CNAME を消す（新規なら不要）→＋サブドメイン→セキュリティ→SSL で無料SSL→ファイル管理で FTP アカウント deploy（接続先ディレクトリ public_html/<サブドメイン>.cutlassfish.tokyo/）→GitHub の Settings→Secrets→Actions に FTP_USERNAME_<KEY>／FTP_PASSWORD_<KEY>。アップロードは Claude Code が DEPLOY ファイルを push すると GitHub Actions が自動で行う。戻すときは DNS の CNAME を custom-domains.chatgpt.site に戻す。',
+ 'ツール':'公開中：潮と流れマップ（tide-current-map、v20、確認用 tide-stg あり）、リール糸管理（reel-line-manager）、持ち物チェック（dont-forget-anything、共有は WordPress 側の share.php）、テンヤ（tenya-simulator、組み立て済みを写し取り。直すには ChatGPT から元ソースの ZIP が必要）、ドラゴンカウンター（dragon-counter、TOOL 05、WordPress にリンク追加プラグイン導入済み）。すべてお名前.com、ChatGPT Sites は使っていない。',
+ 'ChatGPT':'ChatGPT Sites・GPTs・ChatGPT の画面は外から操作できない。必要な時は Claude Code が依頼文を作り、司令塔の「あなたの番」に「ChatGPT へ渡す」が出る→コピーして ChatGPT を開く→返事は「報告」に貼る。画像を GPT に作らせたいだけなら API キーで自動化できる。'
+};
+function chatSystem(){return `あなたは釣りサイト群 cutlassfish.tokyo の「制作台帳」に組み込まれた相談役です。オーナー（台帳の持ち主）と日本語で話します。
+- 答える前に、必要なら道具（tools）で台帳のデータを見る。推測で答えず、台帳にない事実は「台帳には記録がない」と言う。
+- 短く、やさしい言葉で。結論を先に。手順は番号付きで、押すボタン名を「」で示す。専門用語を避ける。
+- 作業の依頼は、prepare_request（司令塔に下書き）や prepare_article_edit（記事の修正欄に下書き）で画面を用意し、最後の送信ボタンはオーナーに押してもらう。勝手に送らない。
+- ログの追記（add_log）や状態・次の一手の更新（set_feature）は、オーナーが頼んだ時、または会話で決まった時にだけ行い、行ったら伝える。
+- パスワード・API キーなどの秘密は絶対にチャットに書かせない。設定場所だけ案内する。
+- このチャットからは GitHub やサーバーを直接触れない。必要なら Claude Code への依頼として司令塔に用意する。
+- 今日の日付：${new Date().toLocaleDateString('ja-JP')}。台帳の画面：司令塔／一覧／全体図／指示文／報告／その他。`}
+function featSummary(f){const l=(f.logs||[]).slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)))[0];return {id:f.id,title:f.title,site:siteName(f.site),status:f.status,owner:f.owner,next:f.next||'',updated:fmt(lastTouch(f)),claude_code:f.cc?f.cc.state:'',last_log:l?`${fmt(l.at)} ${l.by}：${String(l.text).slice(0,140)}`:''}}
+function chatToolDefs(){const obj=(props,req)=>({type:'object',properties:props,required:req||[]});return [
+ {name:'overview',description:'台帳の全体の状況（あなたの番、動いている作業、状態ごとの件数、記事の下書きと未記入、最近のログ）を返す',inputSchema:obj({}),execute:()=>({your_turn:yourTurn().map(({f,kind})=>({feature:f.title,id:f.id,kind:{gpt:'ChatGPTへ渡す',report:'報告が届いている',blocked:'Claude Codeが返事待ち',wait:'確認・公開待ち'}[kind]})),running:feats.filter(f=>f.cc&&f.cc.state==='作業中').map(f=>({id:f.id,title:f.title,state:(ccMsg[f.id]||{}).msg||'未確認'})),counts:STATUS.reduce((o,s)=>(o[s]=feats.filter(f=>f.status===s).length,o),{}),articles:((artDoc&&artDoc.items)||[]).map(a=>({id:a.id,title:a.title,status:ART_ST[a.status]||a.status,todo:artTodo(a).length})),recent_logs:allLogs().slice(0,8).map(l=>`${fmt(l.at)} ${l.by}→${l.title}：${String(l.text).split('\n')[0].slice(0,80)}`)})},
+ {name:'find_features',description:'機能（作業）を探す。query はタイトルや内容の一部、site はサイト名、status は状態',inputSchema:obj({query:{type:'string'},site:{type:'string'},status:{type:'string'}}),execute:({query,site,status})=>feats.filter(f=>(!query||JSON.stringify([f.title,f.next,f.logs]).includes(query))&&(!site||siteName(f.site).includes(site))&&(!status||f.status===status)).slice(0,30).map(featSummary)},
+ {name:'feature_detail',description:'機能1件の詳細（ログ最新15件、チャット、ソース、公開先メモ、ChatGPT への依頼）',inputSchema:obj({id:{type:'string'}},['id']),execute:({id})=>{const f=feats.find(x=>x.id===id);if(!f)throw new Error('その機能はありません');return {...featSummary(f),deploy:f.deploy||'',page:f.pageUrl||'',src:f.src||{},chats:f.chats||[],gpt_ask:f.gptAsk&&!f.gptAsk.done?f.gptAsk.text.slice(0,600):'',plan:f.plan||[],logs:(f.logs||[]).slice().sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,15).map(l=>`${fmt(l.at)} ${l.by}：${String(l.text).slice(0,400)}`)}}},
+ {name:'roles',description:'サイトごとの担当（工程・AI・場所）。site を省くと全部',inputSchema:obj({site:{type:'string'}}),execute:({site})=>roles.filter(r=>!site||siteName(r.site).includes(site)).map(r=>({site:siteName(r.site),step:r.step,ai:r.ai,place:r.place,detail:r.detail}))},
+ {name:'articles',description:'WordPress の記事一覧（台帳に取り込み済みのもの）と未記入・要確認の箇所',inputSchema:obj({}),execute:()=>({fetched:artDoc&&artDoc.fetchedAt?fmt(artDoc.fetchedAt):'未取得',items:((artDoc&&artDoc.items)||[]).map(a=>({id:a.id,title:a.title,status:ART_ST[a.status]||a.status,modified:a.modified?fmt(a.modified):'',todo:artTodo(a),edit:a.edit_link||'',link:a.link||''}))})},
+ {name:'guide',description:'台帳と周辺の使い方・設定手順。topic：'+Object.keys(GUIDE).join('／'),inputSchema:obj({topic:{type:'string'}},['topic']),execute:({topic})=>{const k=Object.keys(GUIDE).find(k=>topic.includes(k)||k.includes(topic));return k?GUIDE[k]:'その項目は未登録。topic は '+Object.keys(GUIDE).join('／')}},
+ {name:'open_screen',description:'台帳の画面を開く（チャットは開いたまま）。screen：home(司令塔)/list(一覧)/map(全体図)/handoff(指示文)/report(報告)/more(その他)/feature(機能の詳細、id 必須)',inputSchema:obj({screen:{type:'string'},id:{type:'string'}},['screen']),execute:({screen,id})=>{go(screen==='feature'?id:screen);return '開きました'}},
+ {name:'prepare_request',description:'司令塔の「何をしますか」に依頼文を下書きして司令塔を開く。送信（計画を立てる→この計画で始める）はオーナーが押す',inputSchema:obj({text:{type:'string'},site:{type:'string',description:'サイトのkey（main/tide/reel/check/tenya 等）。分からなければ省く'}},['text']),execute:({text,site})=>{ui.cmd=text;if(site)ui.cmdSite=site;ui.plan=null;go('home');return '司令塔に下書きしました。オーナーが「計画を立てる」を押す'}},
+ {name:'prepare_article_edit',description:'記事の修正欄に指示を下書きして開く。送信はオーナーが押す',inputSchema:obj({article_id:{type:'string'},instructions:{type:'string'},gpt_image:{type:'boolean'},gpt_text:{type:'boolean'},publish:{type:'boolean'}},['article_id','instructions']),execute:({article_id,instructions,gpt_image,gpt_text,publish})=>{if(!((artDoc&&artDoc.items)||[]).some(a=>String(a.id)===String(article_id)))throw new Error('その記事は台帳の一覧にありません');ui.artOpen=String(article_id);ui.artText=instructions;ui.artGptImg=!!gpt_image;ui.artGptText=!!gpt_text;ui.artPublish=!!publish;go('home');return '記事の修正欄に下書きしました。オーナーが「Claude Code に送る」を押す'}},
+ {name:'add_log',description:'機能に作業ログを1件追加する',inputSchema:obj({feature_id:{type:'string'},text:{type:'string'},by:{type:'string',description:'自分/Claude/ChatGPT/Codex'}},['feature_id','text']),execute:async({feature_id,text,by})=>{const f=feats.find(x=>x.id===feature_id);if(!f)throw new Error('その機能はありません');await addLog(f,text,['自分','Claude','ChatGPT','Codex'].includes(by)?by:'自分');return '記録しました'}},
+ {name:'set_feature',description:'機能の状態・次の一手・担当を更新する',inputSchema:obj({id:{type:'string'},status:{type:'string',description:STATUS.join('/')},next:{type:'string'},owner:{type:'string',description:OWNERS.join('/')}},['id']),execute:async({id,status,next,owner})=>{const f=feats.find(x=>x.id===id);if(!f)throw new Error('その機能はありません');const p={};if(status&&STATUS.includes(status))p.status=status;if(next!==undefined)p.next=next;if(owner&&OWNERS.includes(owner))p.owner=owner;if(!Object.keys(p).length)throw new Error('変える項目がありません');await saveFeat(id,p);return '更新しました：'+JSON.stringify(p)}}]}
+const TOOL_JA={overview:'台帳の全体を見ています',find_features:'機能を探しています',feature_detail:'機能の詳細を見ています',roles:'担当を見ています',articles:'記事を見ています',guide:'使い方を調べています',open_screen:'画面を開きました',prepare_request:'司令塔に下書きしました',prepare_article_edit:'記事の修正欄に下書きしました',add_log:'ログに記録しました',set_feature:'機能を更新しました'};
+function renderChat(){
+  const log=$('#chatLog');if(!log)return;
+  const items=chatMsgs.map(m=>`<div class="msg ${m.role==='user'?'user':'assistant'}">${esc(m.content)}</div>`).join('')
+   +chatTools.map(t=>`<div class="msg tool">${esc(t)}</div>`).join('')
+   +(chatBusy?`<div class="msg assistant">${esc(chatLive||'考えています…')}</div>`:'');
+  log.innerHTML=items||`<div class="msg assistant">台帳の中身を見ながら答えます。今日やること、作業の状況、使い方、設定のしかたなど、何でも聞いてください。作業の依頼も、ここから司令塔に用意できます。</div>`;
+  log.scrollTop=log.scrollHeight;
+  const chips=$('#chatChips');if(chips)chips.innerHTML=chatMsgs.length?'':['今日は何をすれば良い？','動いている作業の状況は？','記事の未記入はどこ？','司令塔の使い方は？'].map(t=>`<button data-chip="${esc(t)}">${esc(t)}</button>`).join('');
+  document.querySelectorAll('[data-chip]').forEach(b=>b.onclick=()=>{$('#chatText').value=b.dataset.chip;chatSend()});
+  const sb=$('#chatSend');if(sb)sb.disabled=chatBusy||!sample}
+async function chatSave(){if(!db)return;try{await write('chat','main',r=>r.set({messages:chatMsgs.slice(-40),updatedAt:nowIso()}))}catch(e){}}
+async function chatSend(){
+  const ta=$('#chatText');const text=ta.value.trim();if(!text||chatBusy)return;
+  if(!sample){toast('この表示ではチャットを使えません（claude.ai で開いてください）');return}
+  ta.value='';chatMsgs.push({role:'user',content:text,at:nowIso()});chatBusy=true;chatLive='';chatTools=[];renderChat();
+  const hist=chatMsgs.slice(-16).map(m=>({role:m.role,content:m.content}));
+  const input=[{role:'user',content:chatSystem()+'\n\n（ここから会話）'},{role:'assistant',content:'了解しました。台帳を見ながら答えます。'},...hist];
+  const tools=chatToolDefs().map(t=>({...t,execute:async(inp)=>{chatTools.push(TOOL_JA[t.name]||t.name);renderChat();try{return await t.execute(inp||{})}catch(e){return {error:e.message||String(e)}}}}));
+  try{const r=await sample(input,{tools,modelTier:'complex',cache:false,onText:u=>{chatLive=u.text;renderChat()}});
+    chatMsgs.push({role:'assistant',content:(r.text||'').trim()||'（返事が空でした）',at:nowIso()})}
+  catch(e){chatMsgs.push({role:'assistant',content:e.code==='rate_limited'?'少し混み合っています。しばらくしてからもう一度送ってください。':e.code==='not_granted'?'台帳の中の Claude の使用が許可されていません。台帳の「権限」から許可してください。':'うまく答えられませんでした（'+(e.code||e.message||'')+'）。もう一度送ってみてください。',at:nowIso()})}
+  chatBusy=false;chatLive='';chatTools=[];renderChat();chatSave()}
+function chatInit(){
+  const panel=$('#chatPanel');
+  $('#chatFab').onclick=()=>{panel.hidden=false;$('#chatFab').hidden=true;renderChat();setTimeout(()=>$('#chatText').focus(),50)};
+  $('#chatClose').onclick=()=>{panel.hidden=true;$('#chatFab').hidden=false};
+  $('#chatClear').onclick=async()=>{if(chatBusy)return;chatMsgs=[];renderChat();await chatSave()};
+  $('#chatSend').onclick=chatSend;
+  $('#chatText').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();chatSend()}});
+}
+chatInit();
+
 // ---------- boot ----------
 readHash();
 (async()=>{
@@ -1185,6 +1278,7 @@ readHash();
     $('#sync').className='sync ok';$('#sync').lastChild.textContent='同期中';
     const a=document.activeElement;if(!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&route.v!=='list'))render()},fail);
   db.collection('roles').onSnapshot(s=>{roles=s.docs.map(d=>({id:d.id,...d.data()}));if(loaded)render()},fail);
+  db.collection('chat').onSnapshot(s=>{const d=s.docs.find(x=>x.id==='main');if(!chatBusy){chatMsgs=(d&&d.data().messages)||[];renderChat()}},fail);
   db.collection('articles').onSnapshot(s=>{const d=s.docs.find(x=>x.id==='list');artDoc=d?d.data():null;if(loaded)render()},fail);
   db.collection('sitemap').onSnapshot(s=>{const d=s.docs.find(x=>x.id==='wp');smap=d?d.data():null;if(loaded)render()},fail);
   db.collection('sites').onSnapshot(s=>{extraSites=s.docs.map(d=>({k:d.id,...d.data()}));if(loaded)render()},fail);
