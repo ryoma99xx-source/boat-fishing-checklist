@@ -68,22 +68,26 @@ jobs:
           php -r 'echo "<?php\n// Written by the deploy workflow. Do not commit.\nreturn ", var_export(array("GOOGLE_MAPS_BROWSER_KEY" => (string)getenv("GOOGLE_MAPS_BROWSER_KEY"), "GOOGLE_MAPS_ENABLED" => (string)getenv("GOOGLE_MAPS_ENABLED")), true), ";\n";' > site/api/map-config/config.php
           php -l site/api/map-config/config.php > /dev/null
 
-      - name: Choose the server directory
+      # Each target uses its own FTP account, created for that subdomain only, so a staging
+      # run can never write into production (or into WordPress). The account's home is the
+      # subdomain's web folder, so the default directory is the account root ("./").
+      - name: Choose the FTP account and directory
         id: dir
         env:
           TARGET: ${{ inputs.target }}
+          USER_STAGING: ${{ secrets.FTP_USERNAME_STAGING }}
+          USER_PRODUCTION: ${{ secrets.FTP_USERNAME_PRODUCTION }}
           DIR_STAGING: ${{ secrets.FTP_DIR_STAGING }}
           DIR_PRODUCTION: ${{ secrets.FTP_DIR_PRODUCTION }}
         run: |
-          if [ "$TARGET" = production ]; then d="$DIR_PRODUCTION"; else d="$DIR_STAGING"; fi
-          d="${d%/}/"
-          case "$d" in
-            /|./|"") echo "::error::FTP_DIR_${TARGET^^} is not set (refusing to deploy to the FTP root)"; exit 1;;
-            *..*) echo "::error::FTP_DIR_${TARGET^^} must not contain '..'"; exit 1;;
-          esac
-          if [ -n "$DIR_STAGING" ] && [ -n "$DIR_PRODUCTION" ] && [ "${DIR_STAGING%/}" = "${DIR_PRODUCTION%/}" ]; then
-            echo "::error::FTP_DIR_STAGING and FTP_DIR_PRODUCTION must differ"; exit 1
+          if [ "$TARGET" = production ]; then u="$USER_PRODUCTION"; d="$DIR_PRODUCTION"; else u="$USER_STAGING"; d="$DIR_STAGING"; fi
+          if [ -z "$u" ]; then echo "::error::FTP_USERNAME_${TARGET^^} is not set"; exit 1; fi
+          if [ -n "$USER_STAGING" ] && [ "$USER_STAGING" = "$USER_PRODUCTION" ]; then
+            echo "::error::Staging and production must use different FTP accounts"; exit 1
           fi
+          [ -z "$d" ] && d="./"
+          case "$d" in *..*) echo "::error::FTP_DIR_${TARGET^^} must not contain '..'"; exit 1;; esac
+          d="${d%/}/"
           echo "server_dir=$d" >> "$GITHUB_OUTPUT"
 
       # Uploads only changed files. Files are deleted on the server only when an earlier run of
@@ -94,8 +98,8 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@a51268f67f6605236975928ae28b0f7e9971d50a # v4.3.6
         with:
           server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          username: ${{ inputs.target == 'production' && secrets.FTP_USERNAME_PRODUCTION || secrets.FTP_USERNAME_STAGING }}
+          password: ${{ inputs.target == 'production' && secrets.FTP_PASSWORD_PRODUCTION || secrets.FTP_PASSWORD_STAGING }}
           protocol: ftps
           local-dir: ./site/
           server-dir: ${{ steps.dir.outputs.server_dir }}

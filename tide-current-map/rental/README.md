@@ -25,16 +25,17 @@ GitHub のこのリポジトリで **Settings → Secrets and variables → Acti
 
 | 名前 | 入れる値 |
 | --- | --- |
-| `FTP_SERVER` | FTP サーバー名（サーバーパネルの「FTP情報」に書かれているもの） |
-| `FTP_USERNAME` | FTP ユーザー名 |
-| `FTP_PASSWORD` | FTP パスワード |
-| `FTP_DIR_STAGING` | テスト用サブドメイン（tide-stg.cutlassfish.tokyo）の公開フォルダ。例：`/tide-stg.cutlassfish.tokyo/` |
-| `FTP_DIR_PRODUCTION` | 本番用サブドメイン（tide-current-map.cutlassfish.tokyo）の公開フォルダ。例：`/tide-current-map.cutlassfish.tokyo/` |
+| `FTP_SERVER` | FTP サーバー名（お名前.com のサーバー画面の「Webサーバー」。例：`www1066.onamae.ne.jp`） |
+| `FTP_USERNAME_STAGING` | テスト用サブドメイン（tide-stg.cutlassfish.tokyo）専用に作った FTP アカウントのユーザー名 |
+| `FTP_PASSWORD_STAGING` | そのパスワード |
+| `FTP_USERNAME_PRODUCTION` | 本番用サブドメイン（tide-current-map.cutlassfish.tokyo）専用の FTP アカウント（切り替えの日に作る） |
+| `FTP_PASSWORD_PRODUCTION` | そのパスワード |
 | `GOOGLE_MAPS_BROWSER_KEY` | Google 地図のブラウザ用キー（今 ChatGPT Sites に入れているものと同じでよい） |
 | `GOOGLE_MAPS_ENABLED` | Google 地図を使うなら `true`、使わないなら `false` |
 
-- フォルダは、サーバーパネルでサブドメインを作ったときに表示される「公開フォルダ」をそのまま書きます。最後の `/` は無くても構いません。
-- 2つのフォルダは必ず別にしてください（同じだとワークフローが止まります）。
+- FTP アカウントは、お名前.com の「ファイル管理」でサブドメインごとに作ります。そのアカウントはそのサブドメインのフォルダしか触れないので、WordPress 本体を誤って変更する心配がありません。
+- テスト用と本番用は必ず別のアカウントにしてください（同じだとワークフローが止まります）。
+- アップロード先は、アカウントのいちばん上（＝そのサブドメインの公開フォルダ）です。別の場所にしたいときだけ、`FTP_DIR_STAGING` / `FTP_DIR_PRODUCTION` にフォルダを入れます（ふつうは不要）。
 - `GOOGLE_MAPS_ENABLED` は Secrets ではなく **Variables** タブに入れても構いません。
 - Google Cloud 側で、キーの「ウェブサイトの制限」に `https://tide-stg.cutlassfish.tokyo/*` も追加しておくと、テスト用でも Google 地図が出ます。
 - 秘密情報はログに表示されません。キーは `api/map-config/config.php` としてサーバーにだけ置かれ、GitHub には保存されません。
