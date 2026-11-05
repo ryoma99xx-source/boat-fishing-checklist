@@ -14,7 +14,7 @@ on:
       app_ref:
         description: Branch / tag / commit that holds tide-current-map/app
         required: true
-        default: claude/funny-dijkstra-n8oyg0
+        default: claude/relaxed-mayer-1u2nhq
       target:
         description: Where to deploy
         type: choice
@@ -53,10 +53,11 @@ jobs:
           echo "Deploy target: $t"
           echo "name=$t" >> "$GITHUB_OUTPUT"
 
-      - name: Check out the app (${{ inputs.app_ref || 'claude/funny-dijkstra-n8oyg0' }})
+      # The app now lives on this work branch (tide-current-map/app), next to the rental build scripts.
+      - name: Check out the app (${{ inputs.app_ref || github.ref_name }})
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          ref: ${{ inputs.app_ref || 'claude/funny-dijkstra-n8oyg0' }}
+          ref: ${{ inputs.app_ref || github.ref_name }}
           path: app-src
           sparse-checkout: tide-current-map/app
           persist-credentials: false

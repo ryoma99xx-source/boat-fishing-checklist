@@ -1,0 +1,24 @@
+{
+  "location": {
+    "lat": 35.279,
+    "lon": 139.708
+  },
+  "comparisons": {
+    "dt10": {
+      "vectorRMSEMps": 0.00039135941753693784,
+      "maxVectorDifferenceMps": 0.0010157860705588546,
+      "tokyoTideRMSEM": 0.06790888690250668
+    },
+    "dx500": {
+      "vectorRMSEMps": 0.02761692451575636,
+      "maxVectorDifferenceMps": 0.04891138896874385,
+      "tokyoTideRMSEM": 0.06540690957476822
+    },
+    "spin24": {
+      "vectorRMSEMps": 0.009585729332487532,
+      "maxVectorDifferenceMps": 0.02652293587348437,
+      "tokyoTideRMSEM": 0.06831906026831235
+    }
+  },
+  "note": "Numerical sensitivity at one approximate fishing point; not an accuracy estimate or field validation."
+}

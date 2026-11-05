@@ -5,8 +5,8 @@
 今 ChatGPT Sites で動いている「東京湾の潮と流れ」（https://tide-current-map.cutlassfish.tokyo/ ）を、
 お名前.com レンタルサーバー（PHP＋ふつうのファイル）でも同じように動かすための仕組みです。
 
-- 画面・データ・URL は今と同じです。アプリ本体は別ブランチ（`claude/funny-dijkstra-n8oyg0` の `tide-current-map/app/`）にあり、
-  ここにはサーバー用に組み立てるスクリプトだけを置いています。
+- 画面・データ・URL は今と同じです。アプリ本体は 2026-11-05 からこのブランチの `tide-current-map/app/` にあります（元は `claude/funny-dijkstra-n8oyg0`。そこからコピーして、以後の変更はこちらで行います）。
+  ここ（`rental/`）にはサーバー用に組み立てるスクリプトを置いています。
 - 潮位（気象庁）・潮流推算（海上保安庁）を取りに行く部分は PHP（`/api/tide`・`/api/current`）、Google 地図キーを返す部分も PHP（`/api/map-config`）です。
 - 今の ChatGPT Sites のサイトには何も変更を加えません。DNS を切り替えるまで、公開中のサイトはそのままです。
 
@@ -62,7 +62,7 @@ GitHub のこのリポジトリで **Settings → Secrets and variables → Acti
 1. GitHub の **Actions** タブを開く。
 2. 左の一覧から **Deploy tide map to rental server** を選ぶ。
 3. 右の **Run workflow** を押す。
-   - `app_ref`：そのまま（`claude/funny-dijkstra-n8oyg0`）。
+   - `app_ref`：そのまま（`claude/relaxed-mayer-1u2nhq`）。
    - `target`：**まず `staging`**。
 4. 緑のチェックになれば完了です。赤なら、テストかアップロードで止まっています（サーバーには途中までしか上がらないことがあるので、直してもう一度実行してください）。
 

@@ -1,0 +1,31 @@
+{
+  "name": "GtTM Whole Japan / Nankai Trough subset",
+  "author": "Naotaka CHIKASADA (2020), NIED",
+  "doi": "https://doi.org/10.17598/NIED.0021",
+  "source": "https://kiyuu.bosai.go.jp/GtTM/TwDB/nankaiTrough.grd",
+  "info": "https://kiyuu.bosai.go.jp/GtTM/",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "gridArcSeconds": 2,
+  "datum": "JGD2000 (per GtTM creation notes)",
+  "verticalDatum": "Mixed source vertical references; not verified locally",
+  "signConvention": "positive depth below water, negative elevation on land (checked against known sea/land sites)",
+  "sourceYears": "CAO tsunami terrain published 2012 / central disaster council 2005 / GEBCO 2019",
+  "changes": "Boso region subset, latitude reordered, stored as int16 decimetres (depth clipped at 3276.7 m); resampled later for model computation",
+  "bounds": {
+    "south": 34.79944444444445,
+    "north": 36.0,
+    "west": 139.55,
+    "east": 141.1
+  },
+  "shape": [
+    2162,
+    2791
+  ],
+  "finite": 6034142,
+  "depthPositiveDownRange": [
+    -396.239990234375,
+    3147.199951171875
+  ],
+  "sha256": "9d970336f2e3fc3a7954fefe493726e8ceb45c3a598466ab8c41854506897df1"
+}
