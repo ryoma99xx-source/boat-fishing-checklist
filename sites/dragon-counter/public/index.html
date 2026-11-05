@@ -360,7 +360,11 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 .dk-t.cur .dk-n{color:var(--catch-ink)}
 .dk-plus{border-style:dashed;border-color:var(--muted);flex-basis:28%}
 .dk-plus .dk-a{color:var(--muted)}
-.dk-sub{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:600px;margin:0 auto;width:100%}
+.dk-sub{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:6px;max-width:600px;margin:0 auto;width:100%}
+.td-bl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.td-bl button{min-height:56px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;padding:6px 12px}
+.td-bl button b{grid-row:1/3;font-family:var(--f-num);font-size:26px;font-weight:600;min-width:22px;text-align:center} .td-bl button span{font-weight:700;font-size:15px;line-height:1.1} .td-bl button small{font-size:11px;color:var(--muted);line-height:1.1}
+.td-bl button[data-act=bite] b{color:var(--amber)} .td-bl button[data-act=lost] b{color:var(--pink)}
 .dk-sub button{min-height:48px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);font-size:14px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;padding:2px}
 .dk-sub b{font-family:var(--f-num);font-size:18px;font-weight:600}
 .dk-sub button[data-act=bite] b{color:var(--amber)}.dk-sub button[data-act=lost] b{color:var(--pink)}
@@ -1259,16 +1263,19 @@ function feedRow(tr,it,idx){const time=`<span class="fd-t">${hm(it.t)}</span>`;
   const n=e.kind==='catch'?catchesOf(tr,e.sp).indexOf(e)+1:0;
   return `<li><button class="fd fd-${e.kind}${e.sp!==(tr.cur&&tr.cur.sp)&&e.kind==='catch'?' fd-gedo':''}" data-act="editEv" data-id="${e.id}">${time}<span class="fd-k">${esc(what)}${n?`<i>${n}${esc(s.unit)}目</i>`:''}${e.dragon?'<em class="dragon"><i class="ic ic-dragon"></i>ドラゴン</em>':''}</span><span class="fd-b">${esc(gear)}${e.size?`<small>${esc(sizeText(e.sp,e.size))}</small>`:''}${e.memo?`<small>${esc(e.memo)}</small>`:''}</span></button></li>`}
 function dockHTML(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);let main='';
-  if(isTenya(sp,g)){const ids=dayTenya(tr,sp);const c=catchesOf(tr,sp);
+  if(isTenya(sp,g)){const all=dayTenya(tr,sp);const c=catchesOf(tr,sp);
+    // the dock shows up to 15 tenya (swipe sideways); the one in use is always among them; the rest are under ほかのテンヤ
+    let ids=all.slice(0,DOCK_MAX);if(g.rig&&all.includes(g.rig)&&!ids.includes(g.rig))ids=[g.rig].concat(ids.slice(0,DOCK_MAX-1));
     const dupe=id=>{const t=tenyaOf(id);return ids.some(o=>o!==id&&tenyaOf(o)&&tenyaShort(tenyaOf(o))===tenyaShort(t))};
     main=ids.map(id=>{const t=tenyaOf(id);const k=c.filter(e=>e.rig===id).length;
-      return `<button class="dk-t ${id===g.rig?'cur':''}" data-act="catchT" data-rig="${id}" aria-label="${esc(tenyaFull(id))}で釣れた">${timg(id,'dkimg')}<span class="dk-a">${esc(t.name?'':tenyaAbbr(t))}${dupe(id)&&t.z?` ${t.z}号`:''}</span><span class="dk-c">${esc(t.name||t.c||'')}</span><span class="dk-n">${k||''}</span></button>`}).join('')
-      +`<button class="dk-t dk-plus" data-act="tenyaOther"><span class="dk-c">${ids.length?'ほかのテンヤ':'テンヤを選ぶ'}</span><span class="dk-a">＋1</span></button>`;
-    if(!ids.length)main=''}
+      return `<button class="dk-t ${id===g.rig?'cur':''}" data-act="dockSel" data-rig="${id}" aria-label="使用テンヤを${esc(tenyaFull(id))}にする">${timg(id,'dkimg')}<span class="dk-a">${esc(t.name?'':tenyaAbbr(t))}${dupe(id)&&t.z?` ${t.z}号`:''}</span><span class="dk-c">${esc(t.name||t.c||'')}</span><span class="dk-n">${k||''}</span></button>`}).join('')
+      +`<button class="dk-t dk-plus" data-act="tenyaOther"><span class="dk-c">${all.length?(all.length>ids.length?`ほかのテンヤ（${all.length-ids.length}）`:'ほかのテンヤ'):'テンヤを選ぶ'}</span><span class="dk-a">切り替え</span></button>`;
+    if(!all.length)main=''}
   else{const vs=s.variants.filter(v=>!v.hidden);main=vs.map(v=>`<button class="dk-t" data-act="catch" data-v="${v.id}"><span class="dk-a">${esc(s.name)}</span><span class="dk-c">${esc(vs.length>1?v.short||v.name:'釣れた')}</span><span class="dk-n">${catchesOf(tr,sp).filter(e=>e.v===v.id).length||''}</span></button>`).join('')}
   if(SOLO&&!isTenya(sp,g))main='';
   return `<div class="dock" id="dock">${main?`<div class="dk-row">${main}</div>`:''}
-   <div class="dk-sub"><button data-act="bite"><b>${nKind(tr,sp,'bite')}</b>アタリ</button><button data-act="lost"><b>${nKind(tr,sp,'lost')}</b>バラシ</button><button data-act="state" data-id="${tr.id}">船の向き</button>${SOLO?'':'<button data-act="gedoPick">ほかの魚</button>'}<button data-act="undo">取り消し</button></div></div>`}
+   <div class="dk-sub"><button data-act="state" data-id="${tr.id}">船の向き</button>${SOLO?'':'<button data-act="gedoPick">ほかの魚</button>'}<button data-act="undo">取り消し</button></div></div>`}
+const DOCK_MAX=15;
 let dragonNext=false;
 function headBtn(tr){const now=Date.now();const q=headSegs(tr,Math.max(now+1,tr.planEnd||0)).find(x=>x.t<=now&&x.te>now);if(!q)return `<button class="tb-btn need" data-act="state" data-id="${tr.id}"><span>船の向き（任意）</span><b>未登録 ＋</b></button>`;
   const e=effState(tr,q,Date.now());return `<button class="tb-btn" data-act="state" data-id="${tr.id}"><span>船の向き${q.auto?'・潮は自動':''}</span><b>船首${HEAD_JP[q.heading||'C']}${e.flow?' '+(e.flow==='C'?'潮止まり':flowName(e.flow)):''}</b></button>`}
@@ -1289,6 +1296,7 @@ function viewActive(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);const c=catc
     <div class="td-row"><button class="td-catch" data-act="catchCur"><b>釣れた</b><small>＋1</small></button>
      <div class="td-side"><button class="td-tenya ${ten&&curGear(tr).rig&&TIMG.has(curGear(tr).rig)?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):''}<span>${ten?'使用テンヤ':'仕掛け'}</span><b>${esc(curRigLabel(tr))}</b><i aria-hidden="true">▾</i></button>
       ${sp==='tachiuo'?`<label class="td-dragon ${dragonNext?'on':''}"><input type="checkbox" id="dragonChk" ${dragonNext?'checked':''}><i class="ic ic-dragon lg"></i><span><b>ドラゴン</b><small>指5以上</small></span></label>`:''}</div></div>
+    <div class="td-bl"><button data-act="bite"><b>${nKind(tr,sp,'bite')}</b><span>アタリ</span><small>${ten?'使用テンヤで記録':'＋1'}</small></button><button data-act="lost"><b>${nKind(tr,sp,'lost')}</b><span>バラシ</span><small>${ten?'使用テンヤで記録':'＋1'}</small></button></div>
    </section>
    <div class="panel tidepanel">${tideCardSVG(tr)}</div>
    <div class="todaybar">${ten?`<button class="tb-btn" data-act="daySet"><span>今日のリスト</span><b>${esc(setName(g.set))}</b></button>`:`<button class="tb-btn" data-act="rigPick"><span>仕掛け</span><b>${esc(METHOD_JP[methodOf(sp,g)]||'仕掛け')}</b></button>`}${needBait(sp,g)?`<button class="tb-btn" data-act="baitPick"><span>${esc(s.baitLabel)}</span><b>${esc(listName(sp,'baits',g.bait))}</b></button>`:''}${SOLO?'':`<button class="tb-btn" data-act="targetPick"><span>釣り物</span><b>${esc(s.name)}</b></button>`}${headBtn(tr)}</div>
@@ -1308,7 +1316,7 @@ function addEvent(kind,v,src,osp,rig){const tr=active();if(!tr)return;const now=
   if(osp&&!$('#sheet').hidden)closeSheet();
   const s=spOf(sp),n=catchesOf(tr,sp).length,id=tr.id;
   if(kind==='catch'&&sp==='tachiuo'&&dayCatch(tr.date)===TAIRYO){toast(`大漁！ 今日のタチウオが${TAIRYO}本になりました`,'取り消す',()=>{const t=S.trips[id];t.events=t.events.filter(x=>x.id!==e.id);touch(t);render()},'ic-tairyo');return}
-  toast(kind==='catch'&&e.dragon?`${hm(now)} ドラゴンを記録（${s.name}${n}${s.unit}目${rig?'・'+(tenyaLabel(rig)||''):''}）`:kind==='catch'?`${hm(now)} ${s.variants.length>1?vShort(sp,e.v):s.name}を記録（${s.name}${n}${s.unit}目${rig?'・'+(tenyaLabel(rig)||''):''}）`:`${hm(now)} ${KIND_JP[kind]}を記録`,'取り消す',()=>{const t=S.trips[id];t.events=t.events.filter(x=>x.id!==e.id);touch(t);render()},e.dragon?'ic-dragon':'')}
+  toast(kind==='catch'&&e.dragon?`${hm(now)} ドラゴンを記録（${s.name}${n}${s.unit}目${rig?'・'+(tenyaLabel(rig)||''):''}）`:kind==='catch'?`${hm(now)} ${s.variants.length>1?vShort(sp,e.v):s.name}を記録（${s.name}${n}${s.unit}目${rig?'・'+(tenyaLabel(rig)||''):''}）`:`${hm(now)} ${KIND_JP[kind]}を記録${e.rig&&tenyaOf(e.rig)?'（'+tenyaLabel(e.rig)+'）':''}`,'取り消す',()=>{const t=S.trips[id];t.events=t.events.filter(x=>x.id!==e.id);touch(t);render()},e.dragon?'ic-dragon':'')}
 function logGear(tr){const now=Date.now();const g=curGear(tr);tr.gearLog=tr.gearLog||[];const last=tr.gearLog[tr.gearLog.length-1];const rec={t:now,sp:tr.cur.sp,rig:g.rig,bait:needBait(tr.cur.sp,g)?g.bait:''};
   if(last&&now-last.t<60e3&&tr.events.every(e=>e.t<last.t))tr.gearLog[tr.gearLog.length-1]={...rec,t:last.t};else tr.gearLog.push(rec)}
 
@@ -1785,6 +1793,7 @@ const acts={
   tenyaCur:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'cur'};openTenyaSheet()},
   tbCur:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.id;g.extra=g.extra||[];if(!dayTenya(tr,tr.cur.sp).includes(id))g.extra.push(id);g.rig=id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render()},
   catchT:b=>{const tr=active();if(!tr)return;addEvent('catch',mainV(tr.cur.sp),null,null,b.dataset.rig)},
+  dockSel:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.rig;if(g.rig===id){toast(`使用テンヤは ${tenyaLabel(id)} です。釣れたら「釣れた＋1」`);return}g.rig=id;logGear(tr);touch(tr);render();toast(`使用テンヤを ${tenyaLabel(id)} に切り替えました`)},
   baitPick:()=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);openSheet(`<div class="sheet-h"><h2>${esc(spOf(sp).baitLabel)}を変える</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${chipsHTML(sp,'baits',g.bait,'setBaitS')}`,{kind:'bait'})},
   setBaitS:b=>{const tr=active();curGear(tr).bait=b.dataset.id;S.prefs.g[tr.cur.sp]={...(S.prefs.g[tr.cur.sp]||{}),bait:b.dataset.id};logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render()},
   stEdit2:b=>{const tr=active()||figTrip();openStateSheet(tr.id,b.dataset.id)},
@@ -1793,7 +1802,7 @@ const acts={
   setRigS:b=>{const tr=active();curGear(tr).rig=b.dataset.id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render()},
   setMethod:b=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);g.method=b.dataset.d;g.rig='';curGear(tr);S.prefs.g[sp]={...(S.prefs.g[sp]||{}),method:g.method};logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();toast(`仕掛けを${METHOD_JP[g.method]}にしました`)},
   setDaySet:b=>{const tr=active();const g=curGear(tr);g.set=b.dataset.id;g.rig=dayTenya(tr,tr.cur.sp)[0]||'';S.prefs.g[tr.cur.sp]={...(S.prefs.g[tr.cur.sp]||{}),set:g.set};logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();toast(`今日のリストを「${setName(g.set)}」にしました`)},
-  tenyaOther:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'catch'};openTenyaSheet()},
+  tenyaOther:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'cur'};openTenyaSheet()},
   tbOpen:b=>{tb={q:'',z:'',m:'',only:b.dataset.only||(b.dataset.mode==='set'&&myTenya().length?'mine':'all'),mode:b.dataset.mode,setId:b.dataset.set||''};openTenyaSheet()},
   tbDone:()=>{closeSheet()},
   tbClear:()=>{tb.q='';const i=$('#tbQ');if(i){i.value='';i.focus()}tbRefresh();const x=$('.sb-x');if(x)x.hidden=true},
@@ -2029,7 +2038,7 @@ const TUT=[
   {k:'ようこそ',t:'釣果を時間の経過と共に記録',d:'ドラゴンカウンターは、タチウオの釣果を時間の経過と共に、使ったテンヤ・潮・船の向きと一緒に記録するアプリです。記録はこの端末に保存されます。'},
   {k:'準備',t:'所有テンヤを登録',d:'画面下の右端にある「登録」タブで、カタログから持っているテンヤにチェック。カタログには今販売されている多くのテンヤが入っていて、月に一度更新する予定です。その中から当日持っていく分を「一軍リスト」のようにまとめておきます。'},
   {k:'出船',t:'釣り場と席を選ぶ',d:'釣り場を選ぶだけで、潮回りと満潮・干潮が自動で入ります。よく行く釣り場は地図から登録できます。船と自分の席もタップで選びます。'},
-  {k:'釣れたら',t:'「釣れた」を1タップ',d:'「釣れた＋1」は、横の「使用テンヤ」で選んでいるテンヤで1本記録します。画面下に並ぶテンヤのボタンは、押したテンヤで1本記録し、使用テンヤもそのテンヤに切り替えます。同じテンヤのままなら「釣れた＋1」、テンヤを替えて釣れたら下のボタン。指5以上なら先に「ドラゴン」にチェック。'},
+  {k:'釣れたら',t:'「釣れた」を1タップ',d:'「釣れた＋1」は、横の「使用テンヤ」で選んでいるテンヤで1本記録します。テンヤを付け替えたら、画面下に並ぶテンヤのボタンを押して使用テンヤを切り替えてください（押しても記録はされません。最大15個、横にスワイプ。それ以上は「ほかのテンヤ」から）。指5以上なら先に「ドラゴン」にチェック。アタリ・バラシも、使用テンヤに紐づいて記録されます。'},
   {k:'沖上がり',t:'図にして振り返る',d:'「沖上がり」を押すと、潮位と釣れた時刻の図、座席の図ができて画像で保存できます。'},
   {k:'アプリとして使う',t:'ホーム画面に置いて使う',d:SITE?'Safariの共有ボタン →「ホーム画面に追加」で、アイコンからアプリのように開けます。一度開いておけば、電波のない船の上でも使えます。':'Safariでこのページを開き、共有ボタン →「ホーム画面に追加」を選ぶと、アイコンからアプリのように開けます（初回はClaudeへのログインが必要です）。記録はクラウドに同期されるので、Claudeアプリから開いても同じ記録が見られます。'}];
 function openTut(i){tutI=i||0;let el=$('#tut');if(!el){el=document.createElement('div');el.id='tut';el.className='tut';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','使い方');document.body.appendChild(el);bindTutSwipe(el)}
