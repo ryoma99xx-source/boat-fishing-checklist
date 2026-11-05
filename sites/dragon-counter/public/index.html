@@ -167,6 +167,12 @@ textarea{min-height:140px;font-family:ui-monospace,Menlo,monospace;font-size:14p
 .sheet-h.stick{position:sticky;top:-18px;z-index:3;margin:-18px calc(-1 * max(16px,env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:14px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-bottom:1px solid var(--line)}
 .tb-foot{position:sticky;bottom:calc(-24px - env(safe-area-inset-bottom,0px));z-index:3;margin:0 calc(-1 * max(16px,env(safe-area-inset-right,0px))) calc(-24px - env(safe-area-inset-bottom,0px)) calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-top:1px solid var(--line)}
 .tb-foot .btn{width:100%;min-height:48px;font-size:16px}
+.trow-cur{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:10px 2px}
+.tc-lbl{flex:1;min-width:0;display:flex;align-items:center;gap:12px}
+.tc-btns{flex:none;display:flex;flex-direction:column;gap:6px;width:9.5em}
+.tc-b{display:flex;flex-direction:column;align-items:center;line-height:1.15;padding:6px 8px;border-radius:12px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-family:inherit;font-size:13px;font-weight:800;text-align:center}
+.tc-b small{font-size:10px;font-weight:600;color:var(--muted)}
+.tc-b.add{border-color:var(--amber);color:var(--amber);background:rgba(227,164,59,.1)} .tc-b.add small{color:var(--amber);opacity:.8}
 /* colour code: 所有テンヤ（持っている）= teal, 今日のリスト（使う）= amber */
 .sheet-panel.tm-set{--acc:var(--amber);--acc-ink:#1a1204}
 .sheet-panel.tm-mine{--acc:var(--teal);--acc-ink:var(--catch-ink)}
@@ -1592,7 +1598,9 @@ function ctBack(){if(ctF&&ctF.from==='tb'){tbRefreshOpen()}else{$('#sheet').hidd
 function tbRefreshOpen(){openTenyaSheet()}
 /* tenya browser sheet */
 let tb={q:'',z:'',m:'',only:'all',mode:'mine',setId:''};
-function tbRows(){const T=TEN();const mine=new Set(myTenya());const inSet=tb.mode==='set'?new Set((T.sets.find(x=>x.id===tb.setId)||{items:[]}).items):null;
+function tbRows(){const T=TEN();const mine=new Set(myTenya());
+  const ctr=tb.mode==='cur'&&active(),cg=ctr&&curGear(ctr),inDay=new Set(ctr?dayTenya(ctr,ctr.cur.sp):[]);
+  const daySet=cg&&cg.set&&cg.set!=='mine'?T.sets.find(x=>x.id===cg.set):null,dayAll=cg&&(!cg.set||cg.set==='mine');const inSet=tb.mode==='set'?new Set((T.sets.find(x=>x.id===tb.setId)||{items:[]}).items):null;
   let list=CAT.list.concat(T.custom.filter(x=>!x.hidden).map(x=>({...x,custom:true})));
   if(tb.only==='mine')list=list.filter(t=>mine.has(t.id));else if(tb.only==='new')list=list.filter(t=>isNewTenya(t)||t.s==='発売予定');
   if(tb.z)list=list.filter(t=>String(t.z)===tb.z);if(tb.m)list=list.filter(t=>t.m===tb.m);
@@ -1610,7 +1618,9 @@ function tbRows(){const T=TEN();const mine=new Set(myTenya());const inSet=tb.mod
   let lastZ=null,lastP=null,out=[];
   const rowOf=t=>{const lbl=`${timg(t.id,'row')}<span class="tl"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}<span class="tbs">${tenyaBadges(t)}</span></span>`;
     if(tb.mode==='catch')return `<button class="trow pick" data-act="tbCatch" data-id="${t.id}">${lbl}<span class="go">これで釣れた</span></button>`;
-    if(tb.mode==='cur')return `<button class="trow pick" data-act="tbCur" data-id="${t.id}">${lbl}<span class="go">これを使う</span></button>`;
+    if(tb.mode==='cur'){if(inDay.has(t.id))return `<button class="trow pick" data-act="tbCur" data-id="${t.id}">${lbl}<span class="go">これを使う</span></button>`;
+      const add=daySet?`<button class="tc-b add" data-act="tbCurAdd" data-id="${t.id}" data-set="${daySet.id}">「${esc(daySet.name)}」に追加<small>して使う</small></button>`:dayAll&&!mine.has(t.id)?`<button class="tc-b add" data-act="tbCurAdd" data-id="${t.id}" data-set="mine">所有テンヤに追加<small>して使う</small></button>`:'';
+      return `<div class="trow-cur"><div class="tc-lbl">${lbl}</div><div class="tc-btns"><button class="tc-b" data-act="tbCur" data-id="${t.id}">今日だけ使う<small>リストは変わりません</small></button>${add}</div></div>`}
     const on=tb.mode==='set'?inSet.has(t.id):mine.has(t.id);
     const row=`<button class="trow" data-act="${tb.mode==='set'?'tbSet':'tbMine'}" data-id="${t.id}" aria-pressed="${on}"><span class="tck ${on?'on':''}">${on?'✓':''}</span>${lbl}</button>`;
     const q=tb.mode==='mine'&&on?qtyHTML(t.id):'';const ed=t.custom?`<button class="btn sm tedit" data-act="ctEdit" data-id="${t.id}" data-from="tb">編集</button>`:'';
@@ -1641,7 +1651,7 @@ function openTenyaSheet(){const close=tb.mode==='catch'||tb.mode==='cur';const t
   const back=tb.mode==='mine'&&tb.backSet;const backName=back?((TEN().sets.find(x=>x.id===tb.backSet)||{}).name||'リスト'):'';
   const doneAct=close?'closeSheet':back?'tbBackSet':'tbDone';
   openSheet(`<div class="sheet-h stick"><h2>${title}</h2><button class="btn sm ${close?'ghost':'primary'}" data-act="${doneAct}" style="white-space:nowrap">${close?'閉じる':back?'リストに戻る':'完了'}</button></div>
-   ${tb.mode==='set'?`<div class="st2box"><button class="st2link" data-act="tbToMine" style="padding-left:12px;border-top:0"><span>リストに入れられるのは所有テンヤです。<b>所有テンヤを追加・編集する（カタログ）</b></span><em>→</em></button></div>`:back?`<p class="muted" style="margin:0">所有テンヤを直したら「リストに戻る」で「${esc(backName)}」の編集に戻ります。</p>`:''}
+   ${tb.mode==='cur'?`<p class="muted" style="margin:0">今日のリストにないテンヤは、「今日だけ使う」（リストは変わりません）か、リストに追加して使うかを選べます。</p>`:''}${tb.mode==='set'?`<div class="st2box"><button class="st2link" data-act="tbToMine" style="padding-left:12px;border-top:0"><span>リストに入れられるのは所有テンヤです。<b>所有テンヤを追加・編集する（カタログ）</b></span><em>→</em></button></div>`:back?`<p class="muted" style="margin:0">所有テンヤを直したら「リストに戻る」で「${esc(backName)}」の編集に戻ります。</p>`:''}
    <div class="searchbox"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg><input type="search" id="tbQ" data-tbq="1" value="${esc(tb.q)}" placeholder="検索（例：ケイムラ 40、ダイワ グロー）" autocomplete="off" enterkeyhint="search"><button class="sb-x" data-act="tbClear" aria-label="検索を消す" ${tb.q?'':'hidden'}>×</button></div><div id="tbBar" style="display:flex;flex-direction:column;gap:8px">${tbBarHTML()}</div><div id="tbList" class="tblist">${tbRows()}</div>
    <div class="tb-foot">${tb.mode==='set'?`<button class="btn tb-foot-link" data-act="tbToMine"><span>所有テンヤを追加・編集する（カタログ）</span><small>リストに入れられるのは所有テンヤです</small></button>`:''}<button class="btn primary" data-act="${doneAct}">${close?'閉じる':back?`「${esc(backName)}」の編集に戻る`:'完了して元の画面に戻る'}</button></div>`,{kind:'tenya'})}
 function tbRefresh(){const b=$('#tbBar');if(b)b.innerHTML=tbBarHTML();const l=$('#tbList');if(l)l.innerHTML=tbRows()}
@@ -1830,7 +1840,10 @@ const acts={
      <button class="btn sm" data-act="tenyaCur">ほかのテンヤから選ぶ</button>${methodSwitchHTML(tr)}`,{kind:'curtenya'})},
   setCurTenya:b=>{const tr=active();const g=curGear(tr);g.rig=b.dataset.id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();scrollTo({top:0,behavior:'smooth'})},
   tenyaCur:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'cur'};openTenyaSheet()},
-  tbCur:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.id;g.extra=g.extra||[];if(!dayTenya(tr,tr.cur.sp).includes(id))g.extra.push(id);g.rig=id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();scrollTo({top:0,behavior:'smooth'})},
+  tbCurAdd:b=>{const tr=active();if(!tr)return;const T=TEN(),g=curGear(tr),id=b.dataset.id,sid=b.dataset.set;
+    if(!T.mine.includes(id))T.mine.push(id);let nm='所有テンヤ';if(sid!=='mine'){const st=T.sets.find(x=>x.id===sid);if(st){if(!st.items.includes(id))st.items.push(id);nm=st.name}}
+    cfgTouch();g.rig=id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();scrollTo({top:0,behavior:'smooth'});toast(`「${nm}」に追加して、使用テンヤを ${tenyaLabel(id)} にしました`)},
+  tbCur:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.id;g.extra=g.extra||[];if(!dayTenya(tr,tr.cur.sp).includes(id))g.extra.push(id);g.rig=id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();scrollTo({top:0,behavior:'smooth'});toast(`使用テンヤを ${tenyaLabel(id)} にしました${g.extra.includes(id)?'（今日だけ・リストは変わりません）':''}`)},
   catchT:b=>{const tr=active();if(!tr)return;addEvent('catch',mainV(tr.cur.sp),null,null,b.dataset.rig)},
   dayListEdit:()=>{const tr=active();if(!tr)return;const g=curGear(tr);const set=g.set&&g.set!=='mine'&&TEN().sets.find(x=>x.id===g.set);
     if(set)tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'set',setId:set.id};else tb={q:'',z:'',m:'',only:'mine',mode:'mine'};openTenyaSheet()},
