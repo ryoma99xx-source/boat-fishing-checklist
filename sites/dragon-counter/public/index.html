@@ -582,6 +582,7 @@ details.fold[open] .fold-ic::after{top:11px;transform:rotate(-135deg)}
 .searchbox input{width:100%;padding-left:44px;padding-right:44px;min-height:52px;font-size:16px;border-color:#2b4866}
 .searchbox input:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px rgba(65,201,198,.2)}
 .searchbox input::-webkit-search-cancel-button{display:none}
+.tsb{margin:2px 0 4px}.tsb input{min-height:44px;font-size:16px}.tq-none{margin:4px 0}
 .sb-x{position:absolute;right:6px;width:40px;height:40px;border:none;background:none;color:var(--muted);font-size:22px}
 /* backup */
 .bk-last{font-size:14px;color:var(--teal);font-weight:700}
@@ -1087,7 +1088,7 @@ function backBar(){let el=$('#backBar');if(!el){el=document.createElement('div')
   if(on){const tb=document.querySelector('.tabs');if(tb)document.documentElement.style.setProperty('--tabs-h',tb.offsetHeight+'px')}
   if(on)el.innerHTML=`<button data-act="backRec"><span class="bb-a">←</span><span><b>保存して記録に戻る</b><small>${active()?'記録中の釣行へ':'出船の準備へ'}</small></span></button>`}
 function render(){if(lastTab==='rec'&&S.ui.tab!=='rec')recScroll=scrollY;lastTab=S.ui.tab;renderTabs();renderSync();backBar();const t=S.ui.tab;document.body.classList.toggle('has-dock',t==='rec'&&!!active());topTrip();const tc=$('#topCatch');if(tc)tc.hidden=!active();
-  $('#view').innerHTML=t==='rec'?(active()?viewActive(active()):viewStart()):t==='fig'?viewFig():t==='hist'?viewHist():viewGear()}
+  $('#view').innerHTML=t==='rec'?(active()?viewActive(active()):viewStart()):t==='fig'?viewFig():t==='hist'?viewHist():viewGear();if(t==='gear'){applyTq('mine');applyTq('set')}}
 
 /* ---------- tide helpers for trips ---------- */
 const PORT_ST=[[/東京|羽田|浦安|深川|大井|お台場|船橋/,'TK'],[/川崎/,'KW'],[/横浜|本牧|磯子|鶴見|新山下|金沢|八景|野島|富岡/,'QS'],[/横須賀|走水|鴨居|観音崎|久里浜|大津|浦賀/,'QN'],
@@ -1594,13 +1595,21 @@ function listCard(sp,k,title,ph){const s=spOf(sp);return `<div class="card"><h2>
    ${k==='variants'&&i>0?`<button class="btn sm" data-act="vMain" data-sp="${sp}" data-id="${g.id}">大きいボタンに</button>`:''}${k==='variants'&&i===0?'<span class="badge">大きいボタン</span>':''}
    <button class="btn sm" data-act="itemHide" data-sp="${sp}" data-kind="${k}" data-id="${g.id}">${g.hidden?'表示する':'隠す'}</button></div>`).join('')}
   <div class="grow"><input type="text" id="add-${sp}-${k}" placeholder="${esc(ph)}"><button class="btn sm primary" data-act="itemAdd" data-sp="${sp}" data-kind="${k}">追加</button></div></div>`}
-function tchip(id,act,extra){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip">${timg(id,'tci')}<b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}${act?`<button class="tx" data-act="${act}" data-id="${id}"${extra||''} aria-label="外す">×</button>`:''}</span>`}
+function tchip(id,act,extra){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip" data-q="${esc(tqText(id))}">${timg(id,'tci')}<b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}${act?`<button class="tx" data-act="${act}" data-id="${id}"${extra||''} aria-label="外す">×</button>`:''}</span>`}
+/* search inside 所有テンヤ / 当日のリスト: filters the chips in place, so typing never re-renders */
+const tq={mine:'',set:''};
+function tqText(id){const t=tenyaOf(id);return t?normQ([tenyaFull(id),t.p,t.m,MK[t.m],t.z?t.z+'号':''].filter(Boolean).join(' ')):''}
+function tqBox(k,ph){return `<div class="searchbox tsb"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg><input type="search" data-tq="${k}" value="${esc(tq[k])}" placeholder="${ph}" autocomplete="off" enterkeyhint="search" aria-label="${ph}"><button class="sb-x" data-act="tqClear" data-k="${k}" aria-label="検索を消す" ${tq[k]?'':'hidden'}>×</button></div>`}
+function applyTq(k){const sc=document.querySelector(`[data-tqscope="${k}"]`);if(!sc)return;const toks=normQ(tq[k]).split(/\s+/).filter(Boolean);let shown=0;
+  sc.querySelectorAll('.tchip[data-q]').forEach(c=>{const ok=toks.every(x=>c.dataset.q.includes(x));c.hidden=!ok;if(ok)shown++});
+  if(k==='set')sc.querySelectorAll('.setcard').forEach(sc2=>{sc2.hidden=toks.length>0&&!sc2.querySelector('.tchip[data-q]:not([hidden])')});
+  const n=sc.querySelector(`[data-tqnone="${k}"]`);if(n)n.hidden=!(toks.length&&!shown);const x=sc.querySelector(`.sb-x[data-k="${k}"]`);if(x)x.hidden=!tq[k]}
 function tenyaSectionHTML(){const T=TEN();
-  return `<div class="card" id="tenyaSec"><h2>① 所有テンヤ（${myTenya().length}種・${ownTotal()}個）</h2><p class="muted">自分が持っているテンヤ（所有テンヤ）に、カタログ（${CAT.list.length}件${CAT.ver?'・'+esc(CAT.ver)+'時点':''}）からチェックを付けます。この中から、下の「その日のリスト」を作ります。${SITE?'カタログには今販売されている多くのテンヤが入っていて、月に一度更新する予定です（更新しても所有テンヤはそのまま残ります）。':''}</p>
-    <div class="tlist">${myTenya().map(id=>mineChip(id)).join('')||'<span class="muted">まだありません</span>'}</div>
+  return `<div class="card" id="tenyaSec" data-tqscope="mine"><h2>① 所有テンヤ（${myTenya().length}種・${ownTotal()}個）</h2>${myTenya().length?tqBox('mine','所有テンヤを検索（例：ゼブラ 40、ダイワ）'):''}<p class="muted">自分が持っているテンヤ（所有テンヤ）に、カタログ（${CAT.list.length}件${CAT.ver?'・'+esc(CAT.ver)+'時点':''}）からチェックを付けます。この中から、下の「その日のリスト」を作ります。${SITE?'カタログには今販売されている多くのテンヤが入っていて、月に一度更新する予定です（更新しても所有テンヤはそのまま残ります）。':''}</p>
+    <p class="muted tq-none" data-tqnone="mine" hidden>見つかりません</p><div class="tlist">${myTenya().map(id=>mineChip(id)).join('')||'<span class="muted">まだありません</span>'}</div>
     <button class="btn sm primary" data-act="tbOpen" data-mode="mine">カタログから選ぶ</button></div>
-   <div class="card"><h2>② 当日使うテンヤのリスト</h2><p class="muted">「一軍リスト」のように組み合わせを作っておき、出船のときにその日のリストを選びます。釣れたときは、そのリストのテンヤのボタンを押すだけで記録できます。</p>
-    ${T.sets.map(st=>`<div class="setcard"><div class="grow"><input type="text" id="set-${st.id}" data-setname="${st.id}" value="${esc(st.name)}" aria-label="リストの名前"><button class="btn sm danger" data-act="setDel" data-id="${st.id}">消す</button></div>
+   <div class="card" data-tqscope="set"><h2>② 当日使うテンヤのリスト</h2>${T.sets.some(st=>st.items.length)?tqBox('set','リスト内のテンヤを検索（例：グロー 50）'):''}<p class="muted">「一軍リスト」のように組み合わせを作っておき、出船のときにその日のリストを選びます。釣れたときは、そのリストのテンヤのボタンを押すだけで記録できます。</p>
+    <p class="muted tq-none" data-tqnone="set" hidden>見つかりません</p>${T.sets.map(st=>`<div class="setcard"><div class="grow"><input type="text" id="set-${st.id}" data-setname="${st.id}" value="${esc(st.name)}" aria-label="リストの名前"><button class="btn sm danger" data-act="setDel" data-id="${st.id}">消す</button></div>
       <div class="tlist">${st.items.map(id=>tchip(id,'setItemDel',` data-set="${st.id}"`)).join('')||'<span class="muted">テンヤが入っていません</span>'}</div>
       <button class="btn sm" data-act="tbOpen" data-mode="set" data-set="${st.id}">テンヤを入れる</button></div>`).join('')}
     <button class="btn sm" data-act="setAdd">＋ 新しいリストを作る</button></div>
@@ -1608,7 +1617,7 @@ function tenyaSectionHTML(){const T=TEN();
     <div class="fold-b">${ctFieldsHTML({})}
     <button class="btn sm primary" data-act="customAdd">登録する</button>
     ${T.custom.filter(x=>!x.hidden).length?`<div class="tlist">${T.custom.filter(x=>!x.hidden).map(x=>ownChip(x.id)).join('')}</div>`:''}</div></details>`}
-function mineChip(id){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip mine ${t.custom?'own':''}">${timg(id,'tci big')}<span class="mc-n"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}</span>${qtyHTML(id)}<button class="tx" data-act="mineDel" data-id="${id}" aria-label="所有から外す">×</button></span>`}
+function mineChip(id){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip mine ${t.custom?'own':''}" data-q="${esc(tqText(id))}">${timg(id,'tci big')}<span class="mc-n"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}</span>${qtyHTML(id)}<button class="tx" data-act="mineDel" data-id="${id}" aria-label="所有から外す">×</button></span>`}
 function ctFieldsHTML(t){return `<div class="grid2"><label class="field"><span>メーカー</span><input type="text" id="ct-m" value="${esc(t.m||'')}" placeholder="例：DAIWA"></label><label class="field"><span>製品名</span><input type="text" id="ct-p" value="${esc(t.p||'')}" placeholder="例：船タチウオテンヤSS"></label></div>
     <div class="grid2"><label class="field"><span>号数</span><input type="number" inputmode="numeric" id="ct-z" value="${esc(t.z||'')}" placeholder="40"></label><label class="field"><span>カラー</span><input type="text" id="ct-c" value="${esc(t.c||'')}" placeholder="例：パープルグロー"></label></div>`}
 function ownChip(id){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip own"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}<button class="tx2" data-act="ctEdit" data-id="${id}">編集</button><button class="tx" data-act="customDel" data-id="${id}" aria-label="消す">×</button></span>`}
@@ -1894,6 +1903,7 @@ const acts={
   tenyaOther:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'cur'};openTenyaSheet()},
   tbOpen:b=>{tb={q:'',z:'',m:'',only:b.dataset.only||(b.dataset.mode==='set'&&myTenya().length?'mine':'all'),mode:b.dataset.mode,setId:b.dataset.set||''};openTenyaSheet()},
   tbDone:()=>{closeSheet()},
+  tqClear:b=>{const k=b.dataset.k;tq[k]='';const i=document.querySelector(`[data-tq="${k}"]`);if(i){i.value='';i.focus()}applyTq(k)},
   tbClear:()=>{tb.q='';const i=$('#tbQ');if(i){i.value='';i.focus()}tbRefresh();const x=$('.sb-x');if(x)x.hidden=true},
   tbToMine:()=>{tb={q:'',z:'',m:'',only:'all',mode:'mine',backSet:tb.setId};openTenyaSheet()},
   tbBackSet:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'set',setId:tb.backSet};openTenyaSheet()},
@@ -2013,6 +2023,7 @@ function onField(e){const el=e.target;
   if(el.dataset.ef&&evF)evF[el.dataset.ef]=el.value;
   if(el.dataset.imp)imp.text=el.value;
   if(el.dataset.impsel&&e.type==='change'){const i=+el.dataset.impsel;if(el.checked)imp.sel.add(i);else imp.sel.delete(i);imp.armed=false;openImportSheet()}
+  if(el.dataset.tq&&e.type==='input'){tq[el.dataset.tq]=el.value;applyTq(el.dataset.tq);return}
   if(el.dataset.tbq&&e.type==='input'){tb.q=el.value;tb.fold={};tb.foldInit=false;const l=$('#tbList');if(l)l.innerHTML=tbRows();const x=$('.sb-x');if(x)x.hidden=!tb.q}
   if(el.dataset.tbm&&e.type==='change'){tb.m=el.value;tb.fold={};tb.foldInit=false;tbRefresh()}
   if(e.type==='change'&&el.dataset.setname){const st=TEN().sets.find(x=>x.id===el.dataset.setname);const v=el.value.trim();if(st&&v&&v!==st.name){st.name=v;cfgTouch()}}
