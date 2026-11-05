@@ -6,8 +6,8 @@
    "path": "/catalog-extra.json",
    "file": "catalog-extra.json",
    "content_type": "application/json; charset=utf-8",
-   "bytes": 41569,
-   "sha256": "3a29e08ff57e4c7d4db269333e845f1fb163d135af984d1e16aa80d4f0f9ccd1",
+   "bytes": 40299,
+   "sha256": "05d1a0d13cd5af87e8d89f76b655732d44a7f9f910ea85903c7987fbe14f5705",
    "found_by": "release zip",
    "modifications": []
   },
