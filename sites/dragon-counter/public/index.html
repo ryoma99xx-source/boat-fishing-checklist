@@ -2,7 +2,7 @@
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ドラゴンカウンター｜TOKYO BAY FISHING</title>
-<meta name="description" content="タチウオの釣果を時間の経過と共に、テンヤ・潮・船の向きと一緒に記録する無料ツール。釣り場を選ぶと潮回りと満潮・干潮が自動で入り、ドラゴン（指5以上）や大漁も記録できます。記録は端末の中だけに保存されます。">
+<meta name="description" content="タチウオの釣果を時間の経過と共に、テンヤ・潮・船の向きと一緒に記録する無料ツール。釣り場を選ぶと潮回りと満潮・干潮が自動で入り、ドラゴン（120cm以上）や大漁も記録できます。記録は端末の中だけに保存されます。">
 <link rel="canonical" href="https://dragon-counter.cutlassfish.tokyo/">
 <meta property="og:type" content="website"><meta property="og:title" content="ドラゴンカウンター"><meta property="og:url" content="https://dragon-counter.cutlassfish.tokyo/"><meta property="og:image" content="https://dragon-counter.cutlassfish.tokyo/og.png">
 <meta property="og:description" content="タチウオの釣果を、テンヤ・潮・船の向きと一緒に時系列で記録する無料ツール"><meta name="twitter:card" content="summary_large_image">
@@ -27,7 +27,9 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{background:var(--bg)}
-body{color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+body{color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;-webkit-tap-highlight-color:transparent;
+  /* the sticky header sits at top:inset; without this padding its natural place is y=0, so on phones with a notch / Dynamic Island it is pushed down over the page by the inset */
+  padding-top:env(safe-area-inset-top,0px)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -1329,7 +1331,7 @@ function viewActive(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);const c=catc
     <div class="td-top"><span class="td-h">本日の釣果${isTairyo(tr.date)?tairyoTag():''}</span><span class="td-n"><b id="cnum">${c.length}</b>${esc(s.unit)}${SOLO?'':`<small>${esc(s.name)}</small>`}${sp==='tachiuo'?`<small class="td-dn"><i class="ic ic-dragon"></i>ドラゴン <b>${nd}</b></small>`:''}</span></div>
     <div class="td-row"><button class="td-catch" data-act="catchCur"><b>釣れた</b><small>＋1</small></button>
      <div class="td-side"><button class="td-tenya ${ten&&curGear(tr).rig&&TIMG.has(curGear(tr).rig)?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):''}<span>${ten?'使用テンヤ':'仕掛け'}</span><b>${esc(curRigLabel(tr))}</b><i aria-hidden="true">▾</i></button>
-      ${sp==='tachiuo'?`<label class="td-dragon ${dragonNext?'on':''}"><input type="checkbox" id="dragonChk" ${dragonNext?'checked':''}><i class="ic ic-dragon lg"></i><span><b>ドラゴン</b><small>指5以上</small></span></label>`:''}</div></div>
+      ${sp==='tachiuo'?`<label class="td-dragon ${dragonNext?'on':''}"><input type="checkbox" id="dragonChk" ${dragonNext?'checked':''}><i class="ic ic-dragon lg"></i><span><b>ドラゴン</b><small>120cm以上</small></span></label>`:''}</div></div>
     <div class="td-bl"><button data-act="bite"><b>${nKind(tr,sp,'bite')}</b><span>アタリ</span><small>${ten?'使用テンヤで記録':'＋1'}</small></button><button data-act="lost"><b>${nKind(tr,sp,'lost')}</b><span>バラシ</span><small>${ten?'使用テンヤで記録':'＋1'}</small></button></div>
    </section>
    <div class="panel tidepanel">${tideCardSVG(tr)}</div>
@@ -1439,7 +1441,7 @@ function timelineSVG(tr,sp){
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}" font-family="${CF}" role="img" aria-label="${esc(tlTitle(tr,sp))}"><rect width="${W}" height="${Ht}" rx="16" fill="${P.card}"/>${under.join('')}${o.join('')}</svg>`}
 function sizeBins(sp,vals){const u=spOf(sp).sizeUnit,m={},ord=[];const add=k=>{if(!(k in m)){m[k]=0;ord.push(k)}m[k]++};
   const nums=vals.map(Number).filter(v=>isFinite(v)).sort((a,b)=>a-b);
-  if(u==='指')nums.forEach(v=>add(v<=3?'指3以下':v>=5?'指5以上':'指'+v));
+  if(u==='指')nums.forEach(v=>add(v<=3?'指3以下':v>=5?'120cm以上':'指'+v));
   else if(u==='g')nums.forEach(v=>{const b=Math.floor(v/500)*500;add(b>=1500?'1.5kg以上':`${b}〜${b+499}g`)});
   else if(u==='cm'&&nums.length&&nums[nums.length-1]>=50)nums.forEach(v=>{const b=Math.floor(v/10)*10;add(`${b}cm台`)});
   else nums.forEach(v=>{const b=Math.floor(v/5)*5;add(`${b}〜${b+4}${u||''}`)});
@@ -1716,7 +1718,7 @@ function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.
   $('#sheetPanel').innerHTML=`<div class="sheet-h"><h2>記録を直す</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
    <div class="seg">${['catch','bite','lost'].map(k=>`<button class="${f.kind===k?'on':''}" data-act="evKind" data-d="${k}">${KIND_JP[k]}</button>`).join('')}</div>
    ${SOLO?'':`<div class="field"><span>魚種</span><div class="chips">${S.cfg.species.filter(x=>!x.hidden||x.id===f.sp).map(x=>`<button class="chip ${x.id===f.sp?'on':''}" data-act="evSp" data-d="${x.id}">${esc(x.name)}</button>`).join('')}</div></div>`}
-   ${f.kind==='catch'&&f.sp==='tachiuo'?`<label class="check"><input type="checkbox" id="evDragon" ${f.dragon?'checked':''}><i class="ic ic-dragon lg"></i>ドラゴン（指5以上）</label>`:''}
+   ${f.kind==='catch'&&f.sp==='tachiuo'?`<label class="check"><input type="checkbox" id="evDragon" ${f.dragon?'checked':''}><i class="ic ic-dragon lg"></i>ドラゴン（120cm以上）</label>`:''}
    ${f.kind==='catch'&&s.variants.length>1?`<div class="field"><span>種類</span><div class="chips">${s.variants.map(v=>`<button class="chip ${v.id===f.v?'on':''}" data-act="evV" data-d="${v.id}">${esc(v.name)}</button>`).join('')}</div></div>`:''}
    <label class="field"><span>時刻</span><input type="time" id="evTime" data-ef="t" value="${esc(f.t)}"></label>
    <div class="grid2"><label class="field"><span>${esc(gs.catalog?'仕掛け':gs.rigLabel)}${f.gsp!==f.sp?`（${esc(gs.name)}の道具）`:''}</span><select id="evRig" data-ef="rig">${sel('rigs')}</select></label>${gs.baitLabel?`<label class="field"><span>${esc(gs.baitLabel)}</span><select id="evBait" data-ef="bait">${sel('baits')}</select></label>`:''}</div>
@@ -2063,7 +2065,7 @@ function tutArt(i){const tx=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${
   if(i===3)return `<rect x="10" y="10" width="280" height="150" rx="16" style="fill:var(--surface2);stroke:#24405c"/>
     <rect x="22" y="24" width="128" height="122" rx="14" style="fill:var(--teal)"/>${tx(86,80,'釣れた',{s:20,w:700,a:'middle',f:'#04161a'})}${tx(86,108,'＋1',{s:22,w:600,a:'middle',f:'#04161a',n:1})}
     <rect x="158" y="24" width="120" height="56" rx="10" style="fill:var(--surface);stroke:var(--line)"/>${tx(168,42,'使用テンヤ',{s:10,f:'var(--muted)'})}${tx(168,64,'SS AH ケイムラ',{s:12,w:700})}${tx(268,56,'▾',{s:14,a:'end',f:'var(--teal)'})}
-    <rect x="158" y="90" width="120" height="56" rx="10" style="fill:rgba(227,164,59,.12);stroke:var(--amber)"/><rect x="168" y="108" width="20" height="20" rx="5" style="fill:var(--amber)"/><path d="M172 118 l4 4 l8 -9" style="stroke:#1a1203;fill:none" stroke-width="2.4" stroke-linecap="round"/>${tx(196,116,'ドラゴン',{s:13,w:700,f:'var(--amber)'})}${tx(196,132,'指5以上',{s:10,f:'var(--muted)'})}`;
+    <rect x="158" y="90" width="120" height="56" rx="10" style="fill:rgba(227,164,59,.12);stroke:var(--amber)"/><rect x="168" y="108" width="20" height="20" rx="5" style="fill:var(--amber)"/><path d="M172 118 l4 4 l8 -9" style="stroke:#1a1203;fill:none" stroke-width="2.4" stroke-linecap="round"/>${tx(196,116,'ドラゴン',{s:13,w:700,f:'var(--amber)'})}${tx(196,132,'120cm以上',{s:10,f:'var(--muted)'})}`;
   let curve='',dots='';for(let k=0;k<=60;k++){const x=24+k*4,y=78-Math.sin(k/60*Math.PI*1.6+.4)*30;curve+=(k?'L':'M')+x+','+y.toFixed(1)}
   [[60,1],[92,0],[110,1],[150,0],[176,0],[198,1]].forEach(([x,d])=>{const k=(x-24)/4,y=78-Math.sin(k/60*Math.PI*1.6+.4)*30;dots+=`<circle cx="${x}" cy="${y.toFixed(1)}" r="${d?5:3.6}" style="fill:${d?'var(--amber)':'var(--teal)'}"/>`});
   return `<rect x="10" y="10" width="280" height="96" rx="12" style="fill:var(--surface2);stroke:var(--line)"/><path d="${curve}" style="fill:none;stroke:#f2d64b" stroke-width="2.2"/>${dots}
@@ -2073,7 +2075,7 @@ const TUT=[
   {k:'ようこそ',t:'釣果を時間の経過と共に記録',d:'ドラゴンカウンターは、タチウオの釣果を時間の経過と共に、使ったテンヤ・潮・船の向きと一緒に記録するアプリです。記録はこの端末に保存されます。'},
   {k:'準備',t:'所有テンヤを登録',d:'画面下の右端にある「登録」タブで、カタログから持っているテンヤにチェック。カタログには今販売されている多くのテンヤが入っていて、月に一度更新する予定です。その中から当日持っていく分を「一軍リスト」のようにまとめておきます。'},
   {k:'出船',t:'釣り場と席を選ぶ',d:'釣り場を選ぶだけで、潮回りと満潮・干潮が自動で入ります。よく行く釣り場は地図から登録できます。船と自分の席もタップで選びます。'},
-  {k:'釣れたら',t:'「釣れた」を1タップ',d:'「釣れた＋1」は、横の「使用テンヤ」で選んでいるテンヤで1本記録します。テンヤを付け替えたら、画面下に並ぶテンヤのボタンを押して使用テンヤを切り替えてください（押しても記録はされません。最大15個、横にスワイプ。それ以上は「ほかのテンヤ」から）。指5以上なら先に「ドラゴン」にチェック。アタリ・バラシも、使用テンヤに紐づいて記録されます。'},
+  {k:'釣れたら',t:'「釣れた」を1タップ',d:'「釣れた＋1」は、横の「使用テンヤ」で選んでいるテンヤで1本記録します。テンヤを付け替えたら、画面下に並ぶテンヤのボタンを押して使用テンヤを切り替えてください（押しても記録はされません。最大15個、横にスワイプ。それ以上は「ほかのテンヤ」から）。120cm以上なら先に「ドラゴン」にチェック。アタリ・バラシも、使用テンヤに紐づいて記録されます。'},
   {k:'沖上がり',t:'図にして振り返る',d:'「沖上がり」を押すと、潮位と釣れた時刻の図、座席の図ができて画像で保存できます。'},
   {k:'アプリとして使う',t:'ホーム画面に置いて使う',d:SITE?'Safariの共有ボタン →「ホーム画面に追加」で、アイコンからアプリのように開けます。一度開いておけば、電波のない船の上でも使えます。':'Safariでこのページを開き、共有ボタン →「ホーム画面に追加」を選ぶと、アイコンからアプリのように開けます（初回はClaudeへのログインが必要です）。記録はクラウドに同期されるので、Claudeアプリから開いても同じ記録が見られます。'}];
 function openTut(i){tutI=i||0;let el=$('#tut');if(!el){el=document.createElement('div');el.id='tut';el.className='tut';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','使い方');document.body.appendChild(el);bindTutSwipe(el)}
