@@ -1339,8 +1339,7 @@ function viewActive(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);const c=catc
    ${others?`<p class="muted">ほかに ${esc(others)}</p>`:''}
    <h2 class="sec-label">記録</h2>
    <ol class="feed" id="feed">${items.map((it,i)=>feedRow(tr,it,i)).join('')}</ol>
-   <div class="feed-foot"><button class="btnlink" data-act="btnImport"><span><b>ボタンの記録を取り込む<small class="pre-tag">予備</small></b><small>アクションボタン・背面タップで残した時刻を、確認してから追加</small></span><span class="go">開く</span></button>
-   <button class="btn end" data-act="end" id="endBtn">沖上がり（記録を終える）</button></div>
+   <div class="feed-foot"><button class="btn end" data-act="end" id="endBtn">沖上がり（記録を終える）</button></div>
    ${dockHTML(tr)}`}
 function gedoBtns(tr){const tsp=tr.cur.sp;const seen=[];sortEv(tr).forEach(e=>{if(e.kind==='catch'&&e.sp!==tsp){const k=e.sp+'|'+e.v;if(!seen.includes(k))seen.push(k)}});
   return seen.map(k=>{const [sp,v]=k.split('|');const s=spOf(sp);return `<button class="gbtn" data-act="gedo" data-sp="${sp}" data-v="${v}">${esc(s.variants.length>1?vShort(sp,v):s.name)} ＋1</button>`}).join('')}
@@ -1667,7 +1666,7 @@ function viewGear(){const sp=SOLO||(spOf(S.ui.gearSp).id!=='?'?S.ui.gearSp:S.cfg
   <h2 class="sec-h">バックアップ</h2>
   ${backupCardHTML()}
   <div class="card"><h2>使い方</h2><p class="muted">はじめに表示した6ステップの説明をもう一度見られます。</p><button class="btn sm" data-act="tutOpen">使い方を見る</button></div>
-  <div class="card"><h2>ボタンで数える<small class="pre-tag">予備機能</small></h2><p class="muted">指が濡れて画面を押しにくいときに、時刻だけ残しておき、あとで確認して追加します（即時反映は検討中）。アクションボタンや背面タップ、Bluetoothのページめくりリモコンで記録できます。</p><button class="btn sm" data-act="btnHelp">設定のしかたを見る</button></div>`}
+  <div class="card"><h2>ボタンで数える<small class="pre-tag">予備機能</small></h2><p class="muted">指が濡れて画面を押しにくいときに、時刻だけ残しておき、あとで確認して追加します（即時反映は検討中）。アクションボタンや背面タップ、Bluetoothのページめくりリモコンで記録できます。</p><div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" data-act="btnHelp">設定のしかたを見る</button>${active()?'<button class="btn sm" data-act="btnImport">ボタンの記録を取り込む</button>':''}</div></div>`}
 
 /* ---------- sheets ---------- */
 let sheetCtx=null;
@@ -1778,8 +1777,8 @@ function helpHTML(){return `<div class="sheet-h"><h2>ボタンで数える<small
     <li>アクションボタンを使う人も、<b>トリプルタップ</b>に <code>ドラゴン＋1</code> を入れておくと、ドラゴンを分けて記録できます</li></ol>
    <p class="muted">ケースが厚いと反応しにくいことがあります。</p></div>
   <div class="card"><h2>4. 帰りにアプリへ取り込む</h2>
-   <ol class="steps"><li>メモ「釣果メモ」の中身を全部コピー</li><li>記録画面の「ボタンの記録を取り込む」に貼り付けて「読み取る」</li><li>一覧で、画面の記録と重なっていないか確かめ、追加する行を選んで「追加する」（2回押して確定）</li></ol>
-   <p class="muted">画面で記録した分は変更しません（上書きなし）。前後3分以内に画面で同じ記録がある行は「重なるかも」と表示し、最初はチェックを外してあります。テンヤは、その時刻にアプリで選んでいたものになります。ロック中は、メモへの追加の前にFace IDを求められることがあります。釣りの前に一度押して、メモに1行増えるか試してください（試しの行は釣行の時間外なので取り込まれません）。</p></div>
+   <ol class="steps"><li>メモ「釣果メモ」の中身を全部コピー</li><li>「登録」タブの「ボタンで数える」にある「ボタンの記録を取り込む」（釣行中に表示）を開いて貼り付け、「読み取る」</li><li>一覧で、画面の記録と重なっていないか確かめ、追加する行を選んで「追加する」（2回押して確定）</li></ol>
+   <p class="muted">画面で記録した分は変更しません（上書きなし）。前後3分以内に画面で同じ記録がある行は「重なるかも」と表示し、最初はチェックを外してあります。テンヤは、その時刻にアプリで選んでいたものになります。ロック中は、メモへの追加の前にFace IDを求められることがあります。釣りの前に一度押して、メモに1行増えるか試してください（試しの行は釣行の時間外なので取り込まれません）。</p>${active()?'<button class="btn" data-act="btnImport" style="margin-top:8px">ボタンの記録を取り込む</button>':''}</div>
   <div class="card"><h2>Bluetoothのページめくりリモコン</h2><p class="muted">楽譜用のページめくりリモコン（矢印キーやスペースを送るもの）なら、この画面を開いたままボタンで直接記録できます。</p>
    <ol class="steps"><li>次へ（→・↓・スペース・Enter・PageDown）＝<b>大きいボタンの魚 ＋1</b></li><li>戻る（←・↑・PageUp）＝<b>バラシ</b></li></ol>
    <p class="muted">カメラ用のシャッターリモコン（AB Shutter3など）は、<b>「Android」側のボタン</b>なら Enter として届くので「釣れた＋1」になります。「iOS」側のボタンは音量ボタン扱いのため、このページでは受け取れません。1ボタンのものは機種によります。</p>
