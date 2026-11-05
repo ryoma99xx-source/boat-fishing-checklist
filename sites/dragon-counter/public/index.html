@@ -679,8 +679,10 @@ body.has-dock .b-ic{width:40px;height:40px;border-radius:10px}
 body.has-dock .b-tx b{font-size:18px;letter-spacing:.08em}
 body.has-dock .b-tx span,body.has-dock .b-tx small{display:none}
 body.has-trip .b-tx>b{display:none}
-.b-trip{display:flex;flex-direction:column;font-style:normal;line-height:1.2;min-width:0}
-.b-trip b{font-size:17px;font-weight:800;color:var(--ink);white-space:nowrap}
+.b-trip{display:flex;align-items:center;gap:10px;font-style:normal;line-height:1.2;min-width:0}
+.bt-now{font-family:var(--f-num);font-size:34px;font-weight:600;line-height:1;color:var(--ink);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.bt-sub,body.has-dock .b-tx .bt-sub{display:flex;flex-direction:column;min-width:0;margin:0;letter-spacing:0}
+.b-trip b{font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap}
 body.has-dock .b-trip small{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0;font-family:var(--f-body)}
 .brand{flex:1;min-width:0}
 .b-tx{flex:1;overflow:hidden}
@@ -1016,8 +1018,8 @@ setInterval(()=>{if(DB&&sync==='error'&&(S.dirty.trips.length||S.dirty.cfg))flus
 // while recording, the fixed header shows the trip date and elapsed time instead of the tool name (the page's own date line scrolls under it)
 function topTrip(){const el=$('#topTrip');if(!el)return;const tr=S.ui.tab==='rec'&&active();el.hidden=!tr;document.body.classList.toggle('has-trip',!!tr);if(!tr)return;
   const span=Date.now()-tr.start;const st=Date.now()<tr.start?'開始前':tr.planEnd&&Date.now()>tr.planEnd?'終了時刻を過ぎました':dur(Math.max(0,span))+'経過';
-  el.innerHTML=`<b>${esc(jdate(tr.date).replace(/^\d+年/,''))}</b><small>${hm(tr.start)}〜${tr.planEnd?hm(tr.planEnd):''}・${esc(st)}</small>`}
-setInterval(topTrip,30000);
+  el.innerHTML=`<strong class="bt-now" aria-label="今の時刻">${hm(Date.now())}</strong><span class="bt-sub"><b>${esc(jdate(tr.date).replace(/^\d+年/,''))}</b><small>${esc(st)}</small></span>`}
+setInterval(topTrip,15000);
 let toastTimer=null;
 function toast(msg,label,fn,icon){const el=$('#toast');el.innerHTML=(icon?`<i class="ic ${icon}"></i>`:'')+`<span>${esc(msg)}</span>`+(label?`<button type="button">${esc(label)}</button>`:'');
   el.hidden=false;el.classList.remove('away');el.style.transform='';if(label)el.querySelector('button').onclick=()=>{el.hidden=true;fn()};clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,label?5000:2600)}
