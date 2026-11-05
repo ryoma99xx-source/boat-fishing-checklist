@@ -363,6 +363,9 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 .dk-sub{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:6px;max-width:600px;margin:0 auto;width:100%}
 .dk-lbl{max-width:600px;margin:0 auto -4px;width:100%;min-height:28px;padding:2px 0;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:800;color:var(--teal);letter-spacing:.04em;display:flex;align-items:baseline;gap:8px;white-space:nowrap;overflow:hidden;text-align:left}
 .dk-lbl i{font-style:normal;width:12px}
+.dk-end{max-width:600px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:4px;padding:8px 10px 10px;border-radius:14px;background:rgba(227,164,59,.14);border:1px solid rgba(227,164,59,.6)}
+.dk-end small{font-size:12px;font-weight:700;color:var(--amber);text-align:center}
+.dk-end .btn{width:100%;min-height:46px;font-size:16px;font-weight:800;background:var(--amber);border-color:var(--amber);color:#1a1204}
 .dock.folded{padding-top:4px}
 .dk-lbl small{font-weight:500;color:var(--muted);font-size:11px;letter-spacing:0}
 .td-bl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -679,6 +682,7 @@ body.has-dock .b-ic{width:40px;height:40px;border-radius:10px}
 body.has-dock .b-tx b{font-size:18px;letter-spacing:.08em}
 body.has-dock .b-tx span,body.has-dock .b-tx small{display:none}
 body.has-trip .b-tx>b{display:none}
+body.has-trip .rhead h1{display:none}
 .b-trip{display:flex;align-items:center;gap:10px;font-style:normal;line-height:1.2;min-width:0}
 .bt-now{display:flex;flex-direction:column;align-items:flex-start;font-family:var(--f-num);font-size:34px;font-weight:600;line-height:1;color:var(--ink);letter-spacing:.02em;font-variant-numeric:tabular-nums}
 .bt-now i{font-style:normal;font-family:var(--f-body);font-size:10px;font-weight:700;color:var(--teal);letter-spacing:.1em;margin-bottom:1px}
@@ -1018,9 +1022,10 @@ setInterval(()=>{if(DB&&sync==='error'&&(S.dirty.trips.length||S.dirty.cfg))flus
 /* ---------- small helpers ---------- */
 // while recording, the fixed header shows the trip date and elapsed time instead of the tool name (the page's own date line scrolls under it)
 function topTrip(){const el=$('#topTrip');if(!el)return;const tr=S.ui.tab==='rec'&&active();el.hidden=!tr;document.body.classList.toggle('has-trip',!!tr);if(!tr)return;
-  const span=Date.now()-tr.start;const st=Date.now()<tr.start?'開始前':tr.planEnd&&Date.now()>tr.planEnd?'終了時刻を過ぎました':'経過 '+dur(Math.max(0,span));
-  el.innerHTML=`<strong class="bt-now" aria-label="現在の時刻"><i>現在</i>${hm(Date.now())}</strong><span class="bt-sub"><b>${esc(jdate(tr.date).replace(/^\d+年/,''))}</b><small>${esc(st)}</small></span>`}
-setInterval(topTrip,15000);
+  const span=Date.now()-tr.start;const st=Date.now()<tr.start?'開始前':tr.planEnd&&Date.now()>tr.planEnd?'〜'+hm(tr.planEnd)+' 終了':'経過 '+dur(Math.max(0,span));
+  const d=new Date(tr.date+'T00:00:00'),dl=`${d.getMonth()+1}/${d.getDate()}（${'日月火水木金土'[d.getDay()]}）`;
+  el.innerHTML=`<strong class="bt-now" aria-label="現在の時刻"><i>現在</i>${hm(Date.now())}</strong><span class="bt-sub"><b>${esc(dl)}</b><small>${esc(st)}</small></span>`}
+setInterval(()=>{topTrip();const tr=S.ui.tab==='rec'&&active();if(!tr||!$('#sheet').hidden)return;const due=!!(tr.planEnd&&Date.now()>tr.planEnd);if(due!==!!$('#dkEnd'))render()},15000);
 let toastTimer=null;
 function toast(msg,label,fn,icon){const el=$('#toast');el.innerHTML=(icon?`<i class="ic ${icon}"></i>`:'')+`<span>${esc(msg)}</span>`+(label?`<button type="button">${esc(label)}</button>`:'');
   el.hidden=false;el.classList.remove('away');el.style.transform='';if(label)el.querySelector('button').onclick=()=>{el.hidden=true;fn()};clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,label?5000:2600)}
@@ -1295,8 +1300,8 @@ function dockHTML(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);let main='';
     if(!all.length)main=''}
   else{const vs=s.variants.filter(v=>!v.hidden);main=vs.map(v=>`<button class="dk-t" data-act="catch" data-v="${v.id}"><span class="dk-a">${esc(s.name)}</span><span class="dk-c">${esc(vs.length>1?v.short||v.name:'釣れた')}</span><span class="dk-n">${catchesOf(tr,sp).filter(e=>e.v===v.id).length||''}</span></button>`).join('')}
   if(SOLO&&!isTenya(sp,g))main='';
-  const fold=!!S.ui.dockFold;
-  return `<div class="dock ${fold?'folded':''}" id="dock">${main?`<button class="dk-lbl" data-act="dockFold" aria-expanded="${!fold}"><i>${fold?'▸':'▾'}</i>${isTenya(sp,g)?`使用テンヤを変更<small>${fold?'今：'+esc(curRigLabel(tr)):'切り替えのみ・記録はされません'}</small>`:'釣れた'}</button>${fold?'':`<div class="dk-row">${main}</div>`}`:''}
+  const fold=!!S.ui.dockFold;const due=tr.planEnd&&Date.now()>tr.planEnd;
+  return `<div class="dock ${fold?'folded':''}" id="dock">${due?`<div class="dk-end" id="dkEnd"><small>沖上がりの時刻（${hm(tr.planEnd)}）を過ぎました</small><button class="btn end" data-act="end">沖上がり（記録を終える）</button></div>`:''}${main?`<button class="dk-lbl" data-act="dockFold" aria-expanded="${!fold}"><i>${fold?'▸':'▾'}</i>${isTenya(sp,g)?`使用テンヤを変更<small>${fold?'今：'+esc(curRigLabel(tr)):'切り替えのみ・記録はされません'}</small>`:'釣れた'}</button>${fold?'':`<div class="dk-row">${main}</div>`}`:''}
    <div class="dk-sub"><button data-act="state" data-id="${tr.id}">船の向き</button>${SOLO?'':'<button data-act="gedoPick">ほかの魚</button>'}<button data-act="undo">取り消し</button></div></div>`}
 const DOCK_MAX=15;
 let dragonNext=false;
@@ -1335,7 +1340,7 @@ let lastTap=0;
 function addEvent(kind,v,src,osp,rig){const tr=active();if(!tr)return;const now=Date.now();if(now-lastTap<450)return;lastTap=now;
   const tsp=tr.cur.sp,g=curGear(tr),sp=osp||tsp;if(rig&&rig!==g.rig){g.rig=rig;logGear(tr)}const e={id:uid(),t:now,kind,sp,gsp:tsp,rig:g.rig,bait:needBait(tsp,g)?g.bait:'',size:''};if(kind==='catch')e.v=v||mainV(sp);if(kind==='catch'&&sp==='tachiuo'&&dragonNext){e.dragon=true;dragonNext=false}if(src)e.src=src;
   tr.events.push(e);touch(tr);buzz();keepAwake();
-  if(S.ui.tab==='rec'&&$('#sheet').hidden){render();if(kind==='catch'){const n=$('#cnum');n&&n.classList.add('bump')}const f=$('#feed');if(f&&f.lastElementChild)f.lastElementChild.scrollIntoView({block:'nearest',behavior:'smooth'})}
+  if(S.ui.tab==='rec'&&$('#sheet').hidden){render();if(kind==='catch'){const n=$('#cnum');n&&n.classList.add('bump')}}
   if(osp&&!$('#sheet').hidden)closeSheet();
   const s=spOf(sp),n=catchesOf(tr,sp).length,id=tr.id;
   if(kind==='catch'&&sp==='tachiuo'&&dayCatch(tr.date)===TAIRYO){toast(`大漁！ 今日のタチウオが${TAIRYO}本になりました`,'取り消す',()=>{const t=S.trips[id];t.events=t.events.filter(x=>x.id!==e.id);touch(t);render()},'ic-tairyo');return}
