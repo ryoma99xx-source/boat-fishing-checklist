@@ -343,11 +343,13 @@ $('about').onclick=()=>modal('計算方法・出典',`<p class="notice">自作�
 // Wind comes from Open-Meteo (hourly 10 m wind, no key); without it the boat is drawn from the current alone.
 const WIND={cache:new Map(),pending:new Set(),last:null};
 function windKey(){return S.date+'|'+S.pin.lat.toFixed(2)+'|'+S.pin.lon.toFixed(2);}
-function windAt(){const day=WIND.cache.get(windKey());if(!day||day.error)return day||null;const h=Math.min(23,Math.round(S.slot/2));const sp=day.speed[h],dir=day.dir[h];return sp==null||dir==null?{error:true}:{speed:sp,dir};}
-function loadWind(){const key=windKey(),had=WIND.cache.get(key);if(WIND.pending.has(key)||had&&!(had.error&&Date.now()-had.at>60000))return;WIND.pending.add(key);
+function windAt(){const day=WIND.cache.get(windKey());if(!day||day.error)return day&&day.tries>=3?day:null;const h=Math.min(23,Math.round(S.slot/2));const sp=day.speed[h],dir=day.dir[h];return sp==null||dir==null?{error:true}:{speed:sp,dir};}
+function loadWind(){const key=windKey(),had=WIND.cache.get(key);if(WIND.pending.has(key)||had&&!(had.error&&Date.now()-had.at>(had.tries<3?4000:60000)))return;WIND.pending.add(key);
+ // A failed forecast is retried a few seconds later (twice), then at most once a minute.
+ const fail=()=>{const tries=(had&&had.error?had.tries||1:0)+1;WIND.cache.set(key,{error:true,at:Date.now(),tries});if(tries<3)setTimeout(()=>{if(WIND.last)updatePeek(WIND.last);},4500);};
  const u='https://api.open-meteo.com/v1/forecast?latitude='+S.pin.lat.toFixed(2)+'&longitude='+S.pin.lon.toFixed(2)+'&hourly=wind_speed_10m,wind_direction_10m&wind_speed_unit=ms&timezone=Asia%2FTokyo&start_date='+S.date+'&end_date='+S.date;
- Promise.resolve().then(()=>fetch(u)).then(r=>r.ok?r.json():Promise.reject(Error(r.status))).then(j=>{const hr=j&&j.hourly;WIND.cache.set(key,hr&&hr.wind_speed_10m?{speed:hr.wind_speed_10m,dir:hr.wind_direction_10m}:{error:true,at:Date.now()});})
-  .catch(()=>WIND.cache.set(key,{error:true,at:Date.now()})).finally(()=>{WIND.pending.delete(key);if(WIND.last)updatePeek(WIND.last);});}
+ Promise.resolve().then(()=>fetch(u)).then(r=>r.ok?r.json():Promise.reject(Error(r.status))).then(j=>{const hr=j&&j.hourly;if(hr&&hr.wind_speed_10m)WIND.cache.set(key,{speed:hr.wind_speed_10m,dir:hr.wind_direction_10m});else fail();})
+  .catch(fail).finally(()=>{WIND.pending.delete(key);if(WIND.last)updatePeek(WIND.last);});}
 function windText(w){return w&&!w.error?compass(w.dir)+' '+w.speed.toFixed(1)+'m/s':w?'予報なし':'取得中';}
 function updateBoat(f){WIND.last=f;const box=$('boatBox');if(!box)return;loadWind();
  const valid=f&&f.bearing!=null,w=windAt(),moving=valid&&f.speed>=.04;let head=null;
@@ -361,8 +363,9 @@ function updateBoat(f){WIND.last=f;const box=$('boatBox');if(!box)return;loadWin
  $('boatNote').innerHTML=(head==null?(valid?'潮がほぼ止まり風も弱いため、向きは決まりません':'この地点の流れが出ていません'):'船首 <b>'+compass(head)+'</b>（'+(w&&!w.error&&w.speed>=3?'風上':'潮上')+'）')+'<br>風 '+windText(w)+'<br>潮 '+tideTxt+'<small>風3m/s以上は風上、未満は潮上に船首</small>';}
 function updatePeek(f){updateBoat(f);
  const valid=f.bearing!=null,model=usesModel();
- $('peekFlow').textContent=valid?(f.speed<.04?'ほぼ停止':compass(f.bearing)+'へ')+' · '+f.speed.toFixed(1)+(model?' kt':' kn'):f.reason==='pending'?f.cellSize+'m格子を取得中…':f.reason==='failed'?f.cellSize+'m格子を取得できません':f.reason==='outside'?'潮流モデルの計算範囲外':f.reason==='land'?'陸地・浅場のため値なし':f.reason==='view-outside'?'表示対象範囲外':S.loading?'データ取得中…':f.reason==='loading'?'潮流データを取得できません':'この地点は表示対象外';
- $('peekNote').textContent=S.loading?'データ取得中':!model?'最寄りの沖合推算点の値 · 風速 '+windText(windAt()):(valid?'自作モデル '+f.cellSize+'m格子':'自作モデル')+' · 風速 '+windText(windAt());
+ $('peekFlow').textContent=valid?'潮流 '+(f.speed<.04?'ほぼ停止':compass(f.bearing)+'へ')+' · '+f.speed.toFixed(1)+(model?' kt':' kn'):f.reason==='pending'?f.cellSize+'m格子を取得中…':f.reason==='failed'?f.cellSize+'m格子を取得できません':f.reason==='outside'?'潮流モデルの計算範囲外':f.reason==='land'?'陸地・浅場のため値なし':f.reason==='view-outside'?'表示対象範囲外':S.loading?'データ取得中…':f.reason==='loading'?'潮流データを取得できません':'この地点は表示対象外';
+ $('peekNote').textContent=S.loading?'データ取得中':!model?'最寄りの沖合推算点の値':valid?'自作モデル '+f.cellSize+'m格子':'自作モデル';
+ {const w=windAt();$('peekWind').textContent=w&&!w.error?'風向 '+compass(w.dir)+' · 風速 '+w.speed.toFixed(1)+'m/s':'風向・風速 '+(w?'予報なし':'取得中');}
  $('peekArrow').textContent=valid?(f.speed<.04?'·':'↑'):'—';$('peekArrow').style.transform=valid?'rotate('+f.bearing+'deg)':'';
 }
 (()=>{const b=$('boatBox'),t=$('boatToggle');if(!b||!t)return;try{if(localStorage.getItem('shio-boatbox')==='min')b.classList.add('min')}catch{}t.onclick=()=>{const m=!b.classList.contains('min');b.classList.toggle('min',m);try{localStorage.setItem('shio-boatbox',m?'min':'open')}catch{}};})();
