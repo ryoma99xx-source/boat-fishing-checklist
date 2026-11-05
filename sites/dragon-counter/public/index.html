@@ -680,7 +680,8 @@ body.has-dock .b-tx b{font-size:18px;letter-spacing:.08em}
 body.has-dock .b-tx span,body.has-dock .b-tx small{display:none}
 body.has-trip .b-tx>b{display:none}
 .b-trip{display:flex;align-items:center;gap:10px;font-style:normal;line-height:1.2;min-width:0}
-.bt-now{font-family:var(--f-num);font-size:34px;font-weight:600;line-height:1;color:var(--ink);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.bt-now{display:flex;flex-direction:column;align-items:flex-start;font-family:var(--f-num);font-size:34px;font-weight:600;line-height:1;color:var(--ink);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.bt-now i{font-style:normal;font-family:var(--f-body);font-size:10px;font-weight:700;color:var(--teal);letter-spacing:.1em;margin-bottom:1px}
 .bt-sub,body.has-dock .b-tx .bt-sub{display:flex;flex-direction:column;min-width:0;margin:0;letter-spacing:0}
 .b-trip b{font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap}
 body.has-dock .b-trip small{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0;font-family:var(--f-body)}
@@ -1017,8 +1018,8 @@ setInterval(()=>{if(DB&&sync==='error'&&(S.dirty.trips.length||S.dirty.cfg))flus
 /* ---------- small helpers ---------- */
 // while recording, the fixed header shows the trip date and elapsed time instead of the tool name (the page's own date line scrolls under it)
 function topTrip(){const el=$('#topTrip');if(!el)return;const tr=S.ui.tab==='rec'&&active();el.hidden=!tr;document.body.classList.toggle('has-trip',!!tr);if(!tr)return;
-  const span=Date.now()-tr.start;const st=Date.now()<tr.start?'開始前':tr.planEnd&&Date.now()>tr.planEnd?'終了時刻を過ぎました':dur(Math.max(0,span))+'経過';
-  el.innerHTML=`<strong class="bt-now" aria-label="今の時刻">${hm(Date.now())}</strong><span class="bt-sub"><b>${esc(jdate(tr.date).replace(/^\d+年/,''))}</b><small>${esc(st)}</small></span>`}
+  const span=Date.now()-tr.start;const st=Date.now()<tr.start?'開始前':tr.planEnd&&Date.now()>tr.planEnd?'終了時刻を過ぎました':'経過 '+dur(Math.max(0,span));
+  el.innerHTML=`<strong class="bt-now" aria-label="現在の時刻"><i>現在</i>${hm(Date.now())}</strong><span class="bt-sub"><b>${esc(jdate(tr.date).replace(/^\d+年/,''))}</b><small>${esc(st)}</small></span>`}
 setInterval(topTrip,15000);
 let toastTimer=null;
 function toast(msg,label,fn,icon){const el=$('#toast');el.innerHTML=(icon?`<i class="ic ${icon}"></i>`:'')+`<span>${esc(msg)}</span>`+(label?`<button type="button">${esc(label)}</button>`:'');
