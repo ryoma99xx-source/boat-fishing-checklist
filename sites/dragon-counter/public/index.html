@@ -1825,12 +1825,12 @@ const acts={
     openSheet(`<div class="sheet-h"><h2>使っているテンヤ</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted">選んだテンヤが「釣れた」ボタンで記録されます（${esc(setName(g.set))}）。</p>
      <div class="chips">${ids.map(id=>`<button class="chip ${id===g.rig?'on':''}" data-act="setCurTenya" data-id="${id}">${esc(tenyaLabel(id))}</button>`).join('')||'<span class="muted">今日のリストにテンヤがありません</span>'}</div>
      <button class="btn sm" data-act="tenyaCur">ほかのテンヤから選ぶ</button>${methodSwitchHTML(tr)}`,{kind:'curtenya'})},
-  setCurTenya:b=>{const tr=active();const g=curGear(tr);g.rig=b.dataset.id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render()},
+  setCurTenya:b=>{const tr=active();const g=curGear(tr);g.rig=b.dataset.id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();scrollTo({top:0,behavior:'smooth'})},
   tenyaCur:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'cur'};openTenyaSheet()},
-  tbCur:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.id;g.extra=g.extra||[];if(!dayTenya(tr,tr.cur.sp).includes(id))g.extra.push(id);g.rig=id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render()},
+  tbCur:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.id;g.extra=g.extra||[];if(!dayTenya(tr,tr.cur.sp).includes(id))g.extra.push(id);g.rig=id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();scrollTo({top:0,behavior:'smooth'})},
   catchT:b=>{const tr=active();if(!tr)return;addEvent('catch',mainV(tr.cur.sp),null,null,b.dataset.rig)},
   dockFold:()=>{S.ui.dockFold=!S.ui.dockFold;saveLocal();render()},
-  dockSel:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.rig;if(g.rig===id){toast(`使用テンヤは ${tenyaLabel(id)} です。釣れたら「釣れた＋1」`);return}g.rig=id;logGear(tr);touch(tr);render();toast(`使用テンヤを ${tenyaLabel(id)} に切り替えました`)},
+  dockSel:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.rig;if(g.rig===id){toast(`使用テンヤは ${tenyaLabel(id)} です。釣れたら「釣れた＋1」`);return}g.rig=id;logGear(tr);touch(tr);render();scrollTo({top:0,behavior:'smooth'});toast(`使用テンヤを ${tenyaLabel(id)} に切り替えました`)},
   baitPick:()=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);openSheet(`<div class="sheet-h"><h2>${esc(spOf(sp).baitLabel)}を変える</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${chipsHTML(sp,'baits',g.bait,'setBaitS')}`,{kind:'bait'})},
   setBaitS:b=>{const tr=active();curGear(tr).bait=b.dataset.id;S.prefs.g[tr.cur.sp]={...(S.prefs.g[tr.cur.sp]||{}),bait:b.dataset.id};logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render()},
   stEdit2:b=>{const tr=active()||figTrip();openStateSheet(tr.id,b.dataset.id)},
