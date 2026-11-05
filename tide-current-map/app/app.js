@@ -347,20 +347,22 @@ function windAt(){const day=WIND.cache.get(windKey());if(!day||day.error)return 
 function loadWind(){const key=windKey(),had=WIND.cache.get(key);if(WIND.pending.has(key)||had&&!(had.error&&Date.now()-had.at>60000))return;WIND.pending.add(key);
  const u='https://api.open-meteo.com/v1/forecast?latitude='+S.pin.lat.toFixed(2)+'&longitude='+S.pin.lon.toFixed(2)+'&hourly=wind_speed_10m,wind_direction_10m&wind_speed_unit=ms&timezone=Asia%2FTokyo&start_date='+S.date+'&end_date='+S.date;
  Promise.resolve().then(()=>fetch(u)).then(r=>r.ok?r.json():Promise.reject(Error(r.status))).then(j=>{const hr=j&&j.hourly;WIND.cache.set(key,hr&&hr.wind_speed_10m?{speed:hr.wind_speed_10m,dir:hr.wind_direction_10m}:{error:true,at:Date.now()});})
-  .catch(()=>WIND.cache.set(key,{error:true,at:Date.now()})).finally(()=>{WIND.pending.delete(key);if(WIND.last)updateBoat(WIND.last);});}
+  .catch(()=>WIND.cache.set(key,{error:true,at:Date.now()})).finally(()=>{WIND.pending.delete(key);if(WIND.last)updatePeek(WIND.last);});}
+function windText(w){return w&&!w.error?compass(w.dir)+' '+w.speed.toFixed(1)+'m/s':w?'予報なし':'取得中';}
 function updateBoat(f){WIND.last=f;const box=$('boatBox');if(!box)return;loadWind();
- const valid=f&&f.bearing!=null,w=windAt(),moving=valid&&f.speed>=.04;let head=null,why='';
- if(w&&!w.error&&w.speed>=3){head=w.dir;why='風 <b>'+compass(w.dir)+' '+w.speed.toFixed(1)+'m/s</b>（3m/s以上）→ 船首は<b>風上</b>';}
- else if(moving){head=(f.bearing+180)%360;why=(w&&!w.error?'風 '+compass(w.dir)+' '+w.speed.toFixed(1)+'m/s（3m/s未満）':'風の予報なし')+' → 船首は<b>潮上</b>';}
+ const valid=f&&f.bearing!=null,w=windAt(),moving=valid&&f.speed>=.04;let head=null;
+ if(w&&!w.error&&w.speed>=3)head=w.dir;
+ else if(moving)head=(f.bearing+180)%360;
  const flow=$('bbFlow'),rot=$('bbFlowRot'),boat=$('bbBoat');
  if(flow&&!WIND.built){let g='';for(let y=-88;y<=88;y+=22)for(let x=-77;x<=77;x+=22)g+='<use href="#bbArrow" x="'+(x+(Math.abs(y/22)%2?11:0))+'" y="'+y+'"/>';flow.innerHTML=g;WIND.built=true;}
  if(rot)rot.setAttribute('transform','rotate('+(moving?f.bearing:0)+')');if(flow){flow.style.display=moving?'':'none';flow.style.animationDuration=(moving?Math.max(.7,Math.min(8,2.2/(f.speed+.05))):3).toFixed(2)+'s';}
  if(boat){boat.setAttribute('transform','rotate('+(head==null?0:head)+')');boat.style.opacity=head==null?'.35':'1';}
- $('boatNote').innerHTML=(head==null?(valid?'潮がほぼ止まっていて風も弱いので、船の向きは決まりません':'この地点の流れが出ていないため表示できません'):'船首 <b>'+compass(head)+'</b><br>'+why)+(valid?'<br>潮：'+(moving?compass(f.bearing)+'へ '+f.speed.toFixed(1)+(usesModel()?'kt':'kn'):'ほぼ停止'):'');}
+ const tideTxt=valid?(moving?compass(f.bearing)+'へ '+f.speed.toFixed(1)+(usesModel()?'kt':'kn'):'ほぼ停止'):'—';
+ $('boatNote').innerHTML=(head==null?(valid?'潮がほぼ止まり風も弱いため、向きは決まりません':'この地点の流れが出ていません'):'船首 <b>'+compass(head)+'</b>（'+(w&&!w.error&&w.speed>=3?'風上':'潮上')+'）')+'<br>風 '+windText(w)+'<br>潮 '+tideTxt+'<small>風3m/s以上は風上、未満は潮上に船首</small>';}
 function updatePeek(f){updateBoat(f);
  const valid=f.bearing!=null,model=usesModel();
  $('peekFlow').textContent=valid?(f.speed<.04?'ほぼ停止':compass(f.bearing)+'へ')+' · '+f.speed.toFixed(1)+(model?' kt':' kn'):f.reason==='pending'?f.cellSize+'m格子を取得中…':f.reason==='failed'?f.cellSize+'m格子を取得できません':f.reason==='outside'?'潮流モデルの計算範囲外':f.reason==='land'?'陸地・浅場のため値なし':f.reason==='view-outside'?'表示対象範囲外':S.loading?'データ取得中…':f.reason==='loading'?'潮流データを取得できません':'この地点は表示対象外';
- $('peekNote').textContent=S.loading?'データ取得中':!model?'最寄りの沖合推算点の値':valid?'自作モデル '+f.cellSize+'m格子 · 実測未検証':'自作モデル · 実測未検証';
+ $('peekNote').textContent=S.loading?'データ取得中':!model?'最寄りの沖合推算点の値 · 風速 '+windText(windAt()):(valid?'自作モデル '+f.cellSize+'m格子':'自作モデル')+' · 風速 '+windText(windAt());
  $('peekArrow').textContent=valid?(f.speed<.04?'·':'↑'):'—';$('peekArrow').style.transform=valid?'rotate('+f.bearing+'deg)':'';
 }
 (()=>{const b=$('boatBox'),t=$('boatToggle');if(!b||!t)return;try{if(localStorage.getItem('shio-boatbox')==='min')b.classList.add('min')}catch{}t.onclick=()=>{const m=!b.classList.contains('min');b.classList.toggle('min',m);try{localStorage.setItem('shio-boatbox',m?'min':'open')}catch{}};})();
