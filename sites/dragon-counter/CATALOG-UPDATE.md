@@ -49,7 +49,7 @@
 
 `public/tenya/<id>.webp` に、各テンヤの頭だけを切り出した写真を置いている（`public/tenya/index.json` が一覧。2026-11-05 時点で 646 件すべて。HAYABUSA ベーシックシングル 夜光（SW405）はオーナー提供の写真）。アプリはこの一覧にある id だけ写真を出す。
 
-- 元画像は `work/src/<id>.jpg|png`（git には入れない）。出どころは `work/retail.json`（id → url / page / src / name。手で切り抜いたものは `cropped`、頭だけに切り抜き済みで通常処理にするものは `plain: true`）
+- 元画像は `work/src/<id>.jpg|png`（git には入れない。2026-11-06 時点の `work/`（元画像 650 件と `retail.json`）はオーナーの手元に ZIP 3 分割で退避済み：`tenya-photo-sources-2026-11-06-part1〜3.zip`。`sites/dragon-counter/` に展開すると戻る）。出どころは `work/retail.json`（id → url / page / src / name。手で切り抜いたものは `cropped`、頭だけに切り抜き済みで通常処理にするものは `plain: true`）
 - メーカー公式の色別写真：DAIWA（現行品）・JACKALL・START・DUO・HAYABUSA（`tools/tenya_images.py daiwa|jackall|start|duo|hayabusa` で取得）、Major Craft・YAMASHITA・マルシン・HAYABUSA SW409 は公式ページから手動取得
 - SHIMANO サーベルマスター 船テンヤ（10 色）・ゲキハヤ（6 色）・β ゲキハヤ（5 色）はオーナー提供の公式カラーチャートから色ごとに切り出し（`work/retail.json` に出どころ）
 - 公式に無いもの（SHIMANO のそれ以外・DAIWA 旧型・OWNER・がまかつ・PRO MARINE など）は釣具店の色別商品写真（相模屋・マルニシ・ポイント・ポイント東日本・フィッシングマックス・キャスティング・釣人館 などの Yahoo!店）。店の写真は `retail.json` に載せると「店写真モード」で切り出す（枠線・GLOW バッジ・夜光写真・スナップ・リーダー・フックホルダーを除き、目の位置から頭を探す。同じ店×製品で構図が固定のものは `FIXED` の固定枠）。写真の加工・掲載はオーナーの判断（2026-11-04）
