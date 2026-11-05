@@ -369,7 +369,8 @@ let googlePromise=null,googleScript=null,googleKey='',googleOverlay=null,googleL
 const storeRemove=(store,key)=>{try{store.removeItem(key);}catch{}};
 function useStandard(){
  ++googleSession;
- if(S.google){const c=S.google.getCenter();if(c)S.center={lat:c.lat(),lon:c.lng()};S.zoom=Math.round(S.google.getZoom());}
+ // After a Google auth failure the map may report no center/zoom: keep the last good values.
+ if(S.google){const c=S.google.getCenter(),z=Math.round(S.google.getZoom());if(c&&Number.isFinite(c.lat())&&Number.isFinite(c.lng()))S.center={lat:c.lat(),lon:c.lng()};if(Number.isFinite(z))S.zoom=z;}
  if(googleOverlay){googleOverlay.setMap(null);googleOverlay=null;}
  for(const l of googleListeners)l.remove();googleListeners=[];
  S.google=null;S.projection=null;document.body.classList.remove('google');
@@ -414,7 +415,7 @@ async function useGoogle(key){
  const overlay=new google.maps.OverlayView();googleOverlay=overlay;
  overlay.onAdd=()=>{};overlay.onRemove=()=>{};overlay.draw=()=>{if(session===googleSession&&S.google===map){S.projection=overlay.getProjection();drawOverlay();flow.invalidate();}};overlay.setMap(map);
  googleListeners.push(map.addListener('click',e=>{if(e.latLng)selectPoint({lat:e.latLng.lat(),lon:e.latLng.lng()});}));
- googleListeners.push(map.addListener('idle',()=>{if(S.google!==map)return;const c=map.getCenter();S.center={lat:c.lat(),lon:c.lng()};S.zoom=map.getZoom();flow.setInteracting(false);drawOverlay();flow.invalidate();loadDetail();}));
+ googleListeners.push(map.addListener('idle',()=>{if(S.google!==map)return;const c=map.getCenter(),z=map.getZoom();if(c)S.center={lat:c.lat(),lon:c.lng()};if(Number.isFinite(z))S.zoom=z;flow.setInteracting(false);drawOverlay();flow.invalidate();loadDetail();}));
  googleListeners.push(map.addListener('dragstart',()=>flow.setInteracting(true)),map.addListener('dragend',()=>flow.setInteracting(false)));
  await new Promise((resolve,reject)=>{let done=false;const finish=error=>{if(done)return;done=true;clearTimeout(timeout);rejectGoogle=null;error?reject(error):resolve();};rejectGoogle=e=>finish(e);const timeout=setTimeout(()=>finish(Error('地図の表示を確認できませんでした。')),15000);googleListeners.push(map.addListener('tilesloaded',()=>finish()));});
  if(session!==googleSession)throw Error('地図の切り替えを取り消しました。');
