@@ -72,12 +72,12 @@ function drawCoverage(c,w,h){
 }
 function drawOverlay(){const c=canvas('arrows'),w=$('map').clientWidth,h=$('map').clientHeight;c.save();c.beginPath();c.rect(0,0,w,Math.max(0,h-(S.google?28:0)));c.clip();drawCoverage(c,w,h);
  const official=officialFrame();if(official)drawOfficial(c,w,h,official);
- const taken=usesModel()?drawModelOverlay(c,w,h):[{x:project(S.pin.lat,S.pin.lon).x-20,y:project(S.pin.lat,S.pin.lon).y-20,w:40,h:66}];
+ const taken=usesModel()?drawModelOverlay(c,w,h):[{x:project(S.pin.lat,S.pin.lon).x-20,y:project(S.pin.lat,S.pin.lon).y-20,w:40,h:66},anglerRect(project(S.pin.lat,S.pin.lon))];
  if(official)drawOfficialLabels(c,w,h,official,taken);
  const atCurrent=S.location&&distanceKm(S.pin,S.location)<.01;
  if(S.location&&!atCurrent){const p=project(S.location.lat,S.location.lon);if(p.x>0&&p.x<w&&p.y>0&&p.y<h){dot(c,p.x,p.y,8,'#ffffff');dot(c,p.x,p.y,5,'#279cff');}}
  const p=project(S.pin.lat,S.pin.lon);if(!usesModel()&&p.x>-50&&p.x<w+50&&p.y>-50&&p.y<h+50){dot(c,p.x,p.y,17,'#ffffffdd');c.strokeStyle='#153c43';c.lineWidth=2;c.beginPath();c.arc(p.x,p.y,17,0,Math.PI*2);c.stroke();dot(c,p.x,p.y,5,atCurrent?'#279cff':'#153c43');
-  label(c,p.x,p.y+32,atCurrent?'現在地':'選択地点');
+  label(c,p.x,p.y+32,atCurrent?'現在地':'選択地点');angler(c,p.x,p.y-2,{ring:atCurrent?'#279cff':'#4fd0d6'});
  }
  const pixels=80,meters=156543.03392*Math.cos(rad(S.center.lat))/2**S.zoom*pixels;const nice=meters>1000?Math.round(meters/1000)+' km':Math.round(meters/50)*50+' m';$('scale').textContent=nice;$('scale').style.width=pixels+'px';c.restore();
 }
@@ -91,6 +91,20 @@ function badge(c,x,y,bearing,{r=13,ring='#ffffffb0',dash=null}={}){
  if(bearing==null){dot(c,x,y,2.5,'#c8d6e6');c.restore();return;}
  c.translate(x,y);c.rotate(rad(bearing));c.beginPath();c.moveTo(0,r-5);c.lineTo(0,-r+5);c.moveTo(-4.5,-r+10);c.lineTo(0,-r+5);c.lineTo(4.5,-r+10);c.strokeStyle='#fff';c.lineWidth=2.2;c.lineCap='round';c.lineJoin='round';c.stroke();c.restore();
 }
+// Angler mark drawn just above the selected point, so "my spot" stands out from reference points.
+function angler(c,x,y,{ring='#4fd0d6'}={}){
+ const cy=y-33;c.save();
+ c.beginPath();c.moveTo(x-5,cy+10);c.lineTo(x,cy+17);c.lineTo(x+5,cy+10);c.closePath();c.fillStyle=ring;c.fill();
+ c.beginPath();c.arc(x,cy,13,0,Math.PI*2);c.fillStyle='#f4f8fb';c.fill();c.lineWidth=2;c.strokeStyle=ring;c.stroke();
+ c.translate(x,cy);c.strokeStyle='#0d2233';c.fillStyle='#0d2233';c.lineCap='round';c.lineJoin='round';
+ c.beginPath();c.arc(-3.2,-5.6,2.4,0,Math.PI*2);c.fill();
+ c.lineWidth=2.6;c.beginPath();c.moveTo(-3.6,-2.6);c.lineTo(-4.2,3.4);c.lineTo(-1.2,7.6);c.moveTo(-4.2,3.4);c.lineTo(-6.6,7.6);c.stroke();
+ c.lineWidth=1.8;c.beginPath();c.moveTo(-3.6,-1.4);c.lineTo(0.8,0.4);c.stroke();
+ c.lineWidth=1.2;c.beginPath();c.moveTo(-1.6,1.6);c.quadraticCurveTo(3.5,-4,8.6,-8.2);c.stroke();
+ c.lineWidth=.8;c.beginPath();c.moveTo(8.6,-8.2);c.lineTo(8.6,5.6);c.stroke();
+ c.restore();
+}
+const anglerRect=p=>({x:p.x-14,y:p.y-47,w:28,h:30});
 function modelValueText(f){return f.bearing==null?(f.reason==='pending'?'モデル取得中':'モデル値なし'):'モデル'+f.speed.toFixed(1)+'kt';}
 // Generic marker list: selected point and fixed reference points (all model values).
 function markerList(){
@@ -118,10 +132,10 @@ function drawModelOverlay(c,w,h){
   if(m.kind==='reference'&&placed.some(o=>Math.hypot(o.p.x-m.p.x,o.p.y-m.p.y)<34))continue;
   const left=m.p.x+20+pillRect(c,0,0,m.text,'right').w>usable,r=pillRect(c,m.p.x,m.p.y,m.text,'right');if(left)r.x=m.p.x-20-r.w;
   if(m.kind==='reference'&&(overlaps(r,taken)||overlaps(r,ui)||r.x<2||r.x+r.w>usable))continue;
-  taken.push(r,{x:m.p.x-15,y:m.p.y-15,w:30,h:30});placed.push({...m,r});
+  taken.push(r,{x:m.p.x-15,y:m.p.y-15,w:30,h:30});if(m.kind==='pin')taken.push(anglerRect(m.p));placed.push({...m,r});
  }
  drawSpots(c,w,h,taken.concat(ui));
- for(const m of placed.sort((a,b)=>b.priority-a.priority)){badge(c,m.p.x,m.p.y,m.bearing,m.kind==='pin'?{r:15,ring:'#4fd0d6'}:{});pill(c,m.r,m.text,m.kind==='pin'?{stroke:'#4fd0d6'}:{stroke:'#ffffff66'});}
+ for(const m of placed.sort((a,b)=>b.priority-a.priority)){badge(c,m.p.x,m.p.y,m.bearing,m.kind==='pin'?{r:15,ring:'#4fd0d6'}:{});pill(c,m.r,m.text,m.kind==='pin'?{stroke:'#4fd0d6'}:{stroke:'#ffffff66'});if(m.kind==='pin')angler(c,m.p.x,m.p.y,{ring:S.location&&distanceKm(S.pin,S.location)<.01?'#279cff':'#4fd0d6'});}
  return taken;
 }
 // Official JCG chart on the same map. Image pixel (x,y) -> lat = 35 + (631 - y)/840, lon = 139.5 + (x - 30)/675
