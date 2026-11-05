@@ -51,8 +51,8 @@
    "path": "/",
    "file": "index.html",
    "content_type": "text/html; charset=utf-8",
-   "bytes": 348012,
-   "sha256": "d82dc7371e162ae77cafa26cfbb36b539b14c17341d0f1f6fa4864ac4d1bb77f",
+   "bytes": 348437,
+   "sha256": "0e89c7b4f0752708367d2f269a8a7237f2aee3f89cacdb8e283814251119bb2d",
    "found_by": "release zip",
    "modifications": [
     "「はじめに表示した5ステップの説明」→「6ステップ」（実際の案内は6ステップ。オーナー指示 2026-11-04）"
