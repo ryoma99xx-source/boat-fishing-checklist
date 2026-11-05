@@ -378,7 +378,7 @@ body.kbd .tabs,body.kbd .dock{display:none}
 .tab{font-size:13px}
 .tab.on{color:var(--teal);background:transparent}
 .sheet-panel{background:var(--surface)}
-.toast{background:#e9f3f6;color:#06121b}
+.toast{background:#e9f3f6;color:#06121b;touch-action:pan-x;transition:transform .15s ease-out}
 .top{background:var(--bg)}
 .sample-note{background:var(--surface);border-color:rgba(227,164,59,.4);color:var(--amber)}
 .tchip{background:var(--surface2)}
@@ -1011,7 +1011,13 @@ setInterval(()=>{if(DB&&sync==='error'&&(S.dirty.trips.length||S.dirty.cfg))flus
 /* ---------- small helpers ---------- */
 let toastTimer=null;
 function toast(msg,label,fn,icon){const el=$('#toast');el.innerHTML=(icon?`<i class="ic ${icon}"></i>`:'')+`<span>${esc(msg)}</span>`+(label?`<button type="button">${esc(label)}</button>`:'');
-  el.hidden=false;if(label)el.querySelector('button').onclick=()=>{el.hidden=true;fn()};clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,label?5000:2600)}
+  el.hidden=false;el.classList.remove('away');el.style.transform='';if(label)el.querySelector('button').onclick=()=>{el.hidden=true;fn()};clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,label?5000:2600)}
+// swipe the toast up (or sideways) to dismiss it without waiting
+(()=>{const el=$('#toast');if(!el)return;let sy=0,sx=0,dy=0,dx=0,on=false;
+  el.addEventListener('touchstart',e=>{const t=e.touches[0];sy=t.clientY;sx=t.clientX;dy=dx=0;on=true;el.style.transition='none'},{passive:true});
+  el.addEventListener('touchmove',e=>{if(!on)return;const t=e.touches[0];dy=t.clientY-sy;dx=t.clientX-sx;if(dy<0||Math.abs(dx)>Math.abs(dy))el.style.transform=`translate(calc(-50% + ${dx}px),${Math.min(0,dy)}px)`},{passive:true});
+  el.addEventListener('touchend',()=>{if(!on)return;on=false;el.style.transition='';if(dy<-24||Math.abs(dx)>60){el.hidden=true;el.style.transform='';clearTimeout(toastTimer)}else el.style.transform=''});
+  el.addEventListener('touchcancel',()=>{on=false;el.style.transition='';el.style.transform=''})})();
 function buzz(){try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}}
 let wl=null;
 async function keepAwake(){try{if(active()&&document.visibilityState==='visible'&&'wakeLock' in navigator&&!wl){wl=await navigator.wakeLock.request('screen');wl.addEventListener('release',()=>{wl=null})}}catch(e){}}
