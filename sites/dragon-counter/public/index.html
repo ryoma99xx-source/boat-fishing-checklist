@@ -365,6 +365,10 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 .dk-sub{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:6px;max-width:600px;margin:0 auto;width:100%}
 .dk-lbl{max-width:600px;margin:0 auto -4px;width:100%;min-height:28px;padding:2px 0;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:800;color:var(--teal);letter-spacing:.04em;display:flex;align-items:baseline;gap:8px;white-space:nowrap;overflow:hidden;text-align:left}
 .dk-lbl i{font-style:normal;width:12px}
+.dk-head{max-width:600px;margin:0 auto -4px;width:100%;display:flex;align-items:center;gap:8px;min-width:0}
+.dk-head .dk-lbl{margin:0;flex:1;min-width:0}
+.dk-listed{flex:none;display:flex;flex-direction:column;align-items:flex-end;line-height:1.1;padding:3px 10px;border-radius:999px;border:1px solid var(--amber);background:rgba(227,164,59,.12);color:var(--amber);font-family:inherit;font-size:12px;font-weight:800;white-space:nowrap}
+.dk-listed small{font-size:10px;font-weight:600;opacity:.85;max-width:9em;overflow:hidden;text-overflow:ellipsis}
 .dk-end{max-width:600px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:4px;padding:8px 10px 10px;border-radius:14px;background:rgba(227,164,59,.14);border:1px solid rgba(227,164,59,.6)}
 .dk-end small{font-size:12px;font-weight:700;color:var(--amber);text-align:center}
 .dk-end .btn{width:100%;min-height:46px;font-size:16px;font-weight:800;background:var(--amber);border-color:var(--amber);color:#1a1204}
@@ -1309,7 +1313,7 @@ function dockHTML(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);let main='';
   else{const vs=s.variants.filter(v=>!v.hidden);main=vs.map(v=>`<button class="dk-t" data-act="catch" data-v="${v.id}"><span class="dk-a">${esc(s.name)}</span><span class="dk-c">${esc(vs.length>1?v.short||v.name:'釣れた')}</span><span class="dk-n">${catchesOf(tr,sp).filter(e=>e.v===v.id).length||''}</span></button>`).join('')}
   if(SOLO&&!isTenya(sp,g))main='';
   const fold=!!S.ui.dockFold;const due=tr.planEnd&&Date.now()>tr.planEnd;
-  return `<div class="dock ${fold?'folded':''}" id="dock">${due?`<div class="dk-end" id="dkEnd"><small>沖上がりの時刻（${hm(tr.planEnd)}）を過ぎました</small><button class="btn end" data-act="end">沖上がり（記録を終える）</button></div>`:''}${main?`<button class="dk-lbl" data-act="dockFold" aria-expanded="${!fold}"><i>${fold?'▸':'▾'}</i>${isTenya(sp,g)?`使用テンヤを変更<small>${fold?'今：'+esc(curRigLabel(tr)):'切り替えのみ・記録はされません'}</small>`:'釣れた'}</button>${fold?'':`<div class="dk-row">${main}</div>`}`:''}
+  return `<div class="dock ${fold?'folded':''}" id="dock">${due?`<div class="dk-end" id="dkEnd"><small>沖上がりの時刻（${hm(tr.planEnd)}）を過ぎました</small><button class="btn end" data-act="end">沖上がり（記録を終える）</button></div>`:''}${main?`<div class="dk-head"><button class="dk-lbl" data-act="dockFold" aria-expanded="${!fold}"><i>${fold?'▸':'▾'}</i>${isTenya(sp,g)?`使用テンヤを変更<small>${fold?'今：'+esc(curRigLabel(tr)):'切り替えのみ'}</small>`:'釣れた'}</button>${isTenya(sp,g)?`<button class="dk-listed" data-act="dayListEdit">✎ 今日のリストを編集<small>${esc(setName(g.set))}</small></button>`:''}</div>${fold?'':`<div class="dk-row">${main}</div>`}`:''}
    <div class="dk-sub"><button data-act="state" data-id="${tr.id}">船の向き</button>${SOLO?'':'<button data-act="gedoPick">ほかの魚</button>'}<button data-act="undo">取り消し</button></div></div>`}
 const DOCK_MAX=15;
 let dragonNext=false;
@@ -1828,6 +1832,8 @@ const acts={
   tenyaCur:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'cur'};openTenyaSheet()},
   tbCur:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.id;g.extra=g.extra||[];if(!dayTenya(tr,tr.cur.sp).includes(id))g.extra.push(id);g.rig=id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();scrollTo({top:0,behavior:'smooth'})},
   catchT:b=>{const tr=active();if(!tr)return;addEvent('catch',mainV(tr.cur.sp),null,null,b.dataset.rig)},
+  dayListEdit:()=>{const tr=active();if(!tr)return;const g=curGear(tr);const set=g.set&&g.set!=='mine'&&TEN().sets.find(x=>x.id===g.set);
+    if(set)tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'set',setId:set.id};else tb={q:'',z:'',m:'',only:'mine',mode:'mine'};openTenyaSheet()},
   dockFold:()=>{S.ui.dockFold=!S.ui.dockFold;saveLocal();render()},
   dockSel:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.rig;if(g.rig===id){toast(`使用テンヤは ${tenyaLabel(id)} です。釣れたら「釣れた＋1」`);return}g.rig=id;logGear(tr);touch(tr);render();scrollTo({top:0,behavior:'smooth'});toast(`使用テンヤを ${tenyaLabel(id)} に切り替えました`)},
   baitPick:()=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);openSheet(`<div class="sheet-h"><h2>${esc(spOf(sp).baitLabel)}を変える</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${chipsHTML(sp,'baits',g.bait,'setBaitS')}`,{kind:'bait'})},
