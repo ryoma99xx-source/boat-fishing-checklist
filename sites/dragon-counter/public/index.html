@@ -378,9 +378,10 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 .dk-head .dk-lbl{margin:0;flex:1;min-width:0}
 .dk-listed{flex:none;display:flex;flex-direction:column;align-items:flex-end;line-height:1.1;padding:3px 10px;border-radius:999px;border:1px solid var(--amber);background:rgba(227,164,59,.12);color:var(--amber);font-family:inherit;font-size:12px;font-weight:800;white-space:nowrap}
 .dk-listed small{font-size:10px;font-weight:600;opacity:.85;max-width:9em;overflow:hidden;text-overflow:ellipsis}
-.dk-end{max-width:600px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:3px;padding:5px 8px 6px;border-radius:14px;background:rgba(227,164,59,.14);border:1px solid rgba(227,164,59,.6)}
-.dk-end small{font-size:11px;font-weight:700;color:var(--amber);text-align:center}
-.dk-end .btn{width:100%;min-height:36px;padding:4px 12px;font-size:15px;font-weight:800;background:var(--amber);border-color:var(--amber);color:#1a1204}
+.dk-end{max-width:600px;margin:0 auto;width:100%;display:flex;flex-direction:row;align-items:center;gap:8px;padding:4px 5px 4px 10px;border-radius:14px;background:rgba(227,164,59,.14);border:1px solid rgba(227,164,59,.6)}
+.dk-end small b{font-family:var(--f-num);font-size:12px;margin-right:1px}.dock:has(.dk-end)::before{height:14px}
+.dk-end small{flex:none;width:auto;white-space:nowrap;line-height:1.3;font-size:10px;font-weight:700;color:var(--amber);text-align:left}
+.dk-end .btn{flex:1;width:auto;min-height:40px;padding:4px 10px;font-size:15px;font-weight:800;background:var(--amber);border-color:var(--amber);color:#1a1204}
 .dock.folded{padding-top:4px}
 .dk-lbl small{font-weight:500;color:var(--muted);font-size:11px;letter-spacing:0}
 .td-bl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -1326,7 +1327,7 @@ function dockHTML(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);let main='';
   else{const vs=s.variants.filter(v=>!v.hidden);main=vs.map(v=>`<button class="dk-t" data-act="catch" data-v="${v.id}"><span class="dk-a">${esc(s.name)}</span><span class="dk-c">${esc(vs.length>1?v.short||v.name:'釣れた')}</span><span class="dk-n">${catchesOf(tr,sp).filter(e=>e.v===v.id).length||''}</span></button>`).join('')}
   if(SOLO&&!isTenya(sp,g))main='';
   const fold=!!S.ui.dockFold;const due=tr.planEnd&&Date.now()>tr.planEnd;
-  return `<div class="dock ${fold?'folded':''}" id="dock">${due?`<div class="dk-end" id="dkEnd"><small>沖上がりの時刻（${hm(tr.planEnd)}）を過ぎました</small><button class="btn end" data-act="end">沖上がり（記録を終える）</button></div>`:''}${main?`<div class="dk-head"><button class="dk-lbl" data-act="dockFold" aria-expanded="${!fold}"><i>${fold?'▸':'▾'}</i>${isTenya(sp,g)?`使用テンヤを変更<small>${fold?'今：'+esc(curRigLabel(tr)):'切り替えのみ'}</small>`:'釣れた'}</button>${isTenya(sp,g)?`<button class="dk-listed" data-act="dayListEdit">✎ 今日のリストを編集<small>${esc(setName(g.set))}</small></button>`:''}</div>${fold?'':`<div class="dk-row">${main}</div>`}`:''}
+  return `<div class="dock ${fold?'folded':''}" id="dock">${due?`<div class="dk-end" id="dkEnd"><small>沖上がり予定<br><b>${hm(tr.planEnd)}</b>を過ぎました</small><button class="btn end" data-act="end">沖上がり（記録を終える）</button></div>`:''}${main?`<div class="dk-head"><button class="dk-lbl" data-act="dockFold" aria-expanded="${!fold}"><i>${fold?'▸':'▾'}</i>${isTenya(sp,g)?`使用テンヤを変更<small>${fold?'今：'+esc(curRigLabel(tr)):'切り替えのみ'}</small>`:'釣れた'}</button>${isTenya(sp,g)?`<button class="dk-listed" data-act="dayListEdit">✎ 今日のリストを編集<small>${esc(setName(g.set))}</small></button>`:''}</div>${fold?'':`<div class="dk-row">${main}</div>`}`:''}
    <div class="dk-sub"><button data-act="state" data-id="${tr.id}">船の向き</button><button class="dk-gedo" data-act="gedoOpen">外道<small>${nKind(tr,sp,'gedo')||''}</small></button>${SOLO?'':'<button data-act="gedoPick">ほかの魚</button>'}<button class="dk-undo" data-act="undo">直前の釣果を取り消し<small>${undoHint(tr)}</small></button></div></div>`}
 const DOCK_MAX=15;
 let dragonNext=false;
