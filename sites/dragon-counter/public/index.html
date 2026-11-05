@@ -333,13 +333,13 @@ h2{font-size:18px}
 .fd-state{grid-template-columns:54px 26px 1fr;border-left-color:#2f6fa3}
 .fd-ic svg{display:block;color:var(--ink)}
 .feed-foot{display:flex;flex-direction:column;gap:12px;margin-top:6px}
-body.has-dock main{padding-bottom:calc(96px + 216px + env(safe-area-inset-bottom,0px))}
+body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom,0px))}
 .dock{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:6;background:rgba(6,10,17,.96);
   /* no hard line: the page fades out above the dock instead of being cut */
   border-top:0;}
 .dock::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:28px;background:linear-gradient(to bottom,rgba(6,10,17,0),rgba(6,10,17,.96));pointer-events:none}
 .dock{
-  padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-block:10px 8px;display:flex;flex-direction:column;gap:8px}
+  padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-block:6px 8px;display:flex;flex-direction:column;gap:8px}
 .tbgh{display:flex;align-items:center;gap:8px;width:100%;margin:14px 0 2px;padding:10px 8px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font-weight:800;font-size:17px;text-align:left;font-family:inherit}
 .tbgh i{font-style:normal;color:var(--teal);width:14px} .tbgh small{margin-left:auto;font-weight:600;color:var(--muted);font-size:13px}
 .chip .chip-ed{margin-left:6px;font-size:12px;font-weight:600;opacity:.9}
@@ -361,13 +361,15 @@ body.has-dock main{padding-bottom:calc(96px + 216px + env(safe-area-inset-bottom
 .dk-plus{border-style:dashed;border-color:var(--muted);flex-basis:28%}
 .dk-plus .dk-a{color:var(--muted)}
 .dk-sub{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:6px;max-width:600px;margin:0 auto;width:100%}
-.dk-lbl{max-width:600px;margin:0 auto -2px;width:100%;font-size:13px;font-weight:800;color:var(--teal);letter-spacing:.04em;display:flex;align-items:baseline;gap:8px;white-space:nowrap;overflow:hidden}
+.dk-lbl{max-width:600px;margin:0 auto -4px;width:100%;min-height:28px;padding:2px 0;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:800;color:var(--teal);letter-spacing:.04em;display:flex;align-items:baseline;gap:8px;white-space:nowrap;overflow:hidden;text-align:left}
+.dk-lbl i{font-style:normal;width:12px}
+.dock.folded{padding-top:4px}
 .dk-lbl small{font-weight:500;color:var(--muted);font-size:11px;letter-spacing:0}
 .td-bl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .td-bl button{min-height:56px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;padding:6px 12px}
 .td-bl button b{grid-row:1/3;font-family:var(--f-num);font-size:26px;font-weight:600;min-width:22px;text-align:center} .td-bl button span{font-weight:700;font-size:15px;line-height:1.1} .td-bl button small{font-size:11px;color:var(--muted);line-height:1.1}
 .td-bl button[data-act=bite] b{color:var(--amber)} .td-bl button[data-act=lost] b{color:var(--pink)}
-.dk-sub button{min-height:48px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);font-size:14px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;padding:2px}
+.dk-sub button{min-height:42px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);font-size:14px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;padding:2px}
 .dk-sub b{font-family:var(--f-num);font-size:18px;font-weight:600}
 .dk-sub button[data-act=bite] b{color:var(--amber)}.dk-sub button[data-act=lost] b{color:var(--pink)}
 .tabs{background:#070c15;border-top:1px solid var(--line)}
@@ -385,9 +387,9 @@ body.kbd .tabs,body.kbd .dock{display:none}
 
 .pill.sm{min-height:34px;padding:3px 14px;margin-left:10px;font-size:14px;vertical-align:middle}
 body.has-dock .toast{bottom:auto;top:calc(env(safe-area-inset-top,0px) + 70px)}
-.dk-t{min-height:104px}
-.dk-c{font-size:18px;-webkit-line-clamp:3}
-body.has-dock main{padding-bottom:calc(96px + 234px + env(safe-area-inset-bottom,0px))}
+.dk-t{min-height:84px}
+.dk-c{font-size:16px;-webkit-line-clamp:2}
+body.has-dock main{padding-bottom:calc(96px + 206px + env(safe-area-inset-bottom,0px))}
 .feed li{scroll-margin-bottom:calc(260px + env(safe-area-inset-bottom,0px))}
 .todaybar{grid-template-columns:repeat(3,minmax(0,1fr))}
 .todaybar:has(.tb-btn:nth-child(2):last-child){grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -1275,7 +1277,8 @@ function dockHTML(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);let main='';
     if(!all.length)main=''}
   else{const vs=s.variants.filter(v=>!v.hidden);main=vs.map(v=>`<button class="dk-t" data-act="catch" data-v="${v.id}"><span class="dk-a">${esc(s.name)}</span><span class="dk-c">${esc(vs.length>1?v.short||v.name:'釣れた')}</span><span class="dk-n">${catchesOf(tr,sp).filter(e=>e.v===v.id).length||''}</span></button>`).join('')}
   if(SOLO&&!isTenya(sp,g))main='';
-  return `<div class="dock" id="dock">${main?`<div class="dk-lbl">${isTenya(sp,g)?'使用テンヤを変更<small>切り替えのみ・記録はされません</small>':'釣れた'}</div><div class="dk-row">${main}</div>`:''}
+  const fold=!!S.ui.dockFold;
+  return `<div class="dock ${fold?'folded':''}" id="dock">${main?`<button class="dk-lbl" data-act="dockFold" aria-expanded="${!fold}"><i>${fold?'▸':'▾'}</i>${isTenya(sp,g)?`使用テンヤを変更<small>${fold?'今：'+esc(curRigLabel(tr)):'切り替えのみ・記録はされません'}</small>`:'釣れた'}</button>${fold?'':`<div class="dk-row">${main}</div>`}`:''}
    <div class="dk-sub"><button data-act="state" data-id="${tr.id}">船の向き</button>${SOLO?'':'<button data-act="gedoPick">ほかの魚</button>'}<button data-act="undo">取り消し</button></div></div>`}
 const DOCK_MAX=15;
 let dragonNext=false;
@@ -1795,6 +1798,7 @@ const acts={
   tenyaCur:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'cur'};openTenyaSheet()},
   tbCur:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.id;g.extra=g.extra||[];if(!dayTenya(tr,tr.cur.sp).includes(id))g.extra.push(id);g.rig=id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render()},
   catchT:b=>{const tr=active();if(!tr)return;addEvent('catch',mainV(tr.cur.sp),null,null,b.dataset.rig)},
+  dockFold:()=>{S.ui.dockFold=!S.ui.dockFold;saveLocal();render()},
   dockSel:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.rig;if(g.rig===id){toast(`使用テンヤは ${tenyaLabel(id)} です。釣れたら「釣れた＋1」`);return}g.rig=id;logGear(tr);touch(tr);render();toast(`使用テンヤを ${tenyaLabel(id)} に切り替えました`)},
   baitPick:()=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);openSheet(`<div class="sheet-h"><h2>${esc(spOf(sp).baitLabel)}を変える</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${chipsHTML(sp,'baits',g.bait,'setBaitS')}`,{kind:'bait'})},
   setBaitS:b=>{const tr=active();curGear(tr).bait=b.dataset.id;S.prefs.g[tr.cur.sp]={...(S.prefs.g[tr.cur.sp]||{}),bait:b.dataset.id};logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render()},
