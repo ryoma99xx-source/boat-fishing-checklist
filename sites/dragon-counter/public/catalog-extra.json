@@ -1644,16 +1644,6 @@
   },
   {
    "m": "HAYABUSA",
-   "p": "船太刀魚テンヤ 速掛型（SW409）",
-   "u": "https://www.hayabusa.co.jp/hayabusa/products/SW409/",
-   "h": false,
-   "z": 40,
-   "c": "アカキンUVゼブラ",
-   "s": "限定色",
-   "a": "2026-11-05"
-  },
-  {
-   "m": "HAYABUSA",
    "p": "瞬貫船太刀魚テンヤ 速掛型２（SW417）",
    "u": "https://www.hayabusa.co.jp/hayabusa/products/SW417/",
    "h": false,
@@ -1670,6 +1660,26 @@
    "z": 50,
    "c": "ブルーグロー",
    "s": "",
+   "a": "2026-11-05"
+  },
+  {
+   "m": "HAYABUSA",
+   "p": "瞬貫船太刀魚テンヤ 速掛型２（SW417）",
+   "u": "https://www.hayabusa.co.jp/hayabusa/products/SW417/",
+   "h": false,
+   "z": 40,
+   "c": "アカキンUVゼブラ",
+   "s": "限定色",
+   "a": "2026-11-05"
+  },
+  {
+   "m": "HAYABUSA",
+   "p": "瞬貫船太刀魚テンヤ 速掛型２（SW417）",
+   "u": "https://www.hayabusa.co.jp/hayabusa/products/SW417/",
+   "h": false,
+   "z": 40,
+   "c": "妖艶チャートグロー",
+   "s": "限定色",
    "a": "2026-11-05"
   }
  ]
