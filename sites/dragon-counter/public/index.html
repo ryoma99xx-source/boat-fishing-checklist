@@ -118,7 +118,8 @@ textarea{min-height:140px;font-family:ui-monospace,Menlo,monospace;font-size:14p
 .empty{padding:16px 2px;color:var(--muted);font-size:14px}
 /* figures */
 .figsel{display:flex;gap:8px;align-items:center;position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--topH,64px));z-index:4;background:var(--bg);padding:8px 0;margin-top:-8px}
-.figsel select{flex:1;min-width:0}
+.figsel select{flex:1;min-width:0}.figsel .figcal{flex:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.sample-note .btn{display:block;margin-top:8px}
 .badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--surface2);color:var(--muted);border:1px solid var(--line)}
 .badge.live{color:var(--catch);border-color:currentColor}
 .scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid var(--line)}
@@ -1506,14 +1507,23 @@ function seatSVG(tr,sp){
     gaps.forEach(([a,b])=>{y+=30;o.push(TX(X0,y,`${hm(a)}〜${hm(b)}`,{size:15,fill:P.muted}));o.push(TX(X0+120,y,'船首の向きなし（潮の向きなし）',{size:15,fill:P.muted}))})}
   const H=y+56;o.push(TX(W/2,H-20,'※本数は自分の席で釣れた分だけです。ほかの席の点は位置だけを示します。',{size:13,fill:P.muted,anchor:'middle'}));
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="${esc(title)}"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${o.join('')}</svg>`}
+function figCalSheet(){const all=trips(),cur=figTrip();const now=new Date();
+  const ym=S.ui.figCalYM||(cur?cur.date.slice(0,7):`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`);const [Y,M]=ym.split('-').map(Number);
+  const by={};all.forEach(t=>{(by[t.date]=by[t.date]||[]).push(t)});const sel=S.ui.figCalDay&&S.ui.figCalDay.startsWith(ym)?S.ui.figCalDay:'';
+  const many=sel?(by[sel]||[]).slice().sort((a,b)=>a.start-b.start):[];
+  openSheet(`<div class="sheet-h"><h2>カレンダーから選ぶ</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted">釣行のある日を押すと、その日の図を出します。</p>
+   <div class="cal"><div class="cal-h"><button class="btn sm" data-act="figCalMove" data-d="-1" aria-label="前の月">‹</button><b>${Y}年${M}月</b><button class="btn sm" data-act="figCalMove" data-d="1" aria-label="次の月">›</button></div>
+   <div class="cal-w">${['日','月','火','水','木','金','土'].map(x=>`<span>${x}</span>`).join('')}</div><div class="cal-g">${calCells(ym,by,sel||(cur&&cur.date.startsWith(ym)?cur.date:''),'figCalDay')}</div></div>
+   ${many.length>1?`<h2 class="sec-h">${jdate(sel)}の釣行</h2><div class="vbtns">${many.map(t=>`<button class="vbtn" data-act="figCalPick" data-id="${t.id}"><span>${hm(t.start)} ${esc(t.boat)}</span><b>${catchesOf(t,'tachiuo').length}本</b></button>`).join('')}</div>`:''}`,{kind:'figcal',ym})}
+function figPickTrip(id){const t=S.trips[id];if(!t)return;S.ui.figTrip=id;S.ui.figSp=mainSp(t);S.ui.figCalDay='';saveLocal();$('#sheet').hidden=true;sheetCtx=null;render();scrollTo(0,0)}
 function figTrip(){let t=S.ui.figTrip&&S.trips[S.ui.figTrip];if(!t||t.deleted){t=active()||trips()[0]||null;S.ui.figTrip=t?t.id:null}return t}
 function figSp(tr){const ss=tripSpecies(tr);return ss.includes(S.ui.figSp)?S.ui.figSp:mainSp(tr)}
 function viewFig(){const tr=figTrip();if(!tr)return `<h1>図</h1><p class="muted">釣行を記録すると、ここに図が出ます。</p>`;const sp=figSp(tr);const ss=tripSpecies(tr);
   const opts=trips().map(t=>`<option value="${t.id}" ${t.id===tr.id?'selected':''}>${t.date.slice(5).replace('-','/')} ${esc(t.boat)}・${esc(tripSummary(t))}${t.sample?'（サンプル）':''}${t.status==='active'?'（記録中）':''}</option>`).join('');
-  return `<div class="figsel"><select id="figPick" aria-label="釣行を選ぶ">${opts}</select>${tr.status==='active'?'<span class="badge live">記録中</span>':''}</div>
+  return `<div class="figsel"><select id="figPick" aria-label="釣行を選ぶ">${opts}</select><button class="btn sm figcal" data-act="figCal" aria-label="カレンダーから釣行を選ぶ">カレンダー</button>${tr.status==='active'?'<span class="badge live">記録中</span>':''}</div>
    ${isTairyo(tr.date)||nDragon(tr,'tachiuo')?`<div class="fig-badges">${isTairyo(tr.date)?tairyoTag():''}${nDragon(tr,'tachiuo')?`<span class="dn-s"><i class="ic ic-dragon"></i>ドラゴン ${nDragon(tr,'tachiuo')}本</span>`:''}</div>`:''}
    ${ss.length>1?`<div class="chips">${ss.map(x=>`<button class="chip ${x===sp?'on':''}" data-act="figSp" data-id="${x}">${esc(spOf(x).name)}</button>`).join('')}</div>`:''}
-   ${tr.sample?'<p class="sample-note">これは見本のサンプル釣行です。実際に出船して記録すると、自分の図が作られます（サンプルは履歴から消せます）。</p>':''}
+   ${tr.sample?`<p class="sample-note">これは見本のサンプル釣行です。実際に出船して記録すると、自分の図が作られます。<button class="btn sm" data-act="delSample" data-id="${tr.id}">サンプルを消す</button></p>`:''}
    <div class="card"><h2>時系列：潮と流れと釣果</h2><p class="swipe">← 図の中を左右にスワイプできます →</p><div class="scrollx">${timelineSVG(tr,sp)}</div>
     <div class="figfoot"><button class="btn sm" data-act="png" data-which="tl">画像として保存</button></div></div>
    <div class="card"><h2>座席と数（自分の席）</h2><div class="fitw">${seatSVG(tr,sp)}</div><div class="figfoot"><button class="btn sm" data-act="png" data-which="seat">画像として保存</button></div></div>`}
@@ -1554,13 +1564,16 @@ function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYe
    ${avgBy('釣り場ごとの平均',t=>t.spot?t.spot.name:(t.port||''))}
    ${avgBy('潮回りごとの平均',t=>tideNameOf(t))}
    ${avgBy('船ごとの平均',t=>t.boat)}</div>`}
+function calCells(ym,by,sel,act){const [Y,M]=ym.split('-').map(Number);const first=new Date(Y,M-1,1),dim=new Date(Y,M,0).getDate(),lead=first.getDay();
+  const today=ymd(Date.now());let cells='';for(let i=0;i<lead;i++)cells+='<span class="cd empty"></span>';
+  for(let d=1;d<=dim;d++){const ds=`${ym}-${String(d).padStart(2,'0')}`;const ts=by[ds]||[];const n=ts.reduce((a,t)=>a+catchesOf(t,'tachiuo').length,0);const dg=ts.reduce((a,t)=>a+nDragon(t,'tachiuo'),0);const wd=(lead+d-1)%7;
+    cells+=ts.length?`<button class="cd has ${ds===sel?'on':''} ${n>=TAIRYO?'tai':''} ${wd===0?'sun':wd===6?'sat':''}" data-act="${act}" data-d="${ds}"><span class="cd-d">${d}</span><b>${n}<small>本</small></b>${n>=TAIRYO?'<i class="ic ic-tairyo"></i>':dg?'<i class="ic ic-dragon"></i>':''}</button>`
+      :`<span class="cd ${ds===today?'today':''} ${wd===0?'sun':wd===6?'sat':''}"><span class="cd-d">${d}</span></span>`}
+  return cells}
 function calHTML(){const all0=trips(),real=all0.filter(t=>!t.sample),all=real.length?real:all0;const now=new Date();let ym=S.ui.calYM;if(!ym){const lt=all.find(t=>!t.sample)||all[0];ym=lt?lt.date.slice(0,7):`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`}
   const [Y,M]=ym.split('-').map(Number);const first=new Date(Y,M-1,1),dim=new Date(Y,M,0).getDate(),lead=first.getDay();
   const by={};all.forEach(t=>{(by[t.date]=by[t.date]||[]).push(t)});const sel=S.ui.calDay&&S.ui.calDay.startsWith(ym)?S.ui.calDay:'';
-  const today=ymd(Date.now());let cells='';for(let i=0;i<lead;i++)cells+='<span class="cd empty"></span>';
-  for(let d=1;d<=dim;d++){const ds=`${ym}-${String(d).padStart(2,'0')}`;const ts=by[ds]||[];const n=ts.reduce((a,t)=>a+catchesOf(t,'tachiuo').length,0);const dg=ts.reduce((a,t)=>a+nDragon(t,'tachiuo'),0);const wd=(lead+d-1)%7;
-    cells+=ts.length?`<button class="cd has ${ds===sel?'on':''} ${n>=TAIRYO?'tai':''} ${wd===0?'sun':wd===6?'sat':''}" data-act="calDay" data-d="${ds}"><span class="cd-d">${d}</span><b>${n}<small>本</small></b>${n>=TAIRYO?'<i class="ic ic-tairyo"></i>':dg?'<i class="ic ic-dragon"></i>':''}</button>`
-      :`<span class="cd ${ds===today?'today':''} ${wd===0?'sun':wd===6?'sat':''}"><span class="cd-d">${d}</span></span>`}
+  const cells=calCells(ym,by,sel,'calDay');
   const mTrips=all.filter(t=>t.date.startsWith(ym));const mTot=mTrips.reduce((a,t)=>a+catchesOf(t,'tachiuo').length,0);
   const list=(sel?by[sel]||[]:mTrips).slice().sort((a,b)=>b.start-a.start);
   return `<div class="card cal"><div class="cal-h"><button class="btn sm" data-act="calMove" data-d="-1" aria-label="前の月">‹</button><b>${Y}年${M}月</b><button class="btn sm" data-act="calMove" data-d="1" aria-label="次の月">›</button></div>
@@ -1962,6 +1975,11 @@ const acts={
   exportJson:()=>exportJson(),
   dashPer:b=>{S.ui.dashPer=b.dataset.d;saveLocal();render()},
   calMove:b=>{const all=trips();const cur=S.ui.calYM||((all.find(t=>!t.sample)||all[0]||{date:ymd(Date.now())}).date.slice(0,7));let [y,m]=cur.split('-').map(Number);m+=+b.dataset.d;if(m<1){m=12;y--}if(m>12){m=1;y++}S.ui.calYM=`${y}-${String(m).padStart(2,'0')}`;S.ui.calDay='';saveLocal();render()},
+  figCal:()=>{S.ui.figCalYM='';S.ui.figCalDay='';figCalSheet()},
+  figCalMove:b=>{const cur=(sheetCtx&&sheetCtx.ym)||ymd(Date.now()).slice(0,7);let [y,m]=cur.split('-').map(Number);m+=+b.dataset.d;if(m<1){m=12;y--}if(m>12){m=1;y++}S.ui.figCalYM=`${y}-${String(m).padStart(2,'0')}`;S.ui.figCalDay='';figCalSheet()},
+  figCalDay:b=>{const d=b.dataset.d,ts=trips().filter(t=>t.date===d);if(ts.length===1)return figPickTrip(ts[0].id);S.ui.figCalYM=d.slice(0,7);S.ui.figCalDay=d;figCalSheet()},
+  figCalPick:b=>figPickTrip(b.dataset.id),
+  delSample:b=>{const id=b.dataset.id;if(!S.trips[id]||!S.trips[id].sample)return;delete S.trips[id];S.ui.figTrip=null;saveLocal();render();toast('サンプルを消しました')},
   calDay:b=>{S.ui.calDay=b.dataset.d===S.ui.calDay?'':b.dataset.d;saveLocal();render();if(S.ui.calDay)setTimeout(()=>{const el=document.querySelector('.cal + .sec-h');el&&el.scrollIntoView({block:'start',behavior:'smooth'})},30)},
   rsMode:b=>{rs.mode=b.dataset.d;rs.armed=false;renderRestore()},
   rsDo:()=>{if(!rs)return;if(!rs.armed){rs.armed=true;return renderRestore()}doRestore()},
