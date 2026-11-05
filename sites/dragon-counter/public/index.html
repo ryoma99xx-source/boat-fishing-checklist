@@ -423,6 +423,7 @@ body.has-dock .sync span{display:none}
 .rhead .pill{margin-left:0;min-height:36px;padding:4px 14px}
 .rmeta{display:flex;flex-wrap:wrap;gap:4px 0;font-size:15px;color:var(--muted);margin-top:-6px}
 .rmeta span+span::before{content:"・";color:var(--line)}
+.rm-txt span{flex:none}
 .rmeta span:first-child{color:var(--ink);font-weight:700}
 .today{background:linear-gradient(160deg,#0f2235,#0b1422 70%);border:1px solid #24405c;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:12px}
 .td-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
@@ -682,12 +683,17 @@ body.has-dock .b-ic{width:40px;height:40px;border-radius:10px}
 body.has-dock .b-tx b{font-size:18px;letter-spacing:.08em}
 body.has-dock .b-tx span,body.has-dock .b-tx small{display:none}
 body.has-trip .b-tx>b{display:none}
-body.has-trip .rhead h1{display:none}
+body.has-trip .rhead{display:none}
+.rmeta .rm-time,.rmeta .rm-edit{display:none}
+.rm-txt{display:flex;flex-wrap:wrap;gap:4px 0;min-width:0}
+body.has-trip .rmeta{align-items:center;gap:8px;margin-top:0;font-size:14px}
+body.has-trip .rm-txt{flex:1;flex-wrap:nowrap;white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent)}
+body.has-trip .rmeta .rm-edit{display:inline-flex;flex:none;margin:0;min-height:32px;padding:2px 14px}
 .b-trip{display:flex;align-items:center;gap:10px;font-style:normal;line-height:1.2;min-width:0}
 .bt-now{display:flex;flex-direction:column;align-items:flex-start;font-family:var(--f-num);font-size:34px;font-weight:600;line-height:1;color:var(--ink);letter-spacing:.02em;font-variant-numeric:tabular-nums}
 .bt-now i{font-style:normal;font-family:var(--f-body);font-size:10px;font-weight:700;color:var(--teal);letter-spacing:.1em;margin-bottom:1px}
 .bt-sub,body.has-dock .b-tx .bt-sub{display:flex;flex-direction:column;min-width:0;margin:0;letter-spacing:0}
-.b-trip b{font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap}
+.b-trip b{font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap} .b-trip b em{font-style:normal;font-weight:600;color:var(--muted)}
 body.has-dock .b-trip small{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0;font-family:var(--f-body)}
 .brand{flex:1;min-width:0}
 .b-tx{flex:1;overflow:hidden}
@@ -1022,7 +1028,7 @@ setInterval(()=>{if(DB&&sync==='error'&&(S.dirty.trips.length||S.dirty.cfg))flus
 /* ---------- small helpers ---------- */
 // while recording, the fixed header shows the trip date and elapsed time instead of the tool name (the page's own date line scrolls under it)
 function topTrip(){const el=$('#topTrip');if(!el)return;const tr=S.ui.tab==='rec'&&active();el.hidden=!tr;document.body.classList.toggle('has-trip',!!tr);if(!tr)return;
-  const span=Date.now()-tr.start;const st=Date.now()<tr.start?'開始前':tr.planEnd&&Date.now()>tr.planEnd?'〜'+hm(tr.planEnd)+' 終了':'経過 '+dur(Math.max(0,span));
+  const span=Date.now()-tr.start;  const st=Date.now()<tr.start?'開始前':tr.planEnd&&Date.now()>tr.planEnd?'〜'+hm(tr.planEnd)+' 終了':'経過 '+dur(Math.max(0,span));
   const d=new Date(tr.date+'T00:00:00'),dl=`${d.getMonth()+1}/${d.getDate()}（${'日月火水木金土'[d.getDay()]}）`;
   el.innerHTML=`<strong class="bt-now" aria-label="現在の時刻"><i>現在</i>${hm(Date.now())}</strong><span class="bt-sub"><b>${esc(dl)}</b><small>${esc(st)}</small></span>`}
 setInterval(()=>{topTrip();const tr=S.ui.tab==='rec'&&active();if(!tr||!$('#sheet').hidden)return;const due=!!(tr.planEnd&&Date.now()>tr.planEnd);if(due!==!!$('#dkEnd'))render()},15000);
@@ -1318,7 +1324,7 @@ function viewActive(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);const c=catc
   const span=Date.now()-tr.start;const items=feedItems(tr);const nd=nDragon(tr,sp);
   const status=Date.now()<tr.start?'まだ始まっていません':tr.planEnd&&Date.now()>tr.planEnd?'終了時刻を過ぎました':dur(Math.max(0,span))+'経過';
   return `<header class="rhead"><div class="rh-l"><h1>${jdate(tr.date).replace(/^\d+年/,'')}</h1><span>${hm(tr.start)}〜${tr.planEnd?hm(tr.planEnd):''}・${status}</span></div><button class="pill sm" data-act="tripEdit" data-id="${tr.id}">直す</button></header>
-   <div class="rmeta">${[tr.boat,seatShort(tr),tr.spot?tr.spot.name:(tr.station?stName(tr.station):''),tideNameOf(tr)].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')}</div>
+   <div class="rmeta"><div class="rm-txt">${[tr.boat,seatShort(tr),tr.spot?tr.spot.name:(tr.station?stName(tr.station):''),tideNameOf(tr)].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')}</div><button class="pill sm rm-edit" data-act="tripEdit" data-id="${tr.id}">直す</button></div>
    <section class="today" aria-label="本日の釣果">
     <div class="td-top"><span class="td-h">本日の釣果${isTairyo(tr.date)?tairyoTag():''}</span><span class="td-n"><b id="cnum">${c.length}</b>${esc(s.unit)}${SOLO?'':`<small>${esc(s.name)}</small>`}${sp==='tachiuo'?`<small class="td-dn"><i class="ic ic-dragon"></i>ドラゴン <b>${nd}</b></small>`:''}</span></div>
     <div class="td-row"><button class="td-catch" data-act="catchCur"><b>釣れた</b><small>＋1</small></button>
@@ -1340,7 +1346,7 @@ let lastTap=0;
 function addEvent(kind,v,src,osp,rig){const tr=active();if(!tr)return;const now=Date.now();if(now-lastTap<450)return;lastTap=now;
   const tsp=tr.cur.sp,g=curGear(tr),sp=osp||tsp;if(rig&&rig!==g.rig){g.rig=rig;logGear(tr)}const e={id:uid(),t:now,kind,sp,gsp:tsp,rig:g.rig,bait:needBait(tsp,g)?g.bait:'',size:''};if(kind==='catch')e.v=v||mainV(sp);if(kind==='catch'&&sp==='tachiuo'&&dragonNext){e.dragon=true;dragonNext=false}if(src)e.src=src;
   tr.events.push(e);touch(tr);buzz();keepAwake();
-  if(S.ui.tab==='rec'&&$('#sheet').hidden){render();if(kind==='catch'){const n=$('#cnum');n&&n.classList.add('bump')}}
+  if(S.ui.tab==='rec'&&$('#sheet').hidden){const y0=scrollY;render();if(y0<160)scrollTo(0,0);if(kind==='catch'){const n=$('#cnum');n&&n.classList.add('bump')}}
   if(osp&&!$('#sheet').hidden)closeSheet();
   const s=spOf(sp),n=catchesOf(tr,sp).length,id=tr.id;
   if(kind==='catch'&&sp==='tachiuo'&&dayCatch(tr.date)===TAIRYO){toast(`大漁！ 今日のタチウオが${TAIRYO}本になりました`,'取り消す',()=>{const t=S.trips[id];t.events=t.events.filter(x=>x.id!==e.id);touch(t);render()},'ic-tairyo');return}
