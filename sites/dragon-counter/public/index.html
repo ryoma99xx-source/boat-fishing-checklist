@@ -136,6 +136,8 @@ textarea{min-height:140px;font-family:ui-monospace,Menlo,monospace;font-size:14p
 .trip-n{font-family:var(--f-num);font-size:30px;font-weight:600;line-height:1;color:var(--catch);font-variant-numeric:tabular-nums}
 .trip-n small{font-family:var(--f-body);font-size:13px;color:var(--muted);font-weight:500;margin-left:2px}
 .trip-act{display:flex;gap:8px;flex-wrap:wrap}
+.btn.two{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;line-height:1.2;gap:2px}.btn.two small{font-size:11px;font-weight:500;color:var(--muted)}
+.dk-sub .dk-undo{font-size:12px}.dk-undo small{font-size:11px;font-weight:500;color:var(--muted);font-family:var(--f-num)}
 .zones{display:grid;grid-template-columns:1fr 1fr;gap:6px;position:relative;padding-top:34px}
 .zones::before{content:"ミヨシ";position:absolute;top:0;left:50%;transform:translateX(-50%);font-size:12px;font-weight:700;color:var(--tide);letter-spacing:.1em}
 .zone{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -1323,7 +1325,7 @@ function dockHTML(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);let main='';
   if(SOLO&&!isTenya(sp,g))main='';
   const fold=!!S.ui.dockFold;const due=tr.planEnd&&Date.now()>tr.planEnd;
   return `<div class="dock ${fold?'folded':''}" id="dock">${due?`<div class="dk-end" id="dkEnd"><small>沖上がりの時刻（${hm(tr.planEnd)}）を過ぎました</small><button class="btn end" data-act="end">沖上がり（記録を終える）</button></div>`:''}${main?`<div class="dk-head"><button class="dk-lbl" data-act="dockFold" aria-expanded="${!fold}"><i>${fold?'▸':'▾'}</i>${isTenya(sp,g)?`使用テンヤを変更<small>${fold?'今：'+esc(curRigLabel(tr)):'切り替えのみ'}</small>`:'釣れた'}</button>${isTenya(sp,g)?`<button class="dk-listed" data-act="dayListEdit">✎ 今日のリストを編集<small>${esc(setName(g.set))}</small></button>`:''}</div>${fold?'':`<div class="dk-row">${main}</div>`}`:''}
-   <div class="dk-sub"><button data-act="state" data-id="${tr.id}">船の向き</button><button class="dk-gedo" data-act="gedoOpen">外道<small>${nKind(tr,sp,'gedo')||''}</small></button>${SOLO?'':'<button data-act="gedoPick">ほかの魚</button>'}<button data-act="undo">取り消し</button></div></div>`}
+   <div class="dk-sub"><button data-act="state" data-id="${tr.id}">船の向き</button><button class="dk-gedo" data-act="gedoOpen">外道<small>${nKind(tr,sp,'gedo')||''}</small></button>${SOLO?'':'<button data-act="gedoPick">ほかの魚</button>'}<button class="dk-undo" data-act="undo">直前の釣果を取り消し<small>${undoHint(tr)}</small></button></div></div>`}
 const DOCK_MAX=15;
 let dragonNext=false;
 function headBtn(tr){const now=Date.now();const q=headSegs(tr,Math.max(now+1,tr.planEnd||0)).find(x=>x.t<=now&&x.te>now);if(!q)return `<button class="tb-btn need" data-act="state" data-id="${tr.id}"><span>船の向き（任意）</span><b>未登録 ＋</b></button>`;
@@ -1525,10 +1527,11 @@ function seatStatsHTML(sp){const real=trips().filter(t=>!t.sample&&t.status==='d
     return v?`<div class="zone"><span class="zn">${nm}</span><span class="za">${r1(v.s/v.n)}<small> ${esc(s.unit)}/回</small></span><span class="zn">${v.n}回・計${v.s}${esc(s.unit)}</span></div>`:`<div class="zone none"><span class="zn">${nm}</span><span class="za">—</span><span class="zn">記録なし</span></div>`};
   return chips+`<div class="zones">${['ミヨシ寄り','胴の間','トモ寄り'].map(zn=>cell('L',zn)+cell('R',zn)).join('')}</div><div class="zones-foot">トモ</div>`}
 /* ---------- 履歴：ダッシュボード + カレンダー ---------- */
+const undoHint=tr=>{const e=tr.events[tr.events.length-1];return e?`${hm(e.t)} ${e.kind==='catch'?esc(vShort(e.sp,e.v)):e.kind==='gedo'?'外道 '+esc(e.name||''):KIND_JP[e.kind]}`:'記録なし'};
 function tripCardHTML(t){return `<div class="trip"><div class="trip-h"><div style="min-width:0"><b>${jdate(t.date)}</b>${isTairyo(t.date)?tairyoTag():''}<div class="muted">${esc(t.boat)}・${esc(seatLabel(t))}${t.port?'・'+esc(t.port):''}</div></div></div>
     <div class="trip-sum">${esc(tripSummary(t))||'記録なし'}${nDragon(t,'tachiuo')?`<span class="dn-s"><i class="ic ic-dragon"></i>ドラゴン ${nDragon(t,'tachiuo')}</span>`:''}</div>
     <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>
-    <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm" data-act="tripEdit" data-id="${t.id}">直す</button><button class="btn sm" data-act="evList" data-id="${t.id}">記録を修正</button>
+    <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm two" data-act="tripEdit" data-id="${t.id}">釣行の情報を直す<small>日付・船・席・時間</small></button><button class="btn sm two" data-act="evList" data-id="${t.id}">釣果の記録を修正<small>釣れた・アタリ・バラシ・外道を1件ずつ</small></button>
     ${t.status==='done'&&!t.sample&&!active()?`<button class="btn sm" data-act="reopen" data-id="${t.id}">記録を再開</button>`:''}
     <button class="btn sm danger" data-act="delTrip" data-id="${t.id}">${t.sample?'サンプルを消す':'消す'}</button></div></div>`}
 const tripHours=t=>Math.max(0,((t.end||(t.status==='active'?Date.now():t.planEnd)||t.start)-t.start)/3600e3);
@@ -1693,7 +1696,7 @@ let sheetCtx=null;
 function openSheet(html,ctx){sheetCtx=ctx||null;const pn=$('#sheetPanel');pn.className='sheet-panel'+(ctx&&ctx.kind==='tenya'?' tm-'+tb.mode:'');pn.innerHTML=html;$('#sheet').hidden=false}
 function closeSheet(){$('#sheet').hidden=true;sheetCtx=null;curForm=startDraft;render()}
 function openTripSheet(id,f){const tr=S.trips[id];curForm=f||formFromTrip(tr);
-  openSheet(`<div class="sheet-h"><h2>釣行を直す</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${formHTML(curForm)}
+  openSheet(`<div class="sheet-h"><h2>釣行の情報を直す</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${formHTML(curForm)}
    <button class="btn sm" data-act="evList" data-id="${id}">釣果の記録を見る・直す（${tr.events.length}件）</button>
    <button class="btn sm" data-act="stateList" data-id="${id}">船の向きの記録を見る・直す（${(tr.states||[]).length}件）</button>
    <button class="btn primary big" data-act="tripSave">保存する</button>`,{kind:'trip',id})}
