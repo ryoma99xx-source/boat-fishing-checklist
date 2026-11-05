@@ -2,6 +2,7 @@
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ドラゴンカウンター｜TOKYO BAY FISHING</title>
+<script>/* Googleアナリティクス（cutlassfish.tokyo と同じ GA4）。本番のドメインのときだけ。釣果などの記録は送らない */(function(){if(location.hostname!=="dragon-counter.cutlassfish.tokyo")return;window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config","G-3MCRXM8WJS");var s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id=G-3MCRXM8WJS";document.head.appendChild(s)})();</script>
 <meta name="description" content="タチウオの釣果を時間の経過と共に、テンヤ・潮・船の向きと一緒に記録する無料ツール。釣り場を選ぶと潮回りと満潮・干潮が自動で入り、ドラゴン（120cm以上）や大漁も記録できます。記録は端末の中だけに保存されます。">
 <link rel="canonical" href="https://dragon-counter.cutlassfish.tokyo/">
 <meta property="og:type" content="website"><meta property="og:title" content="ドラゴンカウンター"><meta property="og:url" content="https://dragon-counter.cutlassfish.tokyo/"><meta property="og:image" content="https://dragon-counter.cutlassfish.tokyo/og.png">
@@ -1116,7 +1117,7 @@ function backBar(){let el=$('#backBar');if(!el){el=document.createElement('div')
   const on=S.ui.tab==='gear';el.hidden=!on;document.body.classList.toggle('has-back',on);
   if(on){const tb=document.querySelector('.tabs');if(tb)document.documentElement.style.setProperty('--tabs-h',tb.offsetHeight+'px')}
   if(on)el.innerHTML=`<button data-act="backRec"><span class="bb-a">←</span><span><b>保存して記録に戻る</b><small>${active()?'記録中の釣行へ':'出船の準備へ'}</small></span></button>`}
-function render(){if(lastTab==='rec'&&S.ui.tab!=='rec')recScroll=scrollY;lastTab=S.ui.tab;renderTabs();renderSync();backBar();const t=S.ui.tab;document.body.classList.toggle('has-dock',t==='rec'&&!!active());topTrip();const tc=$('#topCatch');if(tc)tc.hidden=!active();
+function render(){if(S.ui.tab!==lastTab&&window.gtag)try{gtag('event','tab_view',{tab:S.ui.tab})}catch(e){}if(lastTab==='rec'&&S.ui.tab!=='rec')recScroll=scrollY;lastTab=S.ui.tab;renderTabs();renderSync();backBar();const t=S.ui.tab;document.body.classList.toggle('has-dock',t==='rec'&&!!active());topTrip();const tc=$('#topCatch');if(tc)tc.hidden=!active();
   $('#view').innerHTML=t==='rec'?(active()?viewActive(active()):viewStart()):t==='fig'?viewFig():t==='hist'?viewHist():viewGear();if(t==='gear'){applyTq('mine');applyTq('set')}}
 
 /* ---------- tide helpers for trips ---------- */
