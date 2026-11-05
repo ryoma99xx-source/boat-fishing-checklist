@@ -953,6 +953,8 @@ function migrateCfg(c){const before=JSON.stringify(c);c.mig=c.mig||{};const M=c.
     DEFAULT_SPOTS.forEach(d=>{if(!L.some(x=>x.id===d.id))L.push({...d})});
     const order=DEFAULT_SPOTS.map(d=>d.id);L.sort((a,b)=>{const i=order.indexOf(a.id),j=order.indexOf(b.id);return (i<0?99:i)-(j<0?99:j)});M.spots2=1}
   c.boats=(c.boats||[]).map(b=>({spots:[],people:(b.seats||8)*2,...b}));
+  // 初期登録の船（オーナー指定）。同じ名前がすでにあれば足さない。一度だけ
+  if(!M.boats1){c.boats=c.boats||[];for(const name of ['教至丸','こうゆう丸','長谷川丸','一ノ瀬丸']){if(!c.boats.some(b=>b.name===name))c.boats.push({id:uid(),name,people:16,seats:8,start:'07:20',end:'13:00',spots:[]})}M.boats1=1}
   const changed=JSON.stringify(c)!==before;if(changed&&c.updatedAt)c.updatedAt=Date.now();return changed}
 function migrateState(s){
   if(s.gear&&!s.cfg){const sp=defaultSpecies();sp[0].rigs=s.gear.tenya||sp[0].rigs;sp[0].baits=s.gear.bait||sp[0].baits;
