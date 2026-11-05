@@ -368,7 +368,7 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 .dk-t.cur .dk-n{color:var(--catch-ink)}
 .dk-plus{border-style:dashed;border-color:var(--muted);flex-basis:28%}
 .dk-plus .dk-a{color:var(--muted)}
-.dk-sub{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:6px;max-width:600px;margin:0 auto;width:100%}
+.dk-sub{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;max-width:600px;margin:0 auto;width:100%}
 .dk-lbl{max-width:600px;margin:0 auto -4px;width:100%;min-height:28px;padding:2px 0;border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:800;color:var(--teal);letter-spacing:.04em;display:flex;align-items:baseline;gap:8px;white-space:nowrap;overflow:hidden;text-align:left}
 .dk-lbl i{font-style:normal;width:12px}
 .dk-head{max-width:600px;margin:0 auto -4px;width:100%;display:flex;align-items:center;gap:8px;min-width:0}
@@ -381,6 +381,8 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 .dock.folded{padding-top:4px}
 .dk-lbl small{font-weight:500;color:var(--muted);font-size:11px;letter-spacing:0}
 .td-bl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dk-sub .dk-gedo{flex-direction:row;gap:4px;font-size:13px;color:var(--muted);font-weight:600} .dk-gedo small{font-family:var(--f-num);font-size:13px;color:var(--teal)}
+.fd-gedo .fd-k,.lr-kind.k-gedo{color:var(--muted)}
 .td-bl button{min-height:56px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;padding:6px 12px}
 .td-bl button b{grid-row:1/3;font-family:var(--f-num);font-size:26px;font-weight:600;min-width:22px;text-align:center} .td-bl button span{font-weight:700;font-size:15px;line-height:1.1} .td-bl button small{font-size:11px;color:var(--muted);line-height:1.1}
 .td-bl button[data-act=bite] b{color:var(--amber)} .td-bl button[data-act=lost] b{color:var(--pink)}
@@ -798,7 +800,8 @@ const PART={N:'ミヨシ',S:'トモ',E:'右舷',W:'左舷',NE:'右ミヨシ',NW:
 const OPP=d=>DIRS[(DIRS.indexOf(d)+4)%8];
 const flowName=d=>(!d||d==='C')?'潮止まり':PART[OPP(d)]+'→'+PART[d];
 const SPEED_JP={slow:'緩い',normal:'普通',fast:'速い'};
-const KIND_JP={catch:'釣れた',bite:'アタリ',lost:'バラシ'};
+const KIND_JP={catch:'釣れた',bite:'アタリ',lost:'バラシ',gedo:'外道'};
+const GEDO_DEF=['トラフグ','サバフグ','サワラ','アジ'];const gedoNames=()=>[...new Set(GEDO_DEF.concat((S.cfg.gedo||[])))];
 const vec=d=>{const a=DIRS.indexOf(d)*Math.PI/4;return [Math.sin(a),-Math.cos(a)]};
 function absFlow(st){if(!st||!st.flow||st.flow==='C'||!st.heading||st.heading==='C')return '';return HEAD_JP[DIRS[(DIRS.indexOf(st.heading)+DIRS.indexOf(st.flow))%8]]+'へ'}
 
@@ -1261,7 +1264,7 @@ function condHTML(st){
   return `${uiBoat(st.flow)}<span class="ct"><b>${flowName(st.flow)}${st.flow!=='C'?`・${SPEED_JP[st.speed]||''}`:''}${st.double?'・二枚潮':''}</b><small>船首 ${HEAD_JP[st.heading||'C']}${ab?'・潮は'+ab:''}・${hm(st.t)}から</small></span><span class="go">変わった</span>`}
 function evGearText(e){const gs=e.gsp||e.sp,s=spOf(gs);return [listName(gs,'rigs',e.rig),s.baitLabel?listName(gs,'baits',e.bait):'',e.size?sizeText(e.sp,e.size):'',e.src==='button'?'ボタン':'',e.memo||''].filter(Boolean).join('・')}
 function sizeText(sp,v){const u=spOf(sp).sizeUnit;return u==='指'?'指'+v:v+(u||'')}
-function logRow(e,idx,tid){const s=spOf(e.sp);const kind=e.kind==='catch'?`${esc(s.variants.length>1?vShort(e.sp,e.v):s.name)}${idx?` ${idx}${esc(s.unit)}目`:''}`:KIND_JP[e.kind];
+function logRow(e,idx,tid){const s=spOf(e.sp);const kind=e.kind==='gedo'?'外道 '+esc(e.name||''):e.kind==='catch'?`${esc(s.variants.length>1?vShort(e.sp,e.v):s.name)}${idx?` ${idx}${esc(s.unit)}目`:''}`:KIND_JP[e.kind];
   return `<li><button class="logrow" data-act="editEv" data-id="${e.id}"${tid?` data-tid="${tid}"`:''}><span class="lr-time">${hm(e.t)}</span><span class="lr-kind k-${e.kind}">${kind}</span><span class="lr-gear">${esc(evGearText(e))}</span></button></li>`}
 /* sunrise / sunset (NOAA sunrise equation) */
 const ST_LL={D3:[36.3,140.567],D2:[35.933,140.7],CS:[35.75,140.867],ZF:[35.133,140.25],MR:[34.917,139.833],TT:[34.983,139.85],KZ:[35.367,139.917],QL:[35.567,140.05],TK:[35.65,139.767],KW:[35.517,139.75],QS:[35.45,139.65],QN:[35.283,139.65],Z1:[35.167,139.617],D8:[35.3,139.483],OD:[35.233,139.15],Z3:[34.9,139.133]};
@@ -1303,7 +1306,7 @@ function feedRow(tr,it,idx){const time=`<span class="fd-t">${hm(it.t)}</span>`;
   if(it.kind==='bait')return `<li class="fd fd-sys">${time}<span class="fd-b">${esc(spOf(it.g.sp).baitLabel||'餌')}を<b>${esc(listName(it.g.sp,'baits',it.g.bait))}</b>に変更</span></li>`;
   if(it.kind==='state'){const q=it.st,e=effState(tr,q,q.t);return `<li><button class="fd fd-state" data-act="stEdit2" data-id="${q.id}">${time}<span class="fd-ic">${uiBoat(e.flow||'C',22,32)}</span><span class="fd-b"><b>船首 ${HEAD_JP[q.heading||'C']}${q.until?`<i class="fd-rng">〜${hm(q.until)}</i>`:''}</b><small>${e.flow?`${e.flow==='C'?'潮止まり':flowName(e.flow)+'・'+(SPEED_JP[e.speed]||'')}${q.auto?'（自動）':''}`:''}${q.double?'・二枚潮':''}</small></span></button></li>`}
   const e=it.e,s=spOf(e.sp);const gs=e.gsp||e.sp;
-  const what=e.kind==='catch'?(e.sp==='tachiuo'||s.variants.length<2?s.name:vShort(e.sp,e.v)):KIND_JP[e.kind];
+  const what=e.kind==='gedo'?'外道 '+(e.name||''):e.kind==='catch'?(e.sp==='tachiuo'||s.variants.length<2?s.name:vShort(e.sp,e.v)):KIND_JP[e.kind];
   const gear=e.rig?listName(gs,'rigs',e.rig):'';
   const n=e.kind==='catch'?catchesOf(tr,e.sp).indexOf(e)+1:0;
   return `<li><button class="fd fd-${e.kind}${e.sp!==(tr.cur&&tr.cur.sp)&&e.kind==='catch'?' fd-gedo':''}" data-act="editEv" data-id="${e.id}">${time}<span class="fd-k">${esc(what)}${n?`<i>${n}${esc(s.unit)}目</i>`:''}${e.dragon?'<em class="dragon"><i class="ic ic-dragon"></i>ドラゴン</em>':''}</span><span class="fd-b">${esc(gear)}${e.size?`<small>${esc(sizeText(e.sp,e.size))}</small>`:''}${e.memo?`<small>${esc(e.memo)}</small>`:''}</span></button></li>`}
@@ -1320,7 +1323,7 @@ function dockHTML(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);let main='';
   if(SOLO&&!isTenya(sp,g))main='';
   const fold=!!S.ui.dockFold;const due=tr.planEnd&&Date.now()>tr.planEnd;
   return `<div class="dock ${fold?'folded':''}" id="dock">${due?`<div class="dk-end" id="dkEnd"><small>沖上がりの時刻（${hm(tr.planEnd)}）を過ぎました</small><button class="btn end" data-act="end">沖上がり（記録を終える）</button></div>`:''}${main?`<div class="dk-head"><button class="dk-lbl" data-act="dockFold" aria-expanded="${!fold}"><i>${fold?'▸':'▾'}</i>${isTenya(sp,g)?`使用テンヤを変更<small>${fold?'今：'+esc(curRigLabel(tr)):'切り替えのみ'}</small>`:'釣れた'}</button>${isTenya(sp,g)?`<button class="dk-listed" data-act="dayListEdit">✎ 今日のリストを編集<small>${esc(setName(g.set))}</small></button>`:''}</div>${fold?'':`<div class="dk-row">${main}</div>`}`:''}
-   <div class="dk-sub"><button data-act="state" data-id="${tr.id}">船の向き</button>${SOLO?'':'<button data-act="gedoPick">ほかの魚</button>'}<button data-act="undo">取り消し</button></div></div>`}
+   <div class="dk-sub"><button data-act="state" data-id="${tr.id}">船の向き</button><button class="dk-gedo" data-act="gedoOpen">外道<small>${nKind(tr,sp,'gedo')||''}</small></button>${SOLO?'':'<button data-act="gedoPick">ほかの魚</button>'}<button data-act="undo">取り消し</button></div></div>`}
 const DOCK_MAX=15;
 let dragonNext=false;
 function headBtn(tr){const now=Date.now();const q=headSegs(tr,Math.max(now+1,tr.planEnd||0)).find(x=>x.t<=now&&x.te>now);if(!q)return `<button class="tb-btn need" data-act="state" data-id="${tr.id}"><span>船の向き（任意）</span><b>未登録 ＋</b></button>`;
@@ -1354,6 +1357,9 @@ function viewActive(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);const c=catc
 function gedoBtns(tr){const tsp=tr.cur.sp;const seen=[];sortEv(tr).forEach(e=>{if(e.kind==='catch'&&e.sp!==tsp){const k=e.sp+'|'+e.v;if(!seen.includes(k))seen.push(k)}});
   return seen.map(k=>{const [sp,v]=k.split('|');const s=spOf(sp);return `<button class="gbtn" data-act="gedo" data-sp="${sp}" data-v="${v}">${esc(s.variants.length>1?vShort(sp,v):s.name)} ＋1</button>`}).join('')}
 let lastTap=0;
+function addGedo(name){const tr=active();if(!tr||!name)return;const g=curGear(tr),now=Date.now();const e={id:uid(),t:now,kind:'gedo',name,sp:tr.cur.sp,gsp:tr.cur.sp,rig:g.rig,bait:needBait(tr.cur.sp,g)?g.bait:'',size:''};
+  tr.events.push(e);touch(tr);buzz();$('#sheet').hidden=true;sheetCtx=null;render();const id=tr.id;
+  toast(`${hm(now)} 外道 ${name} を記録`,'取り消す',()=>{const t=S.trips[id];t.events=t.events.filter(x=>x.id!==e.id);touch(t);render()})}
 function addEvent(kind,v,src,osp,rig){const tr=active();if(!tr)return;const now=Date.now();if(now-lastTap<450)return;lastTap=now;
   const tsp=tr.cur.sp,g=curGear(tr),sp=osp||tsp;if(rig&&rig!==g.rig){g.rig=rig;logGear(tr)}const e={id:uid(),t:now,kind,sp,gsp:tsp,rig:g.rig,bait:needBait(tsp,g)?g.bait:'',size:''};if(kind==='catch')e.v=v||mainV(sp);if(kind==='catch'&&sp==='tachiuo'&&dragonNext){e.dragon=true;dragonNext=false}if(src)e.src=src;
   tr.events.push(e);touch(tr);buzz();keepAwake();
@@ -1522,7 +1528,7 @@ function seatStatsHTML(sp){const real=trips().filter(t=>!t.sample&&t.status==='d
 function tripCardHTML(t){return `<div class="trip"><div class="trip-h"><div style="min-width:0"><b>${jdate(t.date)}</b>${isTairyo(t.date)?tairyoTag():''}<div class="muted">${esc(t.boat)}・${esc(seatLabel(t))}${t.port?'・'+esc(t.port):''}</div></div></div>
     <div class="trip-sum">${esc(tripSummary(t))||'記録なし'}${nDragon(t,'tachiuo')?`<span class="dn-s"><i class="ic ic-dragon"></i>ドラゴン ${nDragon(t,'tachiuo')}</span>`:''}</div>
     <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>
-    <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm" data-act="tripEdit" data-id="${t.id}">直す</button>
+    <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm" data-act="tripEdit" data-id="${t.id}">直す</button><button class="btn sm" data-act="evList" data-id="${t.id}">記録を修正</button>
     ${t.status==='done'&&!t.sample&&!active()?`<button class="btn sm" data-act="reopen" data-id="${t.id}">記録を再開</button>`:''}
     <button class="btn sm danger" data-act="delTrip" data-id="${t.id}">${t.sample?'サンプルを消す':'消す'}</button></div></div>`}
 const tripHours=t=>Math.max(0,((t.end||(t.status==='active'?Date.now():t.planEnd)||t.start)-t.start)/3600e3);
@@ -1721,7 +1727,7 @@ function renderStateSheet(){const f=stF,tr=S.trips[f.tid];const AR={N:'↑',NE:'
   $('#sheet').hidden=false;sheetCtx={kind:'state'}}
 let evF=null;
 function openEvSheet(id,tid){const tr=S.trips[tid||(active()&&active().id)];if(!tr)return;const e=tr.events.find(x=>x.id===id);if(!e)return;
-  evF={tid:tr.id,id,dragon:!!e.dragon,kind:e.kind,sp:spOf(e.sp).id!=='?'?e.sp:tr.cur.sp,gsp:e.gsp||e.sp,v:e.v,t:hm2(e.t),rig:e.rig,bait:e.bait,size:e.size===undefined||e.size===null?'':String(e.size),memo:e.memo||'',armed:false};renderEvSheet()}
+  evF={tid:tr.id,id,dragon:!!e.dragon,kind:e.kind,name:e.name||'',sp:spOf(e.sp).id!=='?'?e.sp:tr.cur.sp,gsp:e.gsp||e.sp,v:e.v,t:hm2(e.t),rig:e.rig,bait:e.bait,size:e.size===undefined||e.size===null?'':String(e.size),memo:e.memo||'',armed:false};renderEvSheet()}
 function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.some(v=>v.id===f.v))f.v=mainV(f.sp);
   const sel=k=>{if(k==='rigs'&&gs.catalog){const tr=S.trips[f.tid];const ids=[...new Set([f.rig,...(tr.cur&&tr.cur.g&&tr.cur.g[f.gsp]?dayTenya(tr,f.gsp):[]),...tr.events.map(e=>e.rig),...myTenya()].filter(Boolean))].filter(id=>tenyaOf(id));
       return `<option value="" ${!f.rig?'selected':''}>未選択</option><optgroup label="テンヤ">`+ids.map(id=>`<option value="${id}" ${id===f.rig?'selected':''}>${esc(tenyaFull(id))}</option>`).join('')+`</optgroup><optgroup label="天秤">`+(gs.rigs||[]).map(g=>`<option value="${g.id}" ${g.id===f.rig?'selected':''}>${esc(g.name)}</option>`).join('')+'</optgroup>'}
@@ -1729,7 +1735,8 @@ function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.
   const sizeUI=!s.sizeUnit?'':s.sizeUnit==='指'?`<div class="chips">${['','2','2.5','3','3.5','4','4.5','5','5.5','6'].map(x=>`<button class="chip ${f.size===x?'on':''}" data-act="evSize" data-d="${x}">${x?'指'+x:'未記入'}</button>`).join('')}</div>`
     :`<div class="grow"><input type="number" inputmode="decimal" id="evSize" data-ef="size" value="${esc(f.size)}" placeholder="${s.sizeUnit==='cm'?'例：95':'未記入'}" min="0" max="200" step="0.5"><span class="muted">${esc(s.sizeUnit)}</span></div>`;
   $('#sheetPanel').innerHTML=`<div class="sheet-h"><h2>記録を直す</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
-   <div class="seg">${['catch','bite','lost'].map(k=>`<button class="${f.kind===k?'on':''}" data-act="evKind" data-d="${k}">${KIND_JP[k]}</button>`).join('')}</div>
+   ${f.kind==='gedo'?`<label class="field"><span>外道の魚</span><input type="text" id="evName" data-ef="name" value="${esc(f.name||'')}" list="gedoList"><datalist id="gedoList">${gedoNames().map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>`:''}
+   <div class="seg">${(f.kind==='gedo'?['gedo','catch','bite','lost']:['catch','bite','lost']).map(k=>`<button class="${f.kind===k?'on':''}" data-act="evKind" data-d="${k}">${KIND_JP[k]}</button>`).join('')}</div>
    ${SOLO?'':`<div class="field"><span>魚種</span><div class="chips">${S.cfg.species.filter(x=>!x.hidden||x.id===f.sp).map(x=>`<button class="chip ${x.id===f.sp?'on':''}" data-act="evSp" data-d="${x.id}">${esc(x.name)}</button>`).join('')}</div></div>`}
    ${f.kind==='catch'&&f.sp==='tachiuo'?`<label class="check"><input type="checkbox" id="evDragon" ${f.dragon?'checked':''}><i class="ic ic-dragon lg"></i>ドラゴン（120cm以上）</label>`:''}
    ${f.kind==='catch'&&s.variants.length>1?`<div class="field"><span>種類</span><div class="chips">${s.variants.map(v=>`<button class="chip ${v.id===f.v?'on':''}" data-act="evV" data-d="${v.id}">${esc(v.name)}</button>`).join('')}</div></div>`:''}
@@ -1847,6 +1854,14 @@ const acts={
   catchT:b=>{const tr=active();if(!tr)return;addEvent('catch',mainV(tr.cur.sp),null,null,b.dataset.rig)},
   dayListEdit:()=>{const tr=active();if(!tr)return;const g=curGear(tr);const set=g.set&&g.set!=='mine'&&TEN().sets.find(x=>x.id===g.set);
     if(set)tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'set',setId:set.id};else tb={q:'',z:'',m:'',only:'mine',mode:'mine'};openTenyaSheet()},
+  gedoOpen:()=>{const tr=active();if(!tr)return;const cnt={};tr.events.filter(e=>e.kind==='gedo').forEach(e=>cnt[e.name]=(cnt[e.name]||0)+1);const own=S.cfg.gedo||[];
+    openSheet(`<div class="sheet-h"><h2>外道を記録</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">タチウオ以外に釣れた魚を、今の時刻と使用テンヤで1匹記録します（タチウオの本数には入りません）。</p>
+     <div class="vbtns">${gedoNames().map(n=>`<button class="vbtn" data-act="gedoAdd" data-name="${esc(n)}"><span>${esc(n)}</span><b>＋1${cnt[n]?`（${cnt[n]}）`:''}</b></button>`).join('')}</div>
+     <div class="field"><span>自分で追加</span><div style="display:flex;gap:8px"><input type="text" id="gedoNew" placeholder="例：カサゴ、イナダ" style="flex:1;min-width:0"><button class="btn sm" data-act="gedoNew">追加して＋1</button></div></div>
+     ${own.length?`<p class="muted" style="margin:0;font-size:13px">自分で追加した魚：${own.map(n=>`<button class="inl" data-act="gedoDel" data-name="${esc(n)}">${esc(n)} ×</button>`).join('　')}</p>`:''}`,{kind:'gedo'})},
+  gedoAdd:b=>addGedo(b.dataset.name),
+  gedoNew:()=>{const v=($('#gedoNew').value||'').trim();if(!v)return toast('魚の名前を入れてください');if(!gedoNames().includes(v)){S.cfg.gedo=(S.cfg.gedo||[]).concat([v]);cfgTouch()}addGedo(v)},
+  gedoDel:b=>{const n=b.dataset.name;if(!confirm(`「${n}」を候補から外しますか？（記録は消えません）`))return;S.cfg.gedo=(S.cfg.gedo||[]).filter(x=>x!==n);cfgTouch();acts.gedoOpen()},
   dockFold:()=>{S.ui.dockFold=!S.ui.dockFold;saveLocal();render()},
   dockSel:b=>{const tr=active();if(!tr)return;const g=curGear(tr),id=b.dataset.rig;if(g.rig===id){toast(`使用テンヤは ${tenyaLabel(id)} です。釣れたら「釣れた＋1」`);return}g.rig=id;logGear(tr);touch(tr);render();scrollTo({top:0,behavior:'smooth'});toast(`使用テンヤを ${tenyaLabel(id)} に切り替えました`)},
   baitPick:()=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);openSheet(`<div class="sheet-h"><h2>${esc(spOf(sp).baitLabel)}を変える</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${chipsHTML(sp,'baits',g.bait,'setBaitS')}`,{kind:'bait'})},
@@ -1904,7 +1919,7 @@ const acts={
   setBait:b=>{const tr=active();curGear(tr).bait=b.dataset.id;S.prefs.g[tr.cur.sp]={...curGear(tr)};logGear(tr);touch(tr);render()},
   state:b=>openStateSheet(b.dataset.id),
   editEv:b=>openEvSheet(b.dataset.id,b.dataset.tid),
-  evList:b=>{const tr=S.trips[b.dataset.id],ev=sortEv(tr);openSheet(`<div class="sheet-h"><h2>釣果の記録を直す</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><ol class="log">${ev.slice().reverse().map(e=>logRow(e,e.kind==='catch'?catchesOf(tr,e.sp).indexOf(e)+1:0,tr.id)).join('')||'<li class="empty">記録がありません</li>'}</ol>`,{kind:'evlist'})},
+  evList:b=>{const tr=S.trips[b.dataset.id],ev=sortEv(tr);openSheet(`<div class="sheet-h"><h2>記録を修正</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">直したい行を押すと、時刻・テンヤ・種類（釣れた／アタリ／バラシ）などを直したり、消したりできます。</p><ol class="log">${ev.slice().reverse().map(e=>logRow(e,e.kind==='catch'?catchesOf(tr,e.sp).indexOf(e)+1:0,tr.id)).join('')||'<li class="empty">記録がありません</li>'}</ol>`,{kind:'evlist'})},
   end:b=>{if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='もう一度押すと記録を終えます';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent='沖上がり（記録を終える）'}},3500);return}
     const tr=active();const now=Date.now();tr.end=(tr.planEnd&&now>tr.planEnd)?tr.planEnd:now;tr.status='done';S.activeId=null;releaseAwake();S.ui.tab='fig';S.ui.figTrip=tr.id;S.ui.figSp=mainSp(tr);touch(tr);render();scrollTo(0,0);toast(`おつかれさまでした。${tripSummary(tr)}の記録を図にしました`)},
   btnImport:()=>{imp={text:'',rows:null,sel:new Set(),armed:false};openImportSheet()},
@@ -1931,7 +1946,7 @@ const acts={
   evKind:b=>{evF.kind=b.dataset.d;renderEvSheet()},evSize:b=>{evF.size=b.dataset.d;renderEvSheet()},evV:b=>{evF.v=b.dataset.d;renderEvSheet()},
   evSp:b=>{if(evF.sp===b.dataset.d)return;evF.sp=b.dataset.d;evF.v=mainV(evF.sp);evF.size='';renderEvSheet()},
   evSave:()=>{const f=evF,tr=S.trips[f.tid],e=tr.events.find(x=>x.id===f.id);const dc=$('#evDragon');if(dc)f.dragon=dc.checked;if(f.kind==='catch'&&f.sp==='tachiuo'&&f.dragon)e.dragon=true;else delete e.dragon;
-    Object.assign(e,{kind:f.kind,sp:f.sp,gsp:f.gsp,v:f.kind==='catch'?f.v:undefined,t:tAt(tr,f.t)+(new Date(e.t).getSeconds()*1000),rig:f.rig,bait:f.bait,size:f.kind==='catch'?f.size:'',memo:f.memo.trim()});touch(tr);closeSheet();toast('直しました')},
+    Object.assign(e,{kind:f.kind,sp:f.sp,gsp:f.gsp,v:f.kind==='catch'?f.v:undefined,t:tAt(tr,f.t)+(new Date(e.t).getSeconds()*1000),rig:f.rig,bait:f.bait,size:f.kind==='catch'?f.size:'',memo:f.memo.trim()});if(f.kind==='gedo')e.name=(f.name||'').trim()||e.name;else delete e.name;touch(tr);closeSheet();toast('直しました')},
   evDel:()=>{if(!evF.armed){evF.armed=true;return renderEvSheet()}const tr=S.trips[evF.tid];tr.events=tr.events.filter(x=>x.id!==evF.id);touch(tr);closeSheet();toast('消しました')},
   png:b=>savePng(b.dataset.which),
   figSp:b=>{S.ui.figSp=b.dataset.id;saveLocal();render()},
