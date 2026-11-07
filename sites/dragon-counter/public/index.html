@@ -1559,7 +1559,7 @@ function timelineSVG(tr,sp){
     y+=H}
   // 誘い・掛け方：詳細モードで付けた分だけ。各記録の時刻に小さな札（上＝巻／叩、塗り＝誘い中・白抜き＝ステイ中、下＝即／深）
   const dv=tr.events.filter(e=>(e.sa||e.ka)&&['catch','bite','lost'].includes(e.kind)&&e.t>=t0&&e.t<=t1&&(e.kind!=='catch'||e.sp===sp)).sort((a,b)=>a.t-b.t);
-  if(dv.length){const kc={catch:P.catch,bite:P.bite,lost:P.lost},tw=24,gap=3,lanes=[];const placed=dv.map(e=>{const x=X(e.t);let li=lanes.findIndex(r=>r<x-tw/2-gap);if(li<0){li=lanes.length;lanes.push(-1e9)}lanes[li]=x+tw/2;return {e,x,li}});
+  if(dv.length){const kc={catch:P.catch,bite:P.bite,lost:P.lost},tw=24,gap=3,lanes=[];const placed=dv.map(e=>{const x=Math.min(Math.max(X(e.t),L+tw/2),W-14-tw/2);let li=lanes.findIndex(r=>r<x-tw/2-gap);if(li<0){li=lanes.length;lanes.push(-1e9)}lanes[li]=x+tw/2;return {e,x,li}});
     const nl=Math.min(lanes.length,4),th=34,H=34+nl*(th+6)+8,top=y;band(top,H,'#f2f0f8');label(top,'誘い・掛け方','詳細モードの記録');
     placed.filter(q=>q.li<nl).forEach(({e,x,li})=>{const yy=top+30+li*(th+6),c=kc[e.kind],mv=e.sa&&e.sa.endsWith('move'),st=e.sa&&e.sa.endsWith('stay');
       o.push(`<rect x="${r1(x-tw/2)}" y="${yy}" width="${tw}" height="${th}" rx="5" fill="${mv?c:'#fff'}" stroke="${c}" stroke-width="1.8"/>`);
