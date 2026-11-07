@@ -1493,7 +1493,7 @@ const vColor=(sp,vid)=>VC[Math.max(0,spOf(sp).variants.findIndex(v=>v.id===vid))
 function TX(x,y,s,o={}){return `<text x="${r1(x)}" y="${r1(y)}" font-size="${o.size||13}" fill="${o.fill||P.ink}"${o.anchor?` text-anchor="${o.anchor}"`:''}${o.bold?' font-weight="700"':''}>${esc(s)}</text>`}
 function clip(s,maxW,px){const n=Math.floor(maxW/px);return s.length<=n?s:(n>=3?s.slice(0,n-1)+'…':'')}
 function range(tr){const ts=[tr.start,...tr.events.map(e=>e.t),...(tr.states||[]).map(s=>s.t)].filter(Boolean);
-  let a=Math.min(...ts),b=Math.max(tr.end||(tr.status==='active'?Math.max(Date.now(),tr.planEnd||0):0),...ts);const q=15*60e3;a=Math.floor(a/q)*q;b=Math.ceil(b/q)*q;if(b-a<3600e3)b=a+3600e3;return [a,b]}
+  let a=Math.min(...ts),b=Math.max(tr.end||(tr.status==='active'?(tr.planEnd||Date.now()):0),...ts);const q=15*60e3;a=Math.floor(a/q)*q;b=Math.ceil(b/q)*q;if(b-a<3600e3)b=a+3600e3;return [a,b]}
 function tlTitle(tr,sp){const s=spOf(sp),c=catchesOf(tr,sp),N=c.length;if(!N){const b=nKind(tr,sp,'bite');return `${s.name}は釣果なし`+(b?`（アタリ${b}回）`:'')}
   const bins={};c.forEach(e=>{const h=new Date(e.t).getHours();bins[h]=(bins[h]||0)+1});let ph=null,pk=0;Object.keys(bins).map(Number).sort((a,b)=>a-b).forEach(h=>{if(bins[h]>pk){pk=bins[h];ph=h}});
   if(pk<=1)return `${s.name}は計${N}${s.unit}（${hm(c[0].t)}〜${hm(c[N-1].t)}）`;
