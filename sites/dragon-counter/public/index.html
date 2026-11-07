@@ -1597,7 +1597,7 @@ function seatSVG(tr,sp){
   for(const side of ['L','R'])for(let i=1;i<=n;i++){const x=side==='L'?xl:xr,y=ys(i),me=tr.side===side&&tr.seat===i;
     o.push(me?`<circle cx="${x}" cy="${r1(y)}" r="13" fill="${P.catch}" stroke="#fff" stroke-width="3"/>`:`<circle cx="${x}" cy="${r1(y)}" r="6.5" fill="${P.seatOff}"/>`)}
   {const y=ys(tr.seat),R=tr.side==='R',x=R?xr+28:xl-28,an=R?'start':'end';o.push(TX(x,y-12,seatShort(tr),{size:17,bold:1,anchor:an}));o.push(TX(x,y+32,`${N}${s.unit}`,{size:42,bold:1,fill:P.catch,anchor:an}))}
-  let y=746;const X0=32,X1=310;const span=(tr.end||(tr.status==='active'?Date.now():ev.length?ev[ev.length-1].t:tr.start))-tr.start;
+  let y=746;const X0=32,X1=310;const span=tripEndT(tr,ev.length?ev[ev.length-1].t:tr.start)-tr.start;
   o.push(TX(X0,y,`${s.name}の合計`,{size:15,fill:P.muted}));o.push(TX(X0,y+62,`${N}${s.unit}`,{size:62,bold:1,fill:P.catch}));
   o.push(TX(X1,y,`1時間あたり ${span>0?r1(N/(span/3600e3)):0}${s.unit}`,{size:17}));o.push(TX(X1,y+30,`アタリ ${nKind(tr,sp,'bite')}回・バラシ ${nKind(tr,sp,'lost')}回`,{size:17}));
   o.push(TX(X1,y+60,`${hm(tr.start)}〜${tr.end?hm(tr.end):tr.planEnd?hm(tr.planEnd)+'（予定）':'記録中'}（${dur(Math.max(0,span))}）`,{size:17,fill:P.muted}));y+=92;
@@ -1652,7 +1652,9 @@ function tripCardHTML(t){return `<div class="trip"><div class="trip-h"><div styl
     <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm two" data-act="tripEdit" data-id="${t.id}">釣行の情報を直す<small>日付・船・席・時間</small></button><button class="btn sm two" data-act="evList" data-id="${t.id}">釣果の記録を修正<small>釣れた・アタリ・バラシ・外道を1件ずつ</small></button>
     ${t.status==='done'&&!t.sample&&!active()?`<button class="btn sm" data-act="reopen" data-id="${t.id}">記録を再開</button>`:''}
     <button class="btn sm danger" data-act="delTrip" data-id="${t.id}">${t.sample?'サンプルを消す':'消す'}</button></div></div>`}
-const tripHours=t=>Math.max(0,((t.end||(t.status==='active'?Date.now():t.planEnd)||t.start)-t.start)/3600e3);
+// 釣りの時間：終了時刻、なければ沖上がり予定まで（予定を過ぎても延ばさない）
+const tripEndT=(t,fb)=>t.end||(t.planEnd?(t.status==='active'?Math.min(Date.now(),t.planEnd):t.planEnd):t.status==='active'?Date.now():(fb||t.start));
+const tripHours=t=>Math.max(0,(tripEndT(t)-t.start)/3600e3);
 function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYear());
   const all=trips().filter(t=>!t.sample);const L=per==='year'?all.filter(t=>t.date.startsWith(y0)):per==='90'?all.filter(t=>Date.now()-dayStart(t.date)<=90*864e5):all;
   const seg=`<div class="seg dseg">${[['all','全期間'],['year',y0+'年'],['90','直近90日']].map(([k,l])=>`<button class="${per===k?'on':''}" data-act="dashPer" data-d="${k}">${l}</button>`).join('')}</div>`;
