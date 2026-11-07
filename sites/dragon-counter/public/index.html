@@ -1535,6 +1535,23 @@ function timelineSVG(tr,sp){
     ev.filter(e=>e.kind!=='catch').forEach(e=>{const x=X(e.t),yy=top+186;
       o.push(e.kind==='bite'?`<polygon points="${r1(x-5.5)},${yy-5} ${r1(x+5.5)},${yy-5} ${r1(x)},${yy+5}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`:`<polygon points="${r1(x-5.5)},${yy+5} ${r1(x+5.5)},${yy+5} ${r1(x)},${yy-5}" fill="none" stroke="${P.lost}" stroke-width="1.8"/>`)});
     y+=H}
+  // 誘い・掛け方：詳細モードで付けた分だけ。各記録の時刻に小さな札（上＝巻／叩、塗り＝誘い中・白抜き＝ステイ中、下＝即／深）
+  const dv=tr.events.filter(e=>(e.sa||e.ka)&&['catch','bite','lost'].includes(e.kind)&&e.t>=t0&&e.t<=t1&&(e.kind!=='catch'||e.sp===sp)).sort((a,b)=>a.t-b.t);
+  if(dv.length){const kc={catch:P.catch,bite:P.bite,lost:P.lost},tw=24,gap=3,lanes=[];const placed=dv.map(e=>{const x=X(e.t);let li=lanes.findIndex(r=>r<x-tw/2-gap);if(li<0){li=lanes.length;lanes.push(-1e9)}lanes[li]=x+tw/2;return {e,x,li}});
+    const nl=Math.min(lanes.length,4),th=34,H=34+nl*(th+6)+8,top=y;band(top,H,'#f2f0f8');label(top,'誘い・掛け方','詳細モードの記録');
+    placed.filter(q=>q.li<nl).forEach(({e,x,li})=>{const yy=top+30+li*(th+6),c=kc[e.kind],mv=e.sa&&e.sa.endsWith('move'),st=e.sa&&e.sa.endsWith('stay');
+      o.push(`<rect x="${r1(x-tw/2)}" y="${yy}" width="${tw}" height="${th}" rx="5" fill="${mv?c:'#fff'}" stroke="${c}" stroke-width="1.8"/>`);
+      if(e.sa)o.push(TX(x,yy+14,e.sa.startsWith('maki')?'巻':'叩',{size:12,bold:1,fill:mv?'#fff':c,anchor:'middle'}));
+      if(e.ka)o.push(TX(x,yy+29,e.ka==='soku'?'即':'深',{size:11.5,bold:1,fill:mv?'#fff':c,anchor:'middle'}))});
+    y+=H+10;
+    // 集計表
+    const cnt=(f,k)=>dv.filter(e=>f(e)&&e.kind===k).length,rows=SA_KEYS.map(k=>[SA_JP[k],e=>e.sa===k]).concat(KA_KEYS.map(k=>[KA_JP[k],e=>e.ka===k])).filter(([,f])=>dv.some(f));
+    const RH=24,TH=46+rows.length*RH+10,tt=y;band(tt,TH,'#f2f0f8');o.push(TX(26,tt+24,'誘い・掛け方ごとの数',{size:15,bold:1}));
+    const cx=[W*0.42,W*0.56,W*0.70,W*0.86];['釣れた','アタリ','バラシ','取り込み'].forEach((h,i)=>o.push(TX(cx[i],tt+24,h,{size:12,fill:P.muted,anchor:'middle'})));
+    rows.forEach(([nm,f],i)=>{const yy=tt+48+i*RH,a=cnt(f,'catch'),b=cnt(f,'bite'),l=cnt(f,'lost');if(i===SA_KEYS.filter(k=>dv.some(e=>e.sa===k)).length&&i)o.push(`<line x1="26" y1="${yy-16}" x2="${W-26}" y2="${yy-16}" stroke="${P.grid}"/>`);
+      o.push(TX(40,yy,nm,{size:13,bold:1}));[[a,P.catch],[b,P.bite],[l,P.lost]].forEach(([v,c],j)=>o.push(TX(cx[j],yy,v,{size:14,bold:1,fill:v?c:P.muted,anchor:'middle'})));
+      o.push(TX(cx[3],yy,a+l?Math.round(a/(a+l)*100)+'%':'—',{size:13,fill:P.ink,anchor:'middle'}))});
+    o.push(TX(W-26,tt+TH-8,'取り込み＝釣れた÷（釣れた＋バラシ）',{size:10.5,fill:P.muted,anchor:'end'}));y+=TH+10}
   const H1=3600e3;for(let h=Math.ceil(t0/H1)*H1;h<=t1;h+=H1){const x=X(h);under.push(`<line x1="${r1(x)}" y1="${gridTop}" x2="${r1(x)}" y2="${y}" stroke="${P.grid}" stroke-dasharray="3 4"/>`);o.push(TX(x,y+20,hm(h),{size:12,fill:P.muted,anchor:'middle'}))}
   const marks=[[tr.start,'出船 '+hm(tr.start),'start']];if(tr.end)marks.push([tr.end,'沖上がり '+hm(tr.end),'end']);
   marks.forEach(([t,lb,k])=>{const x=X(t);o.push(`<path d="M${r1(x)},${y+26} l-4,7 h8 z" fill="${P.ink}"/>`);o.push(TX(k==='start'?x-4:x+4,y+46,lb,{size:11,anchor:k==='start'?'start':'end'}))});
@@ -1544,6 +1561,7 @@ function timelineSVG(tr,sp){
   leg(x=>`<polygon points="${x},${y-9} ${x+11},${y-9} ${x+5.5},${y+1}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`,'アタリ');
   leg(x=>`<polygon points="${x},${y+1} ${x+11},${y+1} ${x+5.5},${y-9}" fill="none" stroke="${P.lost}" stroke-width="1.8"/>`,'バラシ');
   o.push(`<rect x="${lx}" y="${y-9}" width="20" height="8" rx="4" fill="${P.slow}"/><rect x="${lx+22}" y="${y-9}" width="20" height="8" rx="4" fill="${P.normal}"/><rect x="${lx+44}" y="${y-9}" width="20" height="8" rx="4" fill="${P.fast}"/>`+TX(lx+72,y,'潮の速さ（緩い・普通・速い）',{size:12,fill:P.muted}));
+  if(dv.length){y+=22;o.push(`<rect x="24" y="${y-12}" width="16" height="16" rx="3" fill="${P.catch}"/>`+TX(32,y+1,'巻',{size:10,bold:1,fill:'#fff',anchor:'middle'})+TX(46,y,'誘い中（塗り）',{size:12,fill:P.muted})+`<rect x="140" y="${y-12}" width="16" height="16" rx="3" fill="#fff" stroke="${P.catch}" stroke-width="1.6"/>`+TX(148,y+1,'叩',{size:10,bold:1,fill:P.catch,anchor:'middle'})+TX(162,y,'ステイ中（白抜き）　巻＝巻き　叩＝叩き　即＝即掛け　深＝深追い　枠の色＝釣れた／アタリ／バラシ',{size:12,fill:P.muted}))}
   y+=22;o.push(TX(24,y,tr.station?`※潮位は気象庁の潮位表（${stName(tr.station)}）をもとに計算した推算値です。潮の向きは船首を上にしたときの、潮が流れていく向きです。`:'※潮位は満潮・干潮の時刻と潮位から補間した概形です。潮の向きは船首を上にしたときの、潮が流れていく向きです。',{size:11,fill:P.muted}));
   y+=18;o.push(TX(24,y,'※本数は自分の席で釣れた分だけです。',{size:11,fill:P.muted}));const Ht=y+20;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}" font-family="${CF}" role="img" aria-label="${esc(tlTitle(tr,sp))}"><rect width="${W}" height="${Ht}" rx="16" fill="${P.card}"/>${under.join('')}${o.join('')}</svg>`}
