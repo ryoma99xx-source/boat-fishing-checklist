@@ -1841,15 +1841,16 @@ function renderStateSheet(){const f=stF,tr=S.trips[f.tid];const AR={N:'↑',NE:'
    ${others.length?`<div class="field"><span>これまでの船の向き（タップで直す）</span><div class="prevlist">${others.map(x=>{const e=effState(tr,x,x.t);return `<button data-act="stEdit" data-id="${x.id}">${hm(x.t)}〜${x.until?hm(x.until):''}　船首${HEAD_JP[x.heading||'C']}　${e.flow?flowName(e.flow):''}${x.auto?'（自動）':''}</button>`}).join('')}</div></div>`:''}`;
   $('#sheet').hidden=false;sheetCtx={kind:'state'}}
 let evF=null;
-function openEvSheet(id,tid){const tr=S.trips[tid||(active()&&active().id)];if(!tr)return;const e=tr.events.find(x=>x.id===id);if(!e)return;
-  evF={tid:tr.id,id,sa:e.sa||'',ka:e.ka||'',dragon:!!e.dragon,kind:e.kind,name:e.name||'',sp:spOf(e.sp).id!=='?'?e.sp:tr.cur.sp,gsp:e.gsp||e.sp,v:e.v,t:hm2(e.t),rig:e.rig,bait:e.bait,size:e.size===undefined||e.size===null?'':String(e.size),memo:e.memo||'',armed:false};renderEvSheet()}
+function evBack(){const tid=evF&&evF.back;if(tid&&S.trips[tid]){$('#sheet').hidden=true;sheetCtx=null;render();acts.evList({dataset:{id:tid}})}else closeSheet()}
+function openEvSheet(id,tid,back){const tr=S.trips[tid||(active()&&active().id)];if(!tr)return;const e=tr.events.find(x=>x.id===id);if(!e)return;
+  evF={tid:tr.id,back:back||null,id,sa:e.sa||'',ka:e.ka||'',dragon:!!e.dragon,kind:e.kind,name:e.name||'',sp:spOf(e.sp).id!=='?'?e.sp:tr.cur.sp,gsp:e.gsp||e.sp,v:e.v,t:hm2(e.t),rig:e.rig,bait:e.bait,size:e.size===undefined||e.size===null?'':String(e.size),memo:e.memo||'',armed:false};renderEvSheet()}
 function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.some(v=>v.id===f.v))f.v=mainV(f.sp);
   const sel=k=>{if(k==='rigs'&&gs.catalog){const tr=S.trips[f.tid];const ids=[...new Set([f.rig,...(tr.cur&&tr.cur.g&&tr.cur.g[f.gsp]?dayTenya(tr,f.gsp):[]),...tr.events.map(e=>e.rig),...myTenya()].filter(Boolean))].filter(id=>tenyaOf(id));
       return `<option value="" ${!f.rig?'selected':''}>未選択</option><optgroup label="テンヤ">`+ids.map(id=>`<option value="${id}" ${id===f.rig?'selected':''}>${esc(tenyaFull(id))}</option>`).join('')+`</optgroup><optgroup label="天秤">`+(gs.rigs||[]).map(g=>`<option value="${g.id}" ${g.id===f.rig?'selected':''}>${esc(g.name)}</option>`).join('')+'</optgroup>'}
     return (k==='baits'&&f.bait&&f.bait.startsWith('bz:')?`<option value="${esc(f.bait)}" selected>${esc(bzLabel(f.bait))}</option>`:'')+(isBzSp(f.gsp)&&k==='baits'?[BZ_DEF,'bz:hc','bz:km'].filter(x=>x!==f.bait).map(x=>`<option value="${x}">${esc(bzLabel(x))}</option>`).join(''):'')+(gs[k]||[]).filter(g=>!(k==='baits'&&isBzSp(f.gsp)&&bzLegacy(g)&&g.id!==f.bait)).map(g=>`<option value="${g.id}" ${g.id===f[k==='rigs'?'rig':'bait']?'selected':''}>${esc(g.name)}${g.hidden?'（隠し中）':''}</option>`).join('')};
   const sizeUI=!s.sizeUnit?'':s.sizeUnit==='指'?`<div class="chips">${['','2','2.5','3','3.5','4','4.5','5','5.5','6'].map(x=>`<button class="chip ${f.size===x?'on':''}" data-act="evSize" data-d="${x}">${x?'指'+x:'未記入'}</button>`).join('')}</div>`
     :`<div class="grow"><input type="number" inputmode="decimal" id="evSize" data-ef="size" value="${esc(f.size)}" placeholder="${s.sizeUnit==='cm'?'例：95':'未記入'}" min="0" max="200" step="0.5"><span class="muted">${esc(s.sizeUnit)}</span></div>`;
-  $('#sheetPanel').innerHTML=`<div class="sheet-h"><h2>記録を直す</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
+  $('#sheetPanel').innerHTML=`<div class="sheet-h"><h2>記録を直す</h2>${f.back?'<button class="btn sm ghost" data-act="evClose">← 一覧に戻る</button>':'<button class="btn sm ghost" data-act="closeSheet">閉じる</button>'}</div>
    ${f.kind==='gedo'?`<label class="field"><span>外道の魚</span><input type="text" id="evName" data-ef="name" value="${esc(f.name||'')}" list="gedoList"><datalist id="gedoList">${gedoNames().map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>`:''}
    <div class="seg">${(f.kind==='gedo'?['gedo','catch','bite','lost']:['catch','bite','lost']).map(k=>`<button class="${f.kind===k?'on':''}" data-act="evKind" data-d="${k}">${KIND_JP[k]}</button>`).join('')}</div>
    ${SOLO?'':`<div class="field"><span>魚種</span><div class="chips">${S.cfg.species.filter(x=>!x.hidden||x.id===f.sp).map(x=>`<button class="chip ${x.id===f.sp?'on':''}" data-act="evSp" data-d="${x.id}">${esc(x.name)}</button>`).join('')}</div></div>`}
@@ -2041,8 +2042,9 @@ const acts={
   setRig:b=>{const tr=active();curGear(tr).rig=b.dataset.id;S.prefs.g[tr.cur.sp]={...curGear(tr)};logGear(tr);touch(tr);render()},
   setBait:b=>{const tr=active();curGear(tr).bait=b.dataset.id;S.prefs.g[tr.cur.sp]={...curGear(tr)};logGear(tr);touch(tr);render()},
   state:b=>openStateSheet(b.dataset.id),
-  editEv:b=>openEvSheet(b.dataset.id,b.dataset.tid),
-  evList:b=>{const tr=S.trips[b.dataset.id],ev=sortEv(tr);openSheet(`<div class="sheet-h"><h2>記録を修正</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">直したい行を押すと、時刻・テンヤ・種類（釣れた／アタリ／バラシ）などを直したり、消したりできます。</p><ol class="log">${ev.slice().reverse().map(e=>logRow(e,e.kind==='catch'?catchesOf(tr,e.sp).indexOf(e)+1:0,tr.id)).join('')||'<li class="empty">記録がありません</li>'}</ol>`,{kind:'evlist'})},
+  editEv:b=>{const back=sheetCtx&&sheetCtx.kind==='evlist'?sheetCtx.tid:null;openEvSheet(b.dataset.id,b.dataset.tid,back)},
+  evClose:()=>evBack(),
+  evList:b=>{const tr=S.trips[b.dataset.id],ev=sortEv(tr);openSheet(`<div class="sheet-h"><h2>記録を修正</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">直したい行を押すと、時刻・テンヤ・種類（釣れた／アタリ／バラシ）などを直したり、消したりできます。</p><ol class="log">${ev.slice().reverse().map(e=>logRow(e,e.kind==='catch'?catchesOf(tr,e.sp).indexOf(e)+1:0,tr.id)).join('')||'<li class="empty">記録がありません</li>'}</ol>`,{kind:'evlist',tid:b.dataset.id})},
   end:b=>{if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='もう一度押すと記録を終えます';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent='沖上がり（記録を終える）'}},3500);return}
     const tr=active();const now=Date.now();tr.end=(tr.planEnd&&now>tr.planEnd)?tr.planEnd:now;tr.status='done';S.activeId=null;releaseAwake();S.ui.tab='fig';S.ui.figTrip=tr.id;S.ui.figSp=mainSp(tr);touch(tr);render();scrollTo(0,0);toast(`おつかれさまでした。${tripSummary(tr)}の記録を図にしました`)},
   btnImport:()=>{imp={text:'',rows:null,sel:new Set(),armed:false};openImportSheet()},
@@ -2083,8 +2085,8 @@ const acts={
      <a class="btn" href="${mapUrl(p)}" target="_blank" rel="noopener">地図で見る</a><button class="btn danger" data-act="locDel" data-tid="${t.id}" data-id="${p.id}">この場所の記録を消す</button>`,{kind:'loc'})},
   locDel:b=>{if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='もう一度押すと消します';return}const t=S.trips[b.dataset.tid];t.points=(t.points||[]).filter(p=>p.id!==b.dataset.id);touch(t);closeSheet();toast('場所の記録を消しました')},
   evSave:()=>{const f=evF,tr=S.trips[f.tid],e=tr.events.find(x=>x.id===f.id);const dc=$('#evDragon');if(dc)f.dragon=dc.checked;if(f.kind==='catch'&&f.sp==='tachiuo'&&f.dragon)e.dragon=true;else delete e.dragon;
-    Object.assign(e,{kind:f.kind,sp:f.sp,gsp:f.gsp,v:f.kind==='catch'?f.v:undefined,t:tAt(tr,f.t)+(new Date(e.t).getSeconds()*1000),rig:f.rig,bait:f.bait,size:f.kind==='catch'?f.size:'',memo:f.memo.trim()});if(f.kind==='gedo')e.name=(f.name||'').trim()||e.name;else delete e.name;if(f.sa&&f.kind!=='gedo')e.sa=f.sa;else delete e.sa;if(f.ka&&f.kind!=='gedo'&&f.kind!=='bite')e.ka=f.ka;else delete e.ka;touch(tr);closeSheet();toast('直しました')},
-  evDel:()=>{if(!evF.armed){evF.armed=true;return renderEvSheet()}const tr=S.trips[evF.tid];tr.events=tr.events.filter(x=>x.id!==evF.id);touch(tr);closeSheet();toast('消しました')},
+    Object.assign(e,{kind:f.kind,sp:f.sp,gsp:f.gsp,v:f.kind==='catch'?f.v:undefined,t:tAt(tr,f.t)+(new Date(e.t).getSeconds()*1000),rig:f.rig,bait:f.bait,size:f.kind==='catch'?f.size:'',memo:f.memo.trim()});if(f.kind==='gedo')e.name=(f.name||'').trim()||e.name;else delete e.name;if(f.sa&&f.kind!=='gedo')e.sa=f.sa;else delete e.sa;if(f.ka&&f.kind!=='gedo'&&f.kind!=='bite')e.ka=f.ka;else delete e.ka;touch(tr);toast('直しました');evBack()},
+  evDel:()=>{if(!evF.armed){evF.armed=true;return renderEvSheet()}const tr=S.trips[evF.tid];tr.events=tr.events.filter(x=>x.id!==evF.id);touch(tr);toast('消しました');evBack()},
   png:b=>savePng(b.dataset.which),
   figSp:b=>{S.ui.figSp=b.dataset.id;saveLocal();render()},
   statSp:b=>{S.ui.statSp=b.dataset.id;saveLocal();render()},
