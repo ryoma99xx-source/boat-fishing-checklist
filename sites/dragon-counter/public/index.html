@@ -1671,7 +1671,7 @@ const undoHint=tr=>{const e=tr.events[tr.events.length-1];return e?`${hm(e.t)} $
 function tripCardHTML(t){return `<div class="trip"><div class="trip-h"><div style="min-width:0"><b>${jdate(t.date)}</b>${isTairyo(t.date)?tairyoTag():''}<div class="muted">${esc(t.boat)}・${esc(seatLabel(t))}${t.port?'・'+esc(t.port):''}</div></div></div>
     <div class="trip-sum">${esc(tripSummary(t))||'記録なし'}${nDragon(t,'tachiuo')?`<span class="dn-s"><i class="ic ic-dragon"></i>ドラゴン ${nDragon(t,'tachiuo')}</span>`:''}</div>
     <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>
-    <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm two" data-act="tripEdit" data-id="${t.id}">釣行の情報を直す<small>日付・船・席・時間</small></button><button class="btn sm two" data-act="evList" data-id="${t.id}">釣果の記録を修正<small>釣れた・アタリ・バラシ・外道を1件ずつ</small></button>
+    <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm two" data-act="tripEdit" data-id="${t.id}">釣行の情報を直す<small>日付・船・席・時間</small></button><button class="btn sm two" data-act="evList" data-id="${t.id}">記録を見る・修正する<small>釣れた・アタリ・バラシ・外道を1件ずつ</small></button>
     ${t.status==='done'&&!t.sample&&!active()?`<button class="btn sm" data-act="reopen" data-id="${t.id}">記録を再開</button>`:''}
     <button class="btn sm danger" data-act="delTrip" data-id="${t.id}">${t.sample?'サンプルを消す':'消す'}</button></div></div>`}
 // 釣りの時間：終了時刻、なければ沖上がり予定まで（予定を過ぎても延ばさない）
@@ -2090,7 +2090,7 @@ const acts={
   state:b=>openStateSheet(b.dataset.id),
   editEv:b=>{const back=sheetCtx&&sheetCtx.kind==='evlist'?sheetCtx.tid:null;openEvSheet(b.dataset.id,b.dataset.tid,back)},
   evClose:()=>evBack(),
-  evList:b=>{const tr=S.trips[b.dataset.id],ev=sortEv(tr);openSheet(`<div class="sheet-h"><h2>記録を修正</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">直したい行を押すと、時刻・テンヤ・種類（釣れた／アタリ／バラシ）などを直したり、消したりできます。</p><ol class="log">${ev.slice().reverse().map(e=>logRow(e,e.kind==='catch'?catchesOf(tr,e.sp).indexOf(e)+1:0,tr.id)).join('')||'<li class="empty">記録がありません</li>'}</ol>`,{kind:'evlist',tid:b.dataset.id})},
+  evList:b=>{const tr=S.trips[b.dataset.id],ev=sortEv(tr);openSheet(`<div class="sheet-h"><h2>記録を見る・修正する</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">直したい行を押すと、時刻・テンヤ・種類（釣れた／アタリ／バラシ）などを直したり、消したりできます。</p><ol class="log">${ev.slice().reverse().map(e=>logRow(e,e.kind==='catch'?catchesOf(tr,e.sp).indexOf(e)+1:0,tr.id)).join('')||'<li class="empty">記録がありません</li>'}</ol>`,{kind:'evlist',tid:b.dataset.id})},
   end:b=>{if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='もう一度押すと記録を終えます';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent='沖上がり（記録を終える）'}},3500);return}
     const tr=active();const now=Date.now();tr.end=(tr.planEnd&&now>tr.planEnd)?tr.planEnd:now;tr.status='done';S.activeId=null;releaseAwake();S.ui.tab='fig';S.ui.figTrip=tr.id;S.ui.figSp=mainSp(tr);touch(tr);render();scrollTo(0,0);toast(`おつかれさまでした。${tripSummary(tr)}の記録を図にしました`)},
   btnImport:()=>{imp={text:'',rows:null,sel:new Set(),armed:false};openImportSheet()},
@@ -2312,7 +2312,7 @@ const TUT=[
   {k:'準備',t:'所有テンヤを登録',d:'画面下の右端にある「登録」タブで、カタログから持っているテンヤにチェック。カタログには今販売されている多くのテンヤが入っていて、月に一度更新する予定です。その中から当日持っていく分を「一軍リスト」のようにまとめておきます。'},
   {k:'出船',t:'釣り場と席を選ぶ',d:'釣り場を選ぶだけで、潮回りと満潮・干潮が自動で入ります。よく行く釣り場は地図から登録できます。船と自分の席もタップで選びます。餌はイワシ（サイズ・頭つき／なし・内臓あり／なし）、ハイブリッドクロス、カマスなどから選べます。'},
   {k:'釣れたら',t:'「釣れた」を1タップ',d:'「釣れた＋1」は、横の「使用テンヤ」で選んでいるテンヤで1本記録します。テンヤを付け替えたら、画面下のテンヤのボタンで使用テンヤを切り替えます（押しても記録はされません）。120cm以上なら先に「ドラゴン」にチェック。アタリ・バラシも、使用テンヤに紐づいて記録されます。押し間違えたら下の「直前の釣果を取り消し」。タチウオ以外が掛かったら小さな「外道」ボタンから（本数には入りません）。「詳細」モードにすると、誘い（巻き／叩き・誘い中／ステイ中）も残せます。釣れた・バラシは掛け方（即掛け／深追い）も選びます。場所を移動したら上の「📍場所」で今いる場所を記録できます。'},
-  {k:'沖上がり',t:'図にして振り返る',d:'沖上がりの予定時刻を過ぎると、画面下に「沖上がり」のボタンが出ます。押すと、潮位と釣れた時刻の図、座席の図ができて画像で保存できます。記録はあとから「履歴」の「釣果の記録を修正」で1件ずつ直せます。'},
+  {k:'沖上がり',t:'図にして振り返る',d:'沖上がりの予定時刻を過ぎると、画面下に「沖上がり」のボタンが出ます。押すと、潮位と釣れた時刻の図、座席の図ができて画像で保存できます。記録はあとから「履歴」の「記録を見る・修正する」で1件ずつ見たり直したりできます。'},
   {k:'アプリとして使う',t:'ホーム画面に置いて使う',d:SITE?'Safariの共有ボタン →「ホーム画面に追加」で、アイコンからアプリのように開けます。一度開いておけば、電波のない船の上でも使えます。':'Safariでこのページを開き、共有ボタン →「ホーム画面に追加」を選ぶと、アイコンからアプリのように開けます（初回はClaudeへのログインが必要です）。記録はクラウドに同期されるので、Claudeアプリから開いても同じ記録が見られます。'}];
 function openTut(i){tutI=i||0;let el=$('#tut');if(!el){el=document.createElement('div');el.id='tut';el.className='tut';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','使い方');document.body.appendChild(el);bindTutSwipe(el)}
   el.hidden=false;renderTut()}
