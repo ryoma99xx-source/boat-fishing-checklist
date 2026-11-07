@@ -6,7 +6,7 @@
   <div class="tool-cta-text">
     <h3 class="en">DRAGON COUNTER</h3>
     <span class="tool-name">ドラゴンカウンター</span>
-    <p class="ja">タチウオの釣果を時間の経過と共に、テンヤ・潮・船の向きと一緒に記録する無料ツール。釣り場を選ぶと潮回りと満潮・干潮が自動で入り、ドラゴン（指5以上）や大漁も残せます。記録は端末の中だけに保存されます。</p>
+    <p class="ja">タチウオの釣果を時間の経過と共に、テンヤ・潮・船の向きと一緒に記録する無料ツール。釣り場を選ぶと潮回りと満潮・干潮が自動で入り、ドラゴン（120cm以上）や大漁も残せます。記録は端末に保存され、釣果データは匿名で集計に使います。</p>
   </div>
   <a class="tool-cta-btn en" href="${url}" target="_blank" rel="noopener">OPEN TOOL →</a>
 </div>`;
