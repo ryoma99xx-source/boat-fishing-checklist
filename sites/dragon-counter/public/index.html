@@ -653,7 +653,7 @@ body.has-back .toast{bottom:calc(146px + env(safe-area-inset-bottom,0px))}
 .rank{display:flex;flex-direction:column;gap:6px}
 .rank h3{font-size:14px;color:var(--muted);margin:4px 0 0}
 .rk{display:grid;grid-template-columns:minmax(0,1.2fr) 1fr auto;align-items:center;gap:8px;font-size:14px}
-.rk span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rk span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rk-btn{width:100%;background:none;border:none;color:inherit;font:inherit;text-align:left;padding:4px 0;min-height:36px;cursor:pointer}.rk-btn span{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}.rk-hint{font-size:12px;margin:4px 0 0}.tv-box{background:#fff;border-radius:14px;padding:10px;display:flex;justify-content:center}.tv-img{display:block;width:100%;max-width:420px;aspect-ratio:4/3;object-fit:contain}.tv-noimg{padding:40px 0;color:#667}.tv-sub{margin:12px 0 0;color:var(--muted);font-size:14px}.tv-main{margin:2px 0 6px;font-size:20px;line-height:1.35}.tv-n{margin:10px 0}
 .rk i{display:block;height:10px;border-radius:5px;background:var(--teal);opacity:.85}
 .rk b{font-size:14px;white-space:nowrap}.rk b small{color:var(--muted);font-weight:500}
 .cal-h{display:flex;align-items:center;justify-content:space-between}
@@ -1954,14 +1954,14 @@ function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYe
   const N=t=>catchesOf(t,'tachiuo').length,tot=L.reduce((a,t)=>a+N(t),0),drag=L.reduce((a,t)=>a+nDragon(t,'tachiuo'),0),hrs=L.reduce((a,t)=>a+tripHours(t),0);
   const best=L.slice().sort((a,b)=>N(b)-N(a))[0],days=[...new Set(L.map(t=>t.date))],tai=days.filter(d=>isTairyo(d)).length;
   const kpi=(v,u,l,sub)=>`<div class="kpi"><span class="k-l">${l}</span><b>${v}<small>${u}</small></b>${sub?`<span class="k-s">${sub}</span>`:''}</div>`;
-  const rank=(title,keyFn,nameFn,lim)=>{const m={};L.forEach(t=>catchesOf(t,'tachiuo').forEach(e=>{const k=keyFn(t,e);if(k)m[k]=(m[k]||0)+1}));const it=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,lim||3);if(!it.length)return '';const mx=it[0][1];
-    return `<div class="rank"><h3>${title}</h3>${it.map(([k,v])=>`<div class="rk"><span>${esc(nameFn(k))}</span><i style="width:${Math.max(6,v/mx*100)}%"></i><b>${v}本</b></div>`).join('')}</div>`};
+  const rank=(title,keyFn,nameFn,lim,act)=>{const m={};L.forEach(t=>catchesOf(t,'tachiuo').forEach(e=>{const k=keyFn(t,e);if(k)m[k]=(m[k]||0)+1}));const it=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,lim||3);if(!it.length)return '';const mx=it[0][1];
+    return `<div class="rank"><h3>${title}</h3>${it.map(([k,v])=>act?`<button class="rk rk-btn" data-act="${act}" data-id="${esc(k)}" data-n="${v}"><span>${esc(nameFn(k))}</span><i style="width:${Math.max(6,v/mx*100)}%"></i><b>${v}本</b></button>`:`<div class="rk"><span>${esc(nameFn(k))}</span><i style="width:${Math.max(6,v/mx*100)}%"></i><b>${v}本</b></div>`).join('')}${act?'<p class="muted rk-hint">押すとテンヤの写真が見られます</p>':''}</div>`};
   const avgBy=(title,keyFn)=>{const m={};L.forEach(t=>{const k=keyFn(t);if(!k)return;m[k]=m[k]||{n:0,s:0};m[k].n++;m[k].s+=N(t)});const it=Object.entries(m).sort((a,b)=>b[1].s/b[1].n-a[1].s/a[1].n).slice(0,5);if(!it.length)return '';const mx=Math.max(...it.map(x=>x[1].s/x[1].n),1);
     return `<div class="rank"><h3>${title}</h3>${it.map(([k,v])=>`<div class="rk"><span>${esc(k)}</span><i style="width:${Math.max(6,v.s/v.n/mx*100)}%"></i><b>${r1(v.s/v.n)}本<small>／${v.n}回</small></b></div>`).join('')}</div>`};
   return `<div class="card dash"><h2>ダッシュボード</h2>${seg}
    <div class="kpis">${kpi(L.length,'回','釣行')}${kpi(tot,'本','タチウオ合計')}${kpi(r1(tot/L.length),'本','1回あたり')}${kpi(hrs?r1(tot/hrs):0,'本','1時間あたり')}
     ${kpi(N(best),'本','最高',`${best.date.slice(5).replace('-','/')} ${esc(best.boat)}`)}${kpi(drag,'本','ドラゴン',tot?`全体の${Math.round(drag/tot*100)}%`:'')}${kpi(tai,'日','大漁（20本以上）',`${days.length}日中`)}${kpi(L.reduce((a,t)=>a+nKind(t,'tachiuo','lost'),0),'回','バラシ')}</div>
-   ${rank('よく釣れたテンヤ',(t,e)=>e.rig&&tenyaOf(e.rig)?e.rig:'',k=>tenyaLabel(k))}
+   ${rank('よく釣れたテンヤ',(t,e)=>e.rig&&tenyaOf(e.rig)?e.rig:'',k=>tenyaLabel(k),3,'tenView')}
    ${avgBy('釣り場ごとの平均',t=>t.spot?t.spot.name:(t.port||''))}
    ${avgBy('潮回りごとの平均',t=>tideNameOf(t))}
    ${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.sa||!['catch','bite','lost'].includes(e.kind))return;if(e.kind==='catch'&&e.sp!=='tachiuo')return;m[e.sa]=m[e.sa]||{catch:0,bite:0,lost:0};m[e.sa][e.kind]++}));const it=SA_KEYS.filter(k=>m[k]);if(!it.length)return '';
@@ -2240,7 +2240,12 @@ function helpHTML(){return `<div class="sheet-h"><h2>ボタンで数える<small
 /* ---------- actions ---------- */
 // keep the trip picker on the 図 tab just under the sticky header
 (()=>{const set=()=>{const h=document.querySelector('header.top');if(h)document.documentElement.style.setProperty('--topH',h.offsetHeight+'px')};set();addEventListener('resize',set);if(window.ResizeObserver){const h=document.querySelector('header.top');if(h)new ResizeObserver(set).observe(h)}})();
+function tenViewSheet(id,n){const t=tenyaOf(id);if(!t)return;const img=TIMG.has(id)?`<img class="tv-img" src="/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}" alt="${esc(tenyaFull(id))}">`:'<div class="tv-noimg">写真はありません</div>';
+  openSheet(`<div class="sheet-h"><h2>よく釣れたテンヤ</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
+   <div class="tv-box">${img}</div><p class="tv-sub">${esc(tenyaSub(t))}</p><h3 class="tv-main">${esc(tenyaMain(t))}</h3><div class="tv-badges">${tenyaBadges(t)}</div>
+   <p class="tv-n">この期間に<b>${n}本</b></p>${t.u?`<a class="golink" href="${esc(t.u)}" target="_blank" rel="noopener">メーカーの商品ページ →</a>`:''}`,{kind:'tenview'})}
 const acts={
+  tenView:b=>tenViewSheet(b.dataset.id,+b.dataset.n||0),
   tab:b=>{S.ui.tab=b.dataset.tab;saveLocal();render();scrollTo(0,0)},
   backRec:()=>{const a=document.activeElement;if(a&&a.blur)a.blur(); // commit the field being edited
     const nb=$('#add-boat');if(nb&&nb.value.trim()&&!S.cfg.boats.some(x=>x.name===nb.value.trim()))acts.boatAdd(); // a boat typed but not yet registered
