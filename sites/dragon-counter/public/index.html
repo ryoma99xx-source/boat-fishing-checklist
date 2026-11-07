@@ -311,6 +311,7 @@ h2{font-size:18px}
 .panel{border:1px solid #1f3a5e;border-radius:16px;background:radial-gradient(120% 90% at 30% 0%,#123a66 0%,#0b2546 55%,#081a33 100%);overflow:hidden}
 .tidecard{display:block;width:100%;height:auto}
 .tc-grid{stroke:rgba(255,255,255,.14);stroke-dasharray:3 4}
+.rvcard{padding:8px}.rvwrap svg{display:block;width:100%;height:auto;border-radius:16px}
 .tc-ax{fill:#a8bdd2;font-size:11px;font-family:var(--f-num)}
 .tc-sun{fill:#e0782f;opacity:.9}
 .tc-sunt{fill:#fff3e6;font-size:10.5px;font-weight:700}
@@ -1342,6 +1343,39 @@ function tideCardSVG(tr){const W=360,H=176,L=34,R=10,T=34,B=24,iw=W-L-R,ih=H-T-B
     if(tr.status==='active'&&Date.now()>=a&&Date.now()<=z){const x=X(Date.now());o.push(`<line x1="${r1(x)}" y1="${T}" x2="${r1(x)}" y2="${T+ih}" class="tc-now"/><circle cx="${r1(x)}" cy="${r1(Y(fn(Date.now())))}" r="5" class="tc-nowd"/>`)}}
   else o.push(`<text x="${W/2}" y="${T+ih/2}" class="tc-ax" text-anchor="middle">「直す」で釣り場を選ぶと潮見表が出ます</text>`);
   return `<svg viewBox="0 0 ${W} ${H}" class="tidecard" role="img" aria-label="${esc(jdate(tr.date))}の潮見表">${o.join('')}</svg>`}
+/* 振り返りの潮位図：記録画面の潮位グラフと同じ見た目で、釣行の時間帯を大きく。PNG にも出すので色は直書き */
+function tideReviewSVG(tr,sp){const fn=tideFn(tr);if(!fn)return '';sp=sp||'tachiuo';
+  const W=720,H=470,L=58,R=18,T=78,B=124,iw=W-L-R,ih=H-T-B;
+  const t0=tr.start,t1=tr.end||tr.planEnd||Date.now();let a=t0-30*6e4,z=Math.max(t1+30*6e4,a+3*36e5);a=Math.floor(a/18e5)*18e5;z=Math.ceil(z/18e5)*18e5;
+  const X=t=>L+(t-a)/(z-a)*iw;const v=[];for(let i=0;i<=160;i++){const t=a+i*(z-a)/160;v.push([X(t),fn(t)])}
+  const cms=v.map(q=>q[1]);const mn=Math.min(...cms),mx=Math.max(...cms),pd=Math.max(8,(mx-mn)*.22),lo=mn-pd,hi=mx+pd;const Y=cm=>T+(1-(cm-lo)/(hi-lo))*ih;
+  const F="font-family=\"Hiragino Sans,'Noto Sans JP',sans-serif\"";const o=[];
+  o.push(`<defs><linearGradient id="rvbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f2a4a"/><stop offset="1" stop-color="#0a1626"/></linearGradient></defs>`);
+  o.push(`<rect width="${W}" height="${H}" rx="22" fill="url(#rvbg)" stroke="#24405c"/>`);
+  const c=catchesOf(tr,sp),nd=c.filter(e=>e.dragon).length,s=spOf(sp);
+  o.push(`<text x="24" y="38" ${F} font-size="22" font-weight="800" fill="#ecf1f7">潮位と釣れた時刻</text>`);
+  o.push(`<text x="24" y="62" ${F} font-size="13" fill="#9fb3c8">${esc(jdate(tr.date))}｜${esc(tr.boat)}｜${esc(tideNameOf(tr)||'')}｜${esc(s.name)} ${c.length}${esc(s.unit)}${nd?`・ドラゴン ${nd}`:''}</text>`);
+  o.push(`<rect x="${r1(X(Math.max(a,t0)))}" y="${T}" width="${r1(Math.max(2,X(Math.min(z,t1))-X(Math.max(a,t0))))}" height="${ih}" fill="rgba(65,201,198,.13)"/>`);
+  const step=(z-a)>8*36e5?2:1;for(let t=Math.ceil(a/36e5)*36e5;t<=z;t+=36e5*step){const x=X(t);const h=new Date(t).getHours();
+    o.push(`<line x1="${r1(x)}" y1="${T}" x2="${r1(x)}" y2="${T+ih}" stroke="rgba(255,255,255,.14)" stroke-dasharray="3 5"/><text x="${r1(x)}" y="${T+ih+22}" ${F} font-size="14" fill="#a8bdd2" text-anchor="middle">${h}:00</text>`)}
+  const line=v.map((q,i)=>(i?'L':'M')+r1(q[0])+','+r1(Y(q[1]))).join(' ');
+  o.push(`<path d="${line} L${X(z)},${T+ih} L${X(a)},${T+ih} Z" fill="rgba(242,229,90,.10)"/><path d="${line}" fill="none" stroke="#f2e55a" stroke-width="3.4" stroke-linejoin="round"/>`);
+  [Math.round(hi-pd),Math.round(lo+pd)].forEach(cm=>o.push(`<text x="${L-8}" y="${r1(Y(cm)+5)}" ${F} font-size="13" fill="#a8bdd2" text-anchor="end">${cm}</text>`));
+  tidePts(tr,a,z).forEach(p=>{const x=X(p.t),yy=Y(p.cm),up=p.type==='high';const bw=70,bx=Math.min(Math.max(x-bw/2,L),W-R-bw),by=up?yy-46:yy+12;
+    o.push(`<rect x="${r1(bx)}" y="${r1(by)}" width="${bw}" height="36" rx="6" fill="#f2e55a"/><text x="${r1(bx+bw/2)}" y="${r1(by+16)}" ${F} font-size="14" font-weight="800" fill="#1a1a1a" text-anchor="middle">${up?'満潮':'干潮'} ${hm(p.t)}</text><text x="${r1(bx+bw/2)}" y="${r1(by+31)}" ${F} font-size="12.5" font-weight="700" fill="#1a1a1a" text-anchor="middle">${Math.round(p.cm)}cm</text>`)});
+  // アタリ・バラシ：下の帯に
+  const ly=T+ih+46;o.push(`<text x="${L-8}" y="${ly+5}" ${F} font-size="12" fill="#9fb3c8" text-anchor="end">アタリ</text><text x="${L-8}" y="${ly+27}" ${F} font-size="12" fill="#9fb3c8" text-anchor="end">バラシ</text>`);
+  tr.events.forEach(e=>{if(e.t<a||e.t>z)return;const x=X(e.t);if(e.kind==='bite')o.push(`<path d="M${r1(x-6)},${ly-5} L${r1(x+6)},${ly-5} L${r1(x)},${ly+6} Z" fill="none" stroke="#e3a43b" stroke-width="2.2"/>`);
+    if(e.kind==='lost')o.push(`<path d="M${r1(x-6)},${ly+28} L${r1(x+6)},${ly+28} L${r1(x)},${ly+17} Z" fill="none" stroke="#ec5f86" stroke-width="2.2"/>`)});
+  // 釣れた：潮位の線の上に
+  c.forEach(e=>{if(e.t<a||e.t>z)return;const x=X(e.t),y=Y(fn(e.t));o.push(e.dragon?`<circle cx="${r1(x)}" cy="${r1(y)}" r="10" fill="#e3a43b" stroke="#2a1600" stroke-width="2"/><circle cx="${r1(x)}" cy="${r1(y)}" r="4" fill="#fff3d6"/>`:`<circle cx="${r1(x)}" cy="${r1(y)}" r="7.5" fill="#41c9c6" stroke="#062033" stroke-width="2"/>`)});
+  const lg=H-14;o.push(`<circle cx="30" cy="${lg-4}" r="6" fill="#41c9c6" stroke="#062033" stroke-width="2"/><text x="42" y="${lg}" ${F} font-size="12.5" fill="#c9d6e3">釣れた</text>
+   <circle cx="104" cy="${lg-4}" r="7" fill="#e3a43b" stroke="#2a1600" stroke-width="2"/><text x="117" y="${lg}" ${F} font-size="12.5" fill="#c9d6e3">ドラゴン</text>
+   <path d="M186,${lg-9} L198,${lg-9} L192,${lg+1} Z" fill="none" stroke="#e3a43b" stroke-width="2"/><text x="204" y="${lg}" ${F} font-size="12.5" fill="#c9d6e3">アタリ</text>
+   <path d="M258,${lg+1} L270,${lg+1} L264,${lg-9} Z" fill="none" stroke="#ec5f86" stroke-width="2"/><text x="276" y="${lg}" ${F} font-size="12.5" fill="#c9d6e3">バラシ</text>
+   <rect x="330" y="${lg-11}" width="16" height="12" fill="rgba(65,201,198,.25)"/><text x="352" y="${lg}" ${F} font-size="12.5" fill="#c9d6e3">釣行中</text>
+   <text x="${W-18}" y="${lg}" ${F} font-size="11" fill="#7f93a8" text-anchor="end">潮位は推算値</text>`);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" class="rvsvg" role="img" aria-label="潮位と釣れた時刻">${o.join('')}</svg>`}
 /* chronological feed: everything that happened on the trip, oldest first */
 function feedItems(tr){const items=[];items.push({t:tr.start,kind:'start'});
   (tr.states||[]).forEach(st=>items.push({t:st.t,kind:'state',st}));
@@ -1611,6 +1645,7 @@ function viewFig(){const tr=figTrip();if(!tr)return `<h1>図</h1><p class="muted
    ${isTairyo(tr.date)||nDragon(tr,'tachiuo')?`<div class="fig-badges">${isTairyo(tr.date)?tairyoTag():''}${nDragon(tr,'tachiuo')?`<span class="dn-s"><i class="ic ic-dragon"></i>ドラゴン ${nDragon(tr,'tachiuo')}本</span>`:''}</div>`:''}
    ${ss.length>1?`<div class="chips">${ss.map(x=>`<button class="chip ${x===sp?'on':''}" data-act="figSp" data-id="${x}">${esc(spOf(x).name)}</button>`).join('')}</div>`:''}
    ${tr.sample?`<p class="sample-note">これは見本のサンプル釣行です。実際に出船して記録すると、自分の図が作られます。<button class="btn sm" data-act="delSample" data-id="${tr.id}">サンプルを消す</button></p>`:''}
+   ${tideReviewSVG(tr,sp)?`<div class="card rvcard"><div class="rvwrap">${tideReviewSVG(tr,sp)}</div><div class="figfoot"><button class="btn sm" data-act="png" data-which="tide">画像として保存</button></div></div>`:''}
    <div class="card"><h2>時系列：潮と流れと釣果</h2><p class="swipe">← 図の中を左右にスワイプできます →</p><div class="scrollx">${timelineSVG(tr,sp)}</div>
     <div class="figfoot"><button class="btn sm" data-act="png" data-which="tl">画像として保存</button></div></div>
    <div class="card"><h2>座席と数（自分の席）</h2><div class="fitw">${seatSVG(tr,sp)}</div><div class="figfoot"><button class="btn sm" data-act="png" data-which="seat">画像として保存</button></div></div>${pointsCard(tr)}`}
@@ -2161,7 +2196,7 @@ async function svgToPng(svg){const m=svg.match(/width="(\d+)" height="(\d+)"/);c
   const sc=2,cv=document.createElement('canvas');cv.width=w*sc;cv.height=h*sc;const ctx=cv.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);
   return {blob:await new Promise(r=>cv.toBlob(r,'image/png')),url:cv.toDataURL('image/png')}}
 async function savePng(which){const tr=figTrip();if(!tr)return;const sp=figSp(tr);toast('画像を作っています…');
-  try{const svg=which==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(svg);const name=`dragon-${tr.date}-${sp}-${which==='tl'?'timeline':'seat'}.png`;
+  try{const svg=which==='tl'?timelineSVG(tr,sp):which==='tide'?tideReviewSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(svg);const name=`dragon-${tr.date}-${sp}-${which==='tl'?'timeline':which==='tide'?'tide':'seat'}.png`;
     if(!SITE){let dl=null;try{dl=await window.claude?.use?.('downloads')}catch(e){}
       if(dl){try{await dl.save({filename:name,data:blob});toast('保存しました');return}catch(err){if(err&&err.code==='declined'){$('#toast').hidden=true;return}}}}
     pendingFile={blob,name,type:'image/png'};
