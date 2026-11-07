@@ -521,6 +521,7 @@ details.fold[open] .fold-ic::after{top:11px;transform:rotate(-135deg)}
 /* tutorial */
 .tut{position:fixed;inset:0;z-index:60;background:rgba(3,7,13,.8);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 .tut[hidden]{display:none}
+.wx-line{font-size:13px;margin-top:2px}.wx-line span{white-space:nowrap}
 .tut-card>*{flex-shrink:0}
 .tut-card{width:100%;max-width:420px;max-height:calc(100dvh - 32px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain;background:linear-gradient(170deg,#11233a,#0b1422 65%);border:1px solid #24405c;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);touch-action:pan-y}
 .tut-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
@@ -1062,7 +1063,7 @@ const rid=()=>{const a=new Uint8Array(12);crypto.getRandomValues(a);return Array
 function sharePayload(t){const r3=x=>typeof x==='number'?Math.round(x*1e3)/1e3:x,nm=(sp,k,id)=>{try{return id?listName(sp,k,id):''}catch(e){return ''}};
   return {app:'dragon-counter',ver:1,uid:t.shareId,date:t.date,spotId:t.spotId||'',spot:t.spot?{name:t.spot.name,lat:r3(t.spot.lat),lon:r3(t.spot.lon)}:{name:t.port||''},
     boat:t.boat||'',people:t.people,seats:t.seats,side:t.side,seat:t.seat,station:t.station||'',tide:tideNameOf(t),tides:(t.tides||[]).map(x=>({type:x.type,hhmm:x.hhmm,cm:x.cm})),
-    mode:modeOf(t),start:t.start,end:t.end,planEnd:t.planEnd||null,
+    mode:modeOf(t),wx:t.wx||null,start:t.start,end:t.end,planEnd:t.planEnd||null,
     events:(t.events||[]).map(e=>{const g=e.gsp||e.sp;return {t:e.t,kind:e.kind,sp:e.sp,gsp:e.gsp,v:e.v,rig:e.rig||'',rigName:nm(g,'rigs',e.rig),bait:e.bait||'',baitName:nm(g,'baits',e.bait),size:e.size||'',dragon:!!e.dragon,sa:e.sa||'',ka:e.ka||'',fish:e.kind==='gedo'?(e.name||''):''}}),
     states:(t.states||[]).map(x=>{const y={...x};delete y.id;delete y.memo;delete y.note;return y}),
     gear:(t.gearLog||[]).map(g=>({t:g.t,sp:g.sp,rig:g.rig||'',rigName:nm(g.sp,'rigs',g.rig),bait:g.bait||'',baitName:nm(g.sp,'baits',g.bait)})),
@@ -1506,7 +1507,7 @@ function timelineSVG(tr,sp){
   const s=spOf(sp),ev=evOf(tr,sp),c=ev.filter(e=>e.kind==='catch');const o=[],under=[];
   o.push(TX(24,42,tlTitle(tr,sp),{size:24,bold:1}));
   o.push(TX(24,68,[jdate(tr.date),tr.port,tr.boat,'席：'+seatLabel(tr),tideNameOf(tr)].filter(Boolean).join('｜'),{size:13,fill:P.muted}));
-  let y=88;const band=(top,h,fill)=>o.push(`<rect x="12" y="${top}" width="${W-24}" height="${h}" rx="10" fill="${fill}"/>`);
+  let y=88;const wt=wxTxt(tr.wx);if(wt){o.push(TX(24,90,wt,{size:13,fill:P.muted}));y=102}const band=(top,h,fill)=>o.push(`<rect x="12" y="${top}" width="${W-24}" height="${h}" rx="10" fill="${fill}"/>`);
   const label=(top,a,b)=>{o.push(TX(26,top+28,a,{size:15,bold:1}));if(b)o.push(TX(26,top+46,b,{size:11,fill:P.muted}))};const gridTop=y;
   const fn=tideFn(tr);
   if(fn){const H=230,top=y;
@@ -1648,7 +1649,7 @@ function figCalSheet(){const all=trips(),cur=figTrip();const now=new Date();
 function figPickTrip(id){const t=S.trips[id];if(!t)return;S.ui.figTrip=id;S.ui.figSp=mainSp(t);S.ui.figCalDay='';saveLocal();$('#sheet').hidden=true;sheetCtx=null;render();scrollTo(0,0)}
 function figTrip(){let t=S.ui.figTrip&&S.trips[S.ui.figTrip];if(!t||t.deleted){t=active()||trips()[0]||null;S.ui.figTrip=t?t.id:null}return t}
 function figSp(tr){const ss=tripSpecies(tr);return ss.includes(S.ui.figSp)?S.ui.figSp:mainSp(tr)}
-function viewFig(){const tr=figTrip();if(!tr)return `<h1>図</h1><p class="muted">釣行を記録すると、ここに図が出ます。</p>`;const sp=figSp(tr);const ss=tripSpecies(tr);
+function viewFig(){const tr=figTrip();wxEnsure(tr);if(!tr)return `<h1>図</h1><p class="muted">釣行を記録すると、ここに図が出ます。</p>`;const sp=figSp(tr);const ss=tripSpecies(tr);
   const opts=trips().map(t=>`<option value="${t.id}" ${t.id===tr.id?'selected':''}>${t.date.slice(5).replace('-','/')} ${esc(t.boat)}・${esc(tripSummary(t))}${t.sample?'（サンプル）':''}${t.status==='active'?'（記録中）':''}</option>`).join('');
   return `<div class="figsel"><select id="figPick" aria-label="釣行を選ぶ">${opts}</select><button class="btn sm figcal" data-act="figCal" aria-label="カレンダーから釣行を選ぶ">カレンダー</button>${tr.status==='active'?'<span class="badge live">記録中</span>':''}</div>
    ${isTairyo(tr.date)||nDragon(tr,'tachiuo')?`<div class="fig-badges">${isTairyo(tr.date)?tairyoTag():''}${nDragon(tr,'tachiuo')?`<span class="dn-s"><i class="ic ic-dragon"></i>ドラゴン ${nDragon(tr,'tachiuo')}本</span>`:''}</div>`:''}
@@ -1668,14 +1669,41 @@ function seatStatsHTML(sp){const real=trips().filter(t=>!t.sample&&t.status==='d
   return chips+`<div class="zones">${['ミヨシ寄り','胴の間','トモ寄り'].map(zn=>cell('L',zn)+cell('R',zn)).join('')}</div><div class="zones-foot">トモ</div>`}
 /* ---------- 履歴：ダッシュボード + カレンダー ---------- */
 const undoHint=tr=>{const e=tr.events[tr.events.length-1];return e?`${hm(e.t)} ${e.kind==='catch'?esc(vShort(e.sp,e.v)):e.kind==='gedo'?'外道 '+esc(e.name||''):KIND_JP[e.kind]}`:'記録なし'};
-function tripCardHTML(t){return `<div class="trip"><div class="trip-h"><div style="min-width:0"><b>${jdate(t.date)}</b>${isTairyo(t.date)?tairyoTag():''}<div class="muted">${esc(t.boat)}・${esc(seatLabel(t))}${t.port?'・'+esc(t.port):''}</div></div></div>
+function tripCardHTML(t){wxEnsure(t);return `<div class="trip"><div class="trip-h"><div style="min-width:0"><b>${jdate(t.date)}</b>${isTairyo(t.date)?tairyoTag():''}<div class="muted">${esc(t.boat)}・${esc(seatLabel(t))}${t.port?'・'+esc(t.port):''}</div></div></div>
     <div class="trip-sum">${esc(tripSummary(t))||'記録なし'}${nDragon(t,'tachiuo')?`<span class="dn-s"><i class="ic ic-dragon"></i>ドラゴン ${nDragon(t,'tachiuo')}</span>`:''}</div>
-    <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>
+    <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>${t.wx&&wxTxt(t.wx)?`<div class="muted wx-line">${wxTxt(t.wx).split('・').map(x=>`<span>${esc(x)}</span>`).join('・')}</div>`:''}
     <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm two" data-act="tripEdit" data-id="${t.id}">釣行の情報を直す<small>日付・船・席・時間</small></button><button class="btn sm two" data-act="evList" data-id="${t.id}">記録を見る・修正する<small>釣れた・アタリ・バラシ・外道を1件ずつ</small></button>
     ${t.status==='done'&&!t.sample&&!active()?`<button class="btn sm" data-act="reopen" data-id="${t.id}">記録を再開</button>`:''}
     <button class="btn sm danger" data-act="delTrip" data-id="${t.id}">${t.sample?'サンプルを消す':'消す'}</button></div></div>`}
 // 釣りの時間：終了時刻、なければ沖上がり予定まで（予定を過ぎても延ばさない）
 const tripEndT=(t,fb)=>t.end||(t.planEnd?(t.status==='active'?Math.min(Date.now(),t.planEnd):t.planEnd):t.status==='active'?Date.now():(fb||t.start));
+/* 天気・波高・水温：横須賀（潮位 横須賀）は釣果速報と同じデータ、ほかの場所は同じ出どころの Open-Meteo から釣行時間の平均を取る */
+const WX_DIR=['北','北北東','北東','東北東','東','東南東','南東','南南東','南','南南西','南西','西南西','西','西北西','北西','北北西'];
+const wmoLabel=c=>c===0?'快晴':c===1?'晴れ':c===2?'晴れ時々くもり':c===3?'くもり':c<=48?'霧':c<=57?'霧雨':c<=67?'雨':c<=77?'雪':c<=82?'にわか雨':c<=86?'にわか雪':'雷雨';
+const avg=a=>{a=a.filter(x=>typeof x==='number'&&isFinite(x));return a.length?a.reduce((p,q)=>p+q,0)/a.length:null};
+const r1n=x=>x==null?null:Math.round(x*10)/10;
+function wxTxt(w){if(!w)return '';const a=[];if(w.weather)a.push(w.weather);if(w.temp!=null)a.push(`気温${w.temp}℃`);if(w.wind!=null)a.push(`${w.dir?w.dir+'の風':'風'}${w.wind}m/s`);if(w.wave!=null)a.push(`波高${w.wave}m`);if(w.sst!=null)a.push(`水温${w.sst}℃`);
+  return a.length?a.join('・')+(w.prov?'（速報値）':''):''}
+async function wxCatch(tr){const r=await fetch(`https://cutlassfish.tokyo/wp-json/tbtcc/v1/series?from=${tr.date}&to=${tr.date}`);if(!r.ok)return null;const d=await r.json();
+  const day=(d.days||[]).find(x=>x.date===tr.date),k=day&&day.conditions;if(!k||(k.sst_avg_c==null&&k.wave_height_m==null&&!k.weather_label))return null;
+  return {src:'catch',weather:k.weather_label||'',temp:r1n(k.temp_avg_c),wind:r1n(k.wind_avg_ms),dir:k.wind_dir_label||'',wave:r1n(k.wave_height_m),sst:r1n(k.sst_avg_c),prov:!!k.provisional,win:'6:00-14:00'}}
+async function wxMeteo(tr){const ll=tr.spot&&tr.spot.lat!=null?[tr.spot.lat,tr.spot.lon]:(tr.station&&ST_LL[tr.station])||null;if(!ll)return null;
+  const q=`latitude=${(+ll[0]).toFixed(3)}&longitude=${(+ll[1]).toFixed(3)}&timezone=Asia%2FTokyo&start_date=${tr.date}&end_date=${tr.date}`;
+  const [f,m]=await Promise.all([fetch(`https://api.open-meteo.com/v1/forecast?${q}&hourly=weather_code,temperature_2m,wind_speed_10m,wind_direction_10m&wind_speed_unit=ms`).then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch(`https://marine-api.open-meteo.com/v1/marine?${q}&hourly=wave_height,sea_surface_temperature`).then(r=>r.ok?r.json():null).catch(()=>null)]);
+  if(!f&&!m)return null;const a=tr.start,b=tr.end||tr.planEnd||(tr.start+6*3600e3);
+  const pick=(o,k)=>{if(!o||!o.hourly||!o.hourly[k])return [];return o.hourly.time.map((t,i)=>[new Date(t+':00+09:00').getTime(),o.hourly[k][i]]).filter(([t])=>t>=a-1800e3&&t<=b+1800e3).map(([,v])=>v)};
+  const codes=pick(f,'weather_code').filter(x=>x!=null),cnt={};codes.forEach(c=>cnt[c]=(cnt[c]||0)+1);const mode=codes.length?+Object.keys(cnt).sort((x,y)=>cnt[y]-cnt[x])[0]:null;
+  const ws=pick(f,'wind_speed_10m'),wd=pick(f,'wind_direction_10m');let u=0,v=0;ws.forEach((s,i)=>{const d=wd[i];if(s!=null&&d!=null){u+=s*Math.sin(d*Math.PI/180);v+=s*Math.cos(d*Math.PI/180)}});
+  const dir=ws.length&&(u||v)?WX_DIR[Math.round(((Math.atan2(u,v)*180/Math.PI)+360)%360/22.5)%16]:'';
+  const w={src:'open-meteo',weather:mode!=null?wmoLabel(mode):'',temp:r1n(avg(pick(f,'temperature_2m'))),wind:r1n(avg(ws)),dir,wave:r1n(avg(pick(m,'wave_height'))),sst:r1n(avg(pick(m,'sea_surface_temperature'))),prov:tr.date>=ymd(Date.now())||tr.status==='active',win:hm(a)+'-'+hm(b)};
+  return wxTxt(w)?w:null}
+const wxBusy=new Set(),wxTried={};
+function wxEnsure(tr){if(!tr||tr.sample||!tr.date||!tr.start||tr.start>Date.now()||wxBusy.has(tr.id))return;const w=tr.wx;
+  if(w&&!w.prov)return;if(w&&Date.now()-(w.at||0)<2*3600e3)return;if(Date.now()-(wxTried[tr.id]||0)<10*60e3)return;
+  wxTried[tr.id]=Date.now();wxBusy.add(tr.id);
+  (async()=>{let r=null;try{if(tr.station==='QN')r=await wxCatch(tr)}catch(e){}if(!r){try{r=await wxMeteo(tr)}catch(e){}}
+    wxBusy.delete(tr.id);const t=S.trips[tr.id];if(!r||!t)return;r.at=Date.now();t.wx=r;touch(t);if(['fig','hist'].includes(S.ui.tab)&&$('#sheet').hidden)render()})()}
 const tripHours=t=>Math.max(0,(tripEndT(t)-t.start)/3600e3);
 function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYear());
   const all=trips().filter(t=>!t.sample);const L=per==='year'?all.filter(t=>t.date.startsWith(y0)):per==='90'?all.filter(t=>Date.now()-dayStart(t.date)<=90*864e5):all;
