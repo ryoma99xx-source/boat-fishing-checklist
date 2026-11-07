@@ -521,6 +521,7 @@ details.fold[open] .fold-ic::after{top:11px;transform:rotate(-135deg)}
 /* tutorial */
 .tut{position:fixed;inset:0;z-index:60;background:rgba(3,7,13,.8);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 .tut[hidden]{display:none}
+.tut-card>*{flex-shrink:0}
 .tut-card{width:100%;max-width:420px;max-height:calc(100dvh - 32px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain;background:linear-gradient(170deg,#11233a,#0b1422 65%);border:1px solid #24405c;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);touch-action:pan-y}
 .tut-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .tut-step{font-family:var(--f-num);font-weight:600;letter-spacing:.16em;color:var(--teal);font-size:14px}
@@ -1053,7 +1054,30 @@ const tideNameOf=tr=>tr.tideName||shioName(tr.date);
 const stName=c=>TIDE.st[c]?TIDE.st[c].n:'';
 
 function markDirty(id){if(!S.dirty.trips.includes(id))S.dirty.trips.push(id)}
-function touch(tr){tr.updatedAt=Date.now();if(!tr.sample)markDirty(tr.id);saveLocal();scheduleFlush()}
+function touch(tr){tr.updatedAt=Date.now();if(!tr.sample)markDirty(tr.id);saveLocal();scheduleFlush();shareQueue()}
+/* 釣果データの匿名提供：沖上がりした釣行を、名前やメモを除いてサーバーに送る（設定でオフにできる） */
+const SHARE_URL='/collect.php',SHARE_FROM=Date.parse('2026-11-07T00:00:00+09:00');
+const shareOn=()=>!S.prefs||S.prefs.share!==false;
+const shareCan=()=>location.origin==='https://dragon-counter.cutlassfish.tokyo';
+const rid=()=>{const a=new Uint8Array(12);crypto.getRandomValues(a);return Array.from(a,x=>x.toString(36).padStart(2,'0')).join('').slice(0,24)};
+function sharePayload(t){const r3=x=>typeof x==='number'?Math.round(x*1e3)/1e3:x,nm=(sp,k,id)=>{try{return id?listName(sp,k,id):''}catch(e){return ''}};
+  return {app:'dragon-counter',ver:1,uid:t.shareId,date:t.date,spotId:t.spotId||'',spot:t.spot?{name:t.spot.name,lat:r3(t.spot.lat),lon:r3(t.spot.lon)}:{name:t.port||''},
+    boat:t.boat||'',people:t.people,seats:t.seats,side:t.side,seat:t.seat,station:t.station||'',tide:tideNameOf(t),tides:(t.tides||[]).map(x=>({type:x.type,hhmm:x.hhmm,cm:x.cm})),
+    mode:modeOf(t),start:t.start,end:t.end,planEnd:t.planEnd||null,
+    events:(t.events||[]).map(e=>{const g=e.gsp||e.sp;return {t:e.t,kind:e.kind,sp:e.sp,gsp:e.gsp,v:e.v,rig:e.rig||'',rigName:nm(g,'rigs',e.rig),bait:e.bait||'',baitName:nm(g,'baits',e.bait),size:e.size||'',dragon:!!e.dragon,sa:e.sa||'',ka:e.ka||'',fish:e.kind==='gedo'?(e.name||''):''}}),
+    states:(t.states||[]).map(x=>{const y={...x};delete y.id;delete y.memo;delete y.note;return y}),
+    gear:(t.gearLog||[]).map(g=>({t:g.t,sp:g.sp,rig:g.rig||'',rigName:nm(g.sp,'rigs',g.rig),bait:g.bait||'',baitName:nm(g.sp,'baits',g.bait)})),
+    points:(t.points||[]).map(q=>({t:q.t,lat:r3(q.lat),lon:r3(q.lon)}))}}
+let shareTimer=null,sharing=false;function shareQueue(){clearTimeout(shareTimer);shareTimer=setTimeout(shareFlush,4000)}
+async function shareFlush(){if(sharing||!shareCan()||!navigator.onLine)return;sharing=true;
+  const post=b=>fetch(SHARE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b),keepalive:true}).then(r=>r.ok);
+  try{for(const t of Object.values(S.trips)){if(!t||t.sample)continue;
+    const off=t.deleted||!shareOn();
+    if(off){if(t.shareId&&t.shareSent){if(await post({app:'dragon-counter',uid:t.shareId,delete:true})){delete t.shareSent;saveLocal()}}continue}
+    if(t.status!=='done'||!t.end||t.end<SHARE_FROM||t.shareSent===t.updatedAt)continue;
+    if(!t.shareId)t.shareId=rid();const u=t.updatedAt;if(await post(sharePayload(t))){t.shareSent=u;saveLocal()}}}
+  catch(e){}sharing=false}
+addEventListener('online',shareQueue);setTimeout(shareQueue,0);
 function cfgTouch(){snapOwned();S.cfg.updatedAt=Date.now();S.dirty.cfg=true;saveLocal();scheduleFlush()}
 
 /* ---------- cloud sync (db capability) ---------- */
@@ -1823,6 +1847,7 @@ function viewGear(){const sp=SOLO||(spOf(S.ui.gearSp).id!=='?'?S.ui.gearSp:S.cfg
   ${listCard(sp,'baits','その他の餌（テンヤのとき）','例：サバ、サンマ',isBzSp(sp)?bzLegacy:null)}
   <h2 class="sec-h">バックアップ</h2>
   ${backupCardHTML()}
+  ${SITE?shareCardHTML():''}
   <div class="card"><h2>使い方</h2><p class="muted">はじめに表示した6ステップの説明をもう一度見られます。</p><button class="btn sm" data-act="tutOpen">使い方を見る</button></div>
   <div class="card"><h2>ボタンで数える<small class="pre-tag">予備機能</small></h2><p class="muted">指が濡れて画面を押しにくいときに、時刻だけ残しておき、あとで確認して追加します（即時反映は検討中）。アクションボタンや背面タップ、Bluetoothのページめくりリモコンで記録できます。</p><div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" data-act="btnHelp">設定のしかたを見る</button>${active()?'<button class="btn sm" data-act="btnImport">ボタンの記録を取り込む</button>':''}</div></div>`}
 
@@ -1949,6 +1974,7 @@ function helpHTML(){return `<div class="sheet-h"><h2>ボタンで数える<small
 // keep the trip picker on the 図 tab just under the sticky header
 (()=>{const set=()=>{const h=document.querySelector('header.top');if(h)document.documentElement.style.setProperty('--topH',h.offsetHeight+'px')};set();addEventListener('resize',set);if(window.ResizeObserver){const h=document.querySelector('header.top');if(h)new ResizeObserver(set).observe(h)}})();
 const acts={
+  shareToggle:()=>{S.prefs.share=!shareOn();saveLocal();render();shareQueue();toast(S.prefs.share?'釣果データの提供をオンにしました':'提供をオフにしました。送った分はサーバーから消します')},
   tab:b=>{S.ui.tab=b.dataset.tab;saveLocal();render();scrollTo(0,0)},
   backRec:()=>{const a=document.activeElement;if(a&&a.blur)a.blur(); // commit the field being edited
     const nb=$('#add-boat');if(nb&&nb.value.trim()&&!S.cfg.boats.some(x=>x.name===nb.value.trim()))acts.boatAdd(); // a boat typed but not yet registered
@@ -2116,7 +2142,7 @@ const acts={
   showFig:b=>{S.ui.figTrip=b.dataset.id;S.ui.figSp=mainSp(S.trips[b.dataset.id]);S.ui.tab='fig';saveLocal();render();scrollTo(0,0)},
   reopen:b=>{const tr=S.trips[b.dataset.id];tr.status='active';tr.end=null;S.activeId=tr.id;S.ui.tab='rec';touch(tr);keepAwake();render();scrollTo(0,0)},
   delTrip:b=>{if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='もう一度押すと消します';return}
-    const id=b.dataset.id,tr=S.trips[id];if(tr.sample){delete S.trips[id];saveLocal()}else{S.trips[id]={id,deleted:true,updatedAt:Date.now()};markDirty(id);saveLocal();scheduleFlush()}
+    const id=b.dataset.id,tr=S.trips[id];if(tr.sample){delete S.trips[id];saveLocal()}else{S.trips[id]={id,deleted:true,updatedAt:Date.now(),...(tr.shareSent?{shareId:tr.shareId,shareSent:1}:{})};markDirty(id);shareQueue();saveLocal();scheduleFlush()}
     if(S.activeId===id){S.activeId=null;releaseAwake()}render();toast('消しました')},
   exportJson:()=>exportJson(),
   dashPer:b=>{S.ui.dashPer=b.dataset.d;saveLocal();render()},
@@ -2223,7 +2249,7 @@ function renderRestore(){const {d}=rs;const c=d.cfg||{};const when=d.exportedAt?
    <p class="muted">${rs.mode==='merge'?`今の記録は残したまま、バックアップにしかない釣行（${rs.nNew}件）を足し、同じ釣行はより新しいほう（バックアップが新しいのは${rs.nNewer}件）を残します。設定（釣り場・船・テンヤ）は、新しいほうを使います。`:'今のこの端末の記録と設定をすべて消して、バックアップの内容にします。バックアップにない釣行は消えます（クラウドからも消えます）。'}</p>
    <button class="btn ${rs.mode==='replace'?'danger':'primary'} big ${rs.armed?'armed':''}" data-act="rsDo">${rs.armed?'もう一度押すと復元します':'復元する'}</button>`,{kind:'restore'})}
 function doRestore(){const {d,mode}=rs;let n=0;
-  if(mode==='replace'){for(const id in S.trips){const t=S.trips[id];if(t.sample||t.deleted)continue;if(!d.trips.some(x=>x.id===id)){S.trips[id]={id,deleted:true,updatedAt:Date.now()};markDirty(id)}}
+  if(mode==='replace'){for(const id in S.trips){const t=S.trips[id];if(t.sample||t.deleted)continue;if(!d.trips.some(x=>x.id===id)){S.trips[id]={id,deleted:true,updatedAt:Date.now(),...(t.shareSent?{shareId:t.shareId,shareSent:1}:{})};markDirty(id)}}
     d.trips.forEach(t=>{t.updatedAt=Math.max(t.updatedAt||0,Date.now());S.trips[t.id]=t;markDirty(t.id);n++});
     if(d.cfg){S.cfg=clone(d.cfg);migrateCfg(S.cfg);S.cfg.updatedAt=Date.now();S.dirty.cfg=true}if(d.prefs)S.prefs={...S.prefs,...d.prefs,g:{...(d.prefs.g||{})}};
     const a=d.trips.find(t=>t.status==='active');S.activeId=a?a.id:null}
@@ -2233,9 +2259,15 @@ function doRestore(){const {d,mode}=rs;let n=0;
   startDraft=null;rs=null;saveLocal();scheduleFlush();closeSheet();toast(mode==='replace'?`バックアップの内容に置き換えました（釣行${n}件）`:`${n}件の釣行を復元しました`)}
 function pasteRestoreSheet(){openSheet(`<div class="sheet-h"><h2>文字を貼り付けて復元</h2><button class="btn sm ghost" data-act="closeSheet">やめる</button></div>
    <p class="muted">「文字で保存」でコピーしておいたバックアップを、そのまま貼り付けてください。</p><textarea id="rsText" style="min-height:200px" placeholder='{"app":"dragon-counter", …}'></textarea><button class="btn primary" data-act="rsPasteRead">読み取る</button>`,{kind:'restore'})}
+function shareCardHTML(){const on=shareOn();
+  return `<div class="card" id="secShare"><h2>釣果データの提供</h2>
+   <p class="muted">沖上がりした釣行の記録（日付・釣り場・船・席・時刻ごとの釣果・テンヤと餌・誘いと掛け方・潮・船の向き・記録した場所）を、名前やメモを除いて匿名で集めています。集めたデータは、釣れる時間や潮・テンヤの傾向を調べてツールや記事に生かすために使い、個人が分かる形で公開することはありません。</p>
+   <p class="muted">送るのはこのページを開いているときだけで、IPアドレスや端末の情報は保存しません。オフにすると、それまでに送った分もサーバーから消します。</p>
+   <button class="btn ${on?'':'primary'}" data-act="shareToggle">${on?'提供をオフにする':'提供をオンにする'}</button>
+   <p class="bk-last">いまの設定：${on?'提供する（オン）':'提供しない（オフ）'}</p></div>`}
 function backupCardHTML(){const lb=S.ui.lastBackup;const ts=trips().filter(t=>!t.sample);
   return `<div class="card" id="secBackup"><h2>バックアップと復元</h2>
-   <p class="muted">釣行の記録、釣り場、船、所有テンヤ・リスト、設定をまとめて1つのファイルに保存します。${SITE?'記録はこの端末の中だけにあるので、機種変更の前やときどき保存してください。':'記録はクラウドにも同期していますが、念のためときどき保存しておくと安心です。'}</p>
+   <p class="muted">釣行の記録、釣り場、船、所有テンヤ・リスト、設定をまとめて1つのファイルに保存します。${SITE?'記録の本体はこの端末の中にあるので、機種変更の前やときどき保存してください。':'記録はクラウドにも同期していますが、念のためときどき保存しておくと安心です。'}</p>
    <p class="bk-last">${lb?`前回のバックアップ：${jdate(ymd(lb))} ${hm(lb)}`:'まだバックアップしていません'}・いまの釣行 ${ts.length}件</p>
    <button class="btn primary" data-act="exportJson">全データをバックアップ</button>
    <div class="bk-row"><label class="btn" for="importFile">ファイルで復元<input type="file" id="importFile" accept=".json,application/json,text/plain" hidden></label><button class="btn" data-act="rsPaste">文字で復元</button></div>
@@ -2281,7 +2313,7 @@ function tutArt(i){const tx=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${
     <path d="M40,122 L236,122 Q262,126 276,138 Q262,150 236,154 L40,154 Q34,138 40,122 Z" style="fill:var(--surface2);stroke:var(--ink)" stroke-width="1.5"/>
     ${[0,1,2,3,4,5,6].map(j=>`<circle cx="${226-j*28}" cy="130" r="${j===2?7:4}" style="fill:${j===2?'var(--amber)':'var(--muted)'}"/><circle cx="${226-j*28}" cy="146" r="4" style="fill:var(--muted)"/>`).join('')}`}
 const TUT=[
-  {k:'ようこそ',t:'釣果を時間の経過と共に記録',d:'ドラゴンカウンターは、タチウオの釣果を時間の経過と共に、使ったテンヤ・潮・船の向きと一緒に記録するアプリです。記録はこの端末に保存されます。'},
+  {k:'ようこそ',t:'釣果を時間の経過と共に記録',d:'ドラゴンカウンターは、タチウオの釣果を時間の経過と共に、使ったテンヤ・潮・船の向きと一緒に記録するアプリです。釣果データは匿名で集めます（「登録」タブでオフにできます）。'},
   {k:'準備',t:'所有テンヤを登録',d:'画面下の右端にある「登録」タブで、カタログから持っているテンヤにチェック。カタログには今販売されている多くのテンヤが入っていて、月に一度更新する予定です。その中から当日持っていく分を「一軍リスト」のようにまとめておきます。'},
   {k:'出船',t:'釣り場と席を選ぶ',d:'釣り場を選ぶだけで、潮回りと満潮・干潮が自動で入ります。よく行く釣り場は地図から登録できます。船と自分の席もタップで選びます。餌はイワシ（サイズ・頭つき／なし・内臓あり／なし）、ハイブリッドクロス、カマスなどから選べます。'},
   {k:'釣れたら',t:'「釣れた」を1タップ',d:'「釣れた＋1」は、横の「使用テンヤ」で選んでいるテンヤで1本記録します。テンヤを付け替えたら、画面下のテンヤのボタンで使用テンヤを切り替えます（押しても記録はされません）。120cm以上なら先に「ドラゴン」にチェック。アタリ・バラシも、使用テンヤに紐づいて記録されます。押し間違えたら下の「直前の釣果を取り消し」。タチウオ以外が掛かったら小さな「外道」ボタンから（本数には入りません）。「詳細」モードにすると、誘い（巻き／叩き・誘い中／ステイ中）も残せます。釣れた・バラシは掛け方（即掛け／深追い）も選びます。場所を移動したら上の「📍場所」で今いる場所を記録できます。'},

@@ -51,8 +51,8 @@
    "path": "/",
    "file": "index.html",
    "content_type": "text/html; charset=utf-8",
-   "bytes": 392741,
-   "sha256": "6e1f8c9f5b5b1f7f4fb1db35d07da3d737efa1f44ea035f052a643f5c5bab8df",
+   "bytes": 396860,
+   "sha256": "9176343b0775d8719d3f881cb9f37b1596ee53c5fab97d00885c4fc8ef75f50d",
    "found_by": "release zip",
    "modifications": [
     "「はじめに表示した5ステップの説明」→「6ステップ」（実際の案内は6ステップ。オーナー指示 2026-11-04）"
@@ -92,6 +92,15 @@
    "bytes": 2486,
    "sha256": "a77ceebef50195ef35993b3ef9923dba5d5aa1075a5eea4e033bcaa9f1ec6b34",
    "found_by": "release zip",
+   "modifications": []
+  },
+  {
+   "path": "/collect.php",
+   "file": "collect.php",
+   "content_type": "application/json; charset=utf-8",
+   "bytes": 2109,
+   "sha256": "211885fdd1c054976f258a1c3e6c21d04c38d8842c410eb7ca4c81788edd7d3c",
+   "found_by": "added 2026-11-07 (anonymous catch data receiver)",
    "modifications": []
   }
  ],
