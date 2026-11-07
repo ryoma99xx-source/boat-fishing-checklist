@@ -521,7 +521,7 @@ details.fold[open] .fold-ic::after{top:11px;transform:rotate(-135deg)}
 /* tutorial */
 .tut{position:fixed;inset:0;z-index:60;background:rgba(3,7,13,.8);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 .tut[hidden]{display:none}
-.wx-line{font-size:13px;margin-top:2px}.maphere{width:100%;margin:8px 0 2px;display:flex;flex-direction:column;align-items:center;gap:2px}.maphere small{font-size:12px;color:var(--muted);font-weight:400}.wx-line span{white-space:nowrap}
+.wx-line{font-size:13px;margin-top:2px}#fModeSeg.need-pick{border-color:var(--amber,#e3a43b)}#fModeSeg .req{font-size:11px;font-weight:700;color:var(--amber,#e3a43b);border:1px solid currentColor;border-radius:999px;padding:1px 7px;margin-left:8px;vertical-align:middle}#fModeSeg.shake{animation:fmshake .5s}@keyframes fmshake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}.maphere{width:100%;margin:8px 0 2px;display:flex;flex-direction:column;align-items:center;gap:2px}.maphere small{font-size:12px;color:var(--muted);font-weight:400}.wx-line span{white-space:nowrap}
 .tut-card>*{flex-shrink:0}
 .tut-card{width:100%;max-width:420px;max-height:calc(100dvh - 32px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain;background:linear-gradient(170deg,#11233a,#0b1422 65%);border:1px solid #24405c;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);touch-action:pan-y}
 .tut-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
@@ -1453,9 +1453,9 @@ function spChipsHTML(sel,act){return `<div class="chips" role="group" aria-label
 function chipsHTML(sp,k,sel,act){const s=spOf(sp);const label=k==='rigs'?s.rigLabel:s.baitLabel;if(!label)return '';
   return `<div class="gearpick"><div class="gp-lbl">${esc(label)}</div><div class="chips wrap">${(s[k]||[]).filter(g=>!g.hidden).map(g=>
   `<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">＋</button></div></div>`}
-function fModeHTML(f){const m=f.mode||S.prefs.recMode||'simple';f.mode=m;
-  return `<div class="card" id="fModeSeg"><h2>記録のしかた</h2><div class="seg">${[['simple','シンプル'],['detail','詳細']].map(([k,l])=>`<button class="${m===k?'on':''}" data-act="fMode" data-d="${k}">${l}</button>`).join('')}</div>
-   <p class="muted">${m==='detail'?'釣れた・アタリ・バラシを押すたびに、誘い（巻き／叩き × 誘い中／ステイ中）と掛け方（即掛け／深追い）を選んで記録します。長押しすると選ばずにすぐ記録。':'押すとすぐ記録します。誘いや掛け方は付けません（あとから記録の一覧で付けることもできます）。'}釣行中も「本日の釣果」の左上で切り替えられます。</p></div>`}
+function fModeHTML(f){const m=f.rmode||'';
+  return `<div class="card ${m?'':'need-pick'}" id="fModeSeg"><h2>記録のしかた<small class="req">必須</small></h2><div class="seg">${[['simple','シンプル'],['detail','詳細']].map(([k,l])=>`<button class="${m===k?'on':''}" data-act="fMode" data-d="${k}">${l}</button>`).join('')}</div>
+   <p class="muted">${!m?'シンプルか詳細のどちらかを選んでください。':m==='detail'?'釣れた・アタリ・バラシを押すたびに、誘い（巻き／叩き × 誘い中／ステイ中）と掛け方（即掛け／深追い）を選んで記録します。長押しすると選ばずにすぐ記録。':'押すとすぐ記録します。誘いや掛け方は付けません（あとから記録の一覧で付けることもできます）。'}釣行中も「本日の釣果」の左上で切り替えられます。</p></div>`}
 function formHTML(f){const boats=S.cfg.boats.map(b=>`<option value="${esc(b.name)}">`).join('');
   return `<div class="card tight"><h2>日時と船</h2>
    <div class="dtrow"><label class="field"><span>日付</span><input type="date" id="fDate" data-f="date" value="${esc(f.date)}"></label>
@@ -1679,7 +1679,7 @@ const SA_JP={'maki-move':'巻き・誘い中','maki-stay':'巻き・ステイ中
 const SA_KEYS=Object.keys(SA_JP);let nextSa=null;
 /* 掛け方：即掛け／深追い。詳細モードでは 誘い → 掛け方 の2段で記録する */
 const KA_JP={soku:'即掛け',fuka:'深追い'},KA_KEYS=Object.keys(KA_JP);let nextKa=null,bypassDetail=false;
-const modeOf=tr=>(tr&&tr.mode)||'simple';
+const modeOf=tr=>tr&&tr.mode==='detail'?'detail':'simple';
 const detailTxt=e=>[e.sa?SA_JP[e.sa]:'',e.ka?KA_JP[e.ka]:''].filter(Boolean).join('・');
 function recKind(kind){if(kind==='catch'){const tr=active();if(!tr)return;const g=curGear(tr);addEvent('catch',mainV(tr.cur.sp),null,null,g.rig)}else addEvent(kind)}
 function openKake(kind,sa){const last=S.ui.lastKa;
@@ -2267,11 +2267,11 @@ const acts={
   pickBoat:b=>{const bt=S.cfg.boats.find(x=>x.id===b.dataset.id);if(!bt)return;const f=curForm;Object.assign(f,{boat:bt.name,people:bt.people||(bt.seats?bt.seats*2:f.people)});if(f.mode!=='edit'){if(bt.start)f.start=bt.start;if(bt.end)f.end=bt.end}fixPeople(f);if(bt.seat){f.side=bt.side||f.side;f.seat=Math.min(bt.seat,f.seats)}boatSpotFollow(f,bt);if(sheetCtx&&sheetCtx.kind==='trip')openTripSheet(sheetCtx.id,f);else render()},
   fRig:b=>{fGear(startDraft,startDraft.sp).rig=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},
   fBait:b=>{fGear(startDraft,startDraft.sp).bait=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},
-  depart:()=>{const f=startDraft;if(!f.boat.trim())return toast('船の名前を入れてください');if(!f.seat)return toast('座席の図で自分の席をタップしてください');
+  depart:()=>{const f=startDraft;if(!f.boat.trim())return toast('船の名前を入れてください');if(!f.seat)return toast('座席の図で自分の席をタップしてください');if(!f.rmode){const w=$('#fModeSeg');if(w){w.classList.add('need-pick','shake');w.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>w.classList.remove('shake'),600)}return toast('記録のしかた（シンプル／詳細）を選んでください')}
     const start=f.start?atTime(f.date,f.start):Date.now();const g=fGear(f,f.sp);const cat=!!spOf(f.sp).catalog;
     const cg=cat?{method:g.method,set:g.set,extra:[],rig:isTenya(f.sp,g)?(setItems(g.set)[0]||''):g.rig,bait:g.bait}:{rig:g.rig,bait:g.bait};
     const tr={id:uid(),v:2,date:f.date,port:f.spot?f.spot.name:'',spotId:f.spotId||'',spot:f.spot||null,boat:f.boat.trim(),people:f.people,seats:f.seats,side:f.side,seat:f.seat,station:f.station,tideName:'',tides:[],
-      start,end:null,planEnd:null,status:'active',mode:f.mode||S.prefs.recMode||'simple',events:[],states:[],gearLog:[{t:start,sp:f.sp,rig:cg.rig,bait:needBait(f.sp,cg)?cg.bait:''}],cur:{sp:f.sp,g:{[f.sp]:cg}},memo:'',updatedAt:0};
+      start,end:null,planEnd:null,status:'active',mode:f.rmode,events:[],states:[],gearLog:[{t:start,sp:f.sp,rig:cg.rig,bait:needBait(f.sp,cg)?cg.bait:''}],cur:{sp:f.sp,g:{[f.sp]:cg}},memo:'',updatedAt:0};
     if(f.end){tr.planEnd=tAt(tr,f.end);if(tr.planEnd<=start)tr.planEnd+=864e5}
     registerBoat(tr);Object.assign(S.prefs,{boat:tr.boat,seats:tr.seats,side:tr.side,seat:tr.seat,sp:f.sp,spotId:f.spotId||S.prefs.spotId||''});S.prefs.g[f.sp]=cat?{method:g.method,set:g.set,bait:g.bait}:{rig:g.rig,bait:g.bait};
     S.trips[tr.id]=tr;S.activeId=tr.id;S.ui.figTrip=tr.id;startDraft=null;touch(tr);keepAwake();render();scrollTo(0,0);toast('出船しました。釣れたらボタンを押してください')},
@@ -2395,7 +2395,7 @@ const acts={
   kaRec:b=>{const k=b.dataset.k,sa=b.dataset.sa,ka=b.dataset.ka;if(ka)S.ui.lastKa=ka;$('#sheet').hidden=true;sheetCtx=null;nextSa=sa||null;nextKa=ka||null;lastTap=0;bypassDetail=true;
     try{recKind(k)}finally{bypassDetail=false;nextSa=null;nextKa=null}},
   recMode:b=>{const tr=active();if(!tr)return;tr.mode=b.dataset.d;S.prefs.recMode=b.dataset.d;touch(tr);render();toast(b.dataset.d==='detail'?'詳細モード：釣れた・アタリ・バラシを押すと、誘いと掛け方を選んで記録します':'シンプルモード：押すとすぐ記録します')},
-  fMode:b=>{startDraft.mode=b.dataset.d;const w=$('#fModeSeg');if(w)w.outerHTML=fModeHTML(startDraft)},
+  fMode:b=>{startDraft.rmode=b.dataset.d;const w=$('#fModeSeg');if(w)w.outerHTML=fModeHTML(startDraft)},
   evKa:b=>{const tm=$('#evTime');if(tm)evF.t=tm.value;const m=$('#evMemo');if(m)evF.memo=m.value;evF.ka=b.dataset.d;renderEvSheet()},
   evSa:b=>{const tm=$('#evTime');if(tm)evF.t=tm.value;const m=$('#evMemo');if(m)evF.memo=m.value;evF.sa=b.dataset.d;renderEvSheet()},
   locRec:()=>recLoc(),
