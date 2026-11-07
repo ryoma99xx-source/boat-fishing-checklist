@@ -1428,11 +1428,11 @@ function openKake(kind,sa){const last=S.ui.lastKa;
    <button class="btn" data-act="kaRec" data-k="${kind}" data-sa="${sa}" data-ka="">掛け方なしで記録</button><button class="btn sm ghost" data-act="saBack" data-k="${kind}">← 誘いを選び直す</button>`,{kind:'sasoi'})}
 function openSasoi(kind){const tr=active();if(!tr)return;const last=S.ui.lastSa;
   openSheet(`<div class="sheet-h"><h2>${KIND_JP[kind]}：誘い</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
-   <p class="muted">1/2　そのとき、どう誘っていたか。次に掛け方を選びます。</p>
+   <p class="muted">${kind==='bite'?'そのとき、どう誘っていたかを押すと記録します。':'1/2　そのとき、どう誘っていたか。次に掛け方を選びます。'}</p>
    <div class="sa-grid"><span></span><b>誘い中</b><b>ステイ中</b>
     <b>巻き</b><button class="sa-b ${last==='maki-move'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="maki-move">巻き<br>誘い中</button><button class="sa-b ${last==='maki-stay'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="maki-stay">巻き<br>ステイ中</button>
     <b>叩き</b><button class="sa-b ${last==='tata-move'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="tata-move">叩き<br>誘い中</button><button class="sa-b ${last==='tata-stay'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="tata-stay">叩き<br>ステイ中</button></div>
-   <button class="btn" data-act="saRec" data-k="${kind}" data-sa="">誘いは選ばない（次へ）</button>`,{kind:'sasoi'})}
+   <button class="btn" data-act="saRec" data-k="${kind}" data-sa="">${kind==='bite'?'誘いなしで記録':'誘いは選ばない（次へ）'}</button>`,{kind:'sasoi'})}
 /* 場所：📍場所ボタンで、その時刻の位置を記録（リアルタイム追跡はしない） */
 const ptKm=(a,b)=>{const R=6371,r=x=>x*Math.PI/180,dl=r(b.lat-a.lat),dn=r(b.lon-a.lon);const h=Math.sin(dl/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
 const kmTxt=k=>k<1?Math.round(k*100)*10+'m':r1(k)+'km';
@@ -1855,7 +1855,7 @@ function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.
    ${SOLO?'':`<div class="field"><span>魚種</span><div class="chips">${S.cfg.species.filter(x=>!x.hidden||x.id===f.sp).map(x=>`<button class="chip ${x.id===f.sp?'on':''}" data-act="evSp" data-d="${x.id}">${esc(x.name)}</button>`).join('')}</div></div>`}
    ${f.kind==='catch'&&f.sp==='tachiuo'?`<label class="check"><input type="checkbox" id="evDragon" ${f.dragon?'checked':''}><i class="ic ic-dragon lg"></i>ドラゴン（120cm以上）</label>`:''}
    ${f.kind==='catch'&&s.variants.length>1?`<div class="field"><span>種類</span><div class="chips">${s.variants.map(v=>`<button class="chip ${v.id===f.v?'on':''}" data-act="evV" data-d="${v.id}">${esc(v.name)}</button>`).join('')}</div></div>`:''}
-   ${f.kind!=='gedo'?`<div class="field"><span>誘い</span><div class="chips wrap">${['',...SA_KEYS].map(k=>`<button class="chip ${f.sa===k?'on':''}" data-act="evSa" data-d="${k}">${k?SA_JP[k]:'なし'}</button>`).join('')}</div></div><div class="field"><span>掛け方</span><div class="chips wrap">${['',...KA_KEYS].map(k=>`<button class="chip ${f.ka===k?'on':''}" data-act="evKa" data-d="${k}">${k?KA_JP[k]:'なし'}</button>`).join('')}</div></div>`:''}
+   ${f.kind!=='gedo'?`<div class="field"><span>誘い</span><div class="chips wrap">${['',...SA_KEYS].map(k=>`<button class="chip ${f.sa===k?'on':''}" data-act="evSa" data-d="${k}">${k?SA_JP[k]:'なし'}</button>`).join('')}</div></div>${f.kind!=='bite'?`<div class="field"><span>掛け方</span><div class="chips wrap">${['',...KA_KEYS].map(k=>`<button class="chip ${f.ka===k?'on':''}" data-act="evKa" data-d="${k}">${k?KA_JP[k]:'なし'}</button>`).join('')}</div></div>`:''}`:''}
    <label class="field"><span>時刻</span><input type="time" id="evTime" data-ef="t" value="${esc(f.t)}"></label>
    <div class="grid2"><label class="field"><span>${esc(gs.catalog?'仕掛け':gs.rigLabel)}${f.gsp!==f.sp?`（${esc(gs.name)}の道具）`:''}</span><select id="evRig" data-ef="rig">${sel('rigs')}</select></label>${gs.baitLabel?`<label class="field"><span>${esc(gs.baitLabel)}</span><select id="evBait" data-ef="bait">${sel('baits')}</select></label>`:''}</div>
    ${f.kind==='catch'&&sizeUI?`<div class="field"><span>サイズ（全長・任意）</span>${sizeUI}</div>`:''}
@@ -2068,7 +2068,8 @@ const acts={
   stDel:()=>{if(!stF.armed){stF.armed=true;return renderStateSheet()}const tr=S.trips[stF.tid];tr.states=tr.states.filter(x=>x.id!==stF.sid);touch(tr);closeSheet()},
   evKind:b=>{evF.kind=b.dataset.d;renderEvSheet()},evSize:b=>{evF.size=b.dataset.d;renderEvSheet()},evV:b=>{evF.v=b.dataset.d;renderEvSheet()},
   evSp:b=>{if(evF.sp===b.dataset.d)return;evF.sp=b.dataset.d;evF.v=mainV(evF.sp);evF.size='';renderEvSheet()},
-  saRec:b=>{const sa=b.dataset.sa;if(sa)S.ui.lastSa=sa;openKake(b.dataset.k,sa)},
+  saRec:b=>{const sa=b.dataset.sa,k=b.dataset.k;if(sa)S.ui.lastSa=sa;if(k!=='bite')return openKake(k,sa);
+    $('#sheet').hidden=true;sheetCtx=null;nextSa=sa||null;lastTap=0;bypassDetail=true;try{recKind(k)}finally{bypassDetail=false;nextSa=null}},
   saBack:b=>openSasoi(b.dataset.k),
   kaRec:b=>{const k=b.dataset.k,sa=b.dataset.sa,ka=b.dataset.ka;if(ka)S.ui.lastKa=ka;$('#sheet').hidden=true;sheetCtx=null;nextSa=sa||null;nextKa=ka||null;lastTap=0;bypassDetail=true;
     try{recKind(k)}finally{bypassDetail=false;nextSa=null;nextKa=null}},
@@ -2082,7 +2083,7 @@ const acts={
      <a class="btn" href="${mapUrl(p)}" target="_blank" rel="noopener">地図で見る</a><button class="btn danger" data-act="locDel" data-tid="${t.id}" data-id="${p.id}">この場所の記録を消す</button>`,{kind:'loc'})},
   locDel:b=>{if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='もう一度押すと消します';return}const t=S.trips[b.dataset.tid];t.points=(t.points||[]).filter(p=>p.id!==b.dataset.id);touch(t);closeSheet();toast('場所の記録を消しました')},
   evSave:()=>{const f=evF,tr=S.trips[f.tid],e=tr.events.find(x=>x.id===f.id);const dc=$('#evDragon');if(dc)f.dragon=dc.checked;if(f.kind==='catch'&&f.sp==='tachiuo'&&f.dragon)e.dragon=true;else delete e.dragon;
-    Object.assign(e,{kind:f.kind,sp:f.sp,gsp:f.gsp,v:f.kind==='catch'?f.v:undefined,t:tAt(tr,f.t)+(new Date(e.t).getSeconds()*1000),rig:f.rig,bait:f.bait,size:f.kind==='catch'?f.size:'',memo:f.memo.trim()});if(f.kind==='gedo')e.name=(f.name||'').trim()||e.name;else delete e.name;if(f.sa&&f.kind!=='gedo')e.sa=f.sa;else delete e.sa;if(f.ka&&f.kind!=='gedo')e.ka=f.ka;else delete e.ka;touch(tr);closeSheet();toast('直しました')},
+    Object.assign(e,{kind:f.kind,sp:f.sp,gsp:f.gsp,v:f.kind==='catch'?f.v:undefined,t:tAt(tr,f.t)+(new Date(e.t).getSeconds()*1000),rig:f.rig,bait:f.bait,size:f.kind==='catch'?f.size:'',memo:f.memo.trim()});if(f.kind==='gedo')e.name=(f.name||'').trim()||e.name;else delete e.name;if(f.sa&&f.kind!=='gedo')e.sa=f.sa;else delete e.sa;if(f.ka&&f.kind!=='gedo'&&f.kind!=='bite')e.ka=f.ka;else delete e.ka;touch(tr);closeSheet();toast('直しました')},
   evDel:()=>{if(!evF.armed){evF.armed=true;return renderEvSheet()}const tr=S.trips[evF.tid];tr.events=tr.events.filter(x=>x.id!==evF.id);touch(tr);closeSheet();toast('消しました')},
   png:b=>savePng(b.dataset.which),
   figSp:b=>{S.ui.figSp=b.dataset.id;saveLocal();render()},
