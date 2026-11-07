@@ -1494,7 +1494,7 @@ function registerBoat(tr){const b=S.cfg.boats.find(x=>x.name===tr.boat);const v=
   else{S.cfg.boats.push({id:uid(),name:tr.boat,...v,...(t0?{start:t0}:{}),...(t1?{end:t1}:{}),spots:tr.spotId?[tr.spotId]:[]});cfgTouch()}}
 function viewStart(){if(!startDraft)startDraft=newForm();curForm=startDraft;
   return `<header class="hero"><p class="eyebrow">TOOL 05 / DRAGON COUNTER</p><div class="hero-h"><h1>ドラゴンカウンター</h1><span class="pill" style="margin-left:0">試験公開</span></div><p class="hero-sub">タチウオの釣果を時間の経過と共に、テンヤ・潮・船の向きと一緒に記録する。<button class="btnlink-s" data-act="tutOpen">使い方を見る</button></p></header>
-   <div class="field" style="gap:4px"><h2>出船の準備</h2><p class="muted">釣り場、船と自分の席、今日のテンヤのリストを選んで出船します。</p>${SITE?`<p class="sample-note">記録の本体はこの端末のブラウザに保存されます。沖上がりした釣行の釣果データは、名前やメモを除いて匿名で集め、傾向の分析に使います（使うことで同意したものとします）。${standalone()?'':'Safariの「共有 → ホーム画面に追加」でアプリのように使え、電波のない船の上でも開けます。'}</p>`:''}</div>
+   <div class="field" style="gap:4px"><h2>出船の準備</h2><p class="muted">釣り場、船と自分の席、今日のテンヤのリストを選んで出船します。</p></div>
    ${formHTML(startDraft)}${fModeHTML(startDraft)}<button class="btn primary big" data-act="depart">出船して記録を始める</button>`}
 
 /* ---------- map picker: coastline from 国土数値情報（行政区域）, simplified; drawn as SVG so it works offline ---------- */
