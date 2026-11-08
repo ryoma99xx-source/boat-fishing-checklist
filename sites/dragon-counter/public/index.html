@@ -521,7 +521,7 @@ details.fold[open] .fold-ic::after{top:11px;transform:rotate(-135deg)}
 /* tutorial */
 .tut{position:fixed;inset:0;z-index:60;background:rgba(3,7,13,.8);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 .tut[hidden]{display:none}
-.wx-line{font-size:13px;margin-top:2px}#fModeSeg.need-pick{border-color:var(--amber,#e3a43b)}#fModeSeg .req{font-size:11px;font-weight:700;color:var(--amber,#e3a43b);border:1px solid currentColor;border-radius:999px;padding:1px 7px;margin-left:8px;vertical-align:middle}#fModeSeg.shake{animation:fmshake .5s}@keyframes fmshake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}.maphere{width:100%;margin:8px 0 2px;display:flex;flex-direction:column;align-items:center;gap:2px}.maphere small{font-size:12px;color:var(--muted);font-weight:400}.wx-line span{white-space:nowrap}
+.wx-line{font-size:13px;margin-top:2px}.memo-ta{width:100%;box-sizing:border-box;font:inherit;font-size:16px;line-height:1.6;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface2,#0f1a28);color:var(--ink);resize:vertical;min-height:84px}.memo-box{margin-top:8px;font-size:14px;line-height:1.6;color:var(--ink);background:var(--surface2,#0f1a28);border:1px solid var(--line);border-radius:10px;padding:8px 10px;word-break:break-word}h2 .opt{font-size:11px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 7px;margin-left:8px;vertical-align:middle}#fModeSeg.need-pick{border-color:var(--amber,#e3a43b)}#fModeSeg .req{font-size:11px;font-weight:700;color:var(--amber,#e3a43b);border:1px solid currentColor;border-radius:999px;padding:1px 7px;margin-left:8px;vertical-align:middle}#fModeSeg.shake{animation:fmshake .5s}@keyframes fmshake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}.maphere{width:100%;margin:8px 0 2px;display:flex;flex-direction:column;align-items:center;gap:2px}.maphere small{font-size:12px;color:var(--muted);font-weight:400}.wx-line span{white-space:nowrap}
 .tut-card>*{flex-shrink:0}
 .tut-card{width:100%;max-width:420px;max-height:calc(100dvh - 32px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain;background:linear-gradient(170deg,#11233a,#0b1422 65%);border:1px solid #24405c;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);touch-action:pan-y}
 .tut-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
@@ -1470,7 +1470,9 @@ function formHTML(f){const boats=S.cfg.boats.map(b=>`<option value="${esc(b.name
    <div class="seatwrap"><div id="seatPick">${seatPickerSVG(f)}</div><div class="seat-note field" id="seatNote">${seatNoteHTML(f)}</div></div></div>
   <div class="card"><div class="card-h"><h2>釣り場</h2><button class="golink" data-act="goSec" data-sec="secSpots">登録・編集 →</button></div><div id="spotChips">${spotChipsHTML(f)}</div><div id="tideInner">${tideInnerHTML(f)}</div></div>
   ${f.mode==='new'?`<div class="card"><h2>仕掛けと餌</h2>${SOLO?'':spChipsHTML(f.sp,'fSp')}<div class="${SOLO?'':'nest'}" id="fGear">${fGearHTML(f)}</div></div>`:''}
-  ${f.mode==='edit'?`<label class="field"><span>メモ</span><input type="text" id="fMemo" data-f="memo" value="${esc(f.memo)}" placeholder="天気・風・水色など"></label>`:''}`}
+  <div class="card"><h2>メモ<small class="opt">任意</small></h2><p class="muted">タックル（竿の調子・リール・道糸）や気づいたことを、自由に残せます。釣行中も記録画面の「📝メモ」から書き足せます。</p>
+   <textarea id="fMemo" data-f="memo" rows="3" class="memo-ta" placeholder="例：竿 極鋭EX178（穂先が柔らかく食い込み良い）／リール ソルティガBJ／PE0.8号・リーダー6号／底から10mまで反応">${esc(f.memo||'')}</textarea>
+   ${f.mode==='new'&&lastMemo()&&!(f.memo||'').trim()?`<button class="golink" data-act="memoCopyLast">前回のメモを入れる →</button>`:''}</div>`}
 function methodSelHTML(sp,g,id){return `<label class="field msel"><span>仕掛け</span><select id="${id}" data-method="${sp}">${['tenya','tenbin'].map(m=>`<option value="${m}" ${methodOf(sp,g)===m?'selected':''}>${METHOD_JP[m]}</option>`).join('')}</select></label>`}
 function fGearHTML(f){const g=fGear(f,f.sp),sp=f.sp,s=spOf(sp);return (SOLO?'':`<div class="nest-h">${esc(s.name)}の道具</div>`)+(s.catalog?methodSelHTML(sp,g,'fMethod')+(isTenya(sp,g)?setPickHTML(g.set,'fSet'):''):chipsHTML(sp,'rigs',g.rig,'fRig'))+(needBait(sp,g)?(isBzSp(sp)?bzHTML(sp,g.bait,'f'):chipsHTML(sp,'baits',g.bait,'fBait')):'')}
 function methodSwitchHTML(tr){const sp=tr.cur.sp;if(!spOf(sp).catalog)return '';const m=methodOf(sp,curGear(tr));const o=m==='tenya'?'tenbin':'tenya';
@@ -1653,7 +1655,7 @@ function viewActive(tr){ocurEnsure(tr);const sp=tr.cur.sp,s=spOf(sp),g=curGear(t
   const span=Date.now()-tr.start;const items=feedItems(tr);const nd=nDragon(tr,sp);
   const status=Date.now()<tr.start?'まだ始まっていません':tr.planEnd&&Date.now()>tr.planEnd?'終了時刻を過ぎました':dur(Math.max(0,span))+'経過';
   return `<header class="rhead"><div class="rh-l"><h1>${jdate(tr.date).replace(/^\d+年/,'')}</h1><span>${hm(tr.start)}〜${tr.planEnd?hm(tr.planEnd):''}・${status}</span></div><button class="pill sm" data-act="tripEdit" data-id="${tr.id}">直す</button></header>
-   <div class="rmeta"><div class="rm-txt">${[tr.boat,seatShort(tr),tr.spot?tr.spot.name:(tr.station?stName(tr.station):''),tideNameOf(tr)].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')}</div><button class="pill sm rm-loc" data-act="locRec" aria-label="今いる場所を記録">📍場所${(tr.points||[]).length?`<small>${tr.points.length}</small>`:''}</button><button class="pill sm rm-edit" data-act="tripEdit" data-id="${tr.id}">直す</button></div>
+   <div class="rmeta"><div class="rm-txt">${[tr.boat,seatShort(tr),tr.spot?tr.spot.name:(tr.station?stName(tr.station):''),tideNameOf(tr)].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')}</div><button class="pill sm rm-loc" data-act="locRec" aria-label="今いる場所を記録">📍場所${(tr.points||[]).length?`<small>${tr.points.length}</small>`:''}</button><button class="pill sm rm-loc rm-memo" data-act="memoOpen" data-id="${tr.id}" aria-label="この釣行のメモ">📝メモ${(tr.memo||'').trim()?'<small>●</small>':''}</button><button class="pill sm rm-edit" data-act="tripEdit" data-id="${tr.id}">直す</button></div>
    <section class="today" aria-label="本日の釣果">
     <div class="td-top"><span class="td-h"><span class="mseg" role="group" aria-label="記録のしかた"><button class="${modeOf(tr)==='simple'?'on':''}" data-act="recMode" data-d="simple">シンプル</button><button class="${modeOf(tr)==='detail'?'on':''}" data-act="recMode" data-d="detail">詳細</button></span>${isTairyo(tr.date)?tairyoTag():''}</span><span class="td-n"><b id="cnum">${c.length}</b>${esc(s.unit)}${SOLO?'':`<small>${esc(s.name)}</small>`}${sp==='tachiuo'?`<small class="td-dn"><i class="ic ic-dragon"></i>ドラゴン <b>${nd}</b></small>`:''}</span></div>
     <div class="td-row"><button class="td-catch" data-act="catchCur"${modeOf(tr)==='detail'?' data-lp="catch"':''}><b>釣れた</b><small>＋1</small>${modeOf(tr)==='detail'?'<i class="lp-hint">誘い・掛け方を選ぶ<br>長押しですぐ記録</i>':''}</button>
@@ -1896,7 +1898,7 @@ function viewFig(){const tr=figTrip();wxEnsure(tr);ocurEnsure(tr);if(!tr)return 
    ${tr.sample?`<p class="sample-note">これは見本のサンプル釣行です。実際に出船して記録すると、自分の図が作られます。<button class="btn sm" data-act="delSample" data-id="${tr.id}">サンプルを消す</button></p>`:''}
    <div class="card"><h2>時系列：潮と流れと釣果</h2><p class="swipe">← 図の中を左右にスワイプできます →</p><div class="scrollx">${timelineSVG(tr,sp)}</div>
     <div class="figfoot"><button class="btn sm" data-act="png" data-which="tl">画像として保存</button></div></div>
-   <div class="card"><h2>座席と数（自分の席）</h2><div class="fitw">${seatSVG(tr,sp)}</div><div class="figfoot"><button class="btn sm" data-act="png" data-which="seat">画像として保存</button></div></div>${pointsCard(tr)}`}
+   <div class="card"><h2>座席と数（自分の席）</h2><div class="fitw">${seatSVG(tr,sp)}</div><div class="figfoot"><button class="btn sm" data-act="png" data-which="seat">画像として保存</button></div></div>${(tr.memo||'').trim()?`<div class="card"><div class="card-h"><h2>メモ</h2><button class="golink" data-act="memoOpen" data-id="${tr.id}">直す →</button></div>${memoHTML(tr)}</div>`:''}${pointsCard(tr)}`}
 
 /* ---------- history ---------- */
 function seatStatsHTML(sp){const real=trips().filter(t=>!t.sample&&t.status==='done'&&tripSpecies(t).includes(sp));const s=spOf(sp);
@@ -1908,9 +1910,17 @@ function seatStatsHTML(sp){const real=trips().filter(t=>!t.sample&&t.status==='d
   return chips+`<div class="zones">${['ミヨシ寄り','胴の間','トモ寄り'].map(zn=>cell('L',zn)+cell('R',zn)).join('')}</div><div class="zones-foot">トモ</div>`}
 /* ---------- 履歴：ダッシュボード + カレンダー ---------- */
 const undoHint=tr=>{const e=tr.events[tr.events.length-1];return e?`${hm(e.t)} ${e.kind==='catch'?esc(vShort(e.sp,e.v)):e.kind==='gedo'?'外道 '+esc(e.name||''):KIND_JP[e.kind]}`:'記録なし'};
+const lastMemo=()=>{const t=trips().filter(x=>!x.sample&&(x.memo||'').trim()).sort((a,b)=>b.start-a.start)[0];return t?t.memo.trim():''};
+function memoSheet(id){const tr=S.trips[id];if(!tr)return;
+  openSheet(`<div class="sheet-h"><h2>この釣行のメモ</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
+   <p class="muted">タックル（竿の調子・リール・道糸）や気づいたことを自由に。メモは釣果データとしては送られません。</p>
+   <textarea id="memoTa" rows="7" class="memo-ta" placeholder="例：竿 極鋭EX178（穂先が柔らかく食い込み良い）／リール ソルティガBJ／PE0.8号・リーダー6号／底から10mまで反応">${esc(tr.memo||'')}</textarea>
+   ${!(tr.memo||'').trim()&&lastMemo()?`<button class="golink" data-act="memoCopyLast" data-into="memoTa">前回のメモを入れる →</button>`:''}
+   <button class="btn primary big" data-act="memoSave" data-id="${id}">保存する</button>`,{kind:'memo'});setTimeout(()=>{const t=$('#memoTa');if(t&&!t.value)t.focus()},250)}
+const memoHTML=t=>(t.memo||'').trim()?`<div class="memo-box">📝 ${esc(t.memo.trim()).replace(/\n/g,'<br>')}</div>`:'';
 function tripCardHTML(t){wxEnsure(t);return `<div class="trip"><div class="trip-h"><div style="min-width:0"><b>${jdate(t.date)}</b>${isTairyo(t.date)?tairyoTag():''}<div class="muted">${esc(t.boat)}・${esc(seatLabel(t))}${t.port?'・'+esc(t.port):''}</div></div></div>
     <div class="trip-sum">${esc(tripSummary(t))||'記録なし'}${nDragon(t,'tachiuo')?`<span class="dn-s"><i class="ic ic-dragon"></i>ドラゴン ${nDragon(t,'tachiuo')}</span>`:''}</div>
-    <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>${t.wx&&wxTxt(t.wx)?`<div class="muted wx-line">${wxTxt(t.wx).split('・').map(x=>`<span>${esc(x)}</span>`).join('・')}</div>`:''}
+    <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>${memoHTML(t)}${t.wx&&wxTxt(t.wx)?`<div class="muted wx-line">${wxTxt(t.wx).split('・').map(x=>`<span>${esc(x)}</span>`).join('・')}</div>`:''}
     <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm two" data-act="tripEdit" data-id="${t.id}">釣行の情報を直す<small>日付・船・席・時間</small></button><button class="btn sm two" data-act="evList" data-id="${t.id}">記録を見る・修正する<small>釣れた・アタリ・バラシ・外道を1件ずつ</small></button>
     ${t.status==='done'&&!t.sample&&!active()?`<button class="btn sm" data-act="reopen" data-id="${t.id}">記録を再開</button>`:''}
     <button class="btn sm danger" data-act="delTrip" data-id="${t.id}">${t.sample?'サンプルを消す':'消す'}</button></div></div>`}
@@ -2245,6 +2255,9 @@ function tenViewSheet(id,n){const t=tenyaOf(id);if(!t)return;const img=TIMG.has(
    <div class="tv-box">${img}</div><p class="tv-sub">${esc(tenyaSub(t))}</p><h3 class="tv-main">${esc(tenyaMain(t))}</h3><div class="tv-badges">${tenyaBadges(t)}</div>
    <p class="tv-n">この期間に<b>${n}本</b></p>${t.u?`<a class="golink" href="${esc(t.u)}" target="_blank" rel="noopener">メーカーの商品ページ →</a>`:''}`,{kind:'tenview'})}
 const acts={
+  memoOpen:b=>memoSheet(b.dataset.id),
+  memoSave:b=>{const tr=S.trips[b.dataset.id];const el=$('#memoTa');if(!tr||!el)return;tr.memo=el.value.replace(/\s+$/,'');touch(tr);closeSheet();render();toast(tr.memo?'メモを保存しました':'メモを空にしました')},
+  memoCopyLast:b=>{const m=lastMemo();const el=$('#'+(b.dataset.into||'fMemo'));if(!el||!m)return;el.value=m;if(!b.dataset.into&&curForm)curForm.memo=m;b.remove();el.focus()},
   tenView:b=>tenViewSheet(b.dataset.id,+b.dataset.n||0),
   tab:b=>{S.ui.tab=b.dataset.tab;saveLocal();render();scrollTo(0,0)},
   backRec:()=>{const a=document.activeElement;if(a&&a.blur)a.blur(); // commit the field being edited
@@ -2276,7 +2289,7 @@ const acts={
     const start=f.start?atTime(f.date,f.start):Date.now();const g=fGear(f,f.sp);const cat=!!spOf(f.sp).catalog;
     const cg=cat?{method:g.method,set:g.set,extra:[],rig:isTenya(f.sp,g)?(setItems(g.set)[0]||''):g.rig,bait:g.bait}:{rig:g.rig,bait:g.bait};
     const tr={id:uid(),v:2,date:f.date,port:f.spot?f.spot.name:'',spotId:f.spotId||'',spot:f.spot||null,boat:f.boat.trim(),people:f.people,seats:f.seats,side:f.side,seat:f.seat,station:f.station,tideName:'',tides:[],
-      start,end:null,planEnd:null,status:'active',mode:f.rmode,events:[],states:[],gearLog:[{t:start,sp:f.sp,rig:cg.rig,bait:needBait(f.sp,cg)?cg.bait:''}],cur:{sp:f.sp,g:{[f.sp]:cg}},memo:'',updatedAt:0};
+      start,end:null,planEnd:null,status:'active',mode:f.rmode,events:[],states:[],gearLog:[{t:start,sp:f.sp,rig:cg.rig,bait:needBait(f.sp,cg)?cg.bait:''}],cur:{sp:f.sp,g:{[f.sp]:cg}},memo:(f.memo||'').trim(),updatedAt:0};
     if(f.end){tr.planEnd=tAt(tr,f.end);if(tr.planEnd<=start)tr.planEnd+=864e5}
     registerBoat(tr);Object.assign(S.prefs,{boat:tr.boat,seats:tr.seats,side:tr.side,seat:tr.seat,sp:f.sp,spotId:f.spotId||S.prefs.spotId||''});S.prefs.g[f.sp]=cat?{method:g.method,set:g.set,bait:g.bait}:{rig:g.rig,bait:g.bait};
     S.trips[tr.id]=tr;S.activeId=tr.id;S.ui.figTrip=tr.id;startDraft=null;touch(tr);keepAwake();render();scrollTo(0,0);toast('出船しました。釣れたらボタンを押してください')},
