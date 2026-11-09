@@ -360,7 +360,7 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 .timg{flex:none;object-fit:contain;border-radius:6px;background:rgba(255,255,255,.05)}
 .timg.row{width:64px;height:48px} .timg.tci{width:40px;height:30px;margin-right:2px}.timg.tci.big{width:64px;height:48px;margin-right:0}
 .timg.dkimg{position:absolute;right:8px;bottom:8px;width:56px;height:42px;pointer-events:none} .dk-t:has(.dkimg) .dk-c,.dk-t:has(.dkimg) .dk-a{padding-right:66px}
-.dk-row{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;max-width:600px;margin:0 auto;width:100%;scroll-snap-type:x proximity}
+.dk-row{display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;overscroll-behavior:contain;touch-action:pan-x;scrollbar-width:none;max-width:600px;margin:0 auto;width:100%;scroll-snap-type:x proximity}
 .dk-row::-webkit-scrollbar{display:none}
 .dk-t{position:relative;flex:0 0 calc(50% - 5px);min-height:92px;border-radius:16px;border:2px solid var(--teal);background:var(--surface);color:var(--ink);text-align:left;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;gap:2px;scroll-snap-align:start;box-shadow:0 3px 0 rgba(0,0,0,.4)}
 .dk-t:only-child{flex-basis:100%}
