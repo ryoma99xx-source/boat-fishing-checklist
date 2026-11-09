@@ -1388,16 +1388,8 @@ function backBar(){let el=$('#backBar');if(!el){el=document.createElement('div')
   if(on){const tb=document.querySelector('.tabs');if(tb)document.documentElement.style.setProperty('--tabs-h',tb.offsetHeight+'px')}
   if(on)el.innerHTML=`<button data-act="backRec"><span class="bb-a">←</span><span><b>保存して記録に戻る</b><small>${active()?'記録中の釣行へ':'出船の準備へ'}</small></span></button>`}
 function render(){if(S.ui.tab!==lastTab&&window.gtag)try{gtag('event','tab_view',{tab:S.ui.tab})}catch(e){}if(lastTab==='rec'&&S.ui.tab!=='rec')recScroll=scrollY;lastTab=S.ui.tab;renderTabs();renderSync();backBar();const t=S.ui.tab;document.body.classList.toggle('has-dock',t==='rec'&&!!active());topTrip();const tc=$('#topCatch');if(tc)tc.hidden=!active();
-  $('#view').innerHTML=t==='rec'?(active()?viewActive(active()):viewStart()):t==='fig'?viewFig():t==='hist'?viewHist():viewGear();if(t==='gear'){applyTq('mine');applyTq('set')}fitToday()}
-/* 記録画面：本日の釣果の枠の下端を、下のテンヤ欄（ドック）の影の境目にそろえる */
-function fitToday(){const td=document.querySelector('body.has-dock .today'),dk=$('#dock');if(!td||!dk)return;td.style.minHeight='';
-  requestAnimationFrame(()=>{const sh=parseFloat(getComputedStyle(dk,'::before').height)||0,edge=dk.getBoundingClientRect().top-sh+scrollY,top=td.getBoundingClientRect().top+scrollY,h=edge-top-4;
-    if(h>td.offsetHeight&&h<td.offsetHeight+260)td.style.minHeight=h+'px'})}
-addEventListener('resize',()=>fitToday());
-/* スクロールが止まったとき、枠の下端が影の境目に近ければ（60px以内）ぴったり合わせる */
-let fitTm=null,fitBusy=false;addEventListener('scroll',()=>{if(fitBusy)return;clearTimeout(fitTm);fitTm=setTimeout(()=>{const td=document.querySelector('body.has-dock .today'),dk=$('#dock');if(!td||!dk||!$('#sheet').hidden)return;
-  const sh=parseFloat(getComputedStyle(dk,'::before').height)||0,d=td.getBoundingClientRect().bottom-(dk.getBoundingClientRect().top-sh);
-  if(Math.abs(d)>2&&Math.abs(d)<60){fitBusy=true;scrollBy({top:d,behavior:'smooth'});setTimeout(()=>fitBusy=false,500)}},160)},{passive:true});
+  $('#view').innerHTML=t==='rec'?(active()?viewActive(active()):viewStart()):t==='fig'?viewFig():t==='hist'?viewHist():viewGear();if(t==='gear'){applyTq('mine');applyTq('set')}}
+
 
 /* ---------- tide helpers for trips ---------- */
 const PORT_ST=[[/東京|羽田|浦安|深川|大井|お台場|船橋/,'TK'],[/川崎/,'KW'],[/横浜|本牧|磯子|鶴見|新山下|金沢|八景|野島|富岡/,'QS'],[/横須賀|走水|鴨居|観音崎|久里浜|大津|浦賀/,'QN'],
