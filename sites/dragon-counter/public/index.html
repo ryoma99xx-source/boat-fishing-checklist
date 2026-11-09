@@ -1388,7 +1388,8 @@ function backBar(){let el=$('#backBar');if(!el){el=document.createElement('div')
   if(on){const tb=document.querySelector('.tabs');if(tb)document.documentElement.style.setProperty('--tabs-h',tb.offsetHeight+'px')}
   if(on)el.innerHTML=`<button data-act="backRec"><span class="bb-a">←</span><span><b>保存して記録に戻る</b><small>${active()?'記録中の釣行へ':'出船の準備へ'}</small></span></button>`}
 function render(){if(S.ui.tab!==lastTab&&window.gtag)try{gtag('event','tab_view',{tab:S.ui.tab})}catch(e){}if(lastTab==='rec'&&S.ui.tab!=='rec')recScroll=scrollY;lastTab=S.ui.tab;renderTabs();renderSync();backBar();const t=S.ui.tab;document.body.classList.toggle('has-dock',t==='rec'&&!!active());topTrip();const tc=$('#topCatch');if(tc)tc.hidden=!active();
-  $('#view').innerHTML=t==='rec'?(active()?viewActive(active()):viewStart()):t==='fig'?viewFig():t==='hist'?viewHist():viewGear();if(t==='gear'){applyTq('mine');applyTq('set')}}
+  const dr0=document.querySelector('.dk-row'),dkSl=dr0?dr0.scrollLeft:0;
+  $('#view').innerHTML=t==='rec'?(active()?viewActive(active()):viewStart()):t==='fig'?viewFig():t==='hist'?viewHist():viewGear();if(t==='gear'){applyTq('mine');applyTq('set')}if(dkSl){const dr=document.querySelector('.dk-row');if(dr)dr.scrollLeft=dkSl}}
 
 
 /* ---------- tide helpers for trips ---------- */
