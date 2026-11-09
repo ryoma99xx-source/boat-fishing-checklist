@@ -389,7 +389,7 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 .td-bl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 [data-lp]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .td-catch .lp-hint{font-style:normal;font-size:11px;font-weight:600;opacity:.65;margin-top:2px}
-.sa-grid{display:grid;grid-template-columns:44px 1fr 1fr;gap:8px;align-items:center;margin:6px 0 10px}.sa-grid>b{font-size:13px;color:var(--muted);text-align:center}
+.sa-grid{display:grid;grid-template-columns:44px 1fr 1fr;gap:8px;align-items:center;margin:6px 0 10px}.sa-grid .sa-fall{grid-column:1/-1;min-height:52px}.sa-grid>b{font-size:13px;color:var(--muted);text-align:center}
 .sa-b{min-height:76px;border-radius:14px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);font-size:17px;font-weight:800;line-height:1.3}.sa-b.on{border-color:var(--teal);box-shadow:0 0 0 2px rgba(65,201,198,.35)}
 .fd-sa{color:var(--amber)!important}
 .ka-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 12px}.ka-grid .sa-b{min-height:96px;font-size:22px}
@@ -1681,7 +1681,7 @@ function addGedo(name){const tr=active();if(!tr||!name)return;const g=curGear(tr
   tr.events.push(e);touch(tr);buzz();$('#sheet').hidden=true;sheetCtx=null;render();const id=tr.id;
   toast(`${hm(now)} 外道 ${name} を記録`,'取り消す',()=>{const t=S.trips[id];t.events=t.events.filter(x=>x.id!==e.id);touch(t);render()})}
 /* 誘い：釣れた・アタリ・バラシに、巻き／叩き × 誘い中／ステイ中 を付ける（長押しで選ぶ） */
-const SA_JP={'maki-move':'巻き・誘い中','maki-stay':'巻き・ステイ中','tata-move':'叩き・誘い中','tata-stay':'叩き・ステイ中'};
+const SA_JP={'maki-move':'巻き・誘い中','maki-stay':'巻き・ステイ中','tata-move':'叩き・誘い中','tata-stay':'叩き・ステイ中','fall':'フォール中'};
 const SA_KEYS=Object.keys(SA_JP);let nextSa=null;
 /* 掛け方：即掛け／深追い。詳細モードでは 誘い → 掛け方 の2段で記録する */
 const KA_JP={soku:'即掛け',fuka:'深追い'},KA_KEYS=Object.keys(KA_JP);let nextKa=null,bypassDetail=false;
@@ -1698,7 +1698,8 @@ function openSasoi(kind){const tr=active();if(!tr)return;const last=S.ui.lastSa;
    <p class="muted">${kind==='bite'?'そのとき、どう誘っていたかを押すと記録します。':'1/2　そのとき、どう誘っていたか。次に掛け方を選びます。'}</p>
    <div class="sa-grid"><span></span><b>誘い中</b><b>ステイ中</b>
     <b>巻き</b><button class="sa-b ${last==='maki-move'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="maki-move">巻き<br>誘い中</button><button class="sa-b ${last==='maki-stay'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="maki-stay">巻き<br>ステイ中</button>
-    <b>叩き</b><button class="sa-b ${last==='tata-move'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="tata-move">叩き<br>誘い中</button><button class="sa-b ${last==='tata-stay'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="tata-stay">叩き<br>ステイ中</button></div>
+    <b>叩き</b><button class="sa-b ${last==='tata-move'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="tata-move">叩き<br>誘い中</button><button class="sa-b ${last==='tata-stay'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="tata-stay">叩き<br>ステイ中</button>
+    <button class="sa-b sa-fall ${last==='fall'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="fall">フォール中</button></div>
    <button class="btn" data-act="saRec" data-k="${kind}" data-sa="">${kind==='bite'?'誘いなしで記録':'誘いは選ばない（次へ）'}</button>`,{kind:'sasoi'})}
 /* 場所：📍場所ボタンで、その時刻の位置を記録（リアルタイム追跡はしない） */
 const ptKm=(a,b)=>{const R=6371,r=x=>x*Math.PI/180,dl=r(b.lat-a.lat),dn=r(b.lon-a.lon);const h=Math.sin(dl/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
@@ -1808,7 +1809,7 @@ function timelineSVG(tr,sp){
     const nl=Math.min(lanes.length,4),th=34,H=34+nl*(th+6)+8,top=y;band(top,H,'#f2f0f8');label(top,'誘い・掛け方','詳細モードの記録');
     placed.filter(q=>q.li<nl).forEach(({e,x,li})=>{const yy=top+30+li*(th+6),c=kc[e.kind],mv=e.sa&&e.sa.endsWith('move'),st=e.sa&&e.sa.endsWith('stay');
       o.push(`<rect x="${r1(x-tw/2)}" y="${yy}" width="${tw}" height="${th}" rx="5" fill="${mv?c:'#fff'}" stroke="${c}" stroke-width="1.8"/>`);
-      if(e.sa)o.push(TX(x,yy+14,e.sa.startsWith('maki')?'巻':'叩',{size:12,bold:1,fill:mv?'#fff':c,anchor:'middle'}));
+      if(e.sa)o.push(TX(x,yy+14,e.sa.startsWith('maki')?'巻':e.sa==='fall'?'フ':'叩',{size:12,bold:1,fill:mv?'#fff':c,anchor:'middle'}));
       if(e.ka)o.push(TX(x,yy+29,e.ka==='soku'?'即':'深',{size:11.5,bold:1,fill:mv?'#fff':c,anchor:'middle'}))});
     y+=H+10;
     // 集計表
@@ -1828,7 +1829,7 @@ function timelineSVG(tr,sp){
   leg(x=>`<polygon points="${x},${y-9} ${x+11},${y-9} ${x+5.5},${y+1}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`,'アタリ');
   leg(x=>`<polygon points="${x},${y+1} ${x+11},${y+1} ${x+5.5},${y-9}" fill="none" stroke="${P.lost}" stroke-width="1.8"/>`,'バラシ');
   o.push(`<rect x="${lx}" y="${y-9}" width="20" height="8" rx="4" fill="${P.slow}"/><rect x="${lx+22}" y="${y-9}" width="20" height="8" rx="4" fill="${P.normal}"/><rect x="${lx+44}" y="${y-9}" width="20" height="8" rx="4" fill="${P.fast}"/>`+TX(lx+72,y,'潮の速さ（緩い・普通・速い）',{size:12,fill:P.muted}));
-  if(dv.length){y+=22;o.push(`<rect x="24" y="${y-12}" width="16" height="16" rx="3" fill="${P.catch}"/>`+TX(32,y+1,'巻',{size:10,bold:1,fill:'#fff',anchor:'middle'})+TX(46,y,'誘い中（塗り）',{size:12,fill:P.muted})+`<rect x="140" y="${y-12}" width="16" height="16" rx="3" fill="#fff" stroke="${P.catch}" stroke-width="1.6"/>`+TX(148,y+1,'叩',{size:10,bold:1,fill:P.catch,anchor:'middle'})+TX(162,y,'ステイ中（白抜き）　巻＝巻き　叩＝叩き　即＝即掛け　深＝深追い　枠の色＝釣れた／アタリ／バラシ',{size:12,fill:P.muted}))}
+  if(dv.length){y+=22;o.push(`<rect x="24" y="${y-12}" width="16" height="16" rx="3" fill="${P.catch}"/>`+TX(32,y+1,'巻',{size:10,bold:1,fill:'#fff',anchor:'middle'})+TX(46,y,'誘い中（塗り）',{size:12,fill:P.muted})+`<rect x="140" y="${y-12}" width="16" height="16" rx="3" fill="#fff" stroke="${P.catch}" stroke-width="1.6"/>`+TX(148,y+1,'叩',{size:10,bold:1,fill:P.catch,anchor:'middle'})+TX(162,y,'ステイ中（白抜き）　巻＝巻き　叩＝叩き　フ＝フォール　即＝即掛け　深＝深追い　枠の色＝釣れた／アタリ／バラシ',{size:12,fill:P.muted}))}
   y+=22;o.push(TX(24,y,tr.station?`※潮位は気象庁の潮位表（${stName(tr.station)}）をもとに計算した推算値です。潮の向きは船首を上にしたときの、潮が流れていく向きです。`:'※潮位は満潮・干潮の時刻と潮位から補間した概形です。潮の向きは船首を上にしたときの、潮が流れていく向きです。',{size:11,fill:P.muted}));
   if(tr.station&&offBay(tr)){y+=20;o.push(TX(24,y,'※東京湾の外では、潮の向きと速さを Open-Meteo の海流データ（約8km四方の推算値）から出しています。',{size:11,fill:P.muted}))}
   y+=18;o.push(TX(24,y,'※本数は自分の席で釣れた分だけです。',{size:11,fill:P.muted}));const Ht=y+20;
