@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Dragon Counter Data
- * Description: ドラゴンカウンター（TOOL 05）から匿名で届いた釣果データを、管理画面（ツール → ドラゴンカウンターのデータ）で一覧・ダウンロード・削除します。データはドラゴンカウンターのサーバーの .data/trips/ にあるものを読むだけで、外には出しません。
- * Version: 1.0.0
+ * Description: ドラゴンカウンター（TOOL 05）から匿名で届いた釣果データを、管理画面（ツール → ドラゴンカウンターのデータ）でダッシュボード・一覧・ダウンロード・削除します。データはドラゴンカウンターのサーバーの .data/trips/ にあるものを読むだけで、外には出しません。
+ * Version: 1.1.0
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -65,11 +65,85 @@ final class DCD_Admin {
             'tackle' => implode(' / ', $tk), 'points' => count((array)($j['points'] ?? [])),
         ];
     }
-    private static function rows($dir) {
-        $out = [];
-        foreach ((array)glob($dir . '/*.json') as $f) { $r = self::row($f); if ($r) $out[] = $r; }
+    private static function since($per) { return $per === 'all' ? '' : wp_date('Y-m-d', time() - (int)$per * 86400); }
+    private static function rows($dir, $per = 'all') {
+        $out = []; $from = self::since($per);
+        foreach ((array)glob($dir . '/*.json') as $f) { $r = self::row($f); if ($r && (!$from || $r['date'] >= $from)) $out[] = $r; }
         usort($out, function ($a, $b) { return strcmp($b['received'], $a['received']); });
         return $out;
+    }
+
+    /** 全釣行を読み込んで集計する */
+    private static function load($dir, $per) {
+        $from = self::since($per); $all = [];
+        foreach ((array)glob($dir . '/*.json') as $f) { $j = json_decode((string)@file_get_contents($f), true); if (is_array($j) && (!$from || ($j['date'] ?? '') >= $from)) $all[] = $j; }
+        return $all;
+    }
+    private static function bars($title, $data, $unit = '本', $note = '', $max_rows = 12) {
+        echo '<div class="dcd-card"><h3>' . esc_html($title) . '</h3>';
+        if (!$data) { echo '<p class="description">データがありません。</p></div>'; return; }
+        $mx = max(array_map(function ($v) { return is_array($v) ? $v[0] : $v; }, $data)) ?: 1; $i = 0;
+        foreach ($data as $k => $v) {
+            if (++$i > $max_rows) break;
+            $val = is_array($v) ? $v[0] : $v; $sub = is_array($v) ? $v[1] : '';
+            echo '<div class="dcd-bar"><span class="dcd-k" title="' . esc_attr($k) . '">' . esc_html($k) . '</span><span class="dcd-t"><i style="width:' . max(2, round($val / $mx * 100)) . '%"></i></span><b>' . esc_html(rtrim(rtrim(number_format((float)$val, 1, '.', ''), '0'), '.') . $unit) . '</b><small>' . esc_html($sub) . '</small></div>';
+        }
+        if ($note) echo '<p class="description">' . esc_html($note) . '</p>';
+        echo '</div>';
+    }
+    private static function dashboard($dir, $per) {
+        $T = self::load($dir, $per); $tz = new DateTimeZone('Asia/Tokyo');
+        $n = count($T); $catch = 0; $dragon = 0; $bite = 0; $lost = 0; $hrs = 0;
+        $byDay = []; $byHour = array_fill(0, 24, 0); $spot = []; $boat = []; $tide = []; $rig = []; $sa = []; $ka = []; $rod = []; $reel = []; $sst = []; $mode = ['simple' => 0, 'detail' => 0];
+        $SA = ['maki-move' => '巻き・誘い中', 'maki-stay' => '巻き・ステイ中', 'tata-move' => '叩き・誘い中', 'tata-stay' => '叩き・ステイ中', 'fall' => 'フォール中']; $KA = ['soku' => '即掛け', 'fuka' => '深追い'];
+        $avgAdd = function (&$arr, $k, $v) { if ($k === '' || $k === null) return; if (!isset($arr[$k])) $arr[$k] = [0, 0]; $arr[$k][0] += $v; $arr[$k][1]++; };
+        foreach ($T as $t) {
+            $c = 0;
+            foreach ((array)($t['events'] ?? []) as $e) {
+                $k = $e['kind'] ?? '';
+                if ($k === 'catch') { $c++; if (!empty($e['dragon'])) $dragon++;
+                    $d = new DateTime('@' . intdiv((int)($e['t'] ?? 0), 1000)); $d->setTimezone($tz); $byHour[(int)$d->format('G')]++;
+                    if (!empty($e['rigName'])) $rig[$e['rigName']] = ($rig[$e['rigName']] ?? 0) + 1; }
+                if ($k === 'bite') $bite++; if ($k === 'lost') $lost++;
+                if (!empty($e['sa']) && in_array($k, ['catch', 'bite', 'lost'], true)) { $l = $SA[$e['sa']] ?? $e['sa']; $sa[$l] = $sa[$l] ?? ['catch' => 0, 'bite' => 0, 'lost' => 0]; $sa[$l][$k]++; }
+                if (!empty($e['ka']) && in_array($k, ['catch', 'lost'], true)) { $l = $KA[$e['ka']] ?? $e['ka']; $ka[$l] = $ka[$l] ?? ['catch' => 0, 'bite' => 0, 'lost' => 0]; $ka[$l][$k]++; }
+            }
+            $catch += $c; $h = max(0, ((int)($t['end'] ?? 0) - (int)($t['start'] ?? 0)) / 3600000); $hrs += $h;
+            $day = $t['date'] ?? ''; if (!isset($byDay[$day])) $byDay[$day] = [0, 0]; $byDay[$day][0] += $c; $byDay[$day][1]++;
+            $avgAdd($spot, $t['spot']['name'] ?? '', $c); $avgAdd($boat, $t['boat'] ?? '', $c); $avgAdd($tide, $t['tide'] ?? '', $c);
+            foreach ((array)($t['tackle'] ?? []) as $tk) { if (!empty($tk['rod'])) $rod[$tk['rod']] = ($rod[$tk['rod']] ?? 0) + 1; if (!empty($tk['reel'])) $reel[$tk['reel']] = ($reel[$tk['reel']] ?? 0) + 1; }
+            if (isset($t['wx']['sst']) && $t['wx']['sst'] !== null) $avgAdd($sst, floor((float)$t['wx']['sst']) . '℃台', $c);
+            $mode[($t['mode'] ?? '') === 'detail' ? 'detail' : 'simple']++;
+        }
+        $pct = function ($a, $b) { return $b ? round($a / $b * 100, 1) . '%' : '―'; };
+        echo '<style>.dcd-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;max-width:1100px}.dcd-kpi{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:10px 12px}.dcd-kpi span{display:block;color:#646970;font-size:12px}.dcd-kpi b{font-size:24px}.dcd-kpi small{display:block;color:#646970}.dcd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;max-width:1100px;margin-top:12px}.dcd-card{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:10px 14px}.dcd-card h3{margin:4px 0 10px;font-size:14px}.dcd-bar{display:grid;grid-template-columns:minmax(0,9em) 1fr auto;gap:8px;align-items:center;font-size:13px;margin:4px 0}.dcd-bar small{grid-column:2/4;color:#646970;margin-top:-4px}.dcd-k{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dcd-t{background:#f0f0f1;border-radius:4px;height:10px;overflow:hidden}.dcd-t i{display:block;height:100%;background:#2271b1}.dcd-hours{display:flex;align-items:flex-end;gap:2px;height:120px}.dcd-hours div{flex:1;background:#2271b1;min-height:1px;position:relative}.dcd-hl{display:flex;gap:2px;font-size:10px;color:#646970}.dcd-hl span{flex:1;text-align:center}.dcd-tb{border-collapse:collapse;width:100%;font-size:13px}.dcd-tb td,.dcd-tb th{padding:4px 6px;border-bottom:1px solid #f0f0f1;text-align:right}.dcd-tb td:first-child,.dcd-tb th:first-child{text-align:left}</style>';
+        echo '<div class="dcd-kpis">';
+        foreach ([['釣行', $n . '件', '詳細モード ' . $mode['detail'] . '件'], ['釣れた合計', $catch . '本', ''], ['1釣行あたり', $n ? round($catch / $n, 1) . '本' : '―', ''], ['1時間あたり', $hrs ? round($catch / $hrs, 1) . '本' : '―', '釣行時間 計' . round($hrs) . '時間'], ['ドラゴン', $dragon . '本', '釣れたうち ' . $pct($dragon, $catch)], ['アタリ', $bite . '回', ''], ['バラシ', $lost . '回', '取り込み率 ' . $pct($catch, $catch + $lost)]] as $k)
+            echo '<div class="dcd-kpi"><span>' . esc_html($k[0]) . '</span><b>' . esc_html($k[1]) . '</b><small>' . esc_html($k[2]) . '</small></div>';
+        echo '</div><div class="dcd-grid">';
+        ksort($byDay); $days = array_slice($byDay, -30, null, true); $dd = [];
+        foreach ($days as $d => $v) $dd[substr($d, 5)] = [$v[0], $v[1] . '釣行'];
+        self::bars('日ごとの釣れた本数（直近30日分）', array_reverse($dd, true), '本', '', 30);
+        $mh = max($byHour) ?: 1;
+        echo '<div class="dcd-card"><h3>時間帯ごとの釣れた本数</h3><div class="dcd-hours">';
+        for ($h = 0; $h < 24; $h++) echo '<div title="' . $h . '時台 ' . $byHour[$h] . '本" style="height:' . round($byHour[$h] / $mh * 100) . '%"></div>';
+        echo '</div><div class="dcd-hl">'; for ($h = 0; $h < 24; $h++) echo '<span>' . ($h % 3 === 0 ? $h : '') . '</span>'; echo '</div></div>';
+        $avg = function ($arr) { $o = []; foreach ($arr as $k => $v) $o[$k] = [round($v[0] / $v[1], 1), $v[1] . '釣行']; uasort($o, function ($a, $b) { return $b[0] <=> $a[0]; }); return $o; };
+        self::bars('釣り場ごとの平均本数', $avg($spot));
+        self::bars('船ごとの平均本数', $avg($boat));
+        self::bars('潮回りごとの平均本数', $avg($tide));
+        if ($sst) { $o = $avg($sst); ksort($o); self::bars('水温ごとの平均本数', $o); }
+        arsort($rig); self::bars('よく釣れたテンヤ', $rig, '本', 'テンヤを選んで記録された分だけ。');
+        foreach (['誘いごと（詳細モードの分）' => $sa, '掛け方ごと（詳細モードの分）' => $ka] as $ttl => $arr) {
+            echo '<div class="dcd-card"><h3>' . esc_html($ttl) . '</h3>';
+            if (!$arr) { echo '<p class="description">データがありません。</p></div>'; continue; }
+            echo '<table class="dcd-tb"><tr><th></th><th>釣れた</th><th>アタリ</th><th>バラシ</th><th>取り込み</th></tr>';
+            foreach ($arr as $k => $v) echo '<tr><td>' . esc_html($k) . '</td><td>' . (int)$v['catch'] . '</td><td>' . (int)$v['bite'] . '</td><td>' . (int)$v['lost'] . '</td><td>' . esc_html($pct($v['catch'], $v['catch'] + $v['lost'])) . '</td></tr>';
+            echo '</table></div>';
+        }
+        arsort($rod); self::bars('使われたロッド（釣行数）', $rod, '件');
+        arsort($reel); self::bars('使われたリール（釣行数）', $reel, '件');
+        echo '</div><p class="description">利用者の記録をそのまま集計しています（テストの釣行は「一覧」で消すと外れます）。1人が何回も使うと、その人の釣り方に寄ります。日数・件数が少ないうちは、傾向として読みすぎないようにしてください。</p>';
     }
 
     public static function page() {
@@ -84,7 +158,16 @@ final class DCD_Admin {
             self::dir_form('');
             echo '</div>'; return;
         }
-        $rows = self::rows($dir);
+        $tab = ($_GET['tab'] ?? 'dash') === 'list' ? 'list' : 'dash';
+        $per = in_array($_GET['per'] ?? '', ['30', '90', 'all'], true) ? $_GET['per'] : 'all';
+        $base = admin_url('tools.php?page=' . self::SLUG);
+        echo '<h2 class="nav-tab-wrapper">';
+        foreach (['dash' => 'ダッシュボード', 'list' => '一覧'] as $k => $l) echo '<a class="nav-tab' . ($tab === $k ? ' nav-tab-active' : '') . '" href="' . esc_url($base . '&tab=' . $k . '&per=' . $per) . '">' . esc_html($l) . '</a>';
+        echo '</h2><p>期間：';
+        foreach (['all' => 'すべて', '90' => '直近90日', '30' => '直近30日'] as $k => $l) echo $per === $k ? '<strong>' . esc_html($l) . '</strong>　' : '<a href="' . esc_url($base . '&tab=' . $tab . '&per=' . $k) . '">' . esc_html($l) . '</a>　';
+        echo '</p>';
+        if ($tab === 'dash') { self::dashboard($dir, $per); echo '</div>'; return; }
+        $rows = self::rows($dir, $per);
         $sum = ['catch' => 0, 'dragon' => 0]; foreach ($rows as $r) { $sum['catch'] += $r['catch']; $sum['dragon'] += $r['dragon']; }
         echo '<p>届いた釣行：<strong>' . count($rows) . '件</strong>（タチウオ ' . (int)$sum['catch'] . '本・ドラゴン ' . (int)$sum['dragon'] . '本）';
         echo '　<a class="button" href="' . esc_url(wp_nonce_url(admin_url('admin-post.php?action=dcd_download&fmt=csv'), 'dcd_download')) . '">CSVでダウンロード</a> ';
