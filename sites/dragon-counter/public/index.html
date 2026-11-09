@@ -1722,14 +1722,15 @@ function catchLoc(tid,eid){if(!navigator.geolocation||S.prefs.catchLoc===false)r
   navigator.geolocation.getCurrentPosition(pos=>{const t=S.trips[tid];const e=t&&t.events.find(x=>x.id===eid);if(!e)return;
     e.lat=+pos.coords.latitude.toFixed(6);e.lon=+pos.coords.longitude.toFixed(6);e.acc=Math.round(pos.coords.accuracy||0);touch(t);if(S.ui.tab==='fig'&&$('#sheet').hidden)render()},
     ()=>{},{enableHighAccuracy:true,timeout:15000,maximumAge:5000})}
-function catchLocCard(tr,sp){const s=spOf(sp),L=catchesOf(tr,sp).map((e,i)=>({...e,n:i+1})).filter(e=>isFinite(e.lat)&&isFinite(e.lon));if(!L.length)return '';
-  const route=L.length>1?`https://www.google.com/maps/dir/${L.slice(0,25).map(p=>p.lat.toFixed(5)+','+p.lon.toFixed(5)).join('/')}`:mapUrl(L[0]);
-  return `<div class="card"><h2>釣れた場所（${L.length}${esc(s.unit)}）</h2><p class="muted">「釣れた」を押した時の位置を自動で残しています。押した時の位置なので、実際に掛けた場所とは少しずれます。</p>
-   <div class="pts">${L.map((e,i)=>`<div class="pt"><b>${e.n}</b><span><em>${hm(e.t)}${e.dragon?'・ドラゴン':''}${i?`・前から約${kmTxt(ptKm(L[i-1],e))}`:''}</em><small>${e.acc?'誤差 約'+e.acc+'m':''}</small></span><a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
-   <a class="btn sm" href="${route}" target="_blank" rel="noopener">${L.length>1?'釣れた順に地図で見る':'地図で見る'}</a></div>`}
+function catchLocCard(tr,sp){const s=spOf(sp);let n=0;const L=evOf(tr,sp).filter(e=>['catch','bite','lost'].includes(e.kind)).map(e=>({...e,n:e.kind==='catch'?++n:0})).filter(e=>isFinite(e.lat)&&isFinite(e.lon));if(!L.length)return '';
+  const KL={catch:'釣れた',bite:'アタリ',lost:'バラシ'},KC={catch:'var(--teal)',bite:'var(--amber,#e3a43b)',lost:'#e0587a'};
+  const route=L.length>1?`https://www.google.com/maps/dir/${L.slice(-25).map(p=>p.lat.toFixed(5)+','+p.lon.toFixed(5)).join('/')}`:mapUrl(L[0]);
+  return `<div class="card"><h2>釣れた・アタリ・バラシの場所（${L.length}件）</h2><p class="muted">「釣れた」「アタリ」「バラシ」を押した時の位置を自動で残しています。押した時の位置なので、実際の場所とは少しずれます。</p>
+   <div class="pts">${L.map((e,i)=>`<div class="pt"><b style="color:${KC[e.kind]}">${e.kind==='catch'?e.n:e.kind==='bite'?'ア':'バ'}</b><span><em>${hm(e.t)}・${KL[e.kind]}${e.kind==='catch'&&e.dragon?'（ドラゴン）':''}${i?`・前から約${kmTxt(ptKm(L[i-1],e))}`:''}</em><small>${e.acc?'誤差 約'+e.acc+'m':''}</small></span><a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
+   <a class="btn sm" href="${route}" target="_blank" rel="noopener">${L.length>1?'記録した順に地図で見る':'地図で見る'}</a></div>`}
 function addEvent(kind,v,src,osp,rig){const tr=active();if(!tr)return;const now=Date.now();if(now-lastTap<450)return;lastTap=now;
   const tsp=tr.cur.sp,g=curGear(tr),sp=osp||tsp;if(rig&&rig!==g.rig){g.rig=rig;logGear(tr)}const e={id:uid(),t:now,kind,sp,gsp:tsp,rig:g.rig,bait:needBait(tsp,g)?g.bait:'',size:'',...(tr.tk&&tr.tk.cur?{tk:tr.tk.cur}:{})};if(kind==='catch')e.v=v||mainV(sp);if(kind==='catch'&&sp==='tachiuo'&&dragonNext){e.dragon=true;dragonNext=false}if(src)e.src=src;if(nextSa){e.sa=nextSa;nextSa=null}if(nextKa){e.ka=nextKa;nextKa=null}
-  tr.events.push(e);touch(tr);buzz();keepAwake();if(kind==='catch')catchLoc(tr.id,e.id);
+  tr.events.push(e);touch(tr);buzz();keepAwake();if(kind==='catch'||kind==='bite'||kind==='lost')catchLoc(tr.id,e.id);
   if(S.ui.tab==='rec'&&$('#sheet').hidden){const y0=scrollY;render();if(y0<160)scrollTo(0,0);if(kind==='catch'){const n=$('#cnum');n&&n.classList.add('bump')}}
   if(osp&&!$('#sheet').hidden)closeSheet();
   const s=spOf(sp),n=catchesOf(tr,sp).length,id=tr.id;
