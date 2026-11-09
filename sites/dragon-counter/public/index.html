@@ -1476,7 +1476,7 @@ function formHTML(f){const boats=S.cfg.boats.map(b=>`<option value="${esc(b.name
    ${f.mode==='new'&&lastMemo()&&!(f.memo||'').trim()?`<button class="golink" data-act="memoCopyLast">前回のメモを入れる →</button>`:''}</div>`}
 function methodSelHTML(sp,g,id){return `<label class="field msel"><span>仕掛け</span><select id="${id}" data-method="${sp}">${['tenya','tenbin'].map(m=>`<option value="${m}" ${methodOf(sp,g)===m?'selected':''}>${METHOD_JP[m]}</option>`).join('')}</select></label>`}
 function fGearHTML(f){const g=fGear(f,f.sp),sp=f.sp,s=spOf(sp);return (SOLO?'':`<div class="nest-h">${esc(s.name)}の道具</div>`)+(s.catalog?methodSelHTML(sp,g,'fMethod')+(isTenya(sp,g)?setPickHTML(g.set,'fSet'):''):chipsHTML(sp,'rigs',g.rig,'fRig'))+(needBait(sp,g)?(isBzSp(sp)?bzHTML(sp,g.bait,'f'):chipsHTML(sp,'baits',g.bait,'fBait')):'')}
-function methodSwitchHTML(tr){const sp=tr.cur.sp;if(!spOf(sp).catalog)return '';const m=methodOf(sp,curGear(tr));const o=m==='tenya'?'tenbin':'tenya';
+function methodSwitchHTML(tr){const sp=tr.cur.sp;if(!spOf(sp).catalog)return '';const m=methodOf(sp,curGear(tr));if(m==='tenya')return '';const o='tenya';
   return `<button class="btn sm" data-act="setMethod" data-d="${o}">${METHOD_JP[o]}に切り替える</button>`}
 function setPickHTML(sel,act){const sets=TEN().sets;const items=setItems(sel);const own=myTenya().length;
   const guide=!sets.length?`<div class="steps2"><b>当日使うテンヤのリストがまだありません</b><span>2ステップで作ると、釣れたときにテンヤのボタンを押すだけで記録できます（作らなくても記録はできます）。</span>
