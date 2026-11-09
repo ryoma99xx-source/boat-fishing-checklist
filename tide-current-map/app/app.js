@@ -1,7 +1,7 @@
 import {TIDE_POINTS,nearestTideStation,prepareTide,tideAt,tideMarkup} from '/tide.js';
 import {distanceKm,facing,compass,relativeFlow,rad} from '/geometry.js';
 import {extract} from '/chart.js';
-import {VIEW_AREA,REGIONS,contains,fitArea} from '/coverage.js';
+import {VIEW_AREA,REGIONS,AREAS,AREA,setArea,areaOf,contains,fitArea} from '/coverage.js';
 import {getJstSelection} from '/clock.js';
 import {claimGoogleMapLoad} from '/google-guard.js';
 import {installMapGestureBoundary} from '/map-gestures.js';
@@ -12,7 +12,7 @@ import {createFlowLayer} from '/flow-layer.js';
 const $=id=>document.getElementById(id),START={lat:35.279,lon:139.708};
 const initialTime=getJstSelection(Date.now());
 const S={mode:'model',date:initialTime.date,slot:initialTime.slot,pin:{...START},home:{...START},center:{...START},zoom:14,coastalMap:null,fieldKey:null,frames:[],compareFrame:null,loading:false,google:null,projection:null,location:null};
-try{const p=JSON.parse(localStorage.getItem('shio-pin'));if(p&&contains(VIEW_AREA,p))S.pin=S.home=S.center=p;}catch{}
+try{const p=JSON.parse(localStorage.getItem('shio-pin'));const k=p&&areaOf(p);if(k){setArea(k);if(!AREAS[k].model)S.mode='official';S.pin=S.home=S.center=p;}}catch{}
 const H={grids:null,index:null,request:null};
 let generation=0,playing=false,playTimer,debounce,toastTimer,mapImage=null,mapReady=false,overviewImage=null,overviewReady=false;
 const currentCache=new Map(),tiles=new Map(),tideCache=new Map();
@@ -34,7 +34,7 @@ function unproject(x,y){const c=world(S.center.lat,S.center.lon);return inverse(
 // Inverse of project() for any north-up Web Mercator view (standard tiles or Google OverlayView).
 function screenToLatLon(x,y){const m=lat=>Math.log(Math.tan(Math.PI/4+rad(lat)/2)),a=project(35,139),b=project(36,140),lon=139+(x-a.x)/(b.x-a.x),my=m(35)+(y-a.y)/(b.y-a.y)*(m(36)-m(35));return {lat:(2*Math.atan(Math.exp(my))-Math.PI/2)*180/Math.PI,lon};}
 // Modes: 'model' (own tidal model), 'official' (JCG chart), 'compare' (both on one map).
-function usesModel(){return S.mode==='model'||S.mode==='compare';}
+function usesModel(){return AREAS[AREA].model&&(S.mode==='model'||S.mode==='compare');}
 function hourly(){return S.mode!=='model';}
 function fieldReady(){return usesModel()&&!!H.grids&&S.fieldKey===S.date+'/'+S.slot;}
 function modelSample(lat,lon){if(!contains(VIEW_AREA,{lat,lon}))return {reason:'view-outside'};if(!H.grids||!fieldReady())return {reason:'loading'};return sampleCurrents(H.grids,lat,lon);}
@@ -65,10 +65,10 @@ function drawCoverage(c,w,h){
  const nw=project(VIEW_AREA.north,VIEW_AREA.west),se=project(VIEW_AREA.south,VIEW_AREA.east);
  c.beginPath();c.rect(0,0,w,h);c.rect(nw.x,nw.y,se.x-nw.x,se.y-nw.y);c.fillStyle='#eff2f580';c.fill('evenodd');
  const outer=rectangle(VIEW_AREA,'#236ab5',[]);
- if(outer.x>0&&outer.y>100&&outer.x<w-170&&outer.y<h-50)label(c,outer.x+125,outer.y+19,'表示対象：東京湾〜房総');
+ if(outer.x>0&&outer.y>100&&outer.x<w-170&&outer.y<h-50)label(c,outer.x+125,outer.y+19,'表示対象：'+(AREA==='tokyo'?'東京湾〜房総':AREAS[AREA].name));
  $('modelCoverageKey').hidden=!usesModel();if(usesModel()&&H.grids)for(const g of H.grids){const fine=g.dxM<200,r=rectangle(gridBounds(g),g.dxM<75?'#4fd0a0':g.dxM<200?'#3fb7c9':'#00816b',[6,4]);if(fine&&r.w>110&&r.h>50&&r.x>0&&r.x<w-140&&r.y>120&&r.y<h-90)label(c,r.x+70,r.y+18,g.dxM+'m格子の範囲');}
  c.restore();
- for(const key of ['inner','katsuyama','misaki']){const r=REGIONS[key],p=project(r.lat,r.lon);if(p.x<35||p.x>w-35||p.y<115||p.y>h-70)continue;dot(c,p.x,p.y,3,'#236ab5');label(c,p.x,p.y+19,r.name);}
+ for(const key of AREAS[AREA].labels){const r=REGIONS[key],p=project(r.lat,r.lon);if(p.x<35||p.x>w-35||p.y<115||p.y>h-70)continue;dot(c,p.x,p.y,3,'#236ab5');label(c,p.x,p.y+19,r.name);}
 }
 function drawOverlay(){const c=canvas('arrows'),w=$('map').clientWidth,h=$('map').clientHeight;c.save();c.beginPath();c.rect(0,0,w,Math.max(0,h-(S.google?28:0)));c.clip();drawCoverage(c,w,h);
  const official=officialFrame();if(official)drawOfficial(c,w,h,official);
@@ -144,14 +144,16 @@ function drawModelOverlay(c,w,h){
 // GtTM/GSI coastline (median over 3,700 coastline pixels; consistent with the old Tokyo Datum offset).
 // Shifting by this constant brings the median coastline distance from ~170 m to ~70 m.
 const JCG_SHIFT={lat:.0036,lon:-.0033};
-const jcgPoint=s=>({lat:s.lat+JCG_SHIFT.lat,lon:s.lon+JCG_SHIFT.lon});
+const jcgPoint=s=>AREA==='tokyo'?{lat:s.lat+JCG_SHIFT.lat,lon:s.lon+JCG_SHIFT.lon}:{lat:s.lat,lon:s.lon};
+// 瀬戸内（大阪湾）の公式図：図の10分目盛りから読んだ換算（worker/api.js の JCG_AREAS と同じ）
+const JCG_TF={tokyo:{lon:x=>139.5+(x-30)/675+JCG_SHIFT.lon,lat:y=>35+(631-y)/840+JCG_SHIFT.lat},osaka:{lon:x=>130+40/60+(x-30)/155.17,lat:y=>34+(187-y)/188.31}};
 function officialFrame(){return S.mode==='official'?S.frames[0]:S.mode==='compare'?S.compareFrame:null;}
 function drawOfficial(c,w,h,frame){
  // Chart coastline, stretched with the chart's graticule; only where the stretch stays small enough to read.
  const src=frame.overlay;
- if(src&&S.zoom<=11){const lonOf=x=>139.5+(x-30)/675+JCG_SHIFT.lon,latOf=y=>35+(631-y)/840+JCG_SHIFT.lat,left=project(35,lonOf(0)).x,right=project(35,lonOf(src.width)).x,step=16;
+ if(src&&S.zoom<=11){const T=JCG_TF[AREA]||JCG_TF.tokyo,lonOf=T.lon,latOf=T.lat,cLat=(VIEW_AREA.north+VIEW_AREA.south)/2,cLon=(VIEW_AREA.west+VIEW_AREA.east)/2,left=project(cLat,lonOf(0)).x,right=project(cLat,lonOf(src.width)).x,step=16;
   c.save();c.imageSmoothingEnabled=true;
-  for(let y=0;y<src.height;y+=step){const y1=Math.min(src.height,y+step),top=project(latOf(y),139.5).y,bottom=project(latOf(y1),139.5).y;if(bottom<0||top>h)continue;c.drawImage(src,0,y,src.width,y1-y,left,top,right-left,bottom-top);}
+  for(let y=0;y<src.height;y+=step){const y1=Math.min(src.height,y+step),top=project(latOf(y),cLon).y,bottom=project(latOf(y1),cLon).y;if(bottom<0||top>h)continue;c.drawImage(src,0,y,src.width,y1-y,left,top,right-left,bottom-top);}
   c.restore();}
  // Arrows: the published arrow pixels at their native size, placed at each station's georeferenced position.
  c.save();if(S.mode==='compare')c.globalAlpha=.9;
@@ -204,23 +206,39 @@ function locateCurrentPosition(){
  },failed,{enableHighAccuracy:true,timeout:15000,maximumAge:0});}catch{failed({});}
 }
 for(const button of locationButtons)button.onclick=locateCurrentPosition;
-$('region').onchange=e=>{const key=e.target.value;if(key==='all')showCoverage();else if(key==='home'){S.pin={...S.home};go(S.home,14);updatePoint();}else if(REGIONS[key]){const r=REGIONS[key];go(r,r.zoom);S.pin={lat:r.lat,lon:r.lon};updatePoint();drawOverlay();}e.target.value='';};
+$('region').onchange=e=>{const key=e.target.value;if(key.startsWith('area:')){const k=key.slice(5),r=AREAS[k];e.target.value='';switchArea(k);showCoverage();const first=Object.values(r.regions)[0];S.pin={lat:first.lat,lon:first.lon};updatePoint();drawOverlay();return;}if(key==='all')showCoverage();else if(key==='home'){selectPoint({...S.home});go(S.home,14);}else if(REGIONS[key]){const r=REGIONS[key];go(r,r.zoom);S.pin={lat:r.lat,lon:r.lon};updatePoint();drawOverlay();}e.target.value='';};
 function zoom(n){if(S.google){S.google.setZoom(Math.max(8,Math.min(20,S.google.getZoom()+n)));return;}S.zoom=Math.max(8,Math.min(18,S.zoom+n));draw();}
-new ResizeObserver(draw).observe($('map'));$('cape').onclick=()=>{go({lat:35.268,lon:139.727},13);toast(S.mode==='official'?'観音崎周辺の沖合推算点を表示しています。':'観音崎周辺の潮汐渦は研究で報告されています。モデルの渦や反転時刻は実測未検証です。');};$('zoomIn').onclick=()=>zoom(1);$('zoomOut').onclick=()=>zoom(-1);$('home').onclick=()=>{S.pin={...S.home};go(S.home,14);updatePoint();};$('fullMap').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $('map').requestFullscreen();}catch{toast('このブラウザは全画面表示に対応していません。');}};
+new ResizeObserver(draw).observe($('map'));$('cape').onclick=()=>{if(AREA!=='tokyo')return;go({lat:35.268,lon:139.727},13);toast(S.mode==='official'?'観音崎周辺の沖合推算点を表示しています。':'観音崎周辺の潮汐渦は研究で報告されています。モデルの渦や反転時刻は実測未検証です。');};$('zoomIn').onclick=()=>zoom(1);$('zoomOut').onclick=()=>zoom(-1);$('home').onclick=()=>{S.pin={...S.home};go(S.home,14);updatePoint();};$('fullMap').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $('map').requestFullscreen();}catch{toast('このブラウザは全画面表示に対応していません。');}};
 const pointers=new Map();let drag=null,pinch=null;
 installMapGestureBoundary($('map'),document);
 $('map').addEventListener('pointerdown',e=>{if(S.google||e.target.closest('button'))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});$('map').setPointerCapture(e.pointerId);if(pointers.size===1)drag={x:e.clientX,y:e.clientY,center:world(S.center.lat,S.center.lon),moved:false};if(pointers.size===2){const p=[...pointers.values()];pinch={distance:Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y),zoom:S.zoom};if(drag)drag.moved=true;}});
 $('map').addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2&&pinch){const p=[...pointers.values()],d=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);const z=Math.max(8,Math.min(18,pinch.zoom+Math.round(Math.log2(d/pinch.distance))));flow.setInteracting(true);if(z!==S.zoom){S.zoom=z;draw();}return;}if(drag&&!pinch){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>6)drag.moved=true;if(drag.moved){flow.setInteracting(true);S.center=inverse(drag.center.x-dx,drag.center.y-dy);draw();}}});
 $('map').addEventListener('pointerup',e=>{if(!pointers.has(e.pointerId))return;const click=pointers.size===1&&drag&&!drag.moved&&!pinch;pointers.delete(e.pointerId);if(click){const r=$('map').getBoundingClientRect();selectPoint(unproject(e.clientX-r.left,e.clientY-r.top));}if(pointers.size===0){drag=null;pinch=null;flow.setInteracting(false);}});
 $('map').addEventListener('pointercancel',()=>{pointers.clear();drag=null;pinch=null;flow.setInteracting(false);});$('map').addEventListener('wheel',e=>{if(S.google)return;e.preventDefault();zoom(e.deltaY<0?1:-1);},{passive:false});
-function selectPoint(p){S.pin=p;updatePoint();drawOverlay();loadDetail();}
+function selectPoint(p){const k=areaOf(p);if(k&&k!==AREA)switchArea(k);S.pin=p;updatePoint();drawOverlay();loadDetail();}
+/* 海域の切り替え（東京湾 / 大阪湾）。大阪湾は自作モデルが無いので、海上保安庁の推算図（瀬戸内）で表示する */
+function regionOptions(){const A=AREAS[AREA],other=Object.keys(AREAS).filter(k=>k!==AREA);
+ $('region').innerHTML='<option value="">海域へ移動</option><option value="all">'+A.all+'</option>'+Object.entries(A.regions).map(([k,r])=>'<option value="'+k+'">'+r.name+'</option>').join('')+'<option value="home">釣り位置</option>'+other.map(k=>'<option value="area:'+k+'">'+AREAS[k].name+'へ切り替え</option>').join('');
+ const cur=$('tideStation').value;$('tideStation').innerHTML='<option value="auto">近い地点を自動選択</option>'+A.stations.map(c=>'<option value="'+c+'">'+TIDE_POINTS[c].name+'</option>').join('');$('tideStation').value=A.stations.includes(cur)?cur:'auto';
+ for(const id of ['coastalMode','compareMode']){const b=$(id);if(b){b.disabled=!A.model;b.title=A.model?'':'自作モデルは東京湾だけです';}}
+ const n=$('areaName');if(n)n.textContent=A.name;}
+function switchArea(k){if(!AREAS[k]||k===AREA)return;setArea(k);if($('cape'))$('cape').hidden=k!=='tokyo';S.frames=[];S.compareFrame=null;++compareGeneration;if(!AREAS[k].model){if(S.mode!=='official'){S.prevMode=S.mode;S.mode='official';}}else if(S.prevMode){S.mode=S.prevMode;S.prevMode=null;}regionOptions();modeButtons();void load();}
+function modeButtons(){syncModeUi();}
 function nearestOfficial(){if(!S.frames[0])return null;const best=S.frames[0].stations.reduce((a,b)=>!a||distanceKm(S.pin,jcgPoint(b))<distanceKm(S.pin,jcgPoint(a))?b:a,null);return best&&{...best,...jcgPoint(best)};}
 function pointFlow(){if(!contains(VIEW_AREA,S.pin))return {reason:'view-outside'};if(usesModel())return modelSample(S.pin.lat,S.pin.lon);return nearestOfficial()||{};}
 const AREA_NAME=dx=>dx<75?'横須賀沿岸':dx<150?'東京湾中部':dx<225?'内房':dx<400?'東京湾':'房総（外房・内房）';
 function gridName(f){return f.cellSize+'m格子（'+AREA_NAME(f.cellSize)+'）';}
 const MODEL_LIMITS='潮汐のみの水深平均モデルです。風・河川・密度流・黒潮の影響・二枚潮・干出は含みません。格子間隔は精度ではありません。実測未検証。';
 const SOTOBO_NOTE='外房・九十九里・銚子沖は黒潮や沖合の海流の影響が大きく、潮汐だけのこの計算とは実際の流れが大きく違うことがあります。';
-function updatePoint(){const f=pointFlow(),face=facing($('heading').value,$('seat').value),official=S.mode==='official';$('coordinates').textContent=S.pin.lat.toFixed(5)+'°N, '+S.pin.lon.toFixed(5)+'°E';$('googleLink').href='https://www.google.com/maps/search/?api=1&query='+S.pin.lat+','+S.pin.lon;$('pointName').textContent=S.location&&distanceKm(S.pin,S.location)<.01?'現在地':distanceKm(S.pin,S.home)<.08?(distanceKm(S.home,START)<.05?'新安浦沖（参考位置）':'保存した釣り位置'):'タップした地点';$('face').textContent='正面：'+compass(face)+' '+face.toFixed(1)+'°';
+function updatePoint(){updatePoint0();if(!AREAS[AREA].model)omNote();}
+/* 大阪湾など：海上保安庁の推算点が粗いので、Open-Meteo の海流推算（潮流を含む、約8km四方）を参考に添える */
+const omCache=new Map();
+function omNote(){const lat=+S.pin.lat.toFixed(2),lon=+S.pin.lon.toFixed(2),key=lat+','+lon+','+S.date,h=Math.floor(S.slot/2),el=$('pointNote');
+ const show=d=>{if(!el||!d)return;const v=d.v[h],dir=d.d[h];if(v==null||dir==null){el.textContent+='（Open-Meteo の海流推算は、この地点では値がありません）';return;}const kt=v/1.852;el.textContent+='　参考：Open-Meteo の海流推算（潮流を含む約8km四方の値）では '+(kt<.05?'ほぼ停止':compass(dir)+'へ '+kt.toFixed(1)+' kt')+'。';};
+ if(omCache.has(key)){const d=omCache.get(key);if(d!=='busy')show(d);return;}
+ omCache.set(key,'busy');fetch('https://marine-api.open-meteo.com/v1/marine?latitude='+lat+'&longitude='+lon+'&hourly=ocean_current_velocity,ocean_current_direction&timezone=Asia%2FTokyo&start_date='+S.date+'&end_date='+S.date)
+  .then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.hourly){omCache.delete(key);return;}omCache.set(key,{v:j.hourly.ocean_current_velocity,d:j.hourly.ocean_current_direction});updatePoint();}).catch(()=>omCache.delete(key));}
+function updatePoint0(){const f=pointFlow(),face=facing($('heading').value,$('seat').value),official=S.mode==='official';$('coordinates').textContent=S.pin.lat.toFixed(5)+'°N, '+S.pin.lon.toFixed(5)+'°E';$('googleLink').href='https://www.google.com/maps/search/?api=1&query='+S.pin.lat+','+S.pin.lon;$('pointName').textContent=S.location&&distanceKm(S.pin,S.location)<.01?'現在地':distanceKm(S.pin,S.home)<.08?(distanceKm(S.home,START)<.05?'新安浦沖（参考位置）':'保存した釣り位置'):'タップした地点';$('face').textContent='正面：'+compass(face)+' '+face.toFixed(1)+'°';
  updatePeek(f);updateTide();$('reference').textContent=official?'海上保安庁 推算':'自作モデル・実測未検証';$('speedUnit').textContent=official?'推算 kn':'モデル kt';$('cell').textContent=official?'毎正時の原図':f.cellSize?'計算格子 '+f.cellSize+'m'+(f.lat!=null?' · セル中心まで約'+Math.round(distanceKm(S.pin,f)*1000)+'m':''):'計算格子 50m / 250m';
  if(f.bearing==null){$('direction').textContent='表示できません';$('speed').textContent='—';$('flowArrow').style.visibility='hidden';$('shore').textContent='岸まで —';$('depth').textContent='水深 —';$('relative').textContent='この地点の流向は表示できません';
   const failed=f.reason==='loading'&&!S.loading&&usesModel();
@@ -302,7 +320,7 @@ async function loadModel(){
   updatePoint();drawOverlay();flow.setEnabled(true);flow.invalidate();loadDetail(true);
  }catch(e){if(id!==generation)return;S.loading=false;S.fieldKey=null;flow.setEnabled(false);updatePoint();drawOverlay();setStatus('潮流モデルの取得失敗');$('boundaryInfo').textContent='取得できませんでした。別の計算では代用しません。';toast(e.message);}
 }
-async function frame(hour){const key=S.date+'/'+hour;if(currentCache.has(key))return currentCache.get(key);const data=await resource('/api/current?date='+S.date+'&hour='+hour,'json',30000);const parsed=await extract(data);currentCache.set(key,parsed);if(currentCache.size>60)currentCache.delete(currentCache.keys().next().value);return parsed;}
+async function frame(hour){const key=S.date+'/'+hour+'/'+AREA;if(currentCache.has(key))return currentCache.get(key);const data=await resource('/api/current?date='+S.date+'&hour='+hour+(AREA==='tokyo'?'':'&area='+AREAS[AREA].jcg),'json',30000);const parsed=await extract(data);currentCache.set(key,parsed);if(currentCache.size>60)currentCache.delete(currentCache.keys().next().value);return parsed;}
 let compareGeneration=0;
 // JCG chart for the comparison view: fetched independently, so a slow official server never blocks the model.
 async function loadCompareFrame(){
@@ -310,7 +328,7 @@ async function loadCompareFrame(){
  try{const fr=await frame(hour);if(id!==compareGeneration||S.mode!=='compare')return;S.compareFrame={...fr,key};drawOverlay();}
  catch(e){if(id!==compareGeneration||S.mode!=='compare')return;toast('海上保安庁の推算図を取得できませんでした。'+e.message);}
 }
-async function load(){syncModeUi();if(S.mode==='compare')void loadCompareFrame();if(usesModel())return loadModel();flow.setEnabled(false);const id=++generation;S.frames=[];S.loading=true;updateTime();updatePoint();drawOverlay();setStatus('沖合データを取得中…');$('boundaryInfo').textContent='沖合の公式推算を取得中';try{const frames=[await frame(Math.floor(S.slot/2))];if(id!==generation)return;S.frames=frames;S.loading=false;setStatus('海上保安庁 / 公式推算');$('boundaryInfo').textContent='毎正時の41地点。岸際の局所流ではありません。';updatePoint();drawOverlay();}catch(e){if(id!==generation)return;S.loading=false;S.frames=[];updatePoint();drawOverlay();setStatus('データ取得失敗');$('boundaryInfo').textContent='取得できませんでした。時刻を選び直すか再取得してください。';toast(e.message);}}
+async function load(){syncModeUi();if(S.mode==='compare')void loadCompareFrame();if(usesModel())return loadModel();flow.setEnabled(false);const id=++generation;S.frames=[];S.loading=true;updateTime();updatePoint();drawOverlay();setStatus('沖合データを取得中…');$('boundaryInfo').textContent='沖合の公式推算を取得中';try{const frames=[await frame(Math.floor(S.slot/2))];if(id!==generation)return;S.frames=frames;S.loading=false;setStatus('海上保安庁 / 公式推算');$('boundaryInfo').textContent='毎正時の'+(AREA==='tokyo'?'41地点':'公式推算図（瀬戸内）の地点')+'。岸際の局所流ではありません。';updatePoint();drawOverlay();}catch(e){if(id!==generation)return;S.loading=false;S.frames=[];updatePoint();drawOverlay();setStatus('データ取得失敗');$('boundaryInfo').textContent='取得できませんでした。時刻を選び直すか再取得してください。';toast(e.message);}}
 function stop(){playing=false;clearTimeout(playTimer);$('play').textContent='▶';$('play').setAttribute('aria-label','時間を再生');}
 function loaded(){return usesModel()?fieldReady():!!S.frames.length;}
 async function advance(){if(!playing)return;const step=hourly()?2:1;if(S.slot+step>lastSlot()){stop();return;}S.slot+=step;await load();if(playing&&loaded())playTimer=setTimeout(advance,usesModel()?1200:1800);else stop();}
@@ -325,7 +343,7 @@ document.addEventListener('visibilitychange',()=>{const now=getJstSelection(Date
 for(const b of document.querySelectorAll('[data-time]'))b.onclick=()=>{stop();S.slot=+b.dataset.time;load();};
 const MODE_TEXT={
  model:{method:()=>'使用中：自作モデル（潮汐の調和合成） / '+gridSummary(),desc:'選んだ日時の潮汐による流れを計算した参考値です（潮汐のみ・実測未検証）。風・河川などの流れは含みません。',kind:'粒子：流れの向き（弱い流れも見えるよう速さを誇張）',guide:'海の上をタップして、その場所の流れを確認'},
- official:{method:()=>'使用中：海上保安庁 潮流推算（沖合41地点・毎正時）',desc:'海上保安庁の潮流推算図を同じ地図に重ねて表示します。岸際の局所流や実測値ではありません。毎正時のみ（30分は前の正時に合わせます）。',kind:'公式図の矢印と流速（kn）',guide:'公式推算は沖合の41地点。タップで近い地点の値'},
+ official:{method:()=>AREA==='tokyo'?'使用中：海上保安庁 潮流推算（沖合41地点・毎正時）':'使用中：海上保安庁 潮流推算（瀬戸内の図・毎正時）＋ Open-Meteo の海流推算（参考）',get desc(){return AREA==='tokyo'?'海上保安庁の潮流推算図を同じ地図に重ねて表示します。岸際の局所流や実測値ではありません。毎正時のみ（30分は前の正時に合わせます）。':'大阪湾は自作モデルの範囲外のため、海上保安庁の潮流推算図（瀬戸内）を重ねて表示します。大阪湾の中の推算点は明石海峡・友ヶ島水道など十数地点です。選んだ地点には Open-Meteo の海流推算（約8km四方の粗い値）も参考に添えます。岸際の局所流や実測値ではありません。'},kind:'公式図の矢印と流速（kn）',get guide(){return AREA==='tokyo'?'公式推算は沖合の41地点。タップで近い地点の値':'大阪湾は公式推算図の地点のみ。タップで近い地点の値'}},
  compare:{method:()=>'使用中：自作モデルと海上保安庁 推算図を重ねて比較（毎正時）',desc:'粒子と目印は自作モデル、矢印と「kn」の数字は海上保安庁の推算図です。比較は毎正時のみ。',kind:'粒子：自作モデル ／ 矢印・kn：海上保安庁',guide:'海の上をタップすると自作モデルの値を表示'}
 };
 const MODEL_NOTICE='自作モデル：潮汐だけで駆動した水深平均の参考計算です（横須賀沿岸50m・東京湾中部100m・東京湾250m格子）。風・河川・密度流・黒潮の影響・二枚潮・干出は含みません。湾口ではフェリーADCP観測（港湾空港技術研究所, 2023）で潮汐以外の流れが潮汐流と同程度あり、実際の流れは大きく異なることがあります。計算範囲外・陸地には値を出しません。';
@@ -338,7 +356,7 @@ function syncModeUi(){
  $('hourNote').hidden=!hourly();
  $('modelNotice').textContent=mode==='official'?'海上保安庁の公式潮流推算図から読み取った沖合の流れを、図の経緯度目盛りに合わせて地図に重ねています。岸際をピンポイントに予測した値ではありません。':MODEL_NOTICE;
 }
-function setMode(view){stop();clearTimeout(debounce);clearTimeout(toastTimer);$('toast').style.display='none';S.mode=view==='official'?'official':view==='compare'?'compare':'model';if(S.mode!=='compare'){++compareGeneration;S.compareFrame=null;}if(S.mode!=='official')S.frames=[];if(S.mode==='official'&&S.zoom>12)go(S.center,12);void load();}
+function setMode(view){if(!AREAS[AREA].model&&view!=='official'){toast('自作モデルは東京湾だけです。'+AREAS[AREA].name+'は海上保安庁の推算図で表示します。');return;}stop();clearTimeout(debounce);clearTimeout(toastTimer);$('toast').style.display='none';S.mode=view==='official'?'official':view==='compare'?'compare':'model';if(S.mode!=='compare'){++compareGeneration;S.compareFrame=null;}if(S.mode!=='official')S.frames=[];if(S.mode==='official'&&S.zoom>12)go(S.center,12);void load();}
 $('coastalMode').onclick=()=>setMode('coastal');$('officialMode').onclick=()=>setMode('official');$('compareMode').onclick=()=>setMode('compare');
 function modal(title,html){$('modalTitle').textContent=title;$('modalBody').innerHTML=html;$('modal').showModal();}$('close').onclick=()=>$('modal').close();$('modal').onclick=e=>{if(e.target===$('modal')){const r=$('modal').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('modal').close();}};
 const escapeHtml=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -401,7 +419,7 @@ function useStandard(){
 function openSettings(){
  modal('地点を座標で指定',`<p>緯度・経度を入力して、確認したい海上の地点へ移動できます。</p>
  <div class="point-grid"><label>北緯<input id="lat" type="number" step=".00001" value="${S.pin.lat.toFixed(5)}"></label><label>東経<input id="lon" type="number" step=".00001" value="${S.pin.lon.toFixed(5)}"></label></div><p id="settingsMessage" role="status"></p><button id="setCoordinates" class="primary">この地点を表示</button><button id="reset">初期位置に戻す</button>`);
- $('setCoordinates').onclick=()=>{const p={lat:+$('lat').value,lon:+$('lon').value};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon)||!contains(VIEW_AREA,p)){$('settingsMessage').textContent='青枠内（東京湾〜房総・鹿島灘南部）の緯度・経度を入力してください。';return;}selectPoint(p);go(p,15);$('modal').close();};
+ $('setCoordinates').onclick=()=>{const p={lat:+$('lat').value,lon:+$('lon').value};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon)||!areaOf(p)){$('settingsMessage').textContent='東京湾〜房総・鹿島灘南部か、大阪湾の緯度・経度を入力してください。';return;}selectPoint(p);go(p,15);$('modal').close();};
  $('reset').onclick=()=>{selectPoint({...START});go(START,14);$('modal').close();};
 }
 $('settings').onclick=openSettings;
@@ -460,7 +478,7 @@ async function restoreGoogle(){
 }
 
 async function init(){
- S.loading=true;syncModeUi();updateTime();updatePoint();draw();
+ regionOptions();S.loading=true;syncModeUi();updateTime();updatePoint();draw();
  // The old static basemap images (0.8 MB) are no longer fetched: live tiles cover every view.
  await Promise.allSettled([load(),restoreGoogle()]);
 }

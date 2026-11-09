@@ -1,5 +1,5 @@
 import {distanceKm} from './geometry.js';
-export const TIDE_POINTS={TK:{name:'東京',lat:35.65,lon:139.766667},Z1:{name:'油壺',lat:35.166667,lon:139.616667},MR:{name:'布良',lat:34.916667,lon:139.833333},TT:{name:'館山',lat:34.983333,lon:139.85},ZF:{name:'勝浦',lat:35.133333,lon:140.25},CS:{name:'銚子漁港',lat:35.75,lon:140.866667}};
+export const TIDE_POINTS={TK:{name:'東京',lat:35.65,lon:139.766667},Z1:{name:'油壺',lat:35.166667,lon:139.616667},MR:{name:'布良',lat:34.916667,lon:139.833333},TT:{name:'館山',lat:34.983333,lon:139.85},ZF:{name:'勝浦',lat:35.133333,lon:140.25},CS:{name:'銚子漁港',lat:35.75,lon:140.866667},OS:{name:'大阪',lat:34.65,lon:135.433},KB:{name:'神戸',lat:34.683,lon:135.183},AM:{name:'尼崎',lat:34.7,lon:135.4},J5:{name:'西宮',lat:34.717,lon:135.333},IO:{name:'泉大津',lat:34.517,lon:135.4},J2:{name:'岸和田',lat:34.467,lon:135.367},AK:{name:'明石',lat:34.65,lon:134.983},ST:{name:'洲本',lat:34.35,lon:134.9},WY:{name:'和歌山',lat:34.217,lon:135.15}};
 export function nearestTideStation(point){return Object.keys(TIDE_POINTS).reduce((a,b)=>distanceKm(point,TIDE_POINTS[a])<=distanceKm(point,TIDE_POINTS[b])?a:b);}
 function spline(points){
  const n=points.length,h=[],d=[],m=Array(n).fill(0);for(let i=0;i<n-1;i++){h[i]=points[i+1].x-points[i].x;d[i]=(points[i+1].y-points[i].y)/h[i];}

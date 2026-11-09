@@ -63,10 +63,11 @@ export default {async fetch(request,env,ctx){
    const date=u.searchParams.get('date')||'',hour=Number(u.searchParams.get('hour'));
    if(!validDate(date)||+date.slice(0,4)<1900||+date.slice(0,4)>2100||!Number.isInteger(hour)||hour<0||hour>23)return Response.json({error:'日付または時刻が不正です。'},{status:400});
    const station=u.searchParams.get('station')||'TK';if(path==='/api/tide'&&!TIDE_STATIONS[station])return Response.json({error:'対応していない潮位地点です。'},{status:400});
-   const key=path+date+hour+(path==='/api/tide'?station:'');
+   const area=u.searchParams.get('area')||'01';if(path==='/api/current'&&!['01','03'].includes(area))return Response.json({error:'対応していない海域です。'},{status:400});
+   const key=path+date+hour+(path==='/api/tide'?station:area);
    if(memo.has(key))return Response.json(memo.get(key));
    let result;
-   if(path==='/api/current')result=SNAPSHOTS[date+'/'+hour]||await current(date,hour);
+   if(path==='/api/current')result=(area==='01'&&SNAPSHOTS[date+'/'+hour])||await current(date,hour,area);
    else {const year=date.slice(0,4);const raw=year==='2026'&&TIDETABLES[station]?TIDETABLES[station]:await(await upstream('https://www.data.jma.go.jp/kaiyou/data/db/tide/suisan/txt/'+year+'/'+station+'.txt')).text();result=parseTides(raw,date,station);}
    if(memo.size>100)memo.delete(memo.keys().next().value);memo.set(key,result);
    return Response.json(result,{headers:{'Cache-Control':'public, max-age=3600'}});

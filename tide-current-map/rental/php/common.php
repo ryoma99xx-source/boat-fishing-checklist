@@ -132,12 +132,14 @@ function upstream($url) {
  return $body;
 }
 
-function parse_stations($html) {
+function parse_stations($html, $area = '01') {
  preg_match_all('/coords\s*=\s*["\']?(\d+),(\d+),\d+\s+ALT=["\']([\d.]+)kn\./i', $html, $all, PREG_SET_ORDER);
  $out = array();
  foreach ($all as $m) {
   $x = js_number($m[1]); $y = js_number($m[2]);
-  $out[] = array('x' => $x, 'y' => $y, 'lat' => 35 + (631 - $y) / 840, 'lon' => 139.5 + ($x - 30) / 675, 'speed' => js_number($m[3]));
+  // 01 東京湾 / 03 瀬戸内 (see worker/api.js JCG_AREAS)
+  if ($area === '03') { $lat = 34 + (187 - $y) / 188.31; $lon = 130 + 40 / 60 + ($x - 30) / 155.17; } else { $lat = 35 + (631 - $y) / 840; $lon = 139.5 + ($x - 30) / 675; }
+  $out[] = array('x' => $x, 'y' => $y, 'lat' => $lat, 'lon' => $lon, 'speed' => js_number($m[3]));
  }
  return $out;
 }
@@ -186,16 +188,16 @@ function parse_tides($raw, $date, $code = 'TK') {
   'datum' => '潮位表基準面からの高さ', 'source' => 'https://www.data.jma.go.jp/kaiyou/data/db/tide/suisan/txt/' . $year . '/' . $code . '.txt');
 }
 
-function current_prediction($date, $hour) {
+function current_prediction($date, $hour, $area = '01') {
  $p = explode('-', $date); $year = (int)$p[0]; $month = (int)$p[1]; $day = (int)$p[2];
- $source = TIDE_ORIGIN . '/TIDE/pred2/cgi-bin/CurrPredCgi_K.cgi?area=01&year=' . $year . '&month=' . $month . '&day=' . $day . '&hour=' . $hour;
- $html = upstream($source); $stations = parse_stations($html);
+ $source = TIDE_ORIGIN . '/TIDE/pred2/cgi-bin/CurrPredCgi_K.cgi?area=' . $area . '&year=' . $year . '&month=' . $month . '&day=' . $day . '&hour=' . $hour;
+ $html = upstream($source); $stations = parse_stations($html, $area);
  if (count($stations) < 20) throw new UpstreamError('公式推算図を読み取れませんでした。時間をおいて再取得してください。');
- $expected = '01_' . str_replace('-', '', $date) . str_pad((string)$hour, 2, '0', STR_PAD_LEFT) . '_.png';
+ $expected = $area . '_' . str_replace('-', '', $date) . str_pad((string)$hour, 2, '0', STR_PAD_LEFT) . '_.png';
  if (strpos($html, $expected) === false) throw new UpstreamError('要求時刻と推算図の時刻が一致しません。');
  $image = upstream(TIDE_ORIGIN . '/TIDE/pred2/CurrPred/curr_img/' . $expected);
  $now = microtime(true);
- return array('date' => $date, 'hour' => $hour, 'stations' => $stations, 'image' => 'data:image/png;base64,' . base64_encode($image), 'source' => $source,
+ return array('date' => $date, 'hour' => $hour, 'area' => $area, 'stations' => $stations, 'image' => 'data:image/png;base64,' . base64_encode($image), 'source' => $source,
   'generatedAt' => gmdate('Y-m-d\TH:i:s', (int)floor($now)) . sprintf('.%03dZ', (int)floor(($now - floor($now)) * 1000)));
 }
 
@@ -239,17 +241,19 @@ function handle_tide_api($path) {
   $station = query_param('station'); if ($station === null || $station === '') $station = 'TK';
   $stations = tide_stations();
   if ($path === '/api/tide' && !isset($stations[$station])) return send_json(array('error' => '対応していない潮位地点です。'), 400);
+  $area = query_param('area'); if ($area === null || $area === '') $area = '01';
+  if ($path === '/api/current' && $area !== '01' && $area !== '03') return send_json(array('error' => '対応していない海域です。'), 400);
   $ok = array('Cache-Control' => 'public, max-age=3600');
-  if ($path === '/api/current') {
+  if ($path === '/api/current' && $area === '01') {
    $snapshot = __DIR__ . '/snapshots/' . $date . '_' . $hour . '.json';
    if (is_file($snapshot)) return send_json_text(file_get_contents($snapshot), 200, $ok);
-  } elseif (substr($date, 0, 4) === '2026' && is_file(__DIR__ . '/tide/' . $station . '-2026.txt')) {
+  } elseif ($path === '/api/tide' && substr($date, 0, 4) === '2026' && is_file(__DIR__ . '/tide/' . $station . '-2026.txt')) {
    return send_json(parse_tides(file_get_contents(__DIR__ . '/tide/' . $station . '-2026.txt'), $date, $station), 200, $ok);
   }
-  $key = $path . $date . $hour . ($path === '/api/tide' ? $station : '');
+  $key = $path . $date . $hour . ($path === '/api/tide' ? $station : ($area === '01' ? '' : $area));
   $cached = cache_get($key);
   if ($cached !== null) return send_json_text($cached, 200, $ok);
-  if ($path === '/api/current') $result = current_prediction($date, $hour);
+  if ($path === '/api/current') $result = current_prediction($date, $hour, $area);
   else $result = parse_tides(upstream('https://www.data.jma.go.jp/kaiyou/data/db/tide/suisan/txt/' . substr($date, 0, 4) . '/' . $station . '.txt'), $date, $station);
   $json = js_json($result);
   cache_put($key, $json);
