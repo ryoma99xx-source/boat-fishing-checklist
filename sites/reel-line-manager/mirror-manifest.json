@@ -87,6 +87,15 @@
    "sha256": "4fc9ecb5df48ce2b9a96dfb3647e410de9b5de4a89db50f189a1c425f05e6071",
    "found_by": "probe",
    "modifications": []
+  },
+  {
+   "path": "/dc-export.html",
+   "file": "dc-export.html",
+   "content_type": "text/html; charset=utf-8",
+   "bytes": 1723,
+   "sha256": "a0104b8600f1a520aa23a10a5b438a4685b7a1d57eb97bfe06baf4ef2368be59",
+   "found_by": "added 2026-11-09 (Dragon Counter import bridge)",
+   "modifications": []
   }
  ],
  "missing_references": {},
