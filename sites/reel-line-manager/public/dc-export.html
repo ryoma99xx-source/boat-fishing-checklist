@@ -1,0 +1,31 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>リール糸管理 → ドラゴンカウンター</title>
+<script>
+// ドラゴンカウンター（同じサイトの TOOL 05）から頼まれたときだけ、このスマホに保存しているリールと糸の情報を渡す。
+// 渡す相手は dragon-counter.cutlassfish.tokyo だけ。書き換えはしない（読むだけ）。
+(function(){
+  var ALLOW = 'https://dragon-counter.cutlassfish.tokyo';
+  function readReels(cb){
+    var rq; try { rq = indexedDB.open('reelLineManagerPublic'); } catch (e) { cb([]); return; }
+    rq.onerror = function(){ cb([]); };
+    rq.onupgradeneeded = function(e){ try { e.target.transaction.abort(); } catch (x) {} cb([]); };
+    rq.onsuccess = function(e){
+      var db = e.target.result;
+      if (!db.objectStoreNames.contains('reels')) { db.close(); cb([]); return; }
+      var g = db.transaction('reels', 'readonly').objectStore('reels').getAll();
+      g.onsuccess = function(){ db.close(); cb(g.result || []); };
+      g.onerror = function(){ db.close(); cb([]); };
+    };
+  }
+  var KEEP = ['id','name','maker','order','lineType','lineSize','lineLength','lineMaker','lineProductName','spooledAt','spare','spareLineType','spareLineSize','spareLineLength','spareLineMaker','spareLineProductName'];
+  window.addEventListener('message', function(e){
+    if (e.origin !== ALLOW || !e.data || e.data.type !== 'rlm-req') return;
+    readReels(function(list){
+      var out = list.map(function(r){ var o = {}; KEEP.forEach(function(k){ if (r[k] !== undefined) o[k] = r[k]; }); return o; });
+      e.source.postMessage({type: 'rlm-reels', reels: out}, ALLOW);
+    });
+  });
+})();
+</script>
