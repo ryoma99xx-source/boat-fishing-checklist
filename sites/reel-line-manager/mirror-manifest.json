@@ -7,11 +7,12 @@
    "path": "/",
    "file": "index.html",
    "content_type": "text/html; charset=utf-8",
-   "bytes": 101621,
-   "sha256": "1402434a1d52b38cdd7873c37bb99f4b12b076012b101c72791966f1c2e6f948",
+   "bytes": 102921,
+   "sha256": "d11835ec1c42b895b39f66f0e7dbc924e113ac14302a507428b24887098924f3",
    "found_by": "start",
    "modifications": [
-    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)"
+    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)",
+    "added copy-for-Dragon-Counter button (2026-11-09)"
    ]
   },
   {
@@ -84,9 +85,11 @@
    "file": "service-worker.js",
    "content_type": "text/javascript; charset=utf-8",
    "bytes": 1142,
-   "sha256": "4fc9ecb5df48ce2b9a96dfb3647e410de9b5de4a89db50f189a1c425f05e6071",
+   "sha256": "631fa880bc573b7daf3477d7f639fbccb1fff72974201873efa43d0a4c716f44",
    "found_by": "probe",
-   "modifications": []
+   "modifications": [
+    "cache name v71"
+   ]
   },
   {
    "path": "/dc-export.html",

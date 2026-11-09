@@ -1,4 +1,4 @@
-const CACHE_NAME = "reel-line-manager-public-v70";
+const CACHE_NAME = "reel-line-manager-public-v71";
 const APP_SHELL = [
 "./",
 "index.html",

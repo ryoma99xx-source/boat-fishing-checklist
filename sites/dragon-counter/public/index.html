@@ -2208,9 +2208,15 @@ function rlmFetch(){return new Promise((res,rej)=>{const f=document.createElemen
   const tm=setTimeout(()=>done(false,new Error('timeout')),8000);addEventListener('message',on);f.onload=()=>{try{f.contentWindow.postMessage({type:'rlm-req'},RLM_ORIGIN)}catch(e){}};document.body.appendChild(f)})}
 function tkImportSheet(){openSheet(`<div class="sheet-h"><h2>リール糸管理から取り込む</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
    <p class="muted">リール糸管理（TOOL 01）に登録したリールを、巻いている糸（PEの号数・長さ）ごと所有リールに入れます。もう一度取り込むと、糸の情報を新しくします。</p>
-   <button class="btn primary big" data-act="tkImportDirect">このスマホのリール糸管理から取り込む</button>
-   <p class="muted">うまくいかないとき（ホーム画面のアイコンから開いている場合など）は、リール糸管理の「JSONバックアップ」で保存したファイルを選んでください。</p>
-   <label class="btn" for="tkImportFile">バックアップのファイルを選ぶ<input type="file" id="tkImportFile" accept=".json,application/json" hidden></label>`,{kind:'tkimport'})}
+   <h3 class="tk-g">1. コピーして貼り付ける（おすすめ）</h3>
+   <p class="muted">リール糸管理の「バックアップ」にある「ドラゴンカウンター用にコピー」を押し、ここに貼り付けます。</p>
+   <textarea id="tkPaste" rows="3" class="memo-ta" placeholder="ここに貼り付け"></textarea>
+   <button class="btn primary big" data-act="tkPasteImport">貼り付けた内容を取り込む</button>
+   <h3 class="tk-g">2. ほかの方法</h3>
+   <button class="btn" data-act="tkImportDirect">このブラウザのリール糸管理から直接読む</button>
+   <p class="muted">直接読めるのは、両方を同じブラウザ（Safari など）で開いている場合だけです。ホーム画面のアイコンから開いているとデータの置き場所が分かれるため、1か下のファイルを使ってください。</p>
+   <label class="btn" for="tkImportFile">リール糸管理のJSONバックアップを選ぶ<input type="file" id="tkImportFile" accept=".json,application/json" hidden></label>`,{kind:'tkimport'})}
+function rlmParse(text){const m=String(text||'').match(/\{[\s\S]*\}/);if(!m)return null;try{const d=JSON.parse(m[0]);return Array.isArray(d.reels)?d.reels:null}catch(e){return null}}
 function tkImported(n){closeSheet();S.ui.tab='gear';render();setTimeout(()=>{const el=$('#tkReels');if(el)el.scrollIntoView({block:'start'})},60);toast(n?`リールを${n}件取り込みました（PEの号数も入れました）`:'取り込めるリールがありませんでした')}
 
 /* 出船の準備：今日のタックル */
@@ -2374,7 +2380,10 @@ const acts={
   tkSwitch:()=>tkSwitchSheet(),
   tkPick:b=>{const tr=active();if(!tr)return;const id=b.dataset.id;if(tr.tk&&tr.tk.cur===id){closeSheet();return}tkUse(tr,id);touch(tr);closeSheet();toast('タックルを替えました：'+tkLabelOf(tr,id,true))},
   tkGoReg:()=>{acts.goSec({dataset:{sec:'tkSets'}})},
-  tkImportDirect:b=>{b.disabled=true;b.textContent='読み込み中…';rlmFetch().then(reels=>tkImported(rlmImport(reels))).catch(()=>{b.disabled=false;b.textContent='このスマホのリール糸管理から取り込む';toast('読み込めませんでした。下のファイルから取り込んでください')})},
+  tkImportDirect:b=>{const t0=b.textContent;b.disabled=true;b.textContent='読み込み中…';const fail=m=>{b.disabled=false;b.textContent=t0;toast(m)};
+    rlmFetch().then(reels=>{if(!reels.length)return fail('このブラウザのリール糸管理にはリールが見つかりませんでした。1のコピーと貼り付けを使ってください');tkImported(rlmImport(reels))}).catch(()=>fail('読み込めませんでした。1のコピーと貼り付けを使ってください'))},
+  tkPasteImport:async()=>{const el=$('#tkPaste');let v=el?el.value:'';if(!v.trim()&&navigator.clipboard&&navigator.clipboard.readText){try{v=await navigator.clipboard.readText();if(el)el.value=v}catch(e){}}
+    if(!v.trim())return toast('リール糸管理の「ドラゴンカウンター用にコピー」を押してから、ここに貼り付けてください');const r=rlmParse(v);if(!r)return toast('リール糸管理のデータとして読めませんでした');if(!r.length)return toast('リールが入っていませんでした');tkImported(rlmImport(r))},
   memoOpen:b=>memoSheet(b.dataset.id),
   memoSave:b=>{const tr=S.trips[b.dataset.id];const el=$('#memoTa');if(!tr||!el)return;tr.memo=el.value.replace(/\s+$/,'');touch(tr);closeSheet();render();toast(tr.memo?'メモを保存しました':'メモを空にしました')},
   memoCopyLast:b=>{const m=lastMemo();const el=$('#'+(b.dataset.into||'fMemo'));if(!el||!m)return;el.value=m;if(!b.dataset.into&&curForm)curForm.memo=m;b.remove();el.focus()},
