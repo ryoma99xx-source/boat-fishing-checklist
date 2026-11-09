@@ -1,6 +1,6 @@
 """Builds the tackle catalog (TCAT) in public/index.html from researched JSON lists.
 
-  python3 tackle_cat.py rods.json reels.json [--write]
+  python3 tackle_cat.py tackle/rods.json tackle/reels.json [--write]   (lists kept in tools/tackle/)
 
 rods.json:  {"items":[{maker,series,model,length_m,tier,price_jpy,url,status}]}
 reels.json: {"items":[{maker,series,model,kind,gear,price_jpy,url,status}]}

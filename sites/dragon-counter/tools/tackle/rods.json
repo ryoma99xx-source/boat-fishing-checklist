@@ -1,0 +1,985 @@
+{
+ "items": [
+  {
+   "maker": "DAIWA",
+   "series": "テンヤタチウオ X",
+   "model": "180・R",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": 19000,
+   "url": "https://www.daiwa.com/jp/product/ox79uek",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "テンヤタチウオ X",
+   "model": "73-180・R",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": 19000,
+   "url": "https://www.daiwa.com/jp/product/ox79uek",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "タチウオ X",
+   "model": "M-180",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": 19000,
+   "url": "https://www.daiwa.com/jp/product/6rsgiqg",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "タチウオ X",
+   "model": "MH-180",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": 19000,
+   "url": "https://www.daiwa.com/jp/product/6rsgiqg",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "テンヤタチウオ X",
+   "model": "200・R",
+   "length_m": 2.0,
+   "tier": "entry",
+   "price_jpy": 19500,
+   "url": "https://www.daiwa.com/jp/product/ox79uek",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "テンヤタチウオ X",
+   "model": "91-180・R",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": 19500,
+   "url": "https://www.daiwa.com/jp/product/ox79uek",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "タチウオ X",
+   "model": "H-180",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": 20000,
+   "url": "https://www.daiwa.com/jp/product/6rsgiqg",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "タチウオ X",
+   "model": "HH-180",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": 20000,
+   "url": "https://www.daiwa.com/jp/product/6rsgiqg",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "アナリスター ライト テンヤタチウオ",
+   "model": "73-180",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 30500,
+   "url": "https://www.daiwa.com/jp/product/1bo1hh6",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "アナリスター ライト テンヤタチウオ",
+   "model": "82-175",
+   "length_m": 1.75,
+   "tier": "mid",
+   "price_jpy": 30500,
+   "url": "https://www.daiwa.com/jp/product/1bo1hh6",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "アナリスター タチウオテンヤ",
+   "model": "82-180・R",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 31500,
+   "url": "https://www.daiwa.com/jp/product/lrlvn4y",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "アナリスター タチウオテンヤ",
+   "model": "73-180・R",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 31500,
+   "url": "https://www.daiwa.com/jp/product/lrlvn4y",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "アナリスター タチウオテンヤ",
+   "model": "91-180・R",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 32000,
+   "url": "https://www.daiwa.com/jp/product/lrlvn4y",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "メタリア テンヤ タチウオ",
+   "model": "82S-165・E",
+   "length_m": 1.65,
+   "tier": "mid",
+   "price_jpy": 43000,
+   "url": "https://www.daiwa.com/jp/product/h7oepwr",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "メタリア テンヤ タチウオ",
+   "model": "82-175・E",
+   "length_m": 1.75,
+   "tier": "mid",
+   "price_jpy": 43500,
+   "url": "https://www.daiwa.com/jp/product/h7oepwr",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "メタリア テンヤ タチウオ",
+   "model": "82S-180・E",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 44000,
+   "url": "https://www.daiwa.com/jp/product/h7oepwr",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "メタリア テンヤ タチウオ",
+   "model": "91-170・E",
+   "length_m": 1.7,
+   "tier": "mid",
+   "price_jpy": 44000,
+   "url": "https://www.daiwa.com/jp/product/h7oepwr",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "メタリア テンヤ タチウオ",
+   "model": "91H-165・E",
+   "length_m": 1.65,
+   "tier": "mid",
+   "price_jpy": 44000,
+   "url": "https://www.daiwa.com/jp/product/h7oepwr",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "メタリア テンヤ タチウオ",
+   "model": "82H-180・E",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 45000,
+   "url": "https://www.daiwa.com/jp/product/h7oepwr",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 テンヤタチウオ",
+   "model": "82S-180",
+   "length_m": 1.8,
+   "tier": "high",
+   "price_jpy": 64500,
+   "url": "https://www.daiwa.com/jp/product/zmotvf2",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 テンヤタチウオ",
+   "model": "82-177",
+   "length_m": 1.77,
+   "tier": "high",
+   "price_jpy": 64500,
+   "url": "https://www.daiwa.com/jp/product/zmotvf2",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 テンヤタチウオ",
+   "model": "91-172",
+   "length_m": 1.72,
+   "tier": "high",
+   "price_jpy": 64500,
+   "url": "https://www.daiwa.com/jp/product/zmotvf2",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 テンヤタチウオ",
+   "model": "91H-161",
+   "length_m": 1.61,
+   "tier": "high",
+   "price_jpy": 64500,
+   "url": "https://www.daiwa.com/jp/product/zmotvf2",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 タチウオゲームRT",
+   "model": "FR",
+   "length_m": 1.83,
+   "tier": "high",
+   "price_jpy": 71000,
+   "url": "https://www.daiwa.com/jp/product/u320j10",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 タチウオゲームRT",
+   "model": "SC",
+   "length_m": 1.83,
+   "tier": "high",
+   "price_jpy": 73000,
+   "url": "https://www.daiwa.com/jp/product/u320j10",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 タチウオテンヤSP EX AGS",
+   "model": "178",
+   "length_m": 1.78,
+   "tier": "high",
+   "price_jpy": 79000,
+   "url": "https://tsurihack.com/7732",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "DAIWA",
+   "series": "瞬鋭 テンヤタチウオEX",
+   "model": "91H-160",
+   "length_m": 1.6,
+   "tier": "high",
+   "price_jpy": 79500,
+   "url": "https://www.daiwa.com/jp/product/4zg8xbc",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 タチウオテンヤSP EX AGS",
+   "model": "184",
+   "length_m": 1.84,
+   "tier": "high",
+   "price_jpy": 79500,
+   "url": "https://tsurihack.com/7732",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 タチウオテンヤSP EX AGS",
+   "model": "192",
+   "length_m": 1.92,
+   "tier": "high",
+   "price_jpy": 79500,
+   "url": "https://tsurihack.com/7732",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 タチウオテンヤSP EX",
+   "model": "82-174",
+   "length_m": 1.74,
+   "tier": "high",
+   "price_jpy": 83000,
+   "url": "https://www.daiwa.com/jp/product/3ae7qkr",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "瞬鋭テンヤタチウオEX R-SPEC",
+   "model": "82-170",
+   "length_m": 1.7,
+   "tier": "high",
+   "price_jpy": 83500,
+   "url": "https://www.daiwa.com/jp/product/lnvuc04",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 タチウオテンヤSP EX",
+   "model": "91-170",
+   "length_m": 1.7,
+   "tier": "high",
+   "price_jpy": 84000,
+   "url": "https://www.daiwa.com/jp/product/3ae7qkr",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 タチウオテンヤSP EX",
+   "model": "82S-177",
+   "length_m": 1.77,
+   "tier": "high",
+   "price_jpy": 84000,
+   "url": "https://www.daiwa.com/jp/product/3ae7qkr",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "瞬鋭テンヤタチウオEX R-SPEC",
+   "model": "91-168",
+   "length_m": 1.68,
+   "tier": "high",
+   "price_jpy": 84500,
+   "url": "https://www.daiwa.com/jp/product/lnvuc04",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "極鋭 タチウオテンヤSP EX",
+   "model": "178",
+   "length_m": 1.78,
+   "tier": "high",
+   "price_jpy": 86000,
+   "url": "https://www.daiwa.com/jp/product/3ae7qkr",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター BB",
+   "model": "73 ML190",
+   "length_m": 1.9,
+   "tier": "entry",
+   "price_jpy": null,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター BB",
+   "model": "73 M190",
+   "length_m": 1.9,
+   "tier": "entry",
+   "price_jpy": null,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター BB",
+   "model": "73 MH185",
+   "length_m": 1.85,
+   "tier": "entry",
+   "price_jpy": null,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター BB",
+   "model": "82 MH180",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": null,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター BB",
+   "model": "82 MH195",
+   "length_m": 1.95,
+   "tier": "entry",
+   "price_jpy": null,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター BB",
+   "model": "82 HH170",
+   "length_m": 1.7,
+   "tier": "entry",
+   "price_jpy": null,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター BB",
+   "model": "91 H185",
+   "length_m": 1.85,
+   "tier": "entry",
+   "price_jpy": null,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター TT",
+   "model": "73 M190",
+   "length_m": 1.9,
+   "tier": "entry",
+   "price_jpy": 24100,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター TT",
+   "model": "73 MH185",
+   "length_m": 1.85,
+   "tier": "entry",
+   "price_jpy": 24400,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター TT",
+   "model": "82 MH180",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": 24400,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター TT",
+   "model": "82 MH195",
+   "length_m": 1.95,
+   "tier": "entry",
+   "price_jpy": 24800,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター TT",
+   "model": "82 HH170",
+   "length_m": 1.7,
+   "tier": "entry",
+   "price_jpy": 24800,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター TT",
+   "model": "91 H185",
+   "length_m": 1.85,
+   "tier": "entry",
+   "price_jpy": 24800,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター TT",
+   "model": "73 M210",
+   "length_m": 2.1,
+   "tier": "entry",
+   "price_jpy": 25200,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ (2019年モデル)",
+   "model": "73 M190 RIGHT",
+   "length_m": 1.9,
+   "tier": "entry",
+   "price_jpy": 28500,
+   "url": "https://go-fish.jp/tackle/rod/19sabermasterss-tenya-ss/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ (2019年モデル)",
+   "model": "73 M190 LEFT",
+   "length_m": 1.9,
+   "tier": "entry",
+   "price_jpy": 28500,
+   "url": "https://go-fish.jp/tackle/rod/19sabermasterss-tenya-ss/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ (2019年モデル)",
+   "model": "91 H160 RIGHT",
+   "length_m": 1.6,
+   "tier": "entry",
+   "price_jpy": 28500,
+   "url": "https://go-fish.jp/tackle/rod/19sabermasterss-tenya-ss/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ (2019年モデル)",
+   "model": "91 H160 LEFT",
+   "length_m": 1.6,
+   "tier": "entry",
+   "price_jpy": 28500,
+   "url": "https://go-fish.jp/tackle/rod/19sabermasterss-tenya-ss/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ (2019年モデル)",
+   "model": "82 MH180 RIGHT",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": 29000,
+   "url": "https://go-fish.jp/tackle/rod/19sabermasterss-tenya-ss/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ (2019年モデル)",
+   "model": "82 MH180 LEFT",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": 29000,
+   "url": "https://go-fish.jp/tackle/rod/19sabermasterss-tenya-ss/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ (2019年モデル)",
+   "model": "82 HH170 RIGHT",
+   "length_m": 1.7,
+   "tier": "entry",
+   "price_jpy": 29500,
+   "url": "https://go-fish.jp/tackle/rod/19sabermasterss-tenya-ss/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ (2019年モデル)",
+   "model": "82 HH170 LEFT",
+   "length_m": 1.7,
+   "tier": "entry",
+   "price_jpy": 29500,
+   "url": "https://go-fish.jp/tackle/rod/19sabermasterss-tenya-ss/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ",
+   "model": "82MH180",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 36000,
+   "url": "https://www.tsurisoku.com/news/148080/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ",
+   "model": "82H175",
+   "length_m": 1.75,
+   "tier": "mid",
+   "price_jpy": 36000,
+   "url": "https://www.tsurisoku.com/news/148080/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ",
+   "model": "91MH165",
+   "length_m": 1.65,
+   "tier": "mid",
+   "price_jpy": 36000,
+   "url": "https://www.tsurisoku.com/news/148080/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ",
+   "model": "73M190",
+   "length_m": 1.9,
+   "tier": "mid",
+   "price_jpy": 36500,
+   "url": "https://www.tsurisoku.com/news/148080/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ",
+   "model": "91H170",
+   "length_m": 1.7,
+   "tier": "mid",
+   "price_jpy": 36500,
+   "url": "https://www.tsurisoku.com/news/148080/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ",
+   "model": "73MH185",
+   "length_m": 1.85,
+   "tier": "mid",
+   "price_jpy": 37000,
+   "url": "https://www.tsurisoku.com/news/148080/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター SS テンヤ",
+   "model": "82HH180",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 37000,
+   "url": "https://www.tsurisoku.com/news/148080/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター XR テンヤ",
+   "model": "73 ML180/RIGHT",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 46600,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター XR テンヤ",
+   "model": "73 ML180/LEFT",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 46600,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター XR テンヤ",
+   "model": "73 M190/RIGHT",
+   "length_m": 1.9,
+   "tier": "mid",
+   "price_jpy": 47100,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター XR テンヤ",
+   "model": "73 M190/LEFT",
+   "length_m": 1.9,
+   "tier": "mid",
+   "price_jpy": 47100,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター XR テンヤ",
+   "model": "73 MH185/RIGHT",
+   "length_m": 1.85,
+   "tier": "mid",
+   "price_jpy": 47600,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター XR テンヤ",
+   "model": "73 MH185/LEFT",
+   "length_m": 1.85,
+   "tier": "mid",
+   "price_jpy": 47600,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター XR テンヤ",
+   "model": "82 MH180/RIGHT",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 48300,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター XR テンヤ",
+   "model": "82 MH180/LEFT",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 48300,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター エクスチューン 攻 テンヤ",
+   "model": "91H170-MS",
+   "length_m": 1.7,
+   "tier": "high",
+   "price_jpy": null,
+   "url": "https://kakaku.com/search_results/%83T%81%5B%83x%83%8B%83%7D%83X%83%5E%81%5B/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター XR",
+   "model": "73M180",
+   "length_m": 1.8,
+   "tier": "high",
+   "price_jpy": 56500,
+   "url": "https://www.tsurisoku.com/news/194841",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター XR",
+   "model": "82MH180",
+   "length_m": 1.8,
+   "tier": "high",
+   "price_jpy": 56500,
+   "url": "https://www.tsurisoku.com/news/194841",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター XR",
+   "model": "91H170",
+   "length_m": 1.7,
+   "tier": "high",
+   "price_jpy": 56500,
+   "url": "https://www.tsurisoku.com/news/194841",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター エクスチューン テンヤ",
+   "model": "91H164",
+   "length_m": 1.64,
+   "tier": "high",
+   "price_jpy": 62000,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター エクスチューン テンヤ",
+   "model": "82H172",
+   "length_m": 1.72,
+   "tier": "high",
+   "price_jpy": 62500,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター エクスチューン テンヤ",
+   "model": "82M/MH178",
+   "length_m": 1.78,
+   "tier": "high",
+   "price_jpy": 63000,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター エクスチューン テンヤ",
+   "model": "64MH195",
+   "length_m": 1.95,
+   "tier": "high",
+   "price_jpy": 63500,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター エクスチューン 攻 テンヤ",
+   "model": "82MH170",
+   "length_m": 1.7,
+   "tier": "high",
+   "price_jpy": 67500,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター リミテッド",
+   "model": "82 MH180",
+   "length_m": 1.8,
+   "tier": "high",
+   "price_jpy": 82000,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "サーベルマスター リミテッド",
+   "model": "91 HH170",
+   "length_m": 1.7,
+   "tier": "high",
+   "price_jpy": 82500,
+   "url": "https://www.tsuribito.online/introducing-sabre-master/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "デッキステージ タチウオテンヤ",
+   "model": "ML-180",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": 29500,
+   "url": "https://www.gamakatsu.co.jp/products/21335/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "デッキステージ タチウオテンヤ",
+   "model": "M-180",
+   "length_m": 1.8,
+   "tier": "entry",
+   "price_jpy": 29500,
+   "url": "https://www.gamakatsu.co.jp/products/21335/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "デッキステージ タチウオテンヤ",
+   "model": "MH-175",
+   "length_m": 1.75,
+   "tier": "entry",
+   "price_jpy": 29500,
+   "url": "https://www.gamakatsu.co.jp/products/21335/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "TT フリーク",
+   "model": "ML 179",
+   "length_m": 1.79,
+   "tier": "mid",
+   "price_jpy": 38000,
+   "url": "https://www.gamakatsu.co.jp/products/21420/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "TT フリーク",
+   "model": "M 177",
+   "length_m": 1.77,
+   "tier": "mid",
+   "price_jpy": 38000,
+   "url": "https://www.gamakatsu.co.jp/products/21420/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "TT フリーク",
+   "model": "MH 175",
+   "length_m": 1.75,
+   "tier": "mid",
+   "price_jpy": 38000,
+   "url": "https://www.gamakatsu.co.jp/products/21420/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "TT フリーク",
+   "model": "H 174",
+   "length_m": 1.74,
+   "tier": "mid",
+   "price_jpy": 38500,
+   "url": "https://www.gamakatsu.co.jp/products/21420/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "TT フリーク",
+   "model": "XH 170",
+   "length_m": 1.7,
+   "tier": "mid",
+   "price_jpy": 38500,
+   "url": "https://www.gamakatsu.co.jp/products/21420/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "タチウオテンヤ MS",
+   "model": "L-180",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 42000,
+   "url": "https://www.gamakatsu.co.jp/products/21316/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "タチウオテンヤ MS",
+   "model": "ML-180",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 42000,
+   "url": "https://www.gamakatsu.co.jp/products/21316/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "タチウオテンヤ MS",
+   "model": "M-180",
+   "length_m": 1.8,
+   "tier": "mid",
+   "price_jpy": 42000,
+   "url": "https://www.gamakatsu.co.jp/products/21316/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "タチウオテンヤ MS",
+   "model": "MH-175",
+   "length_m": 1.75,
+   "tier": "mid",
+   "price_jpy": 42000,
+   "url": "https://www.gamakatsu.co.jp/products/21316/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "タチウオテンヤ MS",
+   "model": "H-173",
+   "length_m": 1.73,
+   "tier": "mid",
+   "price_jpy": 42000,
+   "url": "https://www.gamakatsu.co.jp/products/21316/",
+   "status": ""
+  },
+  {
+   "maker": "がまかつ",
+   "series": "がま船 タチウオテンヤ SRチタン",
+   "model": "掛けアワセ 175",
+   "length_m": 1.75,
+   "tier": "high",
+   "price_jpy": null,
+   "url": "https://www.gamakatsu.co.jp/products/21139/",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "がまかつ",
+   "series": "がま船 タチウオテンヤ SRチタン",
+   "model": "乗せアワセ 175",
+   "length_m": 1.75,
+   "tier": "high",
+   "price_jpy": null,
+   "url": "https://www.gamakatsu.co.jp/products/21139/",
+   "status": "生産終了・在庫のみ"
+  }
+ ],
+ "notes": "Prices are メーカー希望本体価格 (税抜). Tier: entry ≤30,000円, mid 30,001–55,000円, high >55,000円 (null-price items tiered by series). DAIWA: all current models taken from daiwa.com spec tables (model = 品番 with series prefix removed, NFKC-normalised). 極鋭 タチウオゲームRT and タチウオ X are テンヤ・テンビン兼用 (maker says テンヤ対応); アナリスター タチウオ / 極鋭 タチウオゲーム / メタリアタチウオテンビン (テンビン用) excluded. 極鋭 タチウオテンヤSP EX AGS 178/184/192 (old gen) from tsurihack review; whether new stock remains is unverified. SHIMANO: fish.shimano.com blocked (403); specs from tsuribito.online (2025-07 lineup tables), tsurisoku (25 SS テンヤ, 26 XR) and kakaku.com listings. 26 サーベルマスター XR (Jul 2026) replaces 21 XR テンヤ (RIGHT/LEFT variants listed separately). サーベルマスター TT and BB are テンヤ・テンビン共用; BB price left null because the tsuribito table (18,700–20,900円) conflicts with SHIMANO's current listing (20,000–22,000円 per search snippet); TT prices are as of 2025-07. 91H170-MS (26 エクスチューン 攻 テンヤ, Jul 2026) seen only on kakaku retailer listing (仕舞170cm, 1pc → length 1.70 assumed); price unknown and a retailer showed 取寄せ. Older gens not included (unverified): SHIMANO XTUNE テンヤ pre-2024 (82MH180, 91H160 etc.), 21 XR テンヤ 91 H170, DAIWA 極鋭タチウオテンヤSP (non-EX, e.g. 91-180AGS/197AGS), older メタリア/アナリスター generations. がまかつ: official spec tables; デッキステージ price had a ● marker on the maker page (meaning not stated). がま船 シーファング タチウオ excluded (東京湾ライトタチウオ/テンビン用)."
+}

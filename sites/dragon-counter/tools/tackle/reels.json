@@ -1,0 +1,2815 @@
+{
+ "items": [
+  {
+   "maker": "DAIWA",
+   "series": "26シーボーグ",
+   "model": "150J",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 106800,
+   "url": "https://www.daiwa.com/jp/product/6m8xvfe",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26シーボーグ",
+   "model": "150JL",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 106800,
+   "url": "https://www.daiwa.com/jp/product/6m8xvfe",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "シーボーグ",
+   "model": "100J",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 102200,
+   "url": "https://www.daiwa.com/jp/product/s3d8vxd",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "シーボーグ",
+   "model": "100JL",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 102200,
+   "url": "https://www.daiwa.com/jp/product/s3d8vxd",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "22シーボーグ",
+   "model": "200J",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 94300,
+   "url": "https://www.daiwa.com/jp/product/711szwg",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "22シーボーグ",
+   "model": "200JL",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 94300,
+   "url": "https://www.daiwa.com/jp/product/711szwg",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "22シーボーグ",
+   "model": "200J-DH",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 94300,
+   "url": "https://www.daiwa.com/jp/product/711szwg",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "22シーボーグ",
+   "model": "200JL-DH",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 94300,
+   "url": "https://www.daiwa.com/jp/product/711szwg",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "シーボーグ",
+   "model": "G200J",
+   "kind": "electric",
+   "gear": "5.9",
+   "price_jpy": 113000,
+   "url": "https://www.daiwa.com/jp/product/55c24hn",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "シーボーグ",
+   "model": "G200JL",
+   "kind": "electric",
+   "gear": "5.9",
+   "price_jpy": 113000,
+   "url": "https://www.daiwa.com/jp/product/55c24hn",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "シーボーグ",
+   "model": "G300J",
+   "kind": "electric",
+   "gear": "6.0",
+   "price_jpy": 114000,
+   "url": "https://www.daiwa.com/jp/product/pdno77g",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "シーボーグ",
+   "model": "G300JL",
+   "kind": "electric",
+   "gear": "6.0",
+   "price_jpy": 114000,
+   "url": "https://www.daiwa.com/jp/product/pdno77g",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26シーボーグ",
+   "model": "300J",
+   "kind": "electric",
+   "gear": "6.3",
+   "price_jpy": 112000,
+   "url": "https://www.daiwa.com/jp/product/yi35c4g",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26シーボーグ",
+   "model": "300JL",
+   "kind": "electric",
+   "gear": "6.3",
+   "price_jpy": 112000,
+   "url": "https://www.daiwa.com/jp/product/yi35c4g",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23レオブリッツ",
+   "model": "200J",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 81800,
+   "url": "https://www.daiwa.com/jp/product/bvnr26n",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23レオブリッツ",
+   "model": "200JL",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 81800,
+   "url": "https://www.daiwa.com/jp/product/bvnr26n",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23レオブリッツ",
+   "model": "300J",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 83100,
+   "url": "https://www.daiwa.com/jp/product/5kmbx0y",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23レオブリッツ",
+   "model": "300JL",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 83100,
+   "url": "https://www.daiwa.com/jp/product/5kmbx0y",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ソルティガ IC",
+   "model": "100P-DH-C",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 100000,
+   "url": "https://www.daiwa.com/jp/product/51pztze",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ソルティガ IC",
+   "model": "100PL-DH-C",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 100000,
+   "url": "https://www.daiwa.com/jp/product/51pztze",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ソルティガ IC",
+   "model": "100-C",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 100000,
+   "url": "https://www.daiwa.com/jp/product/51pztze",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ソルティガ IC",
+   "model": "100L-C",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 100000,
+   "url": "https://www.daiwa.com/jp/product/51pztze",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ソルティガ IC",
+   "model": "100H-C",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 100000,
+   "url": "https://www.daiwa.com/jp/product/51pztze",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ソルティガ IC",
+   "model": "100HL-C",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 100000,
+   "url": "https://www.daiwa.com/jp/product/51pztze",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ソルティガ IC",
+   "model": "300-C",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 101000,
+   "url": "https://www.daiwa.com/jp/product/51pztze",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ソルティガ IC",
+   "model": "300L-C",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 101000,
+   "url": "https://www.daiwa.com/jp/product/51pztze",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ソルティガ IC",
+   "model": "300H-SJ-C",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 101000,
+   "url": "https://www.daiwa.com/jp/product/51pztze",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ソルティガ IC",
+   "model": "300HL-SJ-C",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 101000,
+   "url": "https://www.daiwa.com/jp/product/51pztze",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ソルティガ IC",
+   "model": "100P-DH",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 73000,
+   "url": "https://www.daiwa.com/jp/product/dtasxgh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ソルティガ IC",
+   "model": "100PL-DH",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 73000,
+   "url": "https://www.daiwa.com/jp/product/dtasxgh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ソルティガ IC",
+   "model": "100",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 73000,
+   "url": "https://www.daiwa.com/jp/product/dtasxgh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ソルティガ IC",
+   "model": "100L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 73000,
+   "url": "https://www.daiwa.com/jp/product/dtasxgh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ソルティガ IC",
+   "model": "100H-DH",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 82600,
+   "url": "https://www.daiwa.com/jp/product/dtasxgh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ソルティガ IC",
+   "model": "100HL-DH",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 82600,
+   "url": "https://www.daiwa.com/jp/product/dtasxgh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ソルティガ IC",
+   "model": "300",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 74000,
+   "url": "https://www.daiwa.com/jp/product/dtasxgh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ソルティガ IC",
+   "model": "300L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 74000,
+   "url": "https://www.daiwa.com/jp/product/dtasxgh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ソルティガ IC",
+   "model": "300-DH",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 83500,
+   "url": "https://www.daiwa.com/jp/product/dtasxgh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ソルティガ IC",
+   "model": "300L-DH",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 83500,
+   "url": "https://www.daiwa.com/jp/product/dtasxgh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ソルティガ IC",
+   "model": "300H-SJ",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 74000,
+   "url": "https://www.daiwa.com/jp/product/dtasxgh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ソルティガ IC",
+   "model": "300HL-SJ",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 74000,
+   "url": "https://www.daiwa.com/jp/product/dtasxgh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ティエラ IC",
+   "model": "150H-C",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 73800,
+   "url": "https://www.daiwa.com/jp/product/y2b9kat",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ティエラ IC",
+   "model": "150HL-C",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 73800,
+   "url": "https://www.daiwa.com/jp/product/y2b9kat",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ティエラ IC",
+   "model": "150XH-DH-C",
+   "kind": "bait",
+   "gear": "8.5",
+   "price_jpy": 73800,
+   "url": "https://www.daiwa.com/jp/product/y2b9kat",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ティエラ IC",
+   "model": "150XHL-DH-C",
+   "kind": "bait",
+   "gear": "8.5",
+   "price_jpy": 73800,
+   "url": "https://www.daiwa.com/jp/product/y2b9kat",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ティエラ IC",
+   "model": "150XH-C",
+   "kind": "bait",
+   "gear": "8.5",
+   "price_jpy": 73800,
+   "url": "https://www.daiwa.com/jp/product/y2b9kat",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ティエラ IC",
+   "model": "150XHL-C",
+   "kind": "bait",
+   "gear": "8.5",
+   "price_jpy": 73800,
+   "url": "https://www.daiwa.com/jp/product/y2b9kat",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ティエラ IC",
+   "model": "300-C",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 76100,
+   "url": "https://www.daiwa.com/jp/product/y2b9kat",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ティエラ IC",
+   "model": "300L-C",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 76100,
+   "url": "https://www.daiwa.com/jp/product/y2b9kat",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ティエラ IC",
+   "model": "300H-C",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 76100,
+   "url": "https://www.daiwa.com/jp/product/y2b9kat",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25ティエラ IC",
+   "model": "300HL-C",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 76100,
+   "url": "https://www.daiwa.com/jp/product/y2b9kat",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26ティエラ IC",
+   "model": "150-DH",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 48000,
+   "url": "https://www.daiwa.com/jp/product/na0xs6c",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26ティエラ IC",
+   "model": "150L-DH",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 48000,
+   "url": "https://www.daiwa.com/jp/product/na0xs6c",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26ティエラ IC",
+   "model": "150H",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 48000,
+   "url": "https://www.daiwa.com/jp/product/na0xs6c",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26ティエラ IC",
+   "model": "150HL",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 48000,
+   "url": "https://www.daiwa.com/jp/product/na0xs6c",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26ティエラ IC",
+   "model": "150H-DH",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 48000,
+   "url": "https://www.daiwa.com/jp/product/na0xs6c",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26ティエラ IC",
+   "model": "150HL-DH",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 48000,
+   "url": "https://www.daiwa.com/jp/product/na0xs6c",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23ティエラ LJ IC",
+   "model": "200",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 57000,
+   "url": "https://www.daiwa.com/jp/product/op0tqqw",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23ティエラ LJ IC",
+   "model": "200L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 57000,
+   "url": "https://www.daiwa.com/jp/product/op0tqqw",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23ティエラ LJ IC",
+   "model": "200H",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 57000,
+   "url": "https://www.daiwa.com/jp/product/op0tqqw",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23ティエラ LJ IC",
+   "model": "200HL",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 57000,
+   "url": "https://www.daiwa.com/jp/product/op0tqqw",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23ティエラ LJ IC",
+   "model": "300H",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 57000,
+   "url": "https://www.daiwa.com/jp/product/op0tqqw",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23ティエラ LJ IC",
+   "model": "300HL",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 57000,
+   "url": "https://www.daiwa.com/jp/product/op0tqqw",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ティエラ AIR IC",
+   "model": "100H",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 49900,
+   "url": "https://www.daiwa.com/jp/product/vf7ee0k",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ティエラ AIR IC",
+   "model": "100HL",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 49900,
+   "url": "https://www.daiwa.com/jp/product/vf7ee0k",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ティエラ AIR IC",
+   "model": "100XH",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": 49900,
+   "url": "https://www.daiwa.com/jp/product/vf7ee0k",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ティエラ AIR IC",
+   "model": "100XHL",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": 49900,
+   "url": "https://www.daiwa.com/jp/product/vf7ee0k",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25紅牙 IC",
+   "model": "150P-C",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 74700,
+   "url": "https://www.daiwa.com/jp/product/h1si00d",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25紅牙 IC",
+   "model": "150PL-C",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 74700,
+   "url": "https://www.daiwa.com/jp/product/h1si00d",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25紅牙 IC",
+   "model": "150-C",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 74700,
+   "url": "https://www.daiwa.com/jp/product/h1si00d",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25紅牙 IC",
+   "model": "150L-C",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 74700,
+   "url": "https://www.daiwa.com/jp/product/h1si00d",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25紅牙 IC",
+   "model": "150H-C",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 74700,
+   "url": "https://www.daiwa.com/jp/product/h1si00d",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25紅牙 IC",
+   "model": "150HL-C",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 74700,
+   "url": "https://www.daiwa.com/jp/product/h1si00d",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "24紅牙 IC",
+   "model": "200P",
+   "kind": "bait",
+   "gear": "5.3",
+   "price_jpy": 64900,
+   "url": "https://www.daiwa.com/jp/product/uorw3su",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "24紅牙 IC",
+   "model": "200PL",
+   "kind": "bait",
+   "gear": "5.3",
+   "price_jpy": 64900,
+   "url": "https://www.daiwa.com/jp/product/uorw3su",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "24紅牙 IC",
+   "model": "200",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 64900,
+   "url": "https://www.daiwa.com/jp/product/uorw3su",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "24紅牙 IC",
+   "model": "200L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 64900,
+   "url": "https://www.daiwa.com/jp/product/uorw3su",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26紅牙 IC",
+   "model": "150P",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 49300,
+   "url": "https://www.daiwa.com/jp/product/dv2jkeh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26紅牙 IC",
+   "model": "150PL",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 49300,
+   "url": "https://www.daiwa.com/jp/product/dv2jkeh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26紅牙 IC",
+   "model": "150",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 49300,
+   "url": "https://www.daiwa.com/jp/product/dv2jkeh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26紅牙 IC",
+   "model": "150L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 49300,
+   "url": "https://www.daiwa.com/jp/product/dv2jkeh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26紅牙 IC",
+   "model": "150H",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 49300,
+   "url": "https://www.daiwa.com/jp/product/dv2jkeh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26紅牙 IC",
+   "model": "150HL",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 49300,
+   "url": "https://www.daiwa.com/jp/product/dv2jkeh",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26紅牙 TW",
+   "model": "80P",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 45400,
+   "url": "https://www.daiwa.com/jp/product/462rxbt",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26紅牙 TW",
+   "model": "80PL",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 45400,
+   "url": "https://www.daiwa.com/jp/product/462rxbt",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26紅牙 TW",
+   "model": "80",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 45400,
+   "url": "https://www.daiwa.com/jp/product/462rxbt",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26紅牙 TW",
+   "model": "80L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 45400,
+   "url": "https://www.daiwa.com/jp/product/462rxbt",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25紅牙 RX IC",
+   "model": "150P",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 25900,
+   "url": "https://www.daiwa.com/jp/product/snmtl1e",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "25紅牙 RX IC",
+   "model": "150PL",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 25900,
+   "url": "https://www.daiwa.com/jp/product/snmtl1e",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "紅牙 X IC",
+   "model": "紅牙 X IC",
+   "kind": "bait",
+   "gear": "4.9",
+   "price_jpy": 16000,
+   "url": "https://www.daiwa.com/jp/product/23djpmj",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21バサラ IC",
+   "model": "150",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 72000,
+   "url": "https://www.daiwa.com/jp/product/hxrshl1",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21バサラ IC",
+   "model": "150L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 72000,
+   "url": "https://www.daiwa.com/jp/product/hxrshl1",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム IC",
+   "model": "150-DH",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 35000,
+   "url": "https://www.daiwa.com/jp/product/ky4guqq",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム IC",
+   "model": "150L-DH",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 35000,
+   "url": "https://www.daiwa.com/jp/product/ky4guqq",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム IC",
+   "model": "150",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 35000,
+   "url": "https://www.daiwa.com/jp/product/ky4guqq",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム IC",
+   "model": "150L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 35000,
+   "url": "https://www.daiwa.com/jp/product/ky4guqq",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム IC",
+   "model": "200",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 38900,
+   "url": "https://www.daiwa.com/jp/product/ky4guqq",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム IC",
+   "model": "200L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 38900,
+   "url": "https://www.daiwa.com/jp/product/ky4guqq",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム RX IC",
+   "model": "150-DH",
+   "kind": "bait",
+   "gear": "6.4",
+   "price_jpy": 24600,
+   "url": "https://www.daiwa.com/jp/product/khzee1i",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム RX IC",
+   "model": "150L-DH",
+   "kind": "bait",
+   "gear": "6.4",
+   "price_jpy": 24600,
+   "url": "https://www.daiwa.com/jp/product/khzee1i",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム RX IC",
+   "model": "150",
+   "kind": "bait",
+   "gear": "6.4",
+   "price_jpy": 24600,
+   "url": "https://www.daiwa.com/jp/product/khzee1i",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム RX IC",
+   "model": "150L",
+   "kind": "bait",
+   "gear": "6.4",
+   "price_jpy": 24600,
+   "url": "https://www.daiwa.com/jp/product/khzee1i",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム RX IC",
+   "model": "150H",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 27200,
+   "url": "https://www.daiwa.com/jp/product/khzee1i",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム RX IC",
+   "model": "150HL",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 27200,
+   "url": "https://www.daiwa.com/jp/product/khzee1i",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム RX IC",
+   "model": "200",
+   "kind": "bait",
+   "gear": "6.4",
+   "price_jpy": 28200,
+   "url": "https://www.daiwa.com/jp/product/khzee1i",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム RX IC",
+   "model": "200L",
+   "kind": "bait",
+   "gear": "6.4",
+   "price_jpy": 28200,
+   "url": "https://www.daiwa.com/jp/product/khzee1i",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム RX IC",
+   "model": "300P",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 28500,
+   "url": "https://www.daiwa.com/jp/product/khzee1i",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム RX IC",
+   "model": "300PL",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 28500,
+   "url": "https://www.daiwa.com/jp/product/khzee1i",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム X IC",
+   "model": "150-DH",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 16800,
+   "url": "https://www.daiwa.com/jp/product/7a7zgph",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム X IC",
+   "model": "150L-DH",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 16800,
+   "url": "https://www.daiwa.com/jp/product/7a7zgph",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム X IC",
+   "model": "150",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 18600,
+   "url": "https://www.daiwa.com/jp/product/7a7zgph",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム X IC",
+   "model": "150L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 18600,
+   "url": "https://www.daiwa.com/jp/product/7a7zgph",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム X IC",
+   "model": "200",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 20400,
+   "url": "https://www.daiwa.com/jp/product/7a7zgph",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム X",
+   "model": "100H-DH",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 12900,
+   "url": "https://www.daiwa.com/jp/product/ic56h0x",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム X",
+   "model": "100HL-DH",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 12900,
+   "url": "https://www.daiwa.com/jp/product/ic56h0x",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム X",
+   "model": "150H-DH",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 12900,
+   "url": "https://www.daiwa.com/jp/product/ic56h0x",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトゲーム X",
+   "model": "150HL-DH",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 12900,
+   "url": "https://www.daiwa.com/jp/product/ic56h0x",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトSW X IC",
+   "model": "ライトSW X IC",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 16000,
+   "url": "https://www.daiwa.com/jp/product/s83v28l",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトSW X IC",
+   "model": "ライトSW X IC L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 16000,
+   "url": "https://www.daiwa.com/jp/product/s83v28l",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトSW X IC SS",
+   "model": "ライトSW X IC SS",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 16000,
+   "url": "https://www.daiwa.com/jp/product/1kz2qok",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "ライトSW X IC SS",
+   "model": "ライトSW X IC L SS",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 16000,
+   "url": "https://www.daiwa.com/jp/product/1kz2qok",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "17タナセンサー",
+   "model": "250",
+   "kind": "bait",
+   "gear": "4.9",
+   "price_jpy": 22700,
+   "url": "https://www.daiwa.com/jp/product/g1bhxg3",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "17タナセンサー",
+   "model": "300",
+   "kind": "bait",
+   "gear": "4.7",
+   "price_jpy": 23300,
+   "url": "https://www.daiwa.com/jp/product/g1bhxg3",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "16プリード",
+   "model": "150SH-DH",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 8400,
+   "url": "https://www.daiwa.com/jp/product/o4wtsy0",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "16プリード",
+   "model": "150SH-DH-L",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 8400,
+   "url": "https://www.daiwa.com/jp/product/o4wtsy0",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "16プリード",
+   "model": "150H",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 8400,
+   "url": "https://www.daiwa.com/jp/product/o4wtsy0",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "200PG",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 72000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "201PG",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 72000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "200MG",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 72000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "201MG",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 72000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "200HG",
+   "kind": "bait",
+   "gear": "6.5",
+   "price_jpy": 72000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "201HG",
+   "kind": "bait",
+   "gear": "6.5",
+   "price_jpy": 72000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "300PG",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 73000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "300MG",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 73000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "301MG",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 73000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "300HG",
+   "kind": "bait",
+   "gear": "6.2",
+   "price_jpy": 73000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "301HG",
+   "kind": "bait",
+   "gear": "6.2",
+   "price_jpy": 73000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "300XG",
+   "kind": "bait",
+   "gear": "7.5",
+   "price_jpy": 73000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト CT",
+   "model": "301XG",
+   "kind": "bait",
+   "gear": "7.5",
+   "price_jpy": 73000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003zd3uzqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト",
+   "model": "200PG",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 60900,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jz5pnqay.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト",
+   "model": "201PG",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 60900,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jz5pnqay.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト",
+   "model": "200HG",
+   "kind": "bait",
+   "gear": "6.5",
+   "price_jpy": 60900,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jz5pnqay.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト",
+   "model": "201HG",
+   "kind": "bait",
+   "gear": "6.5",
+   "price_jpy": 60900,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jz5pnqay.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト",
+   "model": "300PG",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 61300,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jz5pnqay.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト",
+   "model": "301PG",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 61300,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jz5pnqay.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト",
+   "model": "300HG",
+   "kind": "bait",
+   "gear": "6.2",
+   "price_jpy": 61300,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jz5pnqay.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト",
+   "model": "301HG",
+   "kind": "bait",
+   "gear": "6.2",
+   "price_jpy": 61300,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jz5pnqay.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト",
+   "model": "300XG",
+   "kind": "bait",
+   "gear": "7.5",
+   "price_jpy": 61300,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jz5pnqay.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト",
+   "model": "301XG",
+   "kind": "bait",
+   "gear": "7.5",
+   "price_jpy": 61300,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jz5pnqay.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト FT",
+   "model": "60MG",
+   "kind": "bait",
+   "gear": "6.2",
+   "price_jpy": 61000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a07f900004dfisjiar.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト FT",
+   "model": "61MG",
+   "kind": "bait",
+   "gear": "6.2",
+   "price_jpy": 61000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a07f900004dfisjiar.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト FT",
+   "model": "60HG",
+   "kind": "bait",
+   "gear": "7.4",
+   "price_jpy": 61000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a07f900004dfisjiar.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "オシアコンクエスト FT",
+   "model": "61HG",
+   "kind": "bait",
+   "gear": "7.4",
+   "price_jpy": 61000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a07f900004dfisjiar.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "グラップラー CT",
+   "model": "150XG",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": 34800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f000046sjplqak.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "グラップラー CT",
+   "model": "151XG",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": 34800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f000046sjplqak.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "グラップラー",
+   "model": "300HG",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 41000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00004axe1fqah.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "グラップラー",
+   "model": "301HG",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 41000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00004axe1fqah.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "グラップラー",
+   "model": "300XG",
+   "kind": "bait",
+   "gear": "7.6",
+   "price_jpy": 41000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00004axe1fqah.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "グラップラー",
+   "model": "301XG",
+   "kind": "bait",
+   "gear": "7.6",
+   "price_jpy": 41000,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00004axe1fqah.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "グラップラー",
+   "model": "150HG",
+   "kind": "bait",
+   "gear": "7.8",
+   "price_jpy": 32800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003vfikaqax.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "グラップラー",
+   "model": "151HG",
+   "kind": "bait",
+   "gear": "7.8",
+   "price_jpy": 32800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003vfikaqax.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "グラップラー プレミアム",
+   "model": "150XG",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": 46500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003iml5rqaw.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "グラップラー プレミアム",
+   "model": "151XG",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": 46500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003iml5rqaw.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "グラップラー BB",
+   "model": "150HG",
+   "kind": "bait",
+   "gear": "7.2",
+   "price_jpy": 17500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003imnx9qao.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "グラップラー BB",
+   "model": "151HG",
+   "kind": "bait",
+   "gear": "7.2",
+   "price_jpy": 17500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003imnx9qao.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "エンゲツ CT",
+   "model": "150PG",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 34800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f000046sjooqa0.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "エンゲツ CT",
+   "model": "151PG",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 34800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f000046sjooqa0.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "エンゲツ CT",
+   "model": "150HG",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 34800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f000046sjooqa0.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "エンゲツ CT",
+   "model": "151HG",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 34800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f000046sjooqa0.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "エンゲツ プレミアム",
+   "model": "150PG",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 46500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003imkw2qag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "エンゲツ プレミアム",
+   "model": "151PG",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 46500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003imkw2qag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "エンゲツ プレミアム",
+   "model": "150HG",
+   "kind": "bait",
+   "gear": "7.4",
+   "price_jpy": 46500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003imkw2qag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "エンゲツ プレミアム",
+   "model": "151HG",
+   "kind": "bait",
+   "gear": "7.4",
+   "price_jpy": 46500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003imkw2qag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "エンゲツ BB",
+   "model": "100PG",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 17500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003iml81qag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "エンゲツ BB",
+   "model": "101PG",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 17500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003iml81qag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "エンゲツ BB",
+   "model": "100HG",
+   "kind": "bait",
+   "gear": "7.2",
+   "price_jpy": 17500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003iml81qag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "エンゲツ BB",
+   "model": "101HG",
+   "kind": "bait",
+   "gear": "7.2",
+   "price_jpy": 17500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003iml81qag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ",
+   "model": "150DH-PG",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 24600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpvqa3.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ",
+   "model": "151DH-PG",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 24600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpvqa3.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ",
+   "model": "150DH-HG",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 24600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpvqa3.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ",
+   "model": "151DH-HG",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 24600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpvqa3.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ",
+   "model": "150HG",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 24600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpvqa3.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ",
+   "model": "151HG",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 24600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpvqa3.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ",
+   "model": "300PG",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 25700,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpvqa3.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ",
+   "model": "300HG",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 25700,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpvqa3.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ BB",
+   "model": "150HG",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 17200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpfqan.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ BB",
+   "model": "151HG",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 17200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpfqan.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ BB",
+   "model": "150DH-PG",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 17200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpfqan.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ BB",
+   "model": "151DH-PG",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 17200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpfqan.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ BB",
+   "model": "150DH-HG",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 17200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpfqan.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ BB",
+   "model": "151DH-HG",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 17200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpfqan.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ BB",
+   "model": "300PG",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 18200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpfqan.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ BB",
+   "model": "300HG",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 18200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003jfwpfqan.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ プレミアム",
+   "model": "150",
+   "kind": "bait",
+   "gear": "6.9",
+   "price_jpy": 46500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003k1omiqam.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ プレミアム",
+   "model": "151",
+   "kind": "bait",
+   "gear": "6.9",
+   "price_jpy": 46500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003k1omiqam.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ プレミアム",
+   "model": "150DH",
+   "kind": "bait",
+   "gear": "6.9",
+   "price_jpy": 46500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003k1omiqam.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ プレミアム",
+   "model": "151DH",
+   "kind": "bait",
+   "gear": "6.9",
+   "price_jpy": 46500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003k1omiqam.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ プレミアム",
+   "model": "150DHXG",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": 46500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003k1omiqam.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ プレミアム",
+   "model": "151DHXG",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": 46500,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003k1omiqam.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ F カスタム",
+   "model": "150",
+   "kind": "bait",
+   "gear": "6.9",
+   "price_jpy": 35800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f000044rcoxqag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ F カスタム",
+   "model": "151",
+   "kind": "bait",
+   "gear": "6.9",
+   "price_jpy": 35800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f000044rcoxqag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ F カスタム",
+   "model": "150DH",
+   "kind": "bait",
+   "gear": "6.9",
+   "price_jpy": 35800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f000044rcoxqag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ F カスタム",
+   "model": "151DH",
+   "kind": "bait",
+   "gear": "6.9",
+   "price_jpy": 35800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f000044rcoxqag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ F カスタム",
+   "model": "150DHXG",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": 35800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f000044rcoxqag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "バルケッタ F カスタム",
+   "model": "151DHXG",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": 35800,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f000044rcoxqag.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "ゲンプウ XT",
+   "model": "150",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 12900,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003o6sknqaj.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "ゲンプウ XT",
+   "model": "151",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": 12900,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003o6sknqaj.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "ゲンプウ XT",
+   "model": "200PG",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 12900,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003o6sknqaj.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "ゲンプウ XT",
+   "model": "201PG",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": 12900,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/ryojikuoffshorefunesmall/a075f00003o6sknqaj.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "フォースマスター",
+   "model": "200",
+   "kind": "electric",
+   "gear": "8.2",
+   "price_jpy": 86600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003dsymyqa5_p.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "フォースマスター",
+   "model": "200DH",
+   "kind": "electric",
+   "gear": "8.2",
+   "price_jpy": 86600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003dsymyqa5_p.html",
+   "status": "生産終了・在庫のみ"
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "フォースマスター",
+   "model": "201",
+   "kind": "electric",
+   "gear": "8.2",
+   "price_jpy": 86600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003dsymyqa5_p.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "フォースマスター",
+   "model": "201DH",
+   "kind": "electric",
+   "gear": "8.2",
+   "price_jpy": 86600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003dsymyqa5_p.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "フォースマスター",
+   "model": "300",
+   "kind": "electric",
+   "gear": "7.4",
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qe1koqaq.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "フォースマスター",
+   "model": "300DH",
+   "kind": "electric",
+   "gear": "7.4",
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qe1koqaq.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "フォースマスター",
+   "model": "301",
+   "kind": "electric",
+   "gear": "7.4",
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qe1koqaq.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "フォースマスター",
+   "model": "301DH",
+   "kind": "electric",
+   "gear": "7.4",
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qe1koqaq.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "フォースマスター",
+   "model": "600",
+   "kind": "electric",
+   "gear": "",
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qw9eaqal.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "フォースマスター",
+   "model": "600DH",
+   "kind": "electric",
+   "gear": "",
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qw9eaqal.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "フォースマスター",
+   "model": "601",
+   "kind": "electric",
+   "gear": "",
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qw9eaqal.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "フォースマスター",
+   "model": "601DH",
+   "kind": "electric",
+   "gear": "",
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qw9eaqal.html",
+   "status": ""
+  },
+  {
+   "maker": "SHIMANO",
+   "series": "プレイズ",
+   "model": "600",
+   "kind": "electric",
+   "gear": "5.5",
+   "price_jpy": 57200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00002k32wyqaa.html",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "マックス DLC (MAX DLC)",
+   "model": "MAX DLC",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 18500,
+   "url": "https://abugarcia.jp/collections/reels/products/max-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "マックス DLC (MAX DLC)",
+   "model": "MAX DLC-L",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 18500,
+   "url": "https://abugarcia.jp/collections/reels/products/max-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "マックス DLC (MAX DLC)",
+   "model": "MAX DLC P",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 18500,
+   "url": "https://abugarcia.jp/collections/reels/products/max-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "マックス DLC (MAX DLC)",
+   "model": "MAX DLC P-L",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 18500,
+   "url": "https://abugarcia.jp/collections/reels/products/max-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "マックス DLC (MAX DLC)",
+   "model": "MAX DLC H",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 18500,
+   "url": "https://abugarcia.jp/collections/reels/products/max-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "マックス DLC (MAX DLC)",
+   "model": "MAX DLC H-L",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 18500,
+   "url": "https://abugarcia.jp/collections/reels/products/max-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "マックス DLC (MAX DLC)",
+   "model": "MAX DLC MHP",
+   "kind": "bait",
+   "gear": "6.4",
+   "price_jpy": 18500,
+   "url": "https://abugarcia.jp/collections/reels/products/max-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "マックス DLC (MAX DLC)",
+   "model": "MAX DLC MHP-L",
+   "kind": "bait",
+   "gear": "6.4",
+   "price_jpy": 18500,
+   "url": "https://abugarcia.jp/collections/reels/products/max-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "マックス DLC BG (MAX DLC BG)",
+   "model": "MAX DLC BG",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 21800,
+   "url": "https://abugarcia.jp/collections/reels/products/max-dlc-bg-bg",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "マックス DLC BG (MAX DLC BG)",
+   "model": "MAX DLC BG-L",
+   "kind": "bait",
+   "gear": "4.8",
+   "price_jpy": 21800,
+   "url": "https://abugarcia.jp/collections/reels/products/max-dlc-bg-bg",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "マックス DLC BG (MAX DLC BG)",
+   "model": "MAX DLC BG H",
+   "kind": "bait",
+   "gear": "6.2",
+   "price_jpy": 21800,
+   "url": "https://abugarcia.jp/collections/reels/products/max-dlc-bg-bg",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "マックス DLC BG (MAX DLC BG)",
+   "model": "MAX DLC BG H-L",
+   "kind": "bait",
+   "gear": "6.2",
+   "price_jpy": 21800,
+   "url": "https://abugarcia.jp/collections/reels/products/max-dlc-bg-bg",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "フネ DLC (Fune DLC)",
+   "model": "Fune DLC H",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 13800,
+   "url": "https://abugarcia.jp/collections/reels/products/fune-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "フネ DLC (Fune DLC)",
+   "model": "Fune DLC H-L",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 13800,
+   "url": "https://abugarcia.jp/collections/reels/products/fune-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "フネ DLC (Fune DLC)",
+   "model": "Fune DLC MHP",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 13800,
+   "url": "https://abugarcia.jp/collections/reels/products/fune-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "フネ DLC (Fune DLC)",
+   "model": "Fune DLC MHP-L",
+   "kind": "bait",
+   "gear": "7.0",
+   "price_jpy": 13800,
+   "url": "https://abugarcia.jp/collections/reels/products/fune-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "フネ DLC BG (Fune DLC BG)",
+   "model": "Fune DLC BG H",
+   "kind": "bait",
+   "gear": "6.2",
+   "price_jpy": 18200,
+   "url": "https://abugarcia.jp/collections/reels/products/fune-dlc-bg",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "フネ DLC BG (Fune DLC BG)",
+   "model": "Fune DLC BG H-L",
+   "kind": "bait",
+   "gear": "6.2",
+   "price_jpy": 18200,
+   "url": "https://abugarcia.jp/collections/reels/products/fune-dlc-bg",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "TRV DLC",
+   "model": "TRV DLC",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 27500,
+   "url": "https://abugarcia.jp/collections/reels/products/trv-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "TRV DLC",
+   "model": "TRV DLC-L",
+   "kind": "bait",
+   "gear": "5.8",
+   "price_jpy": 27500,
+   "url": "https://abugarcia.jp/collections/reels/products/trv-dlc",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "ブルーマックス 船",
+   "model": "ブルーマックス 船",
+   "kind": "bait",
+   "gear": "6.5",
+   "price_jpy": 9800,
+   "url": "https://abugarcia.jp/collections/reels/products/bluemax-fune",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "ブルーマックス 船",
+   "model": "ブルーマックス 船 左",
+   "kind": "bait",
+   "gear": "6.5",
+   "price_jpy": 9800,
+   "url": "https://abugarcia.jp/collections/reels/products/bluemax-fune",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "レッドマックス 船",
+   "model": "レッドマックス 船",
+   "kind": "bait",
+   "gear": "6.5",
+   "price_jpy": 9800,
+   "url": "https://abugarcia.jp/collections/reels/products/redmax-fune",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "レッドマックス 船",
+   "model": "レッドマックス 船 左",
+   "kind": "bait",
+   "gear": "6.5",
+   "price_jpy": 9800,
+   "url": "https://abugarcia.jp/collections/reels/products/redmax-fune",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "ゴールドマックス 船",
+   "model": "ゴールドマックス 船",
+   "kind": "bait",
+   "gear": "6.5",
+   "price_jpy": 9800,
+   "url": "https://abugarcia.jp/collections/reels/products/goldmax-fune",
+   "status": ""
+  },
+  {
+   "maker": "Abu Garcia",
+   "series": "ゴールドマックス 船",
+   "model": "ゴールドマックス 船 左",
+   "kind": "bait",
+   "gear": "6.5",
+   "price_jpy": 9800,
+   "url": "https://abugarcia.jp/collections/reels/products/goldmax-fune",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン SW デンドウ 150 (ELAN SW DENDO 150)",
+   "model": "150",
+   "kind": "electric",
+   "gear": "5.0",
+   "price_jpy": 55000,
+   "url": "https://www.tailwalk.jp/product/elan-sw-dendo/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン SW デンドウ 150 (ELAN SW DENDO 150)",
+   "model": "150PH",
+   "kind": "electric",
+   "gear": "5.0",
+   "price_jpy": 56000,
+   "url": "https://www.tailwalk.jp/product/elan-sw-dendo/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン SW デンドウ 100 (ELAN SW DENDO 100)",
+   "model": "100-DH/R",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 55000,
+   "url": "https://www.tailwalk.jp/product/elan-sw-dendo-100/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン SW デンドウ 100 (ELAN SW DENDO 100)",
+   "model": "100-DH/L",
+   "kind": "electric",
+   "gear": "5.1",
+   "price_jpy": 55000,
+   "url": "https://www.tailwalk.jp/product/elan-sw-dendo-100/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン ワイドパワー II (ELAN WIDE POWER II)",
+   "model": "71BR",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 22000,
+   "url": "https://www.tailwalk.jp/product/elan-widepower2/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン ワイドパワー II (ELAN WIDE POWER II)",
+   "model": "71BL",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 22000,
+   "url": "https://www.tailwalk.jp/product/elan-widepower2/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン ワイドパワー プラス (ELAN WIDE POWER PLUS)",
+   "model": "54R",
+   "kind": "bait",
+   "gear": "5.4",
+   "price_jpy": 20000,
+   "url": "https://www.tailwalk.jp/product/elan-wide-power-plus/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン ワイドパワー プラス (ELAN WIDE POWER PLUS)",
+   "model": "54L",
+   "kind": "bait",
+   "gear": "5.4",
+   "price_jpy": 20000,
+   "url": "https://www.tailwalk.jp/product/elan-wide-power-plus/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン ワイドパワー プラス (ELAN WIDE POWER PLUS)",
+   "model": "71R",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 25000,
+   "url": "https://www.tailwalk.jp/product/elan-wide-power-plus/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン ワイドパワー プラス (ELAN WIDE POWER PLUS)",
+   "model": "71L",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": 25000,
+   "url": "https://www.tailwalk.jp/product/elan-wide-power-plus/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン ワイドパワー BM (ELAN WIDE POWER BM)",
+   "model": "300HG-DP/R",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 20000,
+   "url": "https://www.tailwalk.jp/product/elan-wide-power-bm/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン ワイドパワー BM (ELAN WIDE POWER BM)",
+   "model": "300HG-DP/L",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 20000,
+   "url": "https://www.tailwalk.jp/product/elan-wide-power-bm/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン ワイドパワー BM (ELAN WIDE POWER BM)",
+   "model": "300XG-DP/R",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": 20000,
+   "url": "https://www.tailwalk.jp/product/elan-wide-power-bm/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "エラン ワイドパワー BM (ELAN WIDE POWER BM)",
+   "model": "300XG-DP/L",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": 20000,
+   "url": "https://www.tailwalk.jp/product/elan-wide-power-bm/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "タイゲーム リール (Tai Game REEL)",
+   "model": "100-DH/R",
+   "kind": "bait",
+   "gear": "6.6",
+   "price_jpy": 31000,
+   "url": "https://www.tailwalk.jp/product/taigame-reel/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "タイゲーム リール (Tai Game REEL)",
+   "model": "100-DH/L",
+   "kind": "bait",
+   "gear": "6.6",
+   "price_jpy": 31000,
+   "url": "https://www.tailwalk.jp/product/taigame-reel/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "バイレイヤー DG (VILAYER DG)",
+   "model": "100-DH/R",
+   "kind": "bait",
+   "gear": "6.6",
+   "price_jpy": 19000,
+   "url": "https://www.tailwalk.jp/product/vilayer-dg/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "バイレイヤー DG (VILAYER DG)",
+   "model": "100-DH/L",
+   "kind": "bait",
+   "gear": "6.6",
+   "price_jpy": 19000,
+   "url": "https://www.tailwalk.jp/product/vilayer-dg/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "バイレイヤー DG (VILAYER DG)",
+   "model": "100HG-DH/R",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 19000,
+   "url": "https://www.tailwalk.jp/product/vilayer-dg/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "バイレイヤー DG (VILAYER DG)",
+   "model": "100HG-DH/L",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 19000,
+   "url": "https://www.tailwalk.jp/product/vilayer-dg/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "バイレイヤー DG (VILAYER DG)",
+   "model": "100HG-PH/R",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 19000,
+   "url": "https://www.tailwalk.jp/product/vilayer-dg/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "バイレイヤー DG (VILAYER DG)",
+   "model": "100HG-PH/L",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 19000,
+   "url": "https://www.tailwalk.jp/product/vilayer-dg/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "バイレイヤー DG ネクシス (VILAYER DG NEXIS)",
+   "model": "100HG-DH/R",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 30000,
+   "url": "https://www.tailwalk.jp/product/vilayer-dg-nexis/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "バイレイヤー DG ネクシス (VILAYER DG NEXIS)",
+   "model": "100HG-DH/L",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 30000,
+   "url": "https://www.tailwalk.jp/product/vilayer-dg-nexis/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "バイレイヤー DG ネクシス (VILAYER DG NEXIS)",
+   "model": "100HG-PH/R",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 30000,
+   "url": "https://www.tailwalk.jp/product/vilayer-dg-nexis/",
+   "status": ""
+  },
+  {
+   "maker": "Tailwalk",
+   "series": "バイレイヤー DG ネクシス (VILAYER DG NEXIS)",
+   "model": "100HG-PH/L",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": 30000,
+   "url": "https://www.tailwalk.jp/product/vilayer-dg-nexis/",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "17ソルティガ BJ",
+   "model": "100P-RM",
+   "kind": "bait",
+   "gear": "4.9",
+   "price_jpy": null,
+   "url": "https://www.fishingmax-webshop.jp/products/soruteiga-bj",
+   "status": "生産終了"
+  },
+  {
+   "maker": "DAIWA",
+   "series": "17ソルティガ BJ",
+   "model": "100PL-RM",
+   "kind": "bait",
+   "gear": "4.9",
+   "price_jpy": null,
+   "url": "https://www.fishingmax-webshop.jp/products/soruteiga-bj",
+   "status": "生産終了"
+  },
+  {
+   "maker": "DAIWA",
+   "series": "17ソルティガ BJ",
+   "model": "100SH",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": null,
+   "url": "https://www.fishingmax-webshop.jp/products/soruteiga-bj",
+   "status": "生産終了"
+  },
+  {
+   "maker": "DAIWA",
+   "series": "17ソルティガ BJ",
+   "model": "100SHL",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": null,
+   "url": "https://www.fishingmax-webshop.jp/products/soruteiga-bj",
+   "status": "生産終了"
+  },
+  {
+   "maker": "DAIWA",
+   "series": "17ソルティガ BJ",
+   "model": "200H",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": null,
+   "url": "https://www.fishingmax-webshop.jp/products/soruteiga-bj",
+   "status": "生産終了"
+  },
+  {
+   "maker": "DAIWA",
+   "series": "17ソルティガ BJ",
+   "model": "200HL",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": null,
+   "url": "https://www.fishingmax-webshop.jp/products/soruteiga-bj",
+   "status": "生産終了"
+  },
+  {
+   "maker": "DAIWA",
+   "series": "17ソルティガ BJ",
+   "model": "200SH",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": null,
+   "url": "https://www.fishingmax-webshop.jp/products/soruteiga-bj",
+   "status": "生産終了"
+  },
+  {
+   "maker": "DAIWA",
+   "series": "17ソルティガ BJ",
+   "model": "200SHL",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": null,
+   "url": "https://www.fishingmax-webshop.jp/products/soruteiga-bj",
+   "status": "生産終了"
+  }
+ ],
+ "notes": "Checked 2026-11-09. DAIWA/Abu Garcia/Tailwalk: maker pages fetched directly; prices are tax-excluded メーカー希望本体価格 (Tailwalk pages say only 'Retail Price (JPY)', tax basis not stated). DAIWA series carry the maker's year prefix (e.g. 26シーボーグ); 品番 converted from full-width to half-width; L = left handle. SHIMANO: fish.shimano.com returns 403 to direct fetch, so SHIMANO rows come from search-engine reads of the official product pages (URLs given); verify 品番/価格 before relying on them. The SHIMANO prices may predate the 2026 price revision. Odd numbers (151/201/301) = left. フォースマスター 600 gear left blank: official pages conflict (6.5 vs 5.1). フォースマスター 200DH: 2021年に販売中止のお知らせが出ている. Japanese katakana names for Abu/Tailwalk series are approximate readings; official names are the alphabetic ones in parentheses. Excluded (unverified or out of scope): DAIWA ソルティガBJ / キャタリナBJ / 紅牙X (non-IC) (not on the current DAIWA list, 品番 not confirmed); レオブリッツ S300J/S400/400J, タナセンサー 400/500, キャタリナ 15H, バサラ IC 250P, エラン スーパーワイドパワー (heavy line, PE3-5+); SHIMANO ベイゲーム X (no reel found), ビーストマスター (large), フォースマスター 400 (only old overseas page); Abu ソルティーステージ / Revo salt (no current boat bait reel found), no small Abu electric; Tailwalk フルレンジ / ソルティシェイプ ダッシュ are rod series, not reels."
+}
