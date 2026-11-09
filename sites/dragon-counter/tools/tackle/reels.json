@@ -2809,6 +2809,286 @@
    "price_jpy": null,
    "url": "https://www.fishingmax-webshop.jp/products/soruteiga-bj",
    "status": "生産終了"
+  },
+  {
+   "maker": "DAIWA",
+   "series": "27ジリオン SV TW",
+   "model": "100",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "27ジリオン SV TW",
+   "model": "100L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "27ジリオン SV TW",
+   "model": "100H",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "27ジリオン SV TW",
+   "model": "100HL",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "27ジリオン SV TW",
+   "model": "100XH",
+   "kind": "bait",
+   "gear": "8.5",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "27ジリオン SV TW",
+   "model": "100XHL",
+   "kind": "bait",
+   "gear": "8.5",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "22ジリオン TW HD",
+   "model": "1000H",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/ux79rxa",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "22ジリオン TW HD",
+   "model": "1000HL",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/ux79rxa",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "22ジリオン TW HD",
+   "model": "1000XH",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/ux79rxa",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "22ジリオン TW HD",
+   "model": "1000XHL",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/ux79rxa",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ジリオン SV TW",
+   "model": "1000P",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ジリオン SV TW",
+   "model": "1000PL",
+   "kind": "bait",
+   "gear": "5.5",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ジリオン SV TW",
+   "model": "1000",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ジリオン SV TW",
+   "model": "1000L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ジリオン SV TW",
+   "model": "1000H",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ジリオン SV TW",
+   "model": "1000HL",
+   "kind": "bait",
+   "gear": "7.1",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ジリオン SV TW",
+   "model": "1000XH",
+   "kind": "bait",
+   "gear": "8.5",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "21ジリオン SV TW",
+   "model": "1000XHL",
+   "kind": "bait",
+   "gear": "8.5",
+   "price_jpy": null,
+   "url": "https://www.daiwa.com/jp/product/1vj7bqs",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26ジリオン TW",
+   "model": "150",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": null,
+   "url": "https://tackle-compare-lab.com/series/zillion",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26ジリオン TW",
+   "model": "150L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": null,
+   "url": "https://tackle-compare-lab.com/series/zillion",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26ジリオン TW",
+   "model": "150H",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": null,
+   "url": "https://tackle-compare-lab.com/series/zillion",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26ジリオン TW",
+   "model": "150HL",
+   "kind": "bait",
+   "gear": "7.3",
+   "price_jpy": null,
+   "url": "https://tackle-compare-lab.com/series/zillion",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26ジリオン TW",
+   "model": "150XH",
+   "kind": "bait",
+   "gear": "8.4",
+   "price_jpy": null,
+   "url": "https://tackle-compare-lab.com/series/zillion",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "26ジリオン TW",
+   "model": "150XHL",
+   "kind": "bait",
+   "gear": "8.4",
+   "price_jpy": null,
+   "url": "https://tackle-compare-lab.com/series/zillion",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23紅牙",
+   "model": "100",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": null,
+   "url": "https://plus.luremaga.jp/2023/03/04/229433/",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23紅牙",
+   "model": "100L",
+   "kind": "bait",
+   "gear": "6.3",
+   "price_jpy": null,
+   "url": "https://plus.luremaga.jp/2023/03/04/229433/",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23紅牙",
+   "model": "100XH",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": null,
+   "url": "https://plus.luremaga.jp/2023/03/04/229433/",
+   "status": ""
+  },
+  {
+   "maker": "DAIWA",
+   "series": "23紅牙",
+   "model": "100XHL",
+   "kind": "bait",
+   "gear": "8.1",
+   "price_jpy": null,
+   "url": "https://plus.luremaga.jp/2023/03/04/229433/",
+   "status": ""
   }
  ],
  "notes": "Checked 2026-11-09. DAIWA/Abu Garcia/Tailwalk: maker pages fetched directly; prices are tax-excluded メーカー希望本体価格 (Tailwalk pages say only 'Retail Price (JPY)', tax basis not stated). DAIWA series carry the maker's year prefix (e.g. 26シーボーグ); 品番 converted from full-width to half-width; L = left handle. SHIMANO: fish.shimano.com returns 403 to direct fetch, so SHIMANO rows come from search-engine reads of the official product pages (URLs given); verify 品番/価格 before relying on them. The SHIMANO prices may predate the 2026 price revision. Odd numbers (151/201/301) = left. フォースマスター 600 gear left blank: official pages conflict (6.5 vs 5.1). フォースマスター 200DH: 2021年に販売中止のお知らせが出ている. Japanese katakana names for Abu/Tailwalk series are approximate readings; official names are the alphabetic ones in parentheses. Excluded (unverified or out of scope): DAIWA ソルティガBJ / キャタリナBJ / 紅牙X (non-IC) (not on the current DAIWA list, 品番 not confirmed); レオブリッツ S300J/S400/400J, タナセンサー 400/500, キャタリナ 15H, バサラ IC 250P, エラン スーパーワイドパワー (heavy line, PE3-5+); SHIMANO ベイゲーム X (no reel found), ビーストマスター (large), フォースマスター 400 (only old overseas page); Abu ソルティーステージ / Revo salt (no current boat bait reel found), no small Abu electric; Tailwalk フルレンジ / ソルティシェイプ ダッシュ are rod series, not reels."
