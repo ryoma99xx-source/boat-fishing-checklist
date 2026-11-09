@@ -1300,7 +1300,7 @@ function sharePayload(t){const r3=x=>typeof x==='number'?Math.round(x*1e3)/1e3:x
   return {app:'dragon-counter',ver:1,uid:t.shareId,date:t.date,spotId:t.spotId||'',spot:t.spot?{name:t.spot.name,lat:r3(t.spot.lat),lon:r3(t.spot.lon)}:{name:t.port||''},
     boat:t.boat||'',people:t.people,seats:t.seats,side:t.side,seat:t.seat,station:t.station||'',tide:tideNameOf(t),tides:(t.tides||[]).map(x=>({type:x.type,hhmm:x.hhmm,cm:x.cm})),
     mode:modeOf(t),wx:t.wx||null,start:t.start,end:t.end,planEnd:t.planEnd||null,
-    events:(t.events||[]).map(e=>{const g=e.gsp||e.sp;return {t:e.t,kind:e.kind,sp:e.sp,gsp:e.gsp,v:e.v,rig:e.rig||'',rigName:nm(g,'rigs',e.rig),bait:e.bait||'',baitName:nm(g,'baits',e.bait),size:e.size||'',dragon:!!e.dragon,sa:e.sa||'',ka:e.ka||'',fish:e.kind==='gedo'?(e.name||''):'',tackle:e.tk?tkLabelOf(t,e.tk):''}}),tackle:t.tk&&t.tk.snap?Object.values(t.tk.snap).map(x=>({rod:x.rod,rodMaker:x.rodMaker,reel:x.reel,reelMaker:x.reelMaker,line:x.line})):[],
+    events:(t.events||[]).map(e=>{const g=e.gsp||e.sp;return {t:e.t,kind:e.kind,sp:e.sp,gsp:e.gsp,v:e.v,rig:e.rig||'',rigName:nm(g,'rigs',e.rig),bait:e.bait||'',baitName:nm(g,'baits',e.bait),size:e.size||'',dragon:!!e.dragon,sa:e.sa||'',ka:e.ka||'',fish:e.kind==='gedo'?(e.name||''):'',tackle:e.tk?tkLabelOf(t,e.tk):'',...(isFinite(e.lat)?{lat:r3(e.lat),lon:r3(e.lon)}:{})}}),tackle:t.tk&&t.tk.snap?Object.values(t.tk.snap).map(x=>({rod:x.rod,rodMaker:x.rodMaker,reel:x.reel,reelMaker:x.reelMaker,line:x.line})):[],
     states:(t.states||[]).map(x=>{const y={...x};delete y.id;delete y.memo;delete y.note;return y}),
     gear:(t.gearLog||[]).map(g=>({t:g.t,sp:g.sp,rig:g.rig||'',rigName:nm(g.sp,'rigs',g.rig),bait:g.bait||'',baitName:nm(g.sp,'baits',g.bait)})),
     points:(t.points||[]).map(q=>({t:q.t,lat:r3(q.lat),lon:r3(q.lon)}))}}
@@ -1714,12 +1714,22 @@ function pointSegs(tr){const P=(tr.points||[]).slice().sort((a,b)=>a.t-b.t);retu
   return {...p,i,te:P[i+1]?P[i+1].t:(tr.end||null),catch:ev.filter(e=>e.kind==='catch'&&e.sp===tr.cur.sp).length,bite:ev.filter(e=>e.kind==='bite').length,lost:ev.filter(e=>e.kind==='lost').length,km:i?ptKm(P[i-1],p):0}})}
 function pointsCard(tr){const sg=pointSegs(tr);if(!sg.length)return '';const s=spOf(tr.cur.sp);
   const route=sg.length>1?`https://www.google.com/maps/dir/${sg.map(p=>p.lat.toFixed(5)+','+p.lon.toFixed(5)).join('/')}`:mapUrl(sg[0]);
-  return `<div class="card"><h2>釣った場所（${sg.length}か所）</h2><p class="muted">「📍場所」を押した時刻から、次に押すまでの記録です。</p>
+  return `<div class="card"><h2>📍で記録した場所（${sg.length}か所）</h2><p class="muted">「📍場所」を押した時刻から、次に押すまでの記録です。</p>
    <div class="pts">${sg.map(p=>`<div class="pt"><b>${p.i+1}</b><span><em>${hm(p.t)}〜${p.te?hm(p.te):''}${p.i?`・前から約${kmTxt(p.km)}`:''}</em><small>${esc(s.name)} ${p.catch}${esc(s.unit)}・アタリ ${p.bite}・バラシ ${p.lost}</small></span><a class="btn sm" href="${mapUrl(p)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
    <a class="btn sm" href="${route}" target="_blank" rel="noopener">${sg.length>1?'移動した順に地図で見る':'地図で見る'}</a></div>`}
+/* 釣れたときに、その時の位置（GPS）も自動で残す。取れなければ何もしない（記録はそのまま） */
+function catchLoc(tid,eid){if(!navigator.geolocation||S.prefs.catchLoc===false)return;
+  navigator.geolocation.getCurrentPosition(pos=>{const t=S.trips[tid];const e=t&&t.events.find(x=>x.id===eid);if(!e)return;
+    e.lat=+pos.coords.latitude.toFixed(6);e.lon=+pos.coords.longitude.toFixed(6);e.acc=Math.round(pos.coords.accuracy||0);touch(t);if(S.ui.tab==='fig'&&$('#sheet').hidden)render()},
+    ()=>{},{enableHighAccuracy:true,timeout:15000,maximumAge:5000})}
+function catchLocCard(tr,sp){const s=spOf(sp),L=catchesOf(tr,sp).map((e,i)=>({...e,n:i+1})).filter(e=>isFinite(e.lat)&&isFinite(e.lon));if(!L.length)return '';
+  const route=L.length>1?`https://www.google.com/maps/dir/${L.slice(0,25).map(p=>p.lat.toFixed(5)+','+p.lon.toFixed(5)).join('/')}`:mapUrl(L[0]);
+  return `<div class="card"><h2>釣れた場所（${L.length}${esc(s.unit)}）</h2><p class="muted">「釣れた」を押した時の位置を自動で残しています。押した時の位置なので、実際に掛けた場所とは少しずれます。</p>
+   <div class="pts">${L.map((e,i)=>`<div class="pt"><b>${e.n}</b><span><em>${hm(e.t)}${e.dragon?'・ドラゴン':''}${i?`・前から約${kmTxt(ptKm(L[i-1],e))}`:''}</em><small>${e.acc?'誤差 約'+e.acc+'m':''}</small></span><a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
+   <a class="btn sm" href="${route}" target="_blank" rel="noopener">${L.length>1?'釣れた順に地図で見る':'地図で見る'}</a></div>`}
 function addEvent(kind,v,src,osp,rig){const tr=active();if(!tr)return;const now=Date.now();if(now-lastTap<450)return;lastTap=now;
   const tsp=tr.cur.sp,g=curGear(tr),sp=osp||tsp;if(rig&&rig!==g.rig){g.rig=rig;logGear(tr)}const e={id:uid(),t:now,kind,sp,gsp:tsp,rig:g.rig,bait:needBait(tsp,g)?g.bait:'',size:'',...(tr.tk&&tr.tk.cur?{tk:tr.tk.cur}:{})};if(kind==='catch')e.v=v||mainV(sp);if(kind==='catch'&&sp==='tachiuo'&&dragonNext){e.dragon=true;dragonNext=false}if(src)e.src=src;if(nextSa){e.sa=nextSa;nextSa=null}if(nextKa){e.ka=nextKa;nextKa=null}
-  tr.events.push(e);touch(tr);buzz();keepAwake();
+  tr.events.push(e);touch(tr);buzz();keepAwake();if(kind==='catch')catchLoc(tr.id,e.id);
   if(S.ui.tab==='rec'&&$('#sheet').hidden){const y0=scrollY;render();if(y0<160)scrollTo(0,0);if(kind==='catch'){const n=$('#cnum');n&&n.classList.add('bump')}}
   if(osp&&!$('#sheet').hidden)closeSheet();
   const s=spOf(sp),n=catchesOf(tr,sp).length,id=tr.id;
@@ -1903,7 +1913,7 @@ function viewFig(){const tr=figTrip();wxEnsure(tr);ocurEnsure(tr);if(!tr)return 
    ${tr.sample?`<p class="sample-note">これは見本のサンプル釣行です。実際に出船して記録すると、自分の図が作られます。<button class="btn sm" data-act="delSample" data-id="${tr.id}">サンプルを消す</button></p>`:''}
    <div class="card"><h2>時系列：潮と流れと釣果</h2><p class="swipe">← 図の中を左右にスワイプできます →</p><div class="scrollx">${timelineSVG(tr,sp)}</div>
     <div class="figfoot"><button class="btn sm" data-act="png" data-which="tl">画像として保存</button></div></div>
-   <div class="card"><h2>座席と数（自分の席）</h2><div class="fitw">${seatSVG(tr,sp)}</div><div class="figfoot"><button class="btn sm" data-act="png" data-which="seat">画像として保存</button></div></div>${(tr.memo||'').trim()?`<div class="card"><div class="card-h"><h2>メモ</h2><button class="golink" data-act="memoOpen" data-id="${tr.id}">直す →</button></div>${memoHTML(tr)}</div>`:''}${pointsCard(tr)}`}
+   <div class="card"><h2>座席と数（自分の席）</h2><div class="fitw">${seatSVG(tr,sp)}</div><div class="figfoot"><button class="btn sm" data-act="png" data-which="seat">画像として保存</button></div></div>${(tr.memo||'').trim()?`<div class="card"><div class="card-h"><h2>メモ</h2><button class="golink" data-act="memoOpen" data-id="${tr.id}">直す →</button></div>${memoHTML(tr)}</div>`:''}${catchLocCard(tr,sp)}${pointsCard(tr)}`}
 
 /* ---------- history ---------- */
 function seatStatsHTML(sp){const real=trips().filter(t=>!t.sample&&t.status==='done'&&tripSpecies(t).includes(sp));const s=spOf(sp);
