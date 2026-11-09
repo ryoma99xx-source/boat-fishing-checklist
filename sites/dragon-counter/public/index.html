@@ -2163,7 +2163,7 @@ let tkAdd={rod:'',reel:''};
 function tkOwnedRows(k){const t=TK(),L=t[k+'s'].mine.map(tkItem).filter(Boolean);
   if(!L.length)return `<p class="muted">まだありません。下のボタンから追加してください。</p>`;
   return L.map(it=>`<div class="tkrow"><div class="tk-nm"><small>${esc([tkMaker(it),tkKind(it),it.src==='rlm'?'リール糸管理から':it.custom?'自分で登録':''].filter(Boolean).join('・'))}</small><b>${esc(tkName(it))}</b>
-    ${k==='reel'?`<span class="tk-line">PE <input type="text" inputmode="decimal" data-tkline="${it.id}:pe" value="${esc((t.line[it.id]||{}).pe||'')}" placeholder="0.8" aria-label="PEの号数">号　長さ <input type="text" inputmode="numeric" data-tkline="${it.id}:len" value="${esc((t.line[it.id]||{}).len||'')}" placeholder="200" aria-label="糸の長さ">m</span>`:''}</div>
+    ${k==='reel'?`<span class="tk-line">PE <input type="text" inputmode="decimal" data-tkline="${it.id}:pe" value="${esc((t.line[it.id]||{}).pe||'')}" placeholder="1.5" aria-label="PEの号数">号　長さ <input type="text" inputmode="numeric" data-tkline="${it.id}:len" value="${esc((t.line[it.id]||{}).len||'')}" placeholder="200" aria-label="糸の長さ">m</span>`:''}</div>
     <button class="btn sm ghost" data-act="tkDel" data-k="${k}" data-id="${it.id}">外す</button></div>`).join('')}
 function tackleSectionHTML(){const t=TK();const rods=t.rods.mine.map(tkItem).filter(Boolean),reels=t.reels.mine.map(tkItem).filter(Boolean);
   return `<div class="card" id="tkRods"><h2>ロッド（所有 ${rods.length}）</h2>${tkOwnedRows('rod')}
@@ -2243,7 +2243,7 @@ function tkSetSheet(id){const t=TK(),st=id?setOf(id):null,rods=t.rods.mine.map(t
   openSheet(`<div class="sheet-h"><h2>${st?'組み合わせを編集':'組み合わせを追加'}</h2><button class="btn sm ghost" data-act="closeSheet">やめる</button></div>
    <label class="field"><span>ロッド</span><select id="tseRod">${rods.map(r=>`<option value="${r.id}" ${r.id===rd?'selected':''}>${esc(tkName(r))}</option>`).join('')}</select></label>
    <label class="field"><span>リール</span><select id="tseReel">${reels.map(r=>`<option value="${r.id}" ${r.id===rl?'selected':''}>${esc(tkName(r))}</option>`).join('')}</select></label>
-   <div class="tk-line"><span>このリールの糸：PE</span><input type="text" inputmode="decimal" id="tsePe" value="${esc(ln.pe||'')}" placeholder="0.8">号　長さ<input type="text" inputmode="numeric" id="tseLen" value="${esc(ln.len||'')}" placeholder="200">m</div>
+   <div class="tk-line"><span>このリールの糸：PE</span><input type="text" inputmode="decimal" id="tsePe" value="${esc(ln.pe||'1.5')}" placeholder="1.5">号　長さ<input type="text" inputmode="numeric" id="tseLen" value="${esc(ln.len||'200')}" placeholder="200">m</div>
    <div class="tk-more"><button class="golink" data-act="goSec" data-sec="tkRods">＋ ロッドを増やす →</button><button class="golink" data-act="goSec" data-sec="tkReels">＋ リールを増やす →</button></div><p class="muted">「登録」タブのタックル欄に移ります。所有に加えたら、下の「保存して記録に戻る」で出船の準備に戻れます。</p>
    <button class="btn primary big" data-act="tkSetSave" data-id="${st?st.id:''}">保存する</button>
    ${st?`<button class="btn ghost" data-act="tkSetDrop" data-id="${st.id}">この組み合わせを消す</button>`:''}`,{kind:'tkset'})}
@@ -2398,10 +2398,10 @@ const acts={
   tkCatKind:b=>{tkQ.kind=b.dataset.v;document.querySelectorAll('.tk-kind button').forEach(c=>c.classList.toggle('on',c.dataset.v===tkQ.kind));$('#tkCatList').innerHTML=tkCatList()},
   tkCat:b=>tkCatSheet(b.dataset.k),tkCustom:b=>tkCustomSheet(b.dataset.k),tkImport:()=>tkImportSheet(),
   tkCatMk:b=>{tkQ.m=b.dataset.m;document.querySelectorAll('.tk-mk .chip').forEach(c=>c.classList.toggle('on',c.dataset.m===tkQ.m));$('#tkCatList').innerHTML=tkCatList()},
-  tkToggle:b=>{const t=TK(),L=t[b.dataset.k+'s'].mine,id=b.dataset.id,i=L.indexOf(id);if(i>=0)L.splice(i,1);else L.push(id);cfgTouch();const cl=$('#tkCatList');if(cl&&!$('#sheet').hidden)cl.innerHTML=tkCatList();else{render();toast('所有リールに加えました')}},
+  tkToggle:b=>{const t=TK(),L=t[b.dataset.k+'s'].mine,id=b.dataset.id,i=L.indexOf(id);if(i>=0)L.splice(i,1);else{L.push(id);if(b.dataset.k==='reel'&&!(t.line[id]&&t.line[id].pe))t.line[id]={...(t.line[id]||{}),pe:'1.5',len:(t.line[id]||{}).len||'200'}}cfgTouch();const cl=$('#tkCatList');if(cl&&!$('#sheet').hidden)cl.innerHTML=tkCatList();else{render();toast('所有リールに加えました')}},
   tkPickFold:()=>{S.ui.rlmOpen=S.ui.rlmOpen===false;saveLocal();render()},
   tkCustomSave:b=>{const k=b.dataset.k,n=($('#tkcN').value||'').trim();if(!n)return toast('製品名・型番を入れてください');let m=$('#tkcM').value;if(m==='__other')m=($('#tkcMo').value||'').trim();
-    const t=TK();const id=(k==='rod'?'ur-':'uq-')+uid();t[k+'s'].custom.push({id,custom:true,m,s:'',model:n,...(k==='reel'?{kind:'bait'}:{})});t[k+'s'].mine.push(id);cfgTouch();closeSheet();S.ui.tab='gear';render();toast(`「${n}」を登録しました`)},
+    const t=TK();const id=(k==='rod'?'ur-':'uq-')+uid();t[k+'s'].custom.push({id,custom:true,m,s:'',model:n,...(k==='reel'?{kind:'bait'}:{})});t[k+'s'].mine.push(id);if(k==='reel')t.line[id]={pe:'1.5',len:'200'};cfgTouch();closeSheet();S.ui.tab='gear';render();toast(`「${n}」を登録しました`)},
   tkDel:b=>{const t=TK(),k=b.dataset.k,id=b.dataset.id;const used=t.sets.filter(st=>st[k]===id).length;
     if(used&&!b.classList.contains('armed')){b.classList.add('armed');b.textContent='組み合わせ'+used+'件も外す？';setTimeout(()=>{b.classList.remove('armed');b.textContent='外す'},3000);return}
     t[k+'s'].mine=t[k+'s'].mine.filter(x=>x!==id);t.sets=t.sets.filter(st=>st[k]!==id);cfgTouch();render()},
@@ -2652,7 +2652,7 @@ function onField(e){const el=e.target;
   if(el.id==='tkQ'&&e.type==='input'){tkQ.q=el.value;const L=$('#tkCatList');if(L)L.innerHTML=tkCatList()}
   if(e.type==='change'&&el.dataset.tkline){const [id,k]=el.dataset.tkline.split(':');const t=TK();t.line[id]={...(t.line[id]||{}),[k]:rlmNum(el.value)};el.value=t.line[id][k];cfgTouch()}
   if(e.type==='change'&&el.id==='tkImportFile'&&el.files[0]){const fr=new FileReader();fr.onload=()=>{try{const d=JSON.parse(fr.result);tkImported(rlmImport(d.reels||[]))}catch(x){toast('リール糸管理のバックアップとして読めませんでした')}};fr.readAsText(el.files[0]);el.value=''}
-  if(e.type==='change'&&el.id==='tseReel'){const l=TK().line[el.value]||{};$('#tsePe').value=l.pe||'';$('#tseLen').value=l.len||''}
+  if(e.type==='change'&&el.id==='tseReel'){const l=TK().line[el.value]||{};$('#tsePe').value=l.pe||'1.5';$('#tseLen').value=l.len||'200'}
   if(e.type==='change'&&(el.id==='tkSetRod'||el.id==='tkSetReel'))tkAdd[el.id==='tkSetRod'?'rod':'reel']=el.value}
 document.addEventListener('input',onField);document.addEventListener('change',onField);
 document.addEventListener('toggle',e=>{if(e.target.id==='ctSec'){S.ui.ctOpen=e.target.open;saveLocal()}},true);
