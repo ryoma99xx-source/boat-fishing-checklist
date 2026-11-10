@@ -165,9 +165,13 @@ textarea{min-height:140px;font-family:ui-monospace,Menlo,monospace;font-size:14p
 /* sheet */
 .sheet{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center}
 .sheet-bg{position:absolute;inset:0;background:rgba(5,12,16,.55);border:none}
-.sheet-panel{position:relative;width:100%;max-width:600px;max-height:92%;overflow-y:auto;background:var(--bg);border-radius:20px 20px 0 0;
+.sheet-panel{position:relative;width:100%;max-width:600px;max-height:92%;max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;min-height:0;background:var(--bg);border-radius:20px 20px 0 0;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:16px}
 .sheet-h{display:flex;justify-content:space-between;align-items:center;gap:12px}
+/* iPhone: keep sheet children at full height so the panel itself scrolls; stop the page behind from scrolling */
+.sheet-panel>*{flex-shrink:0}
+body:has(#sheet:not([hidden])){overflow:hidden}
+.shr-pick{display:flex;flex-direction:column;gap:10px}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
 /* the tenya catalog is long: keep the title + 完了 pinned at the top and a 完了 bar pinned at the bottom of the sheet */
 .sheet-h.stick{position:sticky;top:-18px;z-index:3;margin:-18px calc(-1 * max(16px,env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:14px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-bottom:1px solid var(--line)}
 .tb-foot{position:sticky;bottom:calc(-24px - env(safe-area-inset-bottom,0px));z-index:3;margin:0 calc(-1 * max(16px,env(safe-area-inset-right,0px))) calc(-24px - env(safe-area-inset-bottom,0px)) calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-top:1px solid var(--line)}
@@ -1913,8 +1917,8 @@ function viewFig(){const tr=figTrip();wxEnsure(tr);ocurEnsure(tr);if(!tr)return 
    ${ss.length>1?`<div class="chips">${ss.map(x=>`<button class="chip ${x===sp?'on':''}" data-act="figSp" data-id="${x}">${esc(spOf(x).name)}</button>`).join('')}</div>`:''}
    ${tr.sample?`<p class="sample-note">これは見本のサンプル釣行です。実際に出船して記録すると、自分の図が作られます。<button class="btn sm" data-act="delSample" data-id="${tr.id}">サンプルを消す</button></p>`:''}
    <div class="card"><h2>時系列：潮と流れと釣果</h2><p class="swipe">← 図の中を左右にスワイプできます →</p><div class="scrollx">${timelineSVG(tr,sp)}</div>
-    <div class="figfoot"><button class="btn sm" data-act="png" data-which="tl">画像として保存</button></div></div>
-   <div class="card"><h2>座席と数（自分の席）</h2><div class="fitw">${seatSVG(tr,sp)}</div><div class="figfoot"><button class="btn sm" data-act="png" data-which="seat">画像として保存</button></div></div>${(tr.memo||'').trim()?`<div class="card"><div class="card-h"><h2>メモ</h2><button class="golink" data-act="memoOpen" data-id="${tr.id}">直す →</button></div>${memoHTML(tr)}</div>`:''}${catchLocCard(tr,sp)}${pointsCard(tr)}`}
+    <div class="figfoot"><button class="btn sm" data-act="shareAsk" data-which="tl" data-id="${tr.id}">画像で保存・共有</button></div></div>
+   <div class="card"><h2>座席と数（自分の席）</h2><div class="fitw">${seatSVG(tr,sp)}</div><div class="figfoot"><button class="btn sm" data-act="shareAsk" data-which="seat" data-id="${tr.id}">画像で保存・共有</button></div></div>${(tr.memo||'').trim()?`<div class="card"><div class="card-h"><h2>メモ</h2><button class="golink" data-act="memoOpen" data-id="${tr.id}">直す →</button></div>${memoHTML(tr)}</div>`:''}${catchLocCard(tr,sp)}${pointsCard(tr)}`}
 
 /* ---------- history ---------- */
 function seatStatsHTML(sp){const real=trips().filter(t=>!t.sample&&t.status==='done'&&tripSpecies(t).includes(sp));const s=spOf(sp);
@@ -2558,7 +2562,7 @@ const acts={
   state:b=>openStateSheet(b.dataset.id),
   editEv:b=>{const back=sheetCtx&&sheetCtx.kind==='evlist'?sheetCtx.tid:null;openEvSheet(b.dataset.id,b.dataset.tid,back)},
   evClose:()=>evBack(),
-  evList:b=>{const tr=S.trips[b.dataset.id],ev=sortEv(tr);openSheet(`<div class="sheet-h"><h2>記録を見る・修正する</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">直したい行を押すと、時刻・テンヤ・種類（釣れた／アタリ／バラシ）などを直したり、消したりできます。</p><ol class="log">${ev.slice().reverse().map(e=>logRow(e,e.kind==='catch'?catchesOf(tr,e.sp).indexOf(e)+1:0,tr.id)).join('')||'<li class="empty">記録がありません</li>'}</ol>`,{kind:'evlist',tid:b.dataset.id})},
+  evList:b=>{const tr=S.trips[b.dataset.id],ev=sortEv(tr);openSheet(`<div class="sheet-h"><h2>記録を見る・修正する</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${ev.length?`<button class="btn sm" data-act="shareAsk" data-which="list" data-id="${tr.id}">この一覧を画像で保存・共有</button>`:''}<p class="muted" style="margin:0">直したい行を押すと、時刻・テンヤ・種類（釣れた／アタリ／バラシ）などを直したり、消したりできます。</p><ol class="log">${ev.slice().reverse().map(e=>logRow(e,e.kind==='catch'?catchesOf(tr,e.sp).indexOf(e)+1:0,tr.id)).join('')||'<li class="empty">記録がありません</li>'}</ol>`,{kind:'evlist',tid:b.dataset.id})},
   end:b=>{if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='もう一度押すと記録を終えます';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent='沖上がり（記録を終える）'}},3500);return}
     const tr=active();const now=Date.now();tr.end=(tr.planEnd&&now>tr.planEnd)?tr.planEnd:now;tr.status='done';S.activeId=null;releaseAwake();S.ui.tab='fig';S.ui.figTrip=tr.id;S.ui.figSp=mainSp(tr);touch(tr);render();scrollTo(0,0);toast(`おつかれさまでした。${tripSummary(tr)}の記録を図にしました`)},
   btnImport:()=>{imp={text:'',rows:null,sel:new Set(),armed:false};openImportSheet()},
@@ -2686,6 +2690,31 @@ async function savePng(which){const tr=figTrip();if(!tr)return;const sp=figSp(tr
     pendingFile={blob,name,type:'image/png'};
     $('#toast').hidden=true;openSheet(`<div class="sheet-h"><h2>画像</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${SITE?'<button class="btn primary big" data-act="shareFile">写真に保存・共有する</button>':''}<p class="muted">画像を長押しして「写真に保存」を選んでも保存できます。</p><img class="imgout" src="${url}" alt="${esc(name)}">`,{kind:'img'})
   }catch(e){toast('画像を作れませんでした。もう一度お試しください')}}
+/* record list as an image (oldest first), for sharing */
+function listSVG(tr){const W=600,X0=28,RH=40,ev=sortEv(tr),o=[];const nCatch=ev.filter(e=>e.kind==='catch').length;
+  o.push(TX(X0,50,'記録一覧',{size:26,bold:1}));o.push(TX(W-X0,50,nCatch?`釣果 ${nCatch}`:'',{size:17,bold:1,fill:P.catch,anchor:'end'}));
+  o.push(TX(X0,78,`${jdate(tr.date)}｜${tr.boat||''}${tr.port?'（'+tr.port+'）':''}`,{size:15,fill:P.muted}));
+  let y=104;const cnt={};
+  ev.forEach((e,i)=>{const s=spOf(e.sp);let kind,col;
+    if(e.kind==='catch'){cnt[e.sp]=(cnt[e.sp]||0)+1;kind=`${s.variants.length>1?vShort(e.sp,e.v):s.name} ${cnt[e.sp]}${s.unit}目`;col=P.catch}
+    else if(e.kind==='gedo'){kind='外道 '+(e.name||'');col=P.muted}else{kind=KIND_JP[e.kind]||'';col=P[e.kind]||P.ink}
+    if(i%2===0)o.push(`<rect x="16" y="${y}" width="${W-32}" height="${RH}" rx="8" fill="#eef4f6"/>`);
+    o.push(TX(X0,y+27,hm(e.t),{size:19,bold:1}));o.push(TX(X0+70,y+27,clip(kind,150,15),{size:15,bold:1,fill:col}));
+    o.push(TX(X0+232,y+27,clip(evGearText(e),W-X0-232-X0,14),{size:14,fill:P.muted}));y+=RH});
+  if(!ev.length){o.push(TX(X0,y+30,'記録がありません',{size:15,fill:P.muted}));y+=50}
+  const H=y+24;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="記録一覧"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${o.join('')}</svg>`}
+const SHR_NM={list:'記録一覧',tl:'時系列の図',seat:'座席の図'};
+function shrSp(tr){return S.ui.figTrip===tr.id?figSp(tr):mainSp(tr)}
+acts.shareAsk=b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which;
+  openSheet(`<div class="sheet-h"><h2>画像で保存・共有</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">LINE・メール・メッセージなどで送れます。</p><div class="shr-pick"><button class="btn primary" data-act="shareMake" data-which="${w}" data-id="${tr.id}">${SHR_NM[w]}だけ</button><button class="btn" data-act="shareMake" data-which="all" data-id="${tr.id}">3つまとめて<small style="display:block;font-weight:500">記録一覧・時系列の図・座席の図</small></button></div>`,{kind:'shr'})};
+acts.shareMake=async b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which,ws=w==='all'?['list','tl','seat']:[w],sp=shrSp(tr);
+  b.disabled=true;b.textContent='画像を作っています…';
+  try{const out=[];for(const k of ws){const svg=k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(svg);
+      out.push({blob,url,name:`dragon-${tr.date}-${k==='list'?'list':k==='tl'?'timeline':'seat'}.png`,type:'image/png'})}
+    pendingFile={files:out};
+    openSheet(`<div class="sheet-h"><h2>画像${out.length>1?`（${out.length}枚）`:''}</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${SITE?`<button class="btn primary big" data-act="shareFile">写真に保存・共有する</button>`:''}<p class="muted" style="margin:0">画像を長押しして「写真に保存」を選んでも保存できます。</p><div class="shr-imgs">${out.map(f=>`<img class="imgout" src="${f.url}" alt="${esc(f.name)}">`).join('')}</div>`,{kind:'img'})
+  }catch(e){toast('画像を作れませんでした。もう一度お試しください');closeSheet()}};
 /* ---------- backup & restore (everything: trips, boats, spots, tenya, settings) ---------- */
 function backupData(){const ts=trips().filter(t=>!t.sample);
   return {app:'dragon-counter',kind:'backup',v:3,exportedAt:new Date().toISOString(),
@@ -2743,6 +2772,9 @@ function backupCardHTML(){const lb=S.ui.lastBackup;const ts=trips().filter(t=>!t
 let pendingFile=null;
 const standalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}};
 async function deliverFile(){const p=pendingFile;if(!p)return null;
+  if(p.files){const fs=p.files.map(x=>new File([x.blob],x.name,{type:x.type}));
+    try{if(navigator.canShare&&navigator.canShare({files:fs})){await navigator.share({files:fs});return 'shared'}}catch(e){if(e&&e.name==='AbortError')return 'cancel'}
+    try{p.files.forEach((x,i)=>setTimeout(()=>{const a=document.createElement('a');a.href=URL.createObjectURL(x.blob);a.download=x.name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000)},i*400));toast('ダウンロードしました');return 'downloaded'}catch(e){return null}}
   try{const f=new File([p.blob],p.name,{type:p.type});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});return 'shared'}}catch(e){if(e&&e.name==='AbortError')return 'cancel'}
   try{const a=document.createElement('a');a.href=URL.createObjectURL(p.blob);a.download=p.name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);toast('ダウンロードしました');return 'downloaded'}catch(e){return null}}
 acts.shareFile=()=>deliverFile();
