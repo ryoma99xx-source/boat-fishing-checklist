@@ -21,6 +21,10 @@ URL = 'https://dragon-counter.cutlassfish.tokyo/tairaba/'
 
 s = open(os.path.join(PUB, 'index.html'), encoding='utf-8').read()
 coast_jp = open(os.path.join(HERE, 'tairaba', 'coast-japan.txt')).read().strip()
+# メーカーのヘッド・ネクタイ・スカートの一覧（文字だけ）。tools/tairaba/catalog.json（tairaba_catalog.py が作る）
+_cat_path = os.path.join(HERE, 'tairaba', 'catalog.json')
+import json
+TB_CAT = json.load(open(_cat_path, encoding='utf-8')) if os.path.exists(_cat_path) else {'v': '', 'heads': [], 'ties': [], 'skirts': []}
 assert re.fullmatch(r'[-0-9,;]+', coast_jp)
 
 
@@ -126,24 +130,40 @@ R('<h2 class="sec-h" id="tenyaSec0">テンヤ</h2>\n  ${tenyaSectionHTML()}', '<
 TB = r'''
 /* ---------- タイラバの部品（ヘッド・ネクタイ・針・スカート）：項目を分けて登録し、名前はそこから作る ---------- */
 const TB_DL={hs:['丸型','ドロップ型','扁平型','スリム型'],hc:['オレンジ','赤','金','緑','ピンク','黒','グロー','チャート'],mk:['ダイワ','シマノ','ジャッカル','ハヤブサ','メジャークラフト','自作'],ts:['カーリー','ストレート','極細ストレート','ダブルカーリー','ワイド'],ks:['ラバー','シリコン','ティンセル入り'],tc:['オレンジ','赤','金','緑','ピンク','黒','グロー','チャート','オレンジ×金']};
+const TB_CAT=__TB_CAT__;
 let tbHookType='pkg';
+/* カタログから選ぶ：メーカー → 製品 → 重さ（ヘッドだけ・複数可）→ 色（複数可）→ まとめて登録 */
+let tbc=null;
+const TBC_KEY={rigs:'heads',baits:'ties',skirts:'skirts'},TBC_JP={rigs:'ヘッド',baits:'ネクタイ',skirts:'スカート'};
+function tbcRows(){return TB_CAT[TBC_KEY[tbc.kind]]||[]}
+function tbcSheet(){const rows=tbcRows(),makers=[...new Set(rows.map(r=>r.m))];if(!tbc.m)tbc.m=makers[0]||'';
+  const ser=rows.map((r,i)=>[r,i]).filter(([r])=>r.m===tbc.m),cur=tbc.i>=0?rows[tbc.i]:null;
+  const n=cur?(tbc.kind==='rigs'?tbc.w.size:1)*tbc.c.size:0;
+  openSheet(`<div class="sheet-h stick"><h2>カタログ（${TBC_JP[tbc.kind]}）</h2><button class="btn sm ghost" data-act="tbcClose">閉じる</button></div>
+   <div class="field"><span>メーカー</span><div class="chips wrap">${makers.map(m=>`<button class="chip ${m===tbc.m?'on':''}" data-act="tbcMaker" data-d="${esc(m)}">${esc(m)}</button>`).join('')}</div></div>
+   <div class="field"><span>製品</span><div class="chips wrap">${ser.map(([r,i])=>`<button class="chip ${i===tbc.i?'on':''}" data-act="tbcSeries" data-i="${i}">${esc(r.s)}${r.mat==='TG'?'<small>（TG）</small>':''}</button>`).join('')}</div></div>
+   ${cur?`${cur.note?`<p class="muted" style="margin:0">${esc(cur.note)}</p>`:''}
+    ${tbc.kind==='rigs'&&cur.w.length?`<div class="field"><span>重さ（持っているものを全部）</span><div class="chips wrap">${cur.w.map(g=>`<button class="chip ${tbc.w.has(g)?'on':''}" data-act="tbcW" data-d="${g}">${g}g</button>`).join('')}</div></div>`:''}
+    <div class="field"><span>色（持っているものを全部）</span><div class="chips wrap">${cur.c.map(c=>`<button class="chip ${tbc.c.has(c)?'on':''}" data-act="tbcC" data-d="${esc(c)}">${esc(c)}</button>`).join('')}</div></div>
+    ${cur.u?`<a class="golink" href="${esc(cur.u)}" target="_blank" rel="noopener">メーカーのページで見る ↗</a>`:''}`:'<p class="muted">製品を選んでください。</p>'}
+   <div class="tb-foot"><button class="btn primary" data-act="tbcSave" ${n?'':'disabled'}>${n?`${n}件を登録`:'重さと色を選んでください'}</button></div>`,{kind:'tbc'})}
 /* スカートは付けない人も多いので「なし」を選べる。初期値は「なし」 */
 function skirtChips(sel,act){const s=spOf(SOLO),l=(s.skirts||[]).filter(g=>!g.hidden);
   return `<div class="gearpick"><div class="gp-lbl">スカート<small class="muted">（任意）</small></div><div class="chips wrap"><button class="chip ${!sel?'on':''}" data-act="${act}" data-id="" aria-pressed="${!sel}">なし</button>${l.map(g=>`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="スカートを登録">＋</button></div></div>`}
 const tbVal=id=>{const el=$('#'+id);return el?el.value.trim():''};
 const tbDl=(id,k)=>`<datalist id="${id}">${TB_DL[k].map(x=>`<option value="${esc(x)}">`).join('')}</datalist>`;
-function tbName(k,x){if(k==='rigs')return [x.g?x.g+'g':'',x.shape,x.color].filter(Boolean).join(' ')+(x.maker?`（${x.maker}）`:'');
+function tbName(k,x){if(x.series)return [x.series,x.g?x.g+'g':'',x.color].filter(Boolean).join(' ');if(k==='rigs')return [x.g?x.g+'g':'',x.shape,x.color].filter(Boolean).join(' ')+(x.maker?`（${x.maker}）`:'');
   if(k==='baits'||k==='skirts')return [x.shape,x.color].filter(Boolean).join(' ');
   return x.type==='diy'?['自作',x.n?x.n+'本針':'',x.size?'針'+x.size:'',x.line?'糸'+x.line:''].filter(Boolean).join(' '):'市販 '+(x.pkg||'')}
 function tbList(k){const s=spOf(SOLO),l=s[k]||[];return l.length?l.map(g=>`<div class="grow ${g.hidden?'hid':''}"><span class="tb-nm">${esc(g.name)}</span><button class="btn sm" data-act="itemHide" data-sp="${SOLO}" data-kind="${k}" data-id="${g.id}">${g.hidden?'表示する':'隠す'}</button><button class="btn sm" data-act="tbDel" data-kind="${k}" data-id="${g.id}">消す</button></div>`).join(''):'<p class="muted">まだありません。</p>'}
 function tbPartsHTML(){const H=tbHookType;
-  return `<div class="card" id="tbHeads"><h2>ヘッド</h2><p class="muted">重さ・形・色・メーカーを入れて登録します。記録では「80g 丸型 オレンジ（ダイワ）」のように出ます。</p>${tbList('rigs')}
+  return `<div class="card" id="tbHeads"><h2>ヘッド</h2><p class="muted">メーカーのカタログから選ぶか、重さ・形・色・メーカーを入れて登録します。</p>${tbList('rigs')}${TB_CAT.heads.length?`<button class="btn sm" data-act="tbcOpen" data-kind="rigs" style="margin:8px 0">📖 カタログから選ぶ</button><p class="muted" style="margin:0">カタログにないものは、下に入れて登録</p>`:''}
    <div class="tb-form"><label class="field"><span>重さ（g）</span><input type="number" id="tbHg" inputmode="numeric" min="1" max="500" placeholder="例：80"></label>
     <label class="field"><span>形</span><input type="text" id="tbHs" list="tbHsL" placeholder="例：丸型">${tbDl('tbHsL','hs')}</label>
     <label class="field"><span>色</span><input type="text" id="tbHc" list="tbHcL" placeholder="例：オレンジ">${tbDl('tbHcL','hc')}</label>
     <label class="field"><span>メーカー</span><input type="text" id="tbHm" list="tbHmL" placeholder="例：ダイワ">${tbDl('tbHmL','mk')}</label></div>
    <button class="btn sm primary" data-act="tbAdd" data-kind="rigs">ヘッドを登録</button></div>
-  <div class="card" id="tbTies"><h2>ネクタイ</h2><p class="muted">形と色を入れて登録します。</p>${tbList('baits')}
+  <div class="card" id="tbTies"><h2>ネクタイ</h2><p class="muted">メーカーのカタログから選ぶか、形と色を入れて登録します。</p>${tbList('baits')}${TB_CAT.ties.length?`<button class="btn sm" data-act="tbcOpen" data-kind="baits" style="margin:8px 0">📖 カタログから選ぶ</button><p class="muted" style="margin:0">カタログにないものは、下に入れて登録</p>`:''}
    <div class="tb-form"><label class="field"><span>形</span><input type="text" id="tbTs" list="tbTsL" placeholder="例：カーリー">${tbDl('tbTsL','ts')}</label>
     <label class="field"><span>色</span><input type="text" id="tbTc" list="tbTcL" placeholder="例：赤">${tbDl('tbTcL','tc')}</label></div>
    <button class="btn sm primary" data-act="tbAdd" data-kind="baits">ネクタイを登録</button></div>
@@ -154,7 +174,7 @@ function tbPartsHTML(){const H=tbHookType;
     <label class="field"><span>針の号数</span><input type="text" id="tbSz" placeholder="例：10号 / M"></label>
     <label class="field"><span>糸の号数</span><input type="text" id="tbLn" placeholder="例：5号"></label></div>`}
    <button class="btn sm primary" data-act="tbAdd" data-kind="hooks">針を登録</button></div>
-  <div class="card" id="tbSkirts"><h2>スカート<small class="muted">（任意）</small></h2><p class="muted">使う人だけ登録してください。記録では「なし」も選べます。</p>${tbList('skirts')}
+  <div class="card" id="tbSkirts"><h2>スカート<small class="muted">（任意）</small></h2><p class="muted">使う人だけ登録してください。記録では「なし」も選べます。</p>${tbList('skirts')}${TB_CAT.skirts.length?`<button class="btn sm" data-act="tbcOpen" data-kind="skirts" style="margin:8px 0">📖 カタログから選ぶ</button>`:''}
    <div class="tb-form"><label class="field"><span>素材・形</span><input type="text" id="tbKs" list="tbKsL" placeholder="例：ラバー">${tbDl('tbKsL','ks')}</label>
     <label class="field"><span>色</span><input type="text" id="tbKc" list="tbKcL" placeholder="例：オレンジ">${tbDl('tbKcL','tc')}</label></div>
    <button class="btn sm primary" data-act="tbAdd" data-kind="skirts">スカートを登録</button></div>`}
@@ -170,9 +190,19 @@ Object.assign(acts,{
     else{x={type:'pkg',pkg:tbVal('tbPk')};if(!x.pkg)return toast('商品名を入れてください')}
     x.name=tbName(k,x);x.id=uid();const s=spOf(SOLO);s[k]=s[k]||[];if(s[k].some(g=>g.name===x.name&&!g.hidden))return toast(`「${x.name}」はもう登録されています`);
     s[k].push(x);cfgTouch();const sec={rigs:'tbHeads',baits:'tbTies',hooks:'tbHooks',skirts:'tbSkirts'}[k];render();setTimeout(()=>{const el=$('#'+sec);if(el)el.scrollIntoView({block:'start'})},40);toast(`「${x.name}」を登録しました`)},
+  tbcOpen:b=>{tbc={kind:b.dataset.kind,m:'',i:-1,w:new Set(),c:new Set()};tbcSheet()},
+  tbcClose:()=>{const k=tbc&&tbc.kind;tbc=null;closeSheet();setTimeout(()=>{const el=$('#'+({rigs:'tbHeads',baits:'tbTies',skirts:'tbSkirts'}[k]||''));if(el)el.scrollIntoView({block:'start'})},40)},
+  tbcMaker:b=>{tbc.m=b.dataset.d;tbc.i=-1;tbc.w=new Set();tbc.c=new Set();tbcSheet()},
+  tbcSeries:b=>{tbc.i=+b.dataset.i;tbc.w=new Set();tbc.c=new Set();const r=tbcRows()[tbc.i];if(r&&r.w&&r.w.length===1)tbc.w.add(r.w[0]);tbcSheet()},
+  tbcW:b=>{const g=+b.dataset.d;tbc.w.has(g)?tbc.w.delete(g):tbc.w.add(g);tbcSheet()},
+  tbcC:b=>{const c=b.dataset.d;tbc.c.has(c)?tbc.c.delete(c):tbc.c.add(c);tbcSheet()},
+  tbcSave:()=>{const r=tbcRows()[tbc.i];if(!r)return;const s=spOf(SOLO),k=tbc.kind;s[k]=s[k]||[];let n=0;
+    const ws=k==='rigs'&&r.w.length?[...tbc.w].sort((a,b)=>a-b):[''];
+    for(const g of ws)for(const c of r.c.filter(x=>tbc.c.has(x))){const x={maker:r.m,series:r.s,g:g?String(g):'',color:c,shape:r.sh||'',cat:true,id:uid()};x.name=tbName(k,x);if(s[k].some(y=>y.name===x.name&&!y.hidden))continue;s[k].push(x);n++}
+    cfgTouch();toast(n?`${n}件を登録しました`:'もう登録されています');acts.tbcClose()},
   tbDel:b=>{if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='本当に？';return}const s=spOf(SOLO),k=b.dataset.kind;s[k]=(s[k]||[]).filter(g=>g.id!==b.dataset.id);cfgTouch();render()}});
 '''
-R("/* ---------- species & gear settings ---------- */", TB + "/* ---------- species & gear settings ---------- */")
+R("/* ---------- species & gear settings ---------- */", TB.replace('__TB_CAT__', json.dumps(TB_CAT, ensure_ascii=False, separators=(',', ':'))) + "/* ---------- species & gear settings ---------- */")
 R("/* ---------- boot ---------- */", TB_ACTS + "/* ---------- boot ---------- */")
 R('.mapreg button{min-height:38px;font-size:14px}', '.mapreg button{min-height:38px;font-size:14px}.tb-form{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin:8px 0}.tb-nm{flex:1;min-width:0;font-weight:700}')
 
