@@ -8,6 +8,9 @@
   RewriteCond %{ENV:REDIRECT_STATUS} !^$
   RewriteRule ^ - [END]
   RewriteRule ^\.well-known/ - [END]
+  # タイラバカウンター（/tairaba/）：フォルダの最後の / を補い、フォルダへのアクセスは index.html を返す
+  RewriteRule ^tairaba$ /tairaba/ [R=301,L]
+  RewriteRule ^tairaba/$ tairaba/index.html [L]
   RewriteRule (^|/)\. - [R=404,L]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^.+$ - [R=404,L]
