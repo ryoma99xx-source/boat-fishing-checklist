@@ -4,7 +4,7 @@
 
 Each input file: {"maker","heads":[{series,url,material,type,weights,colors,note}],"ties":[{series,url,shape,colors,note}],"skirts":[{series,url,colors}]}
 Products marked discontinued (廃番/生産終了/discontinued in note) and products with no colours are left out."""
-import glob, json, os, re, sys
+import glob, json, os, re, sys, unicodedata
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, 'tairaba', 'catalog.json')
@@ -15,7 +15,10 @@ GONE = re.compile(r'廃番|生産終了|販売終了|discontinued', re.I)
 def clean(xs):
     out = []
     for x in xs or []:
-        x = re.sub(r'\s+', ' ', str(x)).strip()
+        # 半角カナ→全角、全角英数→半角（NFKC）。先頭の品番（例：F-0353 ）は表示から外す
+        x = unicodedata.normalize('NFKC', str(x))
+        x = re.sub(r'\s+', ' ', x).strip()
+        x = re.sub(r'^[A-Z]{1,3}-?\d{2,5}\s+', '', x)
         if x and x not in out:
             out.append(x)
     return out
