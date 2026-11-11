@@ -70,7 +70,7 @@ R('text-anchor="end">dragon-counter.cutlassfish.tokyo</text>', 'text-anchor="end
 
 # ───────── the fish: マダイ only, no 大物 mark, no 大漁 mark, no sample trip, no preset boats or spots
 R("function defaultSpecies(){return [\n",
-  "function defaultSpecies(){return [\n  {id:'madai',name:'マダイ',unit:'枚',sizeUnit:'cm',rigLabel:'ヘッド',baitLabel:'ネクタイ',hookLabel:'針',tairaba:true,variants:[{id:'madai',name:'マダイ'}],rigs:[],baits:[],hooks:[]},\n")
+  "function defaultSpecies(){return [\n  {id:'madai',name:'マダイ',unit:'枚',sizeUnit:'cm',rigLabel:'ヘッド',baitLabel:'ネクタイ',hookLabel:'針',skirtLabel:'スカート',tairaba:true,variants:[{id:'madai',name:'マダイ'}],rigs:[],baits:[],hooks:[],skirts:[]},\n")
 R("const SOLO='tachiuo';", "const SOLO='madai';")
 R("const GEDO_DEF=['トラフグ','サバフグ','サワラ','アジ'];", "const GEDO_DEF=['ホウボウ','カサゴ','イトヨリ','アマダイ','ハマチ','ワラサ','サバ','アジ'];")
 R("const isTairyo=date=>dayCatch(date)>=TAIRYO;", "const isTairyo=date=>false;")
@@ -89,48 +89,51 @@ R("${f.kind!=='gedo'?`<div class=\"field\"><span>誘い</span>", "${false?`<div 
 
 # ───────── tairaba parts: ヘッド (rigs) ・ ネクタイ (baits) ・ 針 (hooks)
 R("const label=k==='rigs'?s.rigLabel:s.baitLabel;", "const label=k==='rigs'?s.rigLabel:k==='hooks'?s.hookLabel:s.baitLabel;")
-R(":{rig:pf.rig||firstVis(sp,'rigs'),bait:pf.bait||firstVis(sp,'baits')}}", ":{rig:pf.rig||firstVis(sp,'rigs'),bait:pf.bait||firstVis(sp,'baits'),hook:pf.hook||firstVis(sp,'hooks')}}")
+R(":{rig:pf.rig||firstVis(sp,'rigs'),bait:pf.bait||firstVis(sp,'baits')}}", ":{rig:pf.rig||firstVis(sp,'rigs'),bait:pf.bait||firstVis(sp,'baits'),hook:pf.hook||firstVis(sp,'hooks'),skirt:pf.skirt||''}}")
 R("else if(!g.rig)g.rig=firstVis(sp,'rigs');if(!g.bait)", "else if(!g.rig)g.rig=firstVis(sp,'rigs');if(!g.hook)g.hook=firstVis(sp,'hooks');if(!g.bait)")
-R("chipsHTML(sp,'rigs',g.rig,'fRig'))", "chipsHTML(sp,'rigs',g.rig,'fRig')+chipsHTML(sp,'hooks',g.hook,'fHook'))")
+R("chipsHTML(sp,'rigs',g.rig,'fRig'))", "chipsHTML(sp,'rigs',g.rig,'fRig')+chipsHTML(sp,'hooks',g.hook,'fHook')+skirtChips(g.skirt,'fSkirt'))")
 R("  fRig:b=>{fGear(startDraft,startDraft.sp).rig=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},",
-  "  fRig:b=>{fGear(startDraft,startDraft.sp).rig=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},\n  fHook:b=>{fGear(startDraft,startDraft.sp).hook=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},")
-R("bait:needBait(tsp,g)?g.bait:'',size:''", "bait:needBait(tsp,g)?g.bait:'',hook:g.hook||'',size:''")
-R("const rec={t:now,sp:tr.cur.sp,rig:g.rig,bait:needBait(tr.cur.sp,g)?g.bait:''};", "const rec={t:now,sp:tr.cur.sp,rig:g.rig,bait:needBait(tr.cur.sp,g)?g.bait:'',hook:g.hook||''};")
-R("gearLog:[{t:start,sp:f.sp,rig:cg.rig,bait:needBait(f.sp,cg)?cg.bait:''}]", "gearLog:[{t:start,sp:f.sp,rig:cg.rig,bait:needBait(f.sp,cg)?cg.bait:'',hook:cg.hook||''}]")
+  "  fRig:b=>{fGear(startDraft,startDraft.sp).rig=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},\n  fHook:b=>{fGear(startDraft,startDraft.sp).hook=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},\n  fSkirt:b=>{fGear(startDraft,startDraft.sp).skirt=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},")
+R("bait:needBait(tsp,g)?g.bait:'',size:''", "bait:needBait(tsp,g)?g.bait:'',hook:g.hook||'',skirt:g.skirt||'',size:''")
+R("const rec={t:now,sp:tr.cur.sp,rig:g.rig,bait:needBait(tr.cur.sp,g)?g.bait:''};", "const rec={t:now,sp:tr.cur.sp,rig:g.rig,bait:needBait(tr.cur.sp,g)?g.bait:'',hook:g.hook||'',skirt:g.skirt||''};")
+R("gearLog:[{t:start,sp:f.sp,rig:cg.rig,bait:needBait(f.sp,cg)?cg.bait:''}]", "gearLog:[{t:start,sp:f.sp,rig:cg.rig,bait:needBait(f.sp,cg)?cg.bait:'',hook:cg.hook||'',skirt:cg.skirt||''}]")
 R("function evGearText(e){const gs=e.gsp||e.sp,s=spOf(gs);return [listName(gs,'rigs',e.rig),s.baitLabel?listName(gs,'baits',e.bait):'',",
-  "function evGearText(e){const gs=e.gsp||e.sp,s=spOf(gs);return [listName(gs,'rigs',e.rig),s.baitLabel?listName(gs,'baits',e.bait):'',e.hook?listName(gs,'hooks',e.hook):'',")
+  "function evGearText(e){const gs=e.gsp||e.sp,s=spOf(gs);return [listName(gs,'rigs',e.rig),s.baitLabel?listName(gs,'baits',e.bait):'',e.hook?listName(gs,'hooks',e.hook):'',e.skirt?'スカート '+listName(gs,'skirts',e.skirt):'',")
 R("function curRigLabel(tr){const sp=tr.cur.sp,g=curGear(tr);if(isTenya(sp,g))return g.rig&&tenyaOf(g.rig)?tenyaLabel(g.rig):'未選択';return listName(sp,'rigs',g.rig)}",
-  "function curRigLabel(tr){const sp=tr.cur.sp,g=curGear(tr);if(isTenya(sp,g))return g.rig&&tenyaOf(g.rig)?tenyaLabel(g.rig):'未選択';return [listName(sp,'rigs',g.rig),listName(sp,'baits',g.bait)].filter(Boolean).join('／')||'未登録'}")
+  "function curRigLabel(tr){const sp=tr.cur.sp,g=curGear(tr);if(isTenya(sp,g))return g.rig&&tenyaOf(g.rig)?tenyaLabel(g.rig):'未選択';return [listName(sp,'rigs',g.rig),listName(sp,'baits',g.bait),g.skirt?'スカート '+listName(sp,'skirts',g.skirt):''].filter(Boolean).join('／')||'未登録'}")
 R("<span>${ten?'使用テンヤ':'仕掛け'}</span>", "<span>${ten?'使用テンヤ':'タイラバ'}</span>")
 R("`<button class=\"tb-btn\" data-act=\"rigPick\"><span>仕掛け</span><b>${esc(METHOD_JP[methodOf(sp,g)]||'仕掛け')}</b></button>`",
   "`<button class=\"tb-btn\" data-act=\"rigPick\"><span>針</span><b>${esc(listName(sp,'hooks',g.hook)||'未登録')}</b></button>`")
 R("${needBait(sp,g)?`<button class=\"tb-btn\" data-act=\"baitPick\">", "${needBait(sp,g)&&!s.tairaba?`<button class=\"tb-btn\" data-act=\"baitPick\">")
 R("  rigPick:()=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);openSheet(`<div class=\"sheet-h\"><h2>仕掛け</h2><button class=\"btn sm ghost\" data-act=\"closeSheet\">閉じる</button></div>${spOf(sp).catalog?'':chipsHTML(sp,'rigs',g.rig,'setRigS')}",
-  "  rigPick:()=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);openSheet(`<div class=\"sheet-h\"><h2>タイラバを替える</h2><button class=\"btn sm ghost\" data-act=\"closeSheet\">閉じる</button></div><p class=\"muted\" style=\"margin:0\">替えた部品だけ押してください。押した時刻から記録に反映されます。</p>${spOf(sp).catalog?'':chipsHTML(sp,'rigs',g.rig,'setRigK')+chipsHTML(sp,'baits',g.bait,'setBaitK')+chipsHTML(sp,'hooks',g.hook,'setHookK')}")
-R("  setRigS:b=>{", "  setRigK:b=>{const tr=active();curGear(tr).rig=b.dataset.id;logGear(tr);touch(tr);acts.rigPick()},\n  setBaitK:b=>{const tr=active();curGear(tr).bait=b.dataset.id;logGear(tr);touch(tr);acts.rigPick()},\n  setHookK:b=>{const tr=active();curGear(tr).hook=b.dataset.id;S.prefs.g[tr.cur.sp]={...(S.prefs.g[tr.cur.sp]||{}),hook:b.dataset.id};logGear(tr);touch(tr);acts.rigPick()},\n  setRigS:b=>{")
-R(":g.rig,bait:g.bait}:{rig:g.rig,bait:g.bait};", ":g.rig,bait:g.bait}:{rig:g.rig,bait:g.bait,hook:g.hook||''};")
+  "  rigPick:()=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);openSheet(`<div class=\"sheet-h\"><h2>タイラバを替える</h2><button class=\"btn sm ghost\" data-act=\"closeSheet\">閉じる</button></div><p class=\"muted\" style=\"margin:0\">替えた部品だけ押してください。押した時刻から記録に反映されます。</p>${spOf(sp).catalog?'':chipsHTML(sp,'rigs',g.rig,'setRigK')+chipsHTML(sp,'baits',g.bait,'setBaitK')+chipsHTML(sp,'hooks',g.hook,'setHookK')+skirtChips(g.skirt,'setSkirtK')}")
+R("  setRigS:b=>{", "  setRigK:b=>{const tr=active();curGear(tr).rig=b.dataset.id;logGear(tr);touch(tr);acts.rigPick()},\n  setBaitK:b=>{const tr=active();curGear(tr).bait=b.dataset.id;logGear(tr);touch(tr);acts.rigPick()},\n  setHookK:b=>{const tr=active();curGear(tr).hook=b.dataset.id;S.prefs.g[tr.cur.sp]={...(S.prefs.g[tr.cur.sp]||{}),hook:b.dataset.id};logGear(tr);touch(tr);acts.rigPick()},\n  setSkirtK:b=>{const tr=active();curGear(tr).skirt=b.dataset.id;S.prefs.g[tr.cur.sp]={...(S.prefs.g[tr.cur.sp]||{}),skirt:b.dataset.id};logGear(tr);touch(tr);acts.rigPick()},\n  setRigS:b=>{")
+R(":g.rig,bait:g.bait}:{rig:g.rig,bait:g.bait};", ":g.rig,bait:g.bait}:{rig:g.rig,bait:g.bait,hook:g.hook||'',skirt:g.skirt||''};")
 # edit one record: 針 too
-R("rig:e.rig,bait:e.bait,size:e.size===undefined", "rig:e.rig,bait:e.bait,hook:e.hook||'',size:e.size===undefined")
-R("g.id===f[k==='rigs'?'rig':'bait']?'selected':''", "g.id===f[k==='rigs'?'rig':k==='hooks'?'hook':'bait']?'selected':''")
+R("rig:e.rig,bait:e.bait,size:e.size===undefined", "rig:e.rig,bait:e.bait,hook:e.hook||'',skirt:e.skirt||'',size:e.size===undefined")
+R("g.id===f[k==='rigs'?'rig':'bait']?'selected':''", "g.id===f[k==='rigs'?'rig':k==='hooks'?'hook':k==='skirts'?'skirt':'bait']?'selected':''")
 R("<select id=\"evBait\" data-ef=\"bait\">${sel('baits')}</select></label>`:''}</div>",
-  "<select id=\"evBait\" data-ef=\"bait\">${sel('baits')}</select></label>`:''}${gs.hookLabel?`<label class=\"field\"><span>${esc(gs.hookLabel)}</span><select id=\"evHook\" data-ef=\"hook\"><option value=\"\" ${!f.hook?'selected':''}>未選択</option>${sel('hooks')}</select></label>`:''}</div>")
-R("rig:f.rig,bait:f.bait,size:f.kind==='catch'?f.size:''", "rig:f.rig,bait:f.bait,hook:f.hook||'',size:f.kind==='catch'?f.size:''")
+  "<select id=\"evBait\" data-ef=\"bait\">${sel('baits')}</select></label>`:''}${gs.hookLabel?`<label class=\"field\"><span>${esc(gs.hookLabel)}</span><select id=\"evHook\" data-ef=\"hook\"><option value=\"\" ${!f.hook?'selected':''}>未選択</option>${sel('hooks')}</select></label>`:''}${gs.skirtLabel?`<label class=\"field\"><span>${esc(gs.skirtLabel)}</span><select id=\"evSkirt\" data-ef=\"skirt\"><option value=\"\" ${!f.skirt?'selected':''}>なし</option>${sel('skirts')}</select></label>`:''}</div>")
+R("rig:f.rig,bait:f.bait,size:f.kind==='catch'?f.size:''", "rig:f.rig,bait:f.bait,hook:f.hook||'',skirt:f.skirt||'',size:f.kind==='catch'?f.size:''")
 # dashboard: by 針 too
-R("return [(multi?spOf(g).name+'：':'')+listName(g,k==='rig'?'rigs':'baits',id),v]", "return [(multi?spOf(g).name+'：':'')+(listName(g,k==='rig'?'rigs':k==='hook'?'hooks':'baits',id)||'未選択'),v]")
-R("if(gs.baitLabel||multi)bars(multi?'餌など別':`${gs.baitLabel}別`,grp('bait'));", "if(gs.baitLabel||multi)bars(multi?'餌など別':`${gs.baitLabel}別`,grp('bait'));if(gs.hookLabel)bars(`${gs.hookLabel}別`,grp('hook'));")
+R("return [(multi?spOf(g).name+'：':'')+listName(g,k==='rig'?'rigs':'baits',id),v]", "return [(multi?spOf(g).name+'：':'')+((k==='skirt'&&!id?'なし':listName(g,k==='rig'?'rigs':k==='hook'?'hooks':k==='skirt'?'skirts':'baits',id))||'未選択'),v]")
+R("if(gs.baitLabel||multi)bars(multi?'餌など別':`${gs.baitLabel}別`,grp('bait'));", "if(gs.baitLabel||multi)bars(multi?'餌など別':`${gs.baitLabel}別`,grp('bait'));if(gs.hookLabel)bars(`${gs.hookLabel}別`,grp('hook'));if(gs.skirtLabel&&c.some(e=>e.skirt))bars(`${gs.skirtLabel}別`,grp('skirt'));")
 # anonymous data: the parts' names too
-R("bait:e.bait||'',baitName:nm(g,'baits',e.bait),", "bait:e.bait||'',baitName:nm(g,'baits',e.bait),hook:e.hook||'',hookName:nm(g,'hooks',e.hook),")
+R("bait:e.bait||'',baitName:nm(g,'baits',e.bait),", "bait:e.bait||'',baitName:nm(g,'baits',e.bait),hook:e.hook||'',hookName:nm(g,'hooks',e.hook),skirt:e.skirt||'',skirtName:nm(g,'skirts',e.skirt),")
 
 # ───────── registration tab: タイラバの部品 in place of テンヤ
 R('<h2 class="sec-h" id="tenyaSec0">テンヤ</h2>\n  ${tenyaSectionHTML()}', '<h2 class="sec-h" id="tenyaSec0">タイラバ</h2>\n  ${tbPartsHTML()}')
 TB = r'''
-/* ---------- タイラバの部品（ヘッド・ネクタイ・針）：項目を分けて登録し、名前はそこから作る ---------- */
-const TB_DL={hs:['丸型','ドロップ型','扁平型','スリム型'],hc:['オレンジ','赤','金','緑','ピンク','黒','グロー','チャート'],mk:['ダイワ','シマノ','ジャッカル','ハヤブサ','メジャークラフト','自作'],ts:['カーリー','ストレート','極細ストレート','ダブルカーリー','ワイド','スカート付き'],tc:['オレンジ','赤','金','緑','ピンク','黒','グロー','チャート','オレンジ×金']};
+/* ---------- タイラバの部品（ヘッド・ネクタイ・針・スカート）：項目を分けて登録し、名前はそこから作る ---------- */
+const TB_DL={hs:['丸型','ドロップ型','扁平型','スリム型'],hc:['オレンジ','赤','金','緑','ピンク','黒','グロー','チャート'],mk:['ダイワ','シマノ','ジャッカル','ハヤブサ','メジャークラフト','自作'],ts:['カーリー','ストレート','極細ストレート','ダブルカーリー','ワイド'],ks:['ラバー','シリコン','ティンセル入り'],tc:['オレンジ','赤','金','緑','ピンク','黒','グロー','チャート','オレンジ×金']};
 let tbHookType='pkg';
+/* スカートは付けない人も多いので「なし」を選べる。初期値は「なし」 */
+function skirtChips(sel,act){const s=spOf(SOLO),l=(s.skirts||[]).filter(g=>!g.hidden);
+  return `<div class="gearpick"><div class="gp-lbl">スカート<small class="muted">（任意）</small></div><div class="chips wrap"><button class="chip ${!sel?'on':''}" data-act="${act}" data-id="" aria-pressed="${!sel}">なし</button>${l.map(g=>`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="スカートを登録">＋</button></div></div>`}
 const tbVal=id=>{const el=$('#'+id);return el?el.value.trim():''};
 const tbDl=(id,k)=>`<datalist id="${id}">${TB_DL[k].map(x=>`<option value="${esc(x)}">`).join('')}</datalist>`;
 function tbName(k,x){if(k==='rigs')return [x.g?x.g+'g':'',x.shape,x.color].filter(Boolean).join(' ')+(x.maker?`（${x.maker}）`:'');
-  if(k==='baits')return [x.shape,x.color].filter(Boolean).join(' ');
+  if(k==='baits'||k==='skirts')return [x.shape,x.color].filter(Boolean).join(' ');
   return x.type==='diy'?['自作',x.n?x.n+'本針':'',x.size?'針'+x.size:'',x.line?'糸'+x.line:''].filter(Boolean).join(' '):'市販 '+(x.pkg||'')}
 function tbList(k){const s=spOf(SOLO),l=s[k]||[];return l.length?l.map(g=>`<div class="grow ${g.hidden?'hid':''}"><span class="tb-nm">${esc(g.name)}</span><button class="btn sm" data-act="itemHide" data-sp="${SOLO}" data-kind="${k}" data-id="${g.id}">${g.hidden?'表示する':'隠す'}</button><button class="btn sm" data-act="tbDel" data-kind="${k}" data-id="${g.id}">消す</button></div>`).join(''):'<p class="muted">まだありません。</p>'}
 function tbPartsHTML(){const H=tbHookType;
@@ -150,7 +153,11 @@ function tbPartsHTML(){const H=tbHookType;
     :`<div class="tb-form"><label class="field"><span>何本針</span><select id="tbN">${[1,2,3,4].map(n=>`<option value="${n}" ${n===2?'selected':''}>${n}本針</option>`).join('')}</select></label>
     <label class="field"><span>針の号数</span><input type="text" id="tbSz" placeholder="例：10号 / M"></label>
     <label class="field"><span>糸の号数</span><input type="text" id="tbLn" placeholder="例：5号"></label></div>`}
-   <button class="btn sm primary" data-act="tbAdd" data-kind="hooks">針を登録</button></div>`}
+   <button class="btn sm primary" data-act="tbAdd" data-kind="hooks">針を登録</button></div>
+  <div class="card" id="tbSkirts"><h2>スカート<small class="muted">（任意）</small></h2><p class="muted">使う人だけ登録してください。記録では「なし」も選べます。</p>${tbList('skirts')}
+   <div class="tb-form"><label class="field"><span>素材・形</span><input type="text" id="tbKs" list="tbKsL" placeholder="例：ラバー">${tbDl('tbKsL','ks')}</label>
+    <label class="field"><span>色</span><input type="text" id="tbKc" list="tbKcL" placeholder="例：オレンジ">${tbDl('tbKcL','tc')}</label></div>
+   <button class="btn sm primary" data-act="tbAdd" data-kind="skirts">スカートを登録</button></div>`}
 '''
 TB_ACTS = r'''
 Object.assign(acts,{
@@ -158,10 +165,11 @@ Object.assign(acts,{
   tbAdd:b=>{const k=b.dataset.kind;let x;
     if(k==='rigs'){x={g:tbVal('tbHg'),shape:tbVal('tbHs'),color:tbVal('tbHc'),maker:tbVal('tbHm')};if(!x.g&&!x.color)return toast('重さか色を入れてください')}
     else if(k==='baits'){x={shape:tbVal('tbTs'),color:tbVal('tbTc')};if(!x.shape&&!x.color)return toast('形か色を入れてください')}
+    else if(k==='skirts'){x={shape:tbVal('tbKs'),color:tbVal('tbKc')};if(!x.shape&&!x.color)return toast('素材か色を入れてください')}
     else if(tbHookType==='diy'){x={type:'diy',n:tbVal('tbN'),size:tbVal('tbSz'),line:tbVal('tbLn')};if(!x.size&&!x.line)return toast('針か糸の号数を入れてください')}
     else{x={type:'pkg',pkg:tbVal('tbPk')};if(!x.pkg)return toast('商品名を入れてください')}
     x.name=tbName(k,x);x.id=uid();const s=spOf(SOLO);s[k]=s[k]||[];if(s[k].some(g=>g.name===x.name&&!g.hidden))return toast(`「${x.name}」はもう登録されています`);
-    s[k].push(x);cfgTouch();const sec={rigs:'tbHeads',baits:'tbTies',hooks:'tbHooks'}[k];render();setTimeout(()=>{const el=$('#'+sec);if(el)el.scrollIntoView({block:'start'})},40);toast(`「${x.name}」を登録しました`)},
+    s[k].push(x);cfgTouch();const sec={rigs:'tbHeads',baits:'tbTies',hooks:'tbHooks',skirts:'tbSkirts'}[k];render();setTimeout(()=>{const el=$('#'+sec);if(el)el.scrollIntoView({block:'start'})},40);toast(`「${x.name}」を登録しました`)},
   tbDel:b=>{if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='本当に？';return}const s=spOf(SOLO),k=b.dataset.kind;s[k]=(s[k]||[]).filter(g=>g.id!==b.dataset.id);cfgTouch();render()}});
 '''
 R("/* ---------- species & gear settings ---------- */", TB + "/* ---------- species & gear settings ---------- */")
@@ -209,7 +217,7 @@ R("${kpi(drag,'本','ドラゴン',tot?`全体の${Math.round(drag/tot*100)}%`:'
 R("<b>${v}本</b>", "<b>${v}枚</b>", 2)
 R("length}本</b></button>", "length}枚</b></button>")
 R("${rank('よく釣れたテンヤ',(t,e)=>e.rig&&tenyaOf(e.rig)?e.rig:'',k=>tenyaLabel(k),3,'tenView')}",
-  "${rank('よく釣れたヘッド',(t,e)=>e.rig||'',k=>listName(SOLO,'rigs',k)||'（消した部品）')}${rank('よく釣れたネクタイ',(t,e)=>e.bait||'',k=>listName(SOLO,'baits',k)||'（消した部品）')}${rank('よく釣れた針',(t,e)=>e.hook||'',k=>listName(SOLO,'hooks',k)||'（消した部品）')}")
+  "${rank('よく釣れたヘッド',(t,e)=>e.rig||'',k=>listName(SOLO,'rigs',k)||'（消した部品）')}${rank('よく釣れたネクタイ',(t,e)=>e.bait||'',k=>listName(SOLO,'baits',k)||'（消した部品）')}${rank('よく釣れた針',(t,e)=>e.hook||'',k=>listName(SOLO,'hooks',k)||'（消した部品）')}${rank('よく釣れたスカート',(t,e)=>e.skirt||'',k=>listName(SOLO,'skirts',k)||'（消した部品）')}")
 R("よく釣れたテンヤ・釣り場・潮回りなどが出ます", "よく釣れたタイラバ・釣り場・潮回りなどが出ます")
 R('<p class="eyebrow">TOOL 05 / DRAGON COUNTER</p><div class="hero-h"><h1>ドラゴンカウンター</h1>', '<p class="eyebrow">TOOL / TAIRABA COUNTER</p><div class="hero-h"><h1>タイラバカウンター</h1>')
 R('タチウオの釣果を時間の経過と共に、テンヤ・潮・船の向きと一緒に記録する。', 'マダイの釣果を時間の経過と共に、タイラバ・潮・流れと一緒に記録する。')
@@ -236,7 +244,7 @@ R('※本数は自分の席で釣れた分だけです', '※枚数は自分の�
 R("  {k:'ようこそ',t:'釣果を時間の経過と共に記録',d:'ドラゴンカウンターは、タチウオの釣果を時間の経過と共に、使ったテンヤ・潮・船の向きと一緒に記録するアプリです。釣果データは匿名で集めて傾向の分析に使います。使うことでこれに同意したものとします。'},",
   "  {k:'ようこそ',t:'釣果を時間の経過と共に記録',d:'タイラバカウンターは、マダイの釣果を時間の経過と共に、使ったタイラバ（ヘッド・ネクタイ・針）・潮・流れと一緒に記録するアプリです。全国どこの釣り場でも使えます。釣果データは匿名で集めて傾向の分析に使います。使うことでこれに同意したものとします。'},")
 RX(r"  \{k:'準備',t:'所有テンヤを登録',d:'[^']*'\},",
-   "  {k:'準備',t:'タイラバの部品を登録',d:'画面下の右端にある「登録」タブで、持っているヘッド（重さ・形・色・メーカー）、ネクタイ（形・色）、針（市販品は商品名、自作は何本針・針と糸の号数）を登録します。竿・リール・糸も登録できます。'},")
+   "  {k:'準備',t:'タイラバの部品を登録',d:'画面下の右端にある「登録」タブで、持っているヘッド（重さ・形・色・メーカー）、ネクタイ（形・色）、針（市販品は商品名、自作は何本針・針と糸の号数）を登録します。スカートは使う人だけ登録できます。竿・リール・糸も登録できます。'},")
 RX(r"  \{k:'出船',t:'釣り場と席を選ぶ',d:'[^']*'\},",
    "  {k:'出船',t:'釣り場と席を選ぶ',d:'釣り場を選ぶだけで、潮回りと満潮・干潮、流れの向きと速さが自動で入ります。釣り場は全国の地図か現在地から登録できます。船と自分の席もタップで選びます。'},")
 RX(r"  \{k:'釣れたら',t:'「釣れた」を1タップ',d:'[^']*'\},",

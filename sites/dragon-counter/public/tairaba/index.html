@@ -1058,7 +1058,7 @@ function absFlow(st){if(!st||!st.flow||st.flow==='C'||!st.heading||st.heading===
 
 /* ---------- species ---------- */
 function defaultSpecies(){return [
-  {id:'madai',name:'マダイ',unit:'枚',sizeUnit:'cm',rigLabel:'ヘッド',baitLabel:'ネクタイ',hookLabel:'針',tairaba:true,variants:[{id:'madai',name:'マダイ'}],rigs:[],baits:[],hooks:[]},
+  {id:'madai',name:'マダイ',unit:'枚',sizeUnit:'cm',rigLabel:'ヘッド',baitLabel:'ネクタイ',hookLabel:'針',skirtLabel:'スカート',tairaba:true,variants:[{id:'madai',name:'マダイ'}],rigs:[],baits:[],hooks:[],skirts:[]},
   {id:'tachiuo',name:'タチウオ',unit:'本',sizeUnit:'cm',rigLabel:'天秤',baitLabel:'餌',catalog:'tenya',method:'tenya',variants:[{id:'tachiuo',name:'タチウオ'}],
     rigs:[{id:'tb1',name:'天秤'}],baits:[{id:'b1',name:'イワシ 小'},{id:'b2',name:'イワシ 中'},{id:'b3',name:'イワシ 大'}]},
   {id:'fugu',name:'フグ',unit:'匹',sizeUnit:'cm',rigLabel:'仕掛け',baitLabel:'餌',
@@ -1251,7 +1251,7 @@ function tripSpecies(tr){const set=[];const add=x=>{if(x&&!set.includes(x))set.p
 function mainSp(tr){const ss=tripSpecies(tr);let best=ss[0],n=-1;ss.forEach(sp=>{const k=catchesOf(tr,sp).length;if(k>n){n=k;best=sp}});return best||SOLO}
 function tripSummary(tr){return tripSpecies(tr).map(sp=>{const s=spOf(sp);return `${s.name}${catchesOf(tr,sp).length}${s.unit}`}).join('・')}
 function gearAt(tr,t){const L=(tr.gearLog||[]).slice().sort((a,b)=>a.t-b.t);let g=L[0]||{sp:tr.cur&&tr.cur.sp};for(const x of L)if(x.t<=t)g=x;return {sp:g.sp,rig:g.rig,bait:g.bait}}
-function curGear(tr){const sp=tr.cur.sp;tr.cur.g=tr.cur.g||{};const pf=S.prefs.g[sp]||{};if(!tr.cur.g[sp]){tr.cur.g[sp]=spOf(sp).catalog?{method:pf.method||spOf(sp).method||'tenya',set:pf.set||'mine',extra:[],rig:'',bait:pf.bait||(isBzSp(sp)?BZ_DEF:firstVis(sp,'baits'))}:{rig:pf.rig||firstVis(sp,'rigs'),bait:pf.bait||firstVis(sp,'baits'),hook:pf.hook||firstVis(sp,'hooks')}}
+function curGear(tr){const sp=tr.cur.sp;tr.cur.g=tr.cur.g||{};const pf=S.prefs.g[sp]||{};if(!tr.cur.g[sp]){tr.cur.g[sp]=spOf(sp).catalog?{method:pf.method||spOf(sp).method||'tenya',set:pf.set||'mine',extra:[],rig:'',bait:pf.bait||(isBzSp(sp)?BZ_DEF:firstVis(sp,'baits'))}:{rig:pf.rig||firstVis(sp,'rigs'),bait:pf.bait||firstVis(sp,'baits'),hook:pf.hook||firstVis(sp,'hooks'),skirt:pf.skirt||''}}
   const g=tr.cur.g[sp];if(isTenya(sp,g)&&(!g.rig||!tenyaOf(g.rig)))g.rig=dayTenya(tr,sp)[0]||g.rig||'';if(spOf(sp).catalog&&!isTenya(sp,g)&&(!g.rig||tenyaOf(g.rig)))g.rig=firstVis(sp,'rigs');return g}
 /* ---------- 潮の向き（自動）: 潮位の上げ下げから東京湾の上げ潮・下げ潮を推定し、船首の向きと合わせて船から見た向きにする ---------- */
 const BAY_HEAD=[35.65,139.95]; // 東京湾奥（上げ潮が向かう先）
@@ -1307,7 +1307,7 @@ function sharePayload(t){const r3=x=>typeof x==='number'?Math.round(x*1e3)/1e3:x
   return {app:'tairaba-counter',ver:1,uid:t.shareId,date:t.date,spotId:t.spotId||'',spot:t.spot?{name:t.spot.name,lat:r3(t.spot.lat),lon:r3(t.spot.lon)}:{name:t.port||''},
     boat:t.boat||'',people:t.people,seats:t.seats,side:t.side,seat:t.seat,station:t.station||'',tide:tideNameOf(t),tides:(t.tides||[]).map(x=>({type:x.type,hhmm:x.hhmm,cm:x.cm})),
     mode:modeOf(t),wx:t.wx||null,start:t.start,end:t.end,planEnd:t.planEnd||null,
-    events:(t.events||[]).map(e=>{const g=e.gsp||e.sp;return {t:e.t,kind:e.kind,sp:e.sp,gsp:e.gsp,v:e.v,rig:e.rig||'',rigName:nm(g,'rigs',e.rig),bait:e.bait||'',baitName:nm(g,'baits',e.bait),hook:e.hook||'',hookName:nm(g,'hooks',e.hook),size:e.size||'',dragon:!!e.dragon,sa:e.sa||'',ka:e.ka||'',fish:e.kind==='gedo'?(e.name||''):'',tackle:e.tk?tkLabelOf(t,e.tk):'',...(isFinite(e.lat)?{lat:r3(e.lat),lon:r3(e.lon)}:{})}}),tackle:t.tk&&t.tk.snap?Object.values(t.tk.snap).map(x=>({rod:x.rod,rodMaker:x.rodMaker,reel:x.reel,reelMaker:x.reelMaker,line:x.line})):[],
+    events:(t.events||[]).map(e=>{const g=e.gsp||e.sp;return {t:e.t,kind:e.kind,sp:e.sp,gsp:e.gsp,v:e.v,rig:e.rig||'',rigName:nm(g,'rigs',e.rig),bait:e.bait||'',baitName:nm(g,'baits',e.bait),hook:e.hook||'',hookName:nm(g,'hooks',e.hook),skirt:e.skirt||'',skirtName:nm(g,'skirts',e.skirt),size:e.size||'',dragon:!!e.dragon,sa:e.sa||'',ka:e.ka||'',fish:e.kind==='gedo'?(e.name||''):'',tackle:e.tk?tkLabelOf(t,e.tk):'',...(isFinite(e.lat)?{lat:r3(e.lat),lon:r3(e.lon)}:{})}}),tackle:t.tk&&t.tk.snap?Object.values(t.tk.snap).map(x=>({rod:x.rod,rodMaker:x.rodMaker,reel:x.reel,reelMaker:x.reelMaker,line:x.line})):[],
     states:(t.states||[]).map(x=>{const y={...x};delete y.id;delete y.memo;delete y.note;return y}),
     gear:(t.gearLog||[]).map(g=>({t:g.t,sp:g.sp,rig:g.rig||'',rigName:nm(g.sp,'rigs',g.rig),bait:g.bait||'',baitName:nm(g.sp,'baits',g.bait)})),
     points:(t.points||[]).map(q=>({t:q.t,lat:r3(q.lat),lon:r3(q.lon)}))}}
@@ -1493,7 +1493,7 @@ function formHTML(f){const boats=S.cfg.boats.map(b=>`<option value="${esc(b.name
    <textarea id="fMemo" data-f="memo" rows="3" class="memo-ta" placeholder="例：竿 極鋭EX178／リール ソルティガBJ／PE0.8号・リーダー6号／底から10mまで反応">${esc(f.memo||'')}</textarea>
    ${f.mode==='new'&&lastMemo()&&!(f.memo||'').trim()?`<button class="golink" data-act="memoCopyLast">前回のメモを入れる →</button>`:''}</div>`}
 function methodSelHTML(sp,g,id){return `<label class="field msel"><span>仕掛け</span><select id="${id}" data-method="${sp}">${['tenya','tenbin'].map(m=>`<option value="${m}" ${methodOf(sp,g)===m?'selected':''}>${METHOD_JP[m]}</option>`).join('')}</select></label>`}
-function fGearHTML(f){const g=fGear(f,f.sp),sp=f.sp,s=spOf(sp);return (SOLO?'':`<div class="nest-h">${esc(s.name)}の道具</div>`)+(s.catalog?methodSelHTML(sp,g,'fMethod')+(isTenya(sp,g)?setPickHTML(g.set,'fSet'):''):chipsHTML(sp,'rigs',g.rig,'fRig')+chipsHTML(sp,'hooks',g.hook,'fHook'))+(needBait(sp,g)?(isBzSp(sp)?bzHTML(sp,g.bait,'f'):chipsHTML(sp,'baits',g.bait,'fBait')):'')}
+function fGearHTML(f){const g=fGear(f,f.sp),sp=f.sp,s=spOf(sp);return (SOLO?'':`<div class="nest-h">${esc(s.name)}の道具</div>`)+(s.catalog?methodSelHTML(sp,g,'fMethod')+(isTenya(sp,g)?setPickHTML(g.set,'fSet'):''):chipsHTML(sp,'rigs',g.rig,'fRig')+chipsHTML(sp,'hooks',g.hook,'fHook')+skirtChips(g.skirt,'fSkirt'))+(needBait(sp,g)?(isBzSp(sp)?bzHTML(sp,g.bait,'f'):chipsHTML(sp,'baits',g.bait,'fBait')):'')}
 function methodSwitchHTML(tr){const sp=tr.cur.sp;if(!spOf(sp).catalog)return '';const m=methodOf(sp,curGear(tr));if(m==='tenya')return '';const o='tenya';
   return `<button class="btn sm" data-act="setMethod" data-d="${o}">${METHOD_JP[o]}に切り替える</button>`}
 function setPickHTML(sel,act){const sets=TEN().sets;const items=setItems(sel);const own=myTenya().length;
@@ -1599,7 +1599,7 @@ function condHTML(st){
   if(!st)return `${uiBoat('C')}<span class="ct"><b>潮と船の向きを記録</b><small>船首の方位と、潮が流れていく向き</small></span><span class="go">入れる</span>`;
   const ab=absFlow(st);
   return `${uiBoat(st.flow)}<span class="ct"><b>${flowName(st.flow)}${st.flow!=='C'?`・${SPEED_JP[st.speed]||''}`:''}${st.double?'・二枚潮':''}</b><small>船首 ${HEAD_JP[st.heading||'C']}${ab?'・潮は'+ab:''}・${hm(st.t)}から</small></span><span class="go">変わった</span>`}
-function evGearText(e){const gs=e.gsp||e.sp,s=spOf(gs);return [listName(gs,'rigs',e.rig),s.baitLabel?listName(gs,'baits',e.bait):'',e.hook?listName(gs,'hooks',e.hook):'',e.size?sizeText(e.sp,e.size):'',e.src==='button'?'ボタン':'',detailTxt(e),e.memo||''].filter(Boolean).join('・')}
+function evGearText(e){const gs=e.gsp||e.sp,s=spOf(gs);return [listName(gs,'rigs',e.rig),s.baitLabel?listName(gs,'baits',e.bait):'',e.hook?listName(gs,'hooks',e.hook):'',e.skirt?'スカート '+listName(gs,'skirts',e.skirt):'',e.size?sizeText(e.sp,e.size):'',e.src==='button'?'ボタン':'',detailTxt(e),e.memo||''].filter(Boolean).join('・')}
 function sizeText(sp,v){const u=spOf(sp).sizeUnit;return u==='指'?'指'+v:v+(u||'')}
 function logRow(e,idx,tid){const s=spOf(e.sp);const kind=e.kind==='gedo'?'外道 '+esc(e.name||''):e.kind==='catch'?`${esc(s.variants.length>1?vShort(e.sp,e.v):s.name)}${idx?` ${idx}${esc(s.unit)}目`:''}`:KIND_JP[e.kind];
   return `<li><button class="logrow" data-act="editEv" data-id="${e.id}"${tid?` data-tid="${tid}"`:''}><span class="lr-time">${hm(e.t)}</span><span class="lr-kind k-${e.kind}">${kind}</span><span class="lr-gear">${esc(evGearText(e))}</span></button></li>`}
@@ -1673,7 +1673,7 @@ const dayCatch=date=>trips().filter(t=>t.date===date).reduce((n,t)=>n+catchesOf(
 const isTairyo=date=>false;
 const tairyoTag=()=>`<span class="tairyo"><i class="ic ic-tairyo"></i>大漁</span>`;
 const nDragon=(tr,sp)=>catchesOf(tr,sp).filter(e=>e.dragon).length;
-function curRigLabel(tr){const sp=tr.cur.sp,g=curGear(tr);if(isTenya(sp,g))return g.rig&&tenyaOf(g.rig)?tenyaLabel(g.rig):'未選択';return [listName(sp,'rigs',g.rig),listName(sp,'baits',g.bait)].filter(Boolean).join('／')||'未登録'}
+function curRigLabel(tr){const sp=tr.cur.sp,g=curGear(tr);if(isTenya(sp,g))return g.rig&&tenyaOf(g.rig)?tenyaLabel(g.rig):'未選択';return [listName(sp,'rigs',g.rig),listName(sp,'baits',g.bait),g.skirt?'スカート '+listName(sp,'skirts',g.skirt):''].filter(Boolean).join('／')||'未登録'}
 function viewActive(tr){ocurEnsure(tr);const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);const c=catchesOf(tr,sp);const ten=isTenya(sp,g);
   const others=tripSpecies(tr).filter(x=>x!==sp&&catchesOf(tr,x).length).map(x=>`${spOf(x).name} ${catchesOf(tr,x).length}${spOf(x).unit}`).join('・');
   const span=Date.now()-tr.start;const items=feedItems(tr);const nd=nDragon(tr,sp);
@@ -1750,7 +1750,7 @@ function catchLocCard(tr,sp){const s=spOf(sp);let n=0;const L=evOf(tr,sp).filter
    <div class="pts">${L.map((e,i)=>`<div class="pt"><b style="color:${KC[e.kind]}">${e.kind==='catch'?e.n:e.kind==='bite'?'ア':'バ'}</b><span><em>${hm(e.t)}・${KL[e.kind]}${e.kind==='catch'&&e.dragon?'（ドラゴン）':''}${i?`・前から約${kmTxt(ptKm(L[i-1],e))}`:''}</em><small>${e.acc?'誤差 約'+e.acc+'m':''}</small></span><a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
    <a class="btn sm" href="${route}" target="_blank" rel="noopener">${L.length>1?'記録した順に地図で見る':'地図で見る'}</a></div>`}
 function addEvent(kind,v,src,osp,rig){const tr=active();if(!tr)return;const now=Date.now();if(now-lastTap<450)return;lastTap=now;
-  const tsp=tr.cur.sp,g=curGear(tr),sp=osp||tsp;if(rig&&rig!==g.rig){g.rig=rig;logGear(tr)}const e={id:uid(),t:now,kind,sp,gsp:tsp,rig:g.rig,bait:needBait(tsp,g)?g.bait:'',hook:g.hook||'',size:'',...(tr.tk&&tr.tk.cur?{tk:tr.tk.cur}:{})};if(kind==='catch')e.v=v||mainV(sp);if(kind==='catch'&&sp==='tachiuo'&&dragonNext){e.dragon=true;dragonNext=false}if(src)e.src=src;if(nextSa){e.sa=nextSa;nextSa=null}if(nextKa){e.ka=nextKa;nextKa=null}
+  const tsp=tr.cur.sp,g=curGear(tr),sp=osp||tsp;if(rig&&rig!==g.rig){g.rig=rig;logGear(tr)}const e={id:uid(),t:now,kind,sp,gsp:tsp,rig:g.rig,bait:needBait(tsp,g)?g.bait:'',hook:g.hook||'',skirt:g.skirt||'',size:'',...(tr.tk&&tr.tk.cur?{tk:tr.tk.cur}:{})};if(kind==='catch')e.v=v||mainV(sp);if(kind==='catch'&&sp==='tachiuo'&&dragonNext){e.dragon=true;dragonNext=false}if(src)e.src=src;if(nextSa){e.sa=nextSa;nextSa=null}if(nextKa){e.ka=nextKa;nextKa=null}
   tr.events.push(e);touch(tr);buzz();keepAwake();if(kind==='catch'||kind==='bite'||kind==='lost')catchLoc(tr.id,e.id);
   if(S.ui.tab==='rec'&&$('#sheet').hidden){const y0=scrollY;render();if(y0<160)scrollTo(0,0);if(kind==='catch'){const n=$('#cnum');n&&n.classList.add('bump')}}
   if(osp&&!$('#sheet').hidden)closeSheet();
@@ -1758,7 +1758,7 @@ function addEvent(kind,v,src,osp,rig){const tr=active();if(!tr)return;const now=
   if(kind==='catch'&&sp==='tachiuo'&&dayCatch(tr.date)===TAIRYO){toast(`大漁！ 今日のタチウオが${TAIRYO}本になりました`,'取り消す',()=>{const t=S.trips[id];t.events=t.events.filter(x=>x.id!==e.id);touch(t);render()},'ic-tairyo');return}
   const sx=detailTxt(e)?'・'+detailTxt(e):'';
   toast(kind==='catch'&&e.dragon?`${hm(now)} ドラゴンを記録${sx}（${s.name}${n}${s.unit}目${rig?'・'+(tenyaLabel(rig)||listName(SOLO,'rigs',rig)||''):''}）`:kind==='catch'?`${hm(now)} ${s.variants.length>1?vShort(sp,e.v):s.name}を記録${sx}（${s.name}${n}${s.unit}目${rig?'・'+(tenyaLabel(rig)||listName(SOLO,'rigs',rig)||''):''}）`:`${hm(now)} ${KIND_JP[kind]}を記録${sx}${e.rig&&tenyaOf(e.rig)?'（'+tenyaLabel(e.rig)+'）':''}`,'取り消す',()=>{const t=S.trips[id];t.events=t.events.filter(x=>x.id!==e.id);touch(t);render()},e.dragon?'ic-dragon':'')}
-function logGear(tr){const now=Date.now();const g=curGear(tr);tr.gearLog=tr.gearLog||[];const last=tr.gearLog[tr.gearLog.length-1];const rec={t:now,sp:tr.cur.sp,rig:g.rig,bait:needBait(tr.cur.sp,g)?g.bait:'',hook:g.hook||''};
+function logGear(tr){const now=Date.now();const g=curGear(tr);tr.gearLog=tr.gearLog||[];const last=tr.gearLog[tr.gearLog.length-1];const rec={t:now,sp:tr.cur.sp,rig:g.rig,bait:needBait(tr.cur.sp,g)?g.bait:'',hook:g.hook||'',skirt:g.skirt||''};
   if(last&&now-last.t<60e3&&tr.events.every(e=>e.t<last.t))tr.gearLog[tr.gearLog.length-1]={...rec,t:last.t};else tr.gearLog.push(rec)}
 
 /* ---------- figures (fixed light palette so they export as images) ---------- */
@@ -1907,8 +1907,8 @@ function seatSVG(tr,sp){
       o.push(`<rect x="${X0+206}" y="${y-16}" width="${r1(w)}" height="20" rx="5" fill="${colors?colors[i]:P.catch}" fill-opacity=".85"/>`);o.push(TX(X0+206+w+10,y,`${v}${s.unit}`,{size:16,bold:1}))})};
   if(s.variants.length>1){const it=s.variants.map(v=>[v,c.filter(e=>e.v===v.id).length]).filter(([v,k])=>k);bars('内訳',it.map(([v,k])=>[v.name,k]),it.map(([v])=>vColor(sp,v.id)))}
   const gss=[...new Set(c.map(e=>e.gsp||e.sp))],gs=spOf(gss[0]||sp),multi=gss.length>1;
-  const grp=k=>{const m={};c.forEach(e=>{const g=e.gsp||e.sp;const key=g+'|'+e[k];m[key]=(m[key]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([key,v])=>{const [g,id]=key.split('|');return [(multi?spOf(g).name+'：':'')+(listName(g,k==='rig'?'rigs':k==='hook'?'hooks':'baits',id)||'未選択'),v]})};
-  bars(multi||gs.catalog?'仕掛け別':`${gs.rigLabel}別`,grp('rig'));if(gs.baitLabel||multi)bars(multi?'餌など別':`${gs.baitLabel}別`,grp('bait'));if(gs.hookLabel)bars(`${gs.hookLabel}別`,grp('hook'));
+  const grp=k=>{const m={};c.forEach(e=>{const g=e.gsp||e.sp;const key=g+'|'+e[k];m[key]=(m[key]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([key,v])=>{const [g,id]=key.split('|');return [(multi?spOf(g).name+'：':'')+((k==='skirt'&&!id?'なし':listName(g,k==='rig'?'rigs':k==='hook'?'hooks':k==='skirt'?'skirts':'baits',id))||'未選択'),v]})};
+  bars(multi||gs.catalog?'仕掛け別':`${gs.rigLabel}別`,grp('rig'));if(gs.baitLabel||multi)bars(multi?'餌など別':`${gs.baitLabel}別`,grp('bait'));if(gs.hookLabel)bars(`${gs.hookLabel}別`,grp('hook'));if(gs.skirtLabel&&c.some(e=>e.skirt))bars(`${gs.skirtLabel}別`,grp('skirt'));
   const sz=c.filter(e=>e.size!==''&&e.size!=null);if(sz.length)bars(`サイズ（${sz.length}${s.unit}を記入）`,sizeBins(sp,sz.map(e=>e.size)));
   if(hs.length){y+=48;o.push(`<line x1="${X0}" y1="${y-30}" x2="${W-X0}" y2="${y-30}" stroke="${P.grid}"/>`);o.push(TX(X0,y,'船首と潮の向き（時間ごと）',{size:17,bold:1}));y+=4;
     st.forEach(q=>{y+=30;o.push(TX(X0,y,`${hm(q.t)}〜${hm(q.te)}`,{size:15,fill:P.muted}));o.push(TX(X0+120,y,`船首${HEAD_JP[q.heading]}`,{size:15}));o.push(TX(X0+210,y,clip(flowTxt(q),W-X0-(X0+210),15),{size:15,bold:1}))});
@@ -2008,7 +2008,7 @@ function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYe
   return `<div class="card dash"><h2>ダッシュボード</h2>${seg}
    <div class="kpis">${kpi(L.length,'回','釣行')}${kpi(tot,'枚','マダイ合計')}${kpi(r1(tot/L.length),'枚','1回あたり')}${kpi(hrs?r1(tot/hrs):0,'枚','1時間あたり')}
     ${kpi(N(best),'枚','最高',`${best.date.slice(5).replace('-','/')} ${esc(best.boat)}`)}${kpi(L.reduce((a,t)=>a+nKind(t,SOLO,'lost'),0),'回','バラシ')}</div>
-   ${rank('よく釣れたヘッド',(t,e)=>e.rig||'',k=>listName(SOLO,'rigs',k)||'（消した部品）')}${rank('よく釣れたネクタイ',(t,e)=>e.bait||'',k=>listName(SOLO,'baits',k)||'（消した部品）')}${rank('よく釣れた針',(t,e)=>e.hook||'',k=>listName(SOLO,'hooks',k)||'（消した部品）')}
+   ${rank('よく釣れたヘッド',(t,e)=>e.rig||'',k=>listName(SOLO,'rigs',k)||'（消した部品）')}${rank('よく釣れたネクタイ',(t,e)=>e.bait||'',k=>listName(SOLO,'baits',k)||'（消した部品）')}${rank('よく釣れた針',(t,e)=>e.hook||'',k=>listName(SOLO,'hooks',k)||'（消した部品）')}${rank('よく釣れたスカート',(t,e)=>e.skirt||'',k=>listName(SOLO,'skirts',k)||'（消した部品）')}
    ${rank('よく釣れたタックル',(t,e)=>e.tk?tkLabelOf(t,e.tk):'',k=>k)}
    ${avgBy('釣り場ごとの平均',t=>t.spot?t.spot.name:(t.port||''))}
    ${avgBy('潮回りごとの平均',t=>tideNameOf(t))}
@@ -2039,13 +2039,16 @@ function viewHist(){const statSp=spOf(S.ui.statSp).id!=='?'?S.ui.statSp:(spVisib
    ${backupCardHTML()}`}
 
 
-/* ---------- タイラバの部品（ヘッド・ネクタイ・針）：項目を分けて登録し、名前はそこから作る ---------- */
-const TB_DL={hs:['丸型','ドロップ型','扁平型','スリム型'],hc:['オレンジ','赤','金','緑','ピンク','黒','グロー','チャート'],mk:['ダイワ','シマノ','ジャッカル','ハヤブサ','メジャークラフト','自作'],ts:['カーリー','ストレート','極細ストレート','ダブルカーリー','ワイド','スカート付き'],tc:['オレンジ','赤','金','緑','ピンク','黒','グロー','チャート','オレンジ×金']};
+/* ---------- タイラバの部品（ヘッド・ネクタイ・針・スカート）：項目を分けて登録し、名前はそこから作る ---------- */
+const TB_DL={hs:['丸型','ドロップ型','扁平型','スリム型'],hc:['オレンジ','赤','金','緑','ピンク','黒','グロー','チャート'],mk:['ダイワ','シマノ','ジャッカル','ハヤブサ','メジャークラフト','自作'],ts:['カーリー','ストレート','極細ストレート','ダブルカーリー','ワイド'],ks:['ラバー','シリコン','ティンセル入り'],tc:['オレンジ','赤','金','緑','ピンク','黒','グロー','チャート','オレンジ×金']};
 let tbHookType='pkg';
+/* スカートは付けない人も多いので「なし」を選べる。初期値は「なし」 */
+function skirtChips(sel,act){const s=spOf(SOLO),l=(s.skirts||[]).filter(g=>!g.hidden);
+  return `<div class="gearpick"><div class="gp-lbl">スカート<small class="muted">（任意）</small></div><div class="chips wrap"><button class="chip ${!sel?'on':''}" data-act="${act}" data-id="" aria-pressed="${!sel}">なし</button>${l.map(g=>`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="スカートを登録">＋</button></div></div>`}
 const tbVal=id=>{const el=$('#'+id);return el?el.value.trim():''};
 const tbDl=(id,k)=>`<datalist id="${id}">${TB_DL[k].map(x=>`<option value="${esc(x)}">`).join('')}</datalist>`;
 function tbName(k,x){if(k==='rigs')return [x.g?x.g+'g':'',x.shape,x.color].filter(Boolean).join(' ')+(x.maker?`（${x.maker}）`:'');
-  if(k==='baits')return [x.shape,x.color].filter(Boolean).join(' ');
+  if(k==='baits'||k==='skirts')return [x.shape,x.color].filter(Boolean).join(' ');
   return x.type==='diy'?['自作',x.n?x.n+'本針':'',x.size?'針'+x.size:'',x.line?'糸'+x.line:''].filter(Boolean).join(' '):'市販 '+(x.pkg||'')}
 function tbList(k){const s=spOf(SOLO),l=s[k]||[];return l.length?l.map(g=>`<div class="grow ${g.hidden?'hid':''}"><span class="tb-nm">${esc(g.name)}</span><button class="btn sm" data-act="itemHide" data-sp="${SOLO}" data-kind="${k}" data-id="${g.id}">${g.hidden?'表示する':'隠す'}</button><button class="btn sm" data-act="tbDel" data-kind="${k}" data-id="${g.id}">消す</button></div>`).join(''):'<p class="muted">まだありません。</p>'}
 function tbPartsHTML(){const H=tbHookType;
@@ -2065,7 +2068,11 @@ function tbPartsHTML(){const H=tbHookType;
     :`<div class="tb-form"><label class="field"><span>何本針</span><select id="tbN">${[1,2,3,4].map(n=>`<option value="${n}" ${n===2?'selected':''}>${n}本針</option>`).join('')}</select></label>
     <label class="field"><span>針の号数</span><input type="text" id="tbSz" placeholder="例：10号 / M"></label>
     <label class="field"><span>糸の号数</span><input type="text" id="tbLn" placeholder="例：5号"></label></div>`}
-   <button class="btn sm primary" data-act="tbAdd" data-kind="hooks">針を登録</button></div>`}
+   <button class="btn sm primary" data-act="tbAdd" data-kind="hooks">針を登録</button></div>
+  <div class="card" id="tbSkirts"><h2>スカート<small class="muted">（任意）</small></h2><p class="muted">使う人だけ登録してください。記録では「なし」も選べます。</p>${tbList('skirts')}
+   <div class="tb-form"><label class="field"><span>素材・形</span><input type="text" id="tbKs" list="tbKsL" placeholder="例：ラバー">${tbDl('tbKsL','ks')}</label>
+    <label class="field"><span>色</span><input type="text" id="tbKc" list="tbKcL" placeholder="例：オレンジ">${tbDl('tbKcL','tc')}</label></div>
+   <button class="btn sm primary" data-act="tbAdd" data-kind="skirts">スカートを登録</button></div>`}
 /* ---------- species & gear settings ---------- */
 function listCard(sp,k,title,ph,skip){const s=spOf(sp);return `<div class="card"><h2>${esc(title)}</h2>${skip?'<p class="muted">イワシ（サイズ・頭・内臓）、ハイブリッドクロス、カマスは最初から選べます。ここには「その他」に出す餌を登録します。</p>':''}
   ${(s[k]||[]).map((g,i)=>skip&&skip(g)?'':`<div class="grow ${g.hidden?'hid':''}"><input type="text" id="g-${sp}-${k}-${g.id}" data-gname="${sp}:${k}:${g.id}" value="${esc(g.name)}" aria-label="${esc(title)}の名前">
@@ -2360,11 +2367,11 @@ function renderStateSheet(){const f=stF,tr=S.trips[f.tid];const AR={N:'↑',NE:'
 let evF=null;
 function evBack(){const tid=evF&&evF.back;if(tid&&S.trips[tid]){$('#sheet').hidden=true;sheetCtx=null;render();acts.evList({dataset:{id:tid}})}else closeSheet()}
 function openEvSheet(id,tid,back){const tr=S.trips[tid||(active()&&active().id)];if(!tr)return;const e=tr.events.find(x=>x.id===id);if(!e)return;
-  evF={tid:tr.id,back:back||null,id,sa:e.sa||'',ka:e.ka||'',dragon:!!e.dragon,kind:e.kind,name:e.name||'',sp:spOf(e.sp).id!=='?'?e.sp:tr.cur.sp,gsp:e.gsp||e.sp,v:e.v,t:hm2(e.t),rig:e.rig,bait:e.bait,hook:e.hook||'',size:e.size===undefined||e.size===null?'':String(e.size),memo:e.memo||'',armed:false};renderEvSheet()}
+  evF={tid:tr.id,back:back||null,id,sa:e.sa||'',ka:e.ka||'',dragon:!!e.dragon,kind:e.kind,name:e.name||'',sp:spOf(e.sp).id!=='?'?e.sp:tr.cur.sp,gsp:e.gsp||e.sp,v:e.v,t:hm2(e.t),rig:e.rig,bait:e.bait,hook:e.hook||'',skirt:e.skirt||'',size:e.size===undefined||e.size===null?'':String(e.size),memo:e.memo||'',armed:false};renderEvSheet()}
 function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.some(v=>v.id===f.v))f.v=mainV(f.sp);
   const sel=k=>{if(k==='rigs'&&gs.catalog){const tr=S.trips[f.tid];const ids=[...new Set([f.rig,...(tr.cur&&tr.cur.g&&tr.cur.g[f.gsp]?dayTenya(tr,f.gsp):[]),...tr.events.map(e=>e.rig),...myTenya()].filter(Boolean))].filter(id=>tenyaOf(id));
       return `<option value="" ${!f.rig?'selected':''}>未選択</option><optgroup label="テンヤ">`+ids.map(id=>`<option value="${id}" ${id===f.rig?'selected':''}>${esc(tenyaFull(id))}</option>`).join('')+`</optgroup><optgroup label="天秤">`+(gs.rigs||[]).map(g=>`<option value="${g.id}" ${g.id===f.rig?'selected':''}>${esc(g.name)}</option>`).join('')+'</optgroup>'}
-    return (k==='baits'&&f.bait&&f.bait.startsWith('bz:')?`<option value="${esc(f.bait)}" selected>${esc(bzLabel(f.bait))}</option>`:'')+(isBzSp(f.gsp)&&k==='baits'?[BZ_DEF,'bz:hc','bz:km'].filter(x=>x!==f.bait).map(x=>`<option value="${x}">${esc(bzLabel(x))}</option>`).join(''):'')+(gs[k]||[]).filter(g=>!(k==='baits'&&isBzSp(f.gsp)&&bzLegacy(g)&&g.id!==f.bait)).map(g=>`<option value="${g.id}" ${g.id===f[k==='rigs'?'rig':k==='hooks'?'hook':'bait']?'selected':''}>${esc(g.name)}${g.hidden?'（隠し中）':''}</option>`).join('')};
+    return (k==='baits'&&f.bait&&f.bait.startsWith('bz:')?`<option value="${esc(f.bait)}" selected>${esc(bzLabel(f.bait))}</option>`:'')+(isBzSp(f.gsp)&&k==='baits'?[BZ_DEF,'bz:hc','bz:km'].filter(x=>x!==f.bait).map(x=>`<option value="${x}">${esc(bzLabel(x))}</option>`).join(''):'')+(gs[k]||[]).filter(g=>!(k==='baits'&&isBzSp(f.gsp)&&bzLegacy(g)&&g.id!==f.bait)).map(g=>`<option value="${g.id}" ${g.id===f[k==='rigs'?'rig':k==='hooks'?'hook':k==='skirts'?'skirt':'bait']?'selected':''}>${esc(g.name)}${g.hidden?'（隠し中）':''}</option>`).join('')};
   const sizeUI=!s.sizeUnit?'':s.sizeUnit==='指'?`<div class="chips">${['','2','2.5','3','3.5','4','4.5','5','5.5','6'].map(x=>`<button class="chip ${f.size===x?'on':''}" data-act="evSize" data-d="${x}">${x?'指'+x:'未記入'}</button>`).join('')}</div>`
     :`<div class="grow"><input type="number" inputmode="decimal" id="evSize" data-ef="size" value="${esc(f.size)}" placeholder="${s.sizeUnit==='cm'?'例：95':'未記入'}" min="0" max="200" step="0.5"><span class="muted">${esc(s.sizeUnit)}</span></div>`;
   $('#sheetPanel').innerHTML=`<div class="sheet-h"><h2>記録を直す</h2>${f.back?'<button class="btn sm ghost" data-act="evClose">← 一覧に戻る</button>':'<button class="btn sm ghost" data-act="closeSheet">閉じる</button>'}</div>
@@ -2375,7 +2382,7 @@ function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.
    ${f.kind==='catch'&&s.variants.length>1?`<div class="field"><span>種類</span><div class="chips">${s.variants.map(v=>`<button class="chip ${v.id===f.v?'on':''}" data-act="evV" data-d="${v.id}">${esc(v.name)}</button>`).join('')}</div></div>`:''}
    ${false?`<div class="field"><span>誘い</span><div class="chips wrap">${['',...SA_KEYS].map(k=>`<button class="chip ${f.sa===k?'on':''}" data-act="evSa" data-d="${k}">${k?SA_JP[k]:'なし'}</button>`).join('')}</div></div>${f.kind!=='bite'?`<div class="field"><span>掛け方</span><div class="chips wrap">${['',...KA_KEYS].map(k=>`<button class="chip ${f.ka===k?'on':''}" data-act="evKa" data-d="${k}">${k?KA_JP[k]:'なし'}</button>`).join('')}</div></div>`:''}`:''}
    <label class="field"><span>時刻</span><input type="time" id="evTime" data-ef="t" value="${esc(f.t)}"></label>
-   <div class="grid2"><label class="field"><span>${esc(gs.catalog?'仕掛け':gs.rigLabel)}${f.gsp!==f.sp?`（${esc(gs.name)}の道具）`:''}</span><select id="evRig" data-ef="rig">${sel('rigs')}</select></label>${gs.baitLabel?`<label class="field"><span>${esc(gs.baitLabel)}</span><select id="evBait" data-ef="bait">${sel('baits')}</select></label>`:''}${gs.hookLabel?`<label class="field"><span>${esc(gs.hookLabel)}</span><select id="evHook" data-ef="hook"><option value="" ${!f.hook?'selected':''}>未選択</option>${sel('hooks')}</select></label>`:''}</div>
+   <div class="grid2"><label class="field"><span>${esc(gs.catalog?'仕掛け':gs.rigLabel)}${f.gsp!==f.sp?`（${esc(gs.name)}の道具）`:''}</span><select id="evRig" data-ef="rig">${sel('rigs')}</select></label>${gs.baitLabel?`<label class="field"><span>${esc(gs.baitLabel)}</span><select id="evBait" data-ef="bait">${sel('baits')}</select></label>`:''}${gs.hookLabel?`<label class="field"><span>${esc(gs.hookLabel)}</span><select id="evHook" data-ef="hook"><option value="" ${!f.hook?'selected':''}>未選択</option>${sel('hooks')}</select></label>`:''}${gs.skirtLabel?`<label class="field"><span>${esc(gs.skirtLabel)}</span><select id="evSkirt" data-ef="skirt"><option value="" ${!f.skirt?'selected':''}>なし</option>${sel('skirts')}</select></label>`:''}</div>
    ${f.kind==='catch'&&sizeUI?`<div class="field"><span>サイズ（全長・任意）</span>${sizeUI}</div>`:''}
    <label class="field"><span>メモ</span><input type="text" id="evMemo" data-ef="memo" value="${esc(f.memo)}" placeholder="水深・誘い方など"></label>
    <button class="btn primary big" data-act="evSave">保存する</button><button class="btn danger" data-act="evDel">${f.armed?'もう一度押すと消します':'この記録を消す'}</button>`;
@@ -2512,12 +2519,13 @@ const acts={
   pickBoat:b=>{const bt=S.cfg.boats.find(x=>x.id===b.dataset.id);if(!bt)return;const f=curForm;Object.assign(f,{boat:bt.name,people:bt.people||(bt.seats?bt.seats*2:f.people)});if(f.mode!=='edit'){if(bt.start)f.start=bt.start;if(bt.end)f.end=bt.end}fixPeople(f);if(bt.seat){f.side=bt.side||f.side;f.seat=Math.min(bt.seat,f.seats)}boatSpotFollow(f,bt);if(sheetCtx&&sheetCtx.kind==='trip')openTripSheet(sheetCtx.id,f);else render()},
   fRig:b=>{fGear(startDraft,startDraft.sp).rig=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},
   fHook:b=>{fGear(startDraft,startDraft.sp).hook=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},
+  fSkirt:b=>{fGear(startDraft,startDraft.sp).skirt=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},
   fBait:b=>{fGear(startDraft,startDraft.sp).bait=b.dataset.id;$('#fGear').innerHTML=fGearHTML(startDraft)},
   depart:()=>{const f=startDraft;if(!f.boat.trim())return toast('船の名前を入れてください');if(!f.seat)return toast('座席の図で自分の席をタップしてください');if(!f.rmode){const w=$('#fModeSeg');if(w){w.classList.add('need-pick','shake');w.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>w.classList.remove('shake'),600)}return toast('記録のしかた（シンプル／詳細）を選んでください')}
     const start=f.start?atTime(f.date,f.start):Date.now();const g=fGear(f,f.sp);const cat=!!spOf(f.sp).catalog;
-    const cg=cat?{method:g.method,set:g.set,extra:[],rig:isTenya(f.sp,g)?(setItems(g.set)[0]||''):g.rig,bait:g.bait}:{rig:g.rig,bait:g.bait,hook:g.hook||''};
+    const cg=cat?{method:g.method,set:g.set,extra:[],rig:isTenya(f.sp,g)?(setItems(g.set)[0]||''):g.rig,bait:g.bait}:{rig:g.rig,bait:g.bait,hook:g.hook||'',skirt:g.skirt||''};
     const tr={id:uid(),v:2,date:f.date,port:f.spot?f.spot.name:'',spotId:f.spotId||'',spot:f.spot||null,boat:f.boat.trim(),people:f.people,seats:f.seats,side:f.side,seat:f.seat,station:f.station,tideName:'',tides:[],
-      start,end:null,planEnd:null,status:'active',mode:f.rmode,events:[],states:[],gearLog:[{t:start,sp:f.sp,rig:cg.rig,bait:needBait(f.sp,cg)?cg.bait:'',hook:cg.hook||''}],cur:{sp:f.sp,g:{[f.sp]:cg}},memo:(f.memo||'').trim(),...(f.tk&&f.tk.filter(id=>setOf(id)).length?{tk:{sets:[],snap:{}}}:{}),updatedAt:0};
+      start,end:null,planEnd:null,status:'active',mode:f.rmode,events:[],states:[],gearLog:[{t:start,sp:f.sp,rig:cg.rig,bait:needBait(f.sp,cg)?cg.bait:'',hook:cg.hook||'',skirt:cg.skirt||''}],cur:{sp:f.sp,g:{[f.sp]:cg}},memo:(f.memo||'').trim(),...(f.tk&&f.tk.filter(id=>setOf(id)).length?{tk:{sets:[],snap:{}}}:{}),updatedAt:0};
     if(tr.tk){const ids=f.tk.filter(id=>setOf(id));ids.slice().reverse().forEach(id=>tkUse(tr,id,start));tr.tk.sets=ids;tr.tk.cur=ids[0];tr.tkLog=[{t:start,set:ids[0]}];TK().last=ids;cfgTouch()}
     if(f.end){tr.planEnd=tAt(tr,f.end);if(tr.planEnd<=start)tr.planEnd+=864e5}
     registerBoat(tr);Object.assign(S.prefs,{boat:tr.boat,seats:tr.seats,side:tr.side,seat:tr.seat,sp:f.sp,spotId:f.spotId||S.prefs.spotId||''});S.prefs.g[f.sp]=cat?{method:g.method,set:g.set,bait:g.bait}:{rig:g.rig,bait:g.bait};
@@ -2557,10 +2565,11 @@ const acts={
   setBaitS:b=>{const tr=active();curGear(tr).bait=b.dataset.id;S.prefs.g[tr.cur.sp]={...(S.prefs.g[tr.cur.sp]||{}),bait:b.dataset.id};logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render()},
   stEdit2:b=>{const tr=active()||figTrip();openStateSheet(tr.id,b.dataset.id)},
   daySet:()=>{const tr=active();if(!tr)return;const g=curGear(tr);openSheet(`<div class="sheet-h"><h2>今日のテンヤのリスト</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${setPickHTML(g.set,'setDaySet')}${methodSwitchHTML(tr)}`,{kind:'dayset'})},
-  rigPick:()=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);openSheet(`<div class="sheet-h"><h2>タイラバを替える</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">替えた部品だけ押してください。押した時刻から記録に反映されます。</p>${spOf(sp).catalog?'':chipsHTML(sp,'rigs',g.rig,'setRigK')+chipsHTML(sp,'baits',g.bait,'setBaitK')+chipsHTML(sp,'hooks',g.hook,'setHookK')}${methodSwitchHTML(tr)}`,{kind:'rig'})},
+  rigPick:()=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);openSheet(`<div class="sheet-h"><h2>タイラバを替える</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">替えた部品だけ押してください。押した時刻から記録に反映されます。</p>${spOf(sp).catalog?'':chipsHTML(sp,'rigs',g.rig,'setRigK')+chipsHTML(sp,'baits',g.bait,'setBaitK')+chipsHTML(sp,'hooks',g.hook,'setHookK')+skirtChips(g.skirt,'setSkirtK')}${methodSwitchHTML(tr)}`,{kind:'rig'})},
   setRigK:b=>{const tr=active();curGear(tr).rig=b.dataset.id;logGear(tr);touch(tr);acts.rigPick()},
   setBaitK:b=>{const tr=active();curGear(tr).bait=b.dataset.id;logGear(tr);touch(tr);acts.rigPick()},
   setHookK:b=>{const tr=active();curGear(tr).hook=b.dataset.id;S.prefs.g[tr.cur.sp]={...(S.prefs.g[tr.cur.sp]||{}),hook:b.dataset.id};logGear(tr);touch(tr);acts.rigPick()},
+  setSkirtK:b=>{const tr=active();curGear(tr).skirt=b.dataset.id;S.prefs.g[tr.cur.sp]={...(S.prefs.g[tr.cur.sp]||{}),skirt:b.dataset.id};logGear(tr);touch(tr);acts.rigPick()},
   setRigS:b=>{const tr=active();curGear(tr).rig=b.dataset.id;logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render()},
   setMethod:b=>{const tr=active();if(!tr)return;const sp=tr.cur.sp,g=curGear(tr);g.method=b.dataset.d;g.rig='';curGear(tr);S.prefs.g[sp]={...(S.prefs.g[sp]||{}),method:g.method};logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();toast(`仕掛けを${METHOD_JP[g.method]}にしました`)},
   setDaySet:b=>{const tr=active();const g=curGear(tr);g.set=b.dataset.id;g.rig=dayTenya(tr,tr.cur.sp)[0]||'';S.prefs.g[tr.cur.sp]={...(S.prefs.g[tr.cur.sp]||{}),set:g.set};logGear(tr);touch(tr);$('#sheet').hidden=true;sheetCtx=null;render();toast(`今日のリストを「${setName(g.set)}」にしました`)},
@@ -2654,7 +2663,7 @@ const acts={
      <a class="btn" href="${mapUrl(p)}" target="_blank" rel="noopener">地図で見る</a><button class="btn danger" data-act="locDel" data-tid="${t.id}" data-id="${p.id}">この場所の記録を消す</button>`,{kind:'loc'})},
   locDel:b=>{if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='もう一度押すと消します';return}const t=S.trips[b.dataset.tid];t.points=(t.points||[]).filter(p=>p.id!==b.dataset.id);touch(t);closeSheet();toast('場所の記録を消しました')},
   evSave:()=>{const f=evF,tr=S.trips[f.tid],e=tr.events.find(x=>x.id===f.id);const dc=$('#evDragon');if(dc)f.dragon=dc.checked;if(f.kind==='catch'&&f.sp==='tachiuo'&&f.dragon)e.dragon=true;else delete e.dragon;
-    Object.assign(e,{kind:f.kind,sp:f.sp,gsp:f.gsp,v:f.kind==='catch'?f.v:undefined,t:tAt(tr,f.t)+(new Date(e.t).getSeconds()*1000),rig:f.rig,bait:f.bait,hook:f.hook||'',size:f.kind==='catch'?f.size:'',memo:f.memo.trim()});if(f.kind==='gedo')e.name=(f.name||'').trim()||e.name;else delete e.name;if(f.sa&&f.kind!=='gedo')e.sa=f.sa;else delete e.sa;if(f.ka&&f.kind!=='gedo'&&f.kind!=='bite')e.ka=f.ka;else delete e.ka;touch(tr);toast('直しました');evBack()},
+    Object.assign(e,{kind:f.kind,sp:f.sp,gsp:f.gsp,v:f.kind==='catch'?f.v:undefined,t:tAt(tr,f.t)+(new Date(e.t).getSeconds()*1000),rig:f.rig,bait:f.bait,hook:f.hook||'',skirt:f.skirt||'',size:f.kind==='catch'?f.size:'',memo:f.memo.trim()});if(f.kind==='gedo')e.name=(f.name||'').trim()||e.name;else delete e.name;if(f.sa&&f.kind!=='gedo')e.sa=f.sa;else delete e.sa;if(f.ka&&f.kind!=='gedo'&&f.kind!=='bite')e.ka=f.ka;else delete e.ka;touch(tr);toast('直しました');evBack()},
   evDel:()=>{if(!evF.armed){evF.armed=true;return renderEvSheet()}const tr=S.trips[evF.tid];tr.events=tr.events.filter(x=>x.id!==evF.id);touch(tr);toast('消しました');evBack()},
   png:b=>savePng(b.dataset.which),
   figSp:b=>{S.ui.figSp=b.dataset.id;saveLocal();render()},
@@ -2868,7 +2877,7 @@ function tutArt(i){const tx=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${
     ${[0,1,2,3,4,5,6].map(j=>`<circle cx="${226-j*28}" cy="130" r="${j===2?7:4}" style="fill:${j===2?'var(--amber)':'var(--muted)'}"/><circle cx="${226-j*28}" cy="146" r="4" style="fill:var(--muted)"/>`).join('')}`}
 const TUT=[
   {k:'ようこそ',t:'釣果を時間の経過と共に記録',d:'タイラバカウンターは、マダイの釣果を時間の経過と共に、使ったタイラバ（ヘッド・ネクタイ・針）・潮・流れと一緒に記録するアプリです。全国どこの釣り場でも使えます。釣果データは匿名で集めて傾向の分析に使います。使うことでこれに同意したものとします。'},
-  {k:'準備',t:'タイラバの部品を登録',d:'画面下の右端にある「登録」タブで、持っているヘッド（重さ・形・色・メーカー）、ネクタイ（形・色）、針（市販品は商品名、自作は何本針・針と糸の号数）を登録します。竿・リール・糸も登録できます。'},
+  {k:'準備',t:'タイラバの部品を登録',d:'画面下の右端にある「登録」タブで、持っているヘッド（重さ・形・色・メーカー）、ネクタイ（形・色）、針（市販品は商品名、自作は何本針・針と糸の号数）を登録します。スカートは使う人だけ登録できます。竿・リール・糸も登録できます。'},
   {k:'出船',t:'釣り場と席を選ぶ',d:'釣り場を選ぶだけで、潮回りと満潮・干潮、流れの向きと速さが自動で入ります。釣り場は全国の地図か現在地から登録できます。船と自分の席もタップで選びます。'},
   {k:'釣れたら',t:'「釣れた」を1タップ',d:'「釣れた＋1」で、今使っているタイラバ（ヘッド・ネクタイ・針）と一緒に1枚記録します。部品を替えたら「タイラバ」のボタンから、替えた部品だけ選び直します（押しても記録はされません）。アタリ・バラシも同じように記録されます。押し間違えたら下の「直前の釣果を取り消し」。マダイ以外が掛かったら小さな「外道」ボタンから（枚数には入りません）。'},
   {k:'沖上がり',t:'図にして振り返る',d:'沖上がりの予定時刻を過ぎると、画面下に「沖上がり」のボタンが出ます。押すと、潮位と釣れた時刻の図、座席の図ができて画像で保存できます。記録はあとから「履歴」の「記録を見る・修正する」で1件ずつ見たり直したりできます。'},
@@ -2893,10 +2902,11 @@ Object.assign(acts,{
   tbAdd:b=>{const k=b.dataset.kind;let x;
     if(k==='rigs'){x={g:tbVal('tbHg'),shape:tbVal('tbHs'),color:tbVal('tbHc'),maker:tbVal('tbHm')};if(!x.g&&!x.color)return toast('重さか色を入れてください')}
     else if(k==='baits'){x={shape:tbVal('tbTs'),color:tbVal('tbTc')};if(!x.shape&&!x.color)return toast('形か色を入れてください')}
+    else if(k==='skirts'){x={shape:tbVal('tbKs'),color:tbVal('tbKc')};if(!x.shape&&!x.color)return toast('素材か色を入れてください')}
     else if(tbHookType==='diy'){x={type:'diy',n:tbVal('tbN'),size:tbVal('tbSz'),line:tbVal('tbLn')};if(!x.size&&!x.line)return toast('針か糸の号数を入れてください')}
     else{x={type:'pkg',pkg:tbVal('tbPk')};if(!x.pkg)return toast('商品名を入れてください')}
     x.name=tbName(k,x);x.id=uid();const s=spOf(SOLO);s[k]=s[k]||[];if(s[k].some(g=>g.name===x.name&&!g.hidden))return toast(`「${x.name}」はもう登録されています`);
-    s[k].push(x);cfgTouch();const sec={rigs:'tbHeads',baits:'tbTies',hooks:'tbHooks'}[k];render();setTimeout(()=>{const el=$('#'+sec);if(el)el.scrollIntoView({block:'start'})},40);toast(`「${x.name}」を登録しました`)},
+    s[k].push(x);cfgTouch();const sec={rigs:'tbHeads',baits:'tbTies',hooks:'tbHooks',skirts:'tbSkirts'}[k];render();setTimeout(()=>{const el=$('#'+sec);if(el)el.scrollIntoView({block:'start'})},40);toast(`「${x.name}」を登録しました`)},
   tbDel:b=>{if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='本当に？';return}const s=spOf(SOLO),k=b.dataset.kind;s[k]=(s[k]||[]).filter(g=>g.id!==b.dataset.id);cfgTouch();render()}});
 /* ---------- boot ---------- */
 saveLocal();render();keepAwake();
