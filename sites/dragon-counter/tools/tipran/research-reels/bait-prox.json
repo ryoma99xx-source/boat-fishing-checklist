@@ -1,0 +1,28 @@
+{
+ "maker": "プロックス",
+ "reels": [
+  {
+   "series": "バルトムデジ棚",
+   "model": "R150",
+   "kind": "bait",
+   "counter": true,
+   "year": null,
+   "gear": "7.6",
+   "handle": "double",
+   "hand": "R",
+   "retrieve_cm": 68,
+   "weight_g": 245,
+   "pe": "1.5-200",
+   "price_jpy": null,
+   "url": "https://www.fishingmax-webshop.jp/products/4548992102419",
+   "status": "official PROX site could not be opened (TLS certificate mismatch on prox-inc.com / HTTP 503), so list price, release year and any left-hand (L150) version are not confirmed; 100mmダブルハンドル; PE0.8-200m with the supplied エコノマイザー (weight +4g); Fishing Max selling price 14,190円 (tax incl.) on 2026-11-12, in stock",
+   "source": "retailer Fishing Max WEBSHOP product page (商品コード VDTR150)"
+  }
+ ],
+ "notes": [
+  "PROX official site was unreachable from this environment; the only small counter reel found is バルトムデジ棚 R150 as sold by Fishing Max WEBSHOP. Other PROX reels seen there (バルトムBC オクトパス2, 力丸II, 攻棚チヌ) have no counter or are out of class."
+ ],
+ "sources": [
+  "https://www.fishingmax-webshop.jp/products/4548992102419"
+ ]
+}
