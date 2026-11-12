@@ -12,7 +12,7 @@ Output:
   public/tenya-catalog/rank-map.json  item id → "maker|product|colour", read by public/tenya-rank.php
 Affiliate links are search links per product (Amazon / 楽天). The IDs below are the ones that appear in every
 public affiliate link anyway; they are not secrets."""
-import html, json, os, re, urllib.parse
+import html, json, os, re, sys, urllib.parse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.dirname(HERE)
@@ -21,6 +21,7 @@ OUT = os.path.join(PUB, 'tenya-catalog')
 URL = 'https://dragon-counter.cutlassfish.tokyo/tenya-catalog/'
 AMAZON_TAG = '3pdpenguinfis-22'
 RAKUTEN_ID = '596849ef.4c28cf8e.596849f0.7ddddc88'
+VC_SID, VC_PID = '3780817', '892726662'   # バリューコマース（Yahoo!ショッピング）。「高額釣具をいちばんお得に買う」記事と同じ
 JP = {'DAIWA': 'ダイワ', 'SHIMANO': 'シマノ', 'HAYABUSA': 'ハヤブサ', 'JACKALL': 'ジャッカル', 'START': 'スタート',
       'OWNER': 'オーナー', 'Major Craft': 'メジャークラフト', 'DUO': 'デュオ', 'PRO MARINE': 'プロマリン',
       'YAMASHITA': 'ヤマシタ', 'がまかつ': 'がまかつ', 'マルシン漁具': 'マルシン漁具'}
@@ -54,6 +55,11 @@ def search_kw(m, p):
 
 def amazon(kw):
     return 'https://www.amazon.co.jp/s?k=%s&tag=%s' % (urllib.parse.quote_plus(kw), AMAZON_TAG)
+
+
+def yahoo(kw):
+    u = 'https://shopping.yahoo.co.jp/search?p=%s' % urllib.parse.quote(kw)
+    return 'https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=%s&pid=%s&vc_url=%s' % (VC_SID, VC_PID, urllib.parse.quote(u, safe=''))
 
 
 def rakuten(kw):
@@ -112,12 +118,12 @@ def page(allc, plist, pv):
         cards.append('''<section class="pd" id="p-%d" data-m="%s" data-z="%s" data-h="%d">
  <h2><small>%s</small>%s</h2>
  <p class="meta">%s・%d色%s</p>
- <p class="links">%s<a class="buy az" href="%s" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a><a class="buy rk" href="%s" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a></p>
+ <p class="links">%s<a class="buy az" href="%s" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a><a class="buy rk" href="%s" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a><a class="buy yh" href="%s" target="_blank" rel="nofollow sponsored noopener">Yahoo!で探す</a></p>
  <div class="grid">%s</div>
 </section>''' % (pi, E(r['m']), ' '.join(zs(z) for z in zl), 1 if r['h'] else 0, E(JP.get(r['m'], r['m'])), E(r['p']), zr, len(r['cols']),
                  '・替えヘッド' if r['h'] else '',
                  '<a class="off" href="%s" target="_blank" rel="noopener">メーカーのページ ↗</a>' % E(r['u']) if r['u'] else '',
-                 E(amazon(kw)), E(rakuten(kw)), ''.join(cols)))
+                 E(amazon(kw)), E(rakuten(kw)), E(yahoo(kw)), ''.join(cols)))
     idx = {('%s|%s|%s' % (r['m'], r['p'], c['c'])): {'a': 'c-%d-%d' % (pi, ci), 'n': '%s %s' % (r['p'], c['c']), 'mk': JP.get(r['m'], r['m']),
                                                     'img': c['img']} for pi, r in enumerate(plist) for ci, c in enumerate(r['cols'].values())}
     upd = allc.get('updated', '')
@@ -182,7 +188,7 @@ h1{{font-size:26px;line-height:1.35;margin:4px 0 10px}}
 .links{{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}}
 .links a{{display:inline-flex;align-items:center;min-height:38px;padding:6px 14px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none}}
 .off{{border:1px solid var(--line);color:var(--ink)!important;font-weight:500!important}}
-.buy.az{{background:#f3a847;color:#111}}.buy.rk{{background:#bf0000;color:#fff}}
+.buy.az{{background:#f3a847;color:#111}}.buy.rk{{background:#bf0000;color:#fff}}.buy.yh{{background:#ff0033;color:#fff}}
 .grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}@media(min-width:600px){{.grid{{grid-template-columns:repeat(4,minmax(0,1fr))}}}}
 .cl{{margin:0;background:var(--surface2);border:1px solid var(--line);border-radius:10px;overflow:hidden;scroll-margin-top:140px}}
 .cl img,.cl .noimg{{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#fff}}
@@ -202,7 +208,7 @@ footer{{color:var(--muted);font-size:13px;border-top:1px solid var(--line);margi
 <h1>船タチウオテンヤ カタログ</h1>
 <p class="lead">{lead}</p>
 <p class="note">色の名前・号数はメーカーの表記です。{upd} 時点。最新の情報はメーカーのページで確かめてください。</p>
-<span class="pr">PR：このページはアフィリエイト広告（Amazon・楽天）を利用しています</span>
+<span class="pr">PR：このページはアフィリエイト広告（Amazon・楽天・Yahoo!ショッピング）を利用しています</span>
 
 <section class="box" id="rank" hidden>
  <h2>ドラゴンカウンターのランキング</h2>
@@ -266,6 +272,7 @@ def main():
     json.dump(rmap, open(os.path.join(OUT, 'rank-map.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     print(len(plist), 'products,', sum(len(r['cols']) for r in plist), 'colours,', len(rmap), 'items,',
           sum(1 for r in plist for c in r['cols'].values() if c['img']), 'with photo,', len(s) // 1024, 'KB')
+    sys.path.insert(0, HERE); import tenya_article; tenya_article.build_article()   # the same catalog as a cutlassfish.tokyo article
 
 
 if __name__ == '__main__':
