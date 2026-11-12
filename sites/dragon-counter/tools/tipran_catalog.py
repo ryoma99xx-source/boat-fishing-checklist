@@ -9,7 +9,7 @@ import glob, json, os, re, sys, unicodedata
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, 'tipran', 'catalog.json')
-ORDER = ['ダイワ', 'シマノ', 'ヤマシタ', 'デュエル', 'ハリミツ', 'エバーグリーン', 'メジャークラフト', '林釣漁具製作所', 'ジャッカル']
+ORDER = ['ダイワ', 'シマノ', 'ヤマシタ', 'デュエル', 'バレーヒル', 'クレイジーオーシャン', 'フィッシュリーグ', 'ジャッカル', 'メジャークラフト', 'エバーグリーン', 'ジークラック', 'キーストン', 'マルシン漁具', 'ハリミツ']
 
 
 def norm(x):
@@ -35,7 +35,7 @@ def main():
     rows = []
     for f in sorted(glob.glob(os.path.join(src, '*.json'))):
         d = json.load(open(f, encoding='utf-8'))
-        m = norm(d.get('maker', ''))
+        m = re.sub(r'\(.*?\)$', '', norm(d.get('maker', ''))).strip()  # 「キーストン(Keystone)」→「キーストン」
         for e in d.get('egis', []):
             if e.get('discontinued') or e.get('exclude'):  # exclude: ティップラン用ではないと判断したもの
                 continue

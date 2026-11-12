@@ -1,0 +1,98 @@
+{
+ "maker": "エバーグリーン",
+ "egis": [
+  {
+   "series": "ドラッギン番長",
+   "url": "https://www.evergreen-fishing.com/goods_list/DragginBancho.html",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      30,
+      40,
+      50,
+      70,
+      90
+     ]
+    }
+   ],
+   "colors": [
+    "#0101G ピンク・スギ・金",
+    "#0218G オレンジ・エビ・金",
+    "#0401G オリーブ・アジ・金",
+    "#0503P パープル・エビ・紫",
+    "#0505R パープル・エビ・赤",
+    "#0801Y チャート・バナナ・黄",
+    "#1501GL グロー・エビ・グロー"
+   ],
+   "note": "Marketed as 重見典宏のボートエギング専用エギ (ティップラン use shown in linked staff report). 3.5号 body only, 5 weights; all 7 colours listed for every weight. Sink type not stated. Price 1,350-1,500円(税別). Body-integrated sinker with front/rear support sinker eyes.",
+   "discontinued": false
+  },
+  {
+   "series": "エギ番長XD エクストラファストシンキング",
+   "url": "https://www.evergreen-fishing.com/goods_list/EgiBanchoTypeXd.html",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      28
+     ],
+     "sink": "エクストラファストシンキング"
+    }
+   ],
+   "colors": [
+    "#0101G ピンク・スギ(金)",
+    "#0102M ピンク・スポット(マーブル)",
+    "#0103R ピンク・エビ(赤)",
+    "#0104S ピンク・アジ(銀)",
+    "#0105M ピンク・スギ(マーブル)",
+    "#0107HG ピンク・コンビ(ホロ金)",
+    "#0112RE ピンク・アジ(リフレクト)",
+    "#0201G オレンジ・スギ(金)",
+    "#0202M オレンジ・スポット(マーブル)",
+    "#0203R オレンジ・エビ(赤)",
+    "#0204S オレンジ・アジ(銀)",
+    "#0205M オレンジ・スギ(マーブル)",
+    "#0206G オレンジ・アジ(金)",
+    "#0209D オレンジ・ミカン(橙)",
+    "#0301R ブラウン・エビ(赤)",
+    "#0401G オリーブ・アジ(金)",
+    "#0402G オリーブ・スギ(金)",
+    "#0403R オリーブ・アジ(赤)",
+    "#0404GL オリーブ・エビ(グロー)",
+    "#0501S パープル・スギ(銀)",
+    "#0503P パープル・エビ(紫)",
+    "#0601S ブラック・エビ(銀)",
+    "#0603HS ブラック・コノシロ(ホロ銀)",
+    "#0701M レッド・スポット(マーブル)",
+    "#0801Y チャート・バナナ(黄)",
+    "#1101Y ライム・エビ(黄)",
+    "#UV0106G ピンク・アジ(金)",
+    "#UV0109RE ピンク・カニ(リフレクト)",
+    "#UV0110HM ピンク・スギ(ホロマーブル)",
+    "#UV0207G オレンジ・エビ(金)",
+    "#UV0208HS オレンジ・ネンブツ(ホロ銀)",
+    "#UV0210HM オレンジ・スギ(ホロマーブル)",
+    "#UV0211GL オレンジ・ゼブラ(グロー)",
+    "#UV0302GR ブラウン・エビ(緑)",
+    "#UV0303G ブラウン・メバル(金)",
+    "#UV0502P パープル・スギ(紫)",
+    "#UV0504UV パープル・サバ(UV)",
+    "#UV0602M ブラック・エビ(マーブル)",
+    "#UV0604S ブラック・ゴンズイ(銀)",
+    "#UV0802HM チャート・スギ(ホロマーブル)",
+    "#UV0901HG ブルー・スギ(ホロ金)",
+    "#UV0902HS ブルー・イワシ(ホロ銀)",
+    "#UV1001S ホワイト・グローエビ(銀)"
+   ],
+   "note": "BORDERLINE: general-purpose egi, not a dedicated tip-run model; included only because the description says 'ボートエギングでも威力を発揮します'. Single size 3.5号 28.0g, 1,400円(税別). Drop if you want dedicated tip-run egi only.",
+   "discontinued": false,
+   "exclude": "汎用エギ（ティップラン専用ではない）"
+  }
+ ],
+ "sources": [
+  "https://www.evergreen-fishing.com/goods_list/goods_list_22lure.php?vctg_no=4&vcts_no=26&vctt_no=2&g_no=4&r=2&s_no=26",
+  "https://www.evergreen-fishing.com/goods_list/DragginBancho.html",
+  "https://www.evergreen-fishing.com/goods_list/EgiBanchoTypeXd.html"
+ ]
+}

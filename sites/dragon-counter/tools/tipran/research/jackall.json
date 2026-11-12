@@ -1,0 +1,96 @@
+{
+  "maker": "ジャッカル",
+  "egis": [
+    {
+      "series": "ゲキダキTR",
+      "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/gekidaki-tr/",
+      "sizes": [
+        {
+          "size": "2.5",
+          "weights": [
+            18
+          ],
+          "sink": "SINKING"
+        },
+        {
+          "size": "3.0",
+          "weights": [
+            24
+          ],
+          "sink": "SINKING"
+        },
+        {
+          "size": "3.5",
+          "weights": [
+            30
+          ],
+          "sink": "SINKING"
+        }
+      ],
+      "colors": [
+        "ウィードグリーンUV",
+        "オレンジパープルUV",
+        "ダークパープルUV",
+        "オレンジゴールド",
+        "アジ",
+        "ピンクマーブル",
+        "パープルパープル",
+        "レッドパープル",
+        "グリーンレッド",
+        "ナジミブルー",
+        "パープルグロー",
+        "クリアーピンクピンク",
+        "MAXオレンジ"
+      ],
+      "note": "ティップラン専用モデル, non-rattle. Prices ¥1,540/¥1,595/¥1,650 (税込). 13 colours; ウィードグリーンUV, オレンジパープルUV, ダークパープルUV are 2026 new colours (2026年9月発売) and 'ノンラトルモデルのみ'. All colours listed with JANs for all 3 sizes. Page shows 号 as '3号' (stored as 3.0). Optional ゲキダキTRシンカー sold separately.",
+      "discontinued": false
+    },
+    {
+      "series": "ゲキダキTR GS",
+      "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/gekidaki-tr/",
+      "sizes": [
+        {
+          "size": "2.5",
+          "weights": [
+            18
+          ],
+          "sink": "SINKING"
+        },
+        {
+          "size": "3.0",
+          "weights": [
+            24
+          ],
+          "sink": "SINKING"
+        },
+        {
+          "size": "3.5",
+          "weights": [
+            30
+          ],
+          "sink": "SINKING"
+        }
+      ],
+      "colors": [
+        "オレンジゴールド",
+        "アジ",
+        "ピンクマーブル",
+        "パープルパープル",
+        "レッドパープル",
+        "グリーンレッド",
+        "ナジミブルー",
+        "パープルグロー",
+        "クリアーピンクピンク",
+        "MAXオレンジ"
+      ],
+      "note": "2026 NEW glass-rattle (GLASS SOUND) version on the same page as ゲキダキTR; same weights and prices. 10 colours (the three 2026 UV colours are non-rattle only).",
+      "discontinued": false
+    }
+  ],
+  "sources": [
+    "https://www.jackall.co.jp/saltwater/offshore-casting/products/category/tiprun/",
+    "https://www.jackall.co.jp/saltwater/offshore-casting/products/gekidaki-tr/",
+    "https://www.jackall.co.jp/saltwater/offshore-casting/products/gekidaki-tr_series/",
+    "https://www.jackall.co.jp/saltwater/shore-casting/products/category/eging/"
+  ]
+}

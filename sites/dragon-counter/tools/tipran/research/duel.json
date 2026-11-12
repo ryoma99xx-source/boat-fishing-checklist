@@ -1,0 +1,78 @@
+{
+  "maker": "デュエル",
+  "egis": [
+    {
+      "series": "イージーQ® レンジクルーザー™ TR",
+      "url": "https://www.duel.co.jp/products/detail.php?pid=1688",
+      "sizes": [
+        {
+          "size": "3.0",
+          "weights": [
+            25
+          ]
+        },
+        {
+          "size": "3.5",
+          "weights": [
+            30
+          ]
+        }
+      ],
+      "colors": [
+        "01.BLBP ブルー夜光ブルーパープル",
+        "02.KVMO まずめオレンジ®",
+        "03.KVVP 日中ピンク®",
+        "04.KVRP モンスターマスター®",
+        "05.RDPU レッドパープル",
+        "06.PUPU パープルパープル",
+        "07.BUPU ブルーパープル",
+        "08.MPU グリーンパープル",
+        "09.GPU ゴールドパープル",
+        "10.MPK マーブルピンク",
+        "11.RDM レッドグリーン",
+        "12.GM ゴールドグリーン"
+      ],
+      "note": "ティップランエギング専用. English name on page: ez-Q® RANGE CRUISER™ TR #3.0/#3.5. Listed as 新商品 / 発売中. All 12 colours in both sizes (order no. A1880- 3.0号, A1881- 3.5号). Colour strings are '<no>.<code> <name>' as written on the page (® marks kept). Spec table gives 沈下速度 as '-' (not stated). Compatible with クイック®TRシンカー (sold separately, not included).",
+      "discontinued": false
+    },
+    {
+      "series": "Ebi Q® TR",
+      "url": "https://www.duel.co.jp/products/detail.php?pid=1534",
+      "sizes": [
+        {
+          "size": "3.0",
+          "weights": [
+            23
+          ]
+        },
+        {
+          "size": "3.5",
+          "weights": [
+            28
+          ]
+        }
+      ],
+      "colors": [
+        "01.LFM 深場グリーン®",
+        "02.KVMO まずめオレンジ®",
+        "03.KVSB すみ潮ブルー®",
+        "04.KVVP 日中ピンク®",
+        "05.KVRP モンスターマスター®",
+        "06.RDPU レッドパープル",
+        "07.PUPU パープルパープル",
+        "08.BUPU ブルーパープル",
+        "09.NLM にごりライム®",
+        "10.NRDR どんよりレッド®",
+        "11.NRBW 藻場ブラウン®"
+      ],
+      "note": "ティップランエギング専用 (エビQ® TR #3.0/#3.5). All 11 colours in both sizes (order no. A1822- 3.0号, A1823- 3.5号). Colour strings are '<no>.<code> <name>' as written on the page (® marks kept). Spec table gives 沈下速度 as '-' (not stated). Compatible with クイック®TRシンカー (sold separately, not included).",
+      "discontinued": false
+    }
+  ],
+  "sources": [
+    "https://www.duel.co.jp/products/detail.php?pid=1688",
+    "https://www.duel.co.jp/products/detail.php?pid=1534",
+    "https://www.duel.co.jp/products/?category=377 (エギ category incl. more.php?p=2, checked 2026-11-12)",
+    "https://www.duel.co.jp/products/?category=406"
+  ]
+}

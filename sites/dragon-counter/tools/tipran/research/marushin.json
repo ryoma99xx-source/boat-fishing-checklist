@@ -1,0 +1,42 @@
+{
+ "maker": "マルシン漁具（Dragon）",
+ "egis": [
+  {
+   "series": "至高のティップランエギ",
+   "url": "https://www.mr-dragon.jp/products/sea-fishing/ikaegi/15231/",
+   "sizes": [
+    {
+     "size": "3.0",
+     "weights": [
+      25
+     ],
+     "sink": "head-integrated sinker"
+    },
+    {
+     "size": "3.5",
+     "weights": [
+      30
+     ],
+     "sink": "head-integrated sinker"
+    }
+   ],
+   "colors": [
+    "1ピンク",
+    "2オレンジ",
+    "3ブルー",
+    "4グリーン",
+    "5パープル",
+    "6めっちゃパープル",
+    "7めっちゃオレンジ",
+    "8ベイトアジ",
+    "9赤パープル"
+   ],
+   "note": "Brand: Dragon World Fishing Gear (マルシン漁具). Page title '至高のティップランエギ(しこうのティップランエギ) / 2サイズ・9カラー'; also written 至高のTIP RUN EGI. All 9 colours in both sizes; colours 6-9 are the 'NEWカラー追加' batch. Colour names taken from the JAN table (e.g. '至高のティップランエギ 1ピンク'). Body text mentions ピンク is 夜光 and ブルー has an oil-like base. Released ~2024年11月 (per tsurigu-np).",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://www.mr-dragon.jp/products/sea-fishing/ikaegi/15231/",
+  "https://tsurigu-np.jp/products/28925/"
+ ]
+}

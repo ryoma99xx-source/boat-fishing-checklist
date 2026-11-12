@@ -1,0 +1,47 @@
+{
+  "maker": "ハリミツ",
+  "egis": [
+    {
+      "series": "墨族BB",
+      "url": "https://sumizoku.com/squiditem/tiprun",
+      "sizes": [
+        {
+          "size": "3.5",
+          "weights": [
+            30,
+            40
+          ]
+        }
+      ],
+      "colors": [
+        "B1 レッド/レッド"
+      ],
+      "note": "Official Sumizoku page (category 'ティップラン（BB）', banner 'ディープレンジサイレントモデル', '抜群のティップランバランス', 全色ケイムラ加工) states only weights 30g/40g, no 号 and no sink rate. Size 3.5号 is from retailer BackLash (backlash.co.jp/item/4945826112543 and /4945826112680, both SOLD OUT). Official LINEUP currently shows only one colour: 墨族BB B1 レッド/レッド (VE-44B1); official online shop (sumizoku.com/onlineshop/sumizokuonline/bbonline) lists B1 in 30g (in stock) and 40g (売り切れ). BackLash (older listing, not official) lists more colours: 30g: パープル/コパー, アメジスト, パープル/パープル, アジ/コパー, ブラウン/レッド, レッド/レッド, レモン（夜光）; 40g: レッドレッド/下地ホロレッド, ブラウンレッド/下地レッド, パープルコパー/下地ホロコパーGD, アジコパー/下地ホロコパーGD, パープルパープル/下地ホロPL, アメジスト/下地ホログリーン, レモン/下地チャート. These are likely no longer current but no page says discontinued.",
+      "discontinued": false
+    },
+    {
+      "series": "墨族BB デカ針",
+      "url": "https://sumizoku.com/squiditem/tiprun",
+      "sizes": [
+        {
+          "size": null,
+          "weights": [
+            30,
+            40
+          ]
+        }
+      ],
+      "colors": [],
+      "note": "Official page (same tiprun category, banner image only): 'ディープレンジ攻略モデル', ラトル内蔵, デカ針 (パーフェクト・キャッチフックII デカ針仕様), weights 30g/40g. No 号 size, sink rate or colour list is published (LINEUP section is empty). No retailer page found reproducing a spec. Size left null.",
+      "discontinued": false
+    }
+  ],
+  "sources": [
+    "https://sumizoku.com/squiditem/tiprun",
+    "https://sumizoku.com/2162",
+    "https://sumizoku.com/onlineshop/sumizokuonline/bbonline",
+    "https://www.backlash.co.jp/item/4945826112543/ (retailer)",
+    "https://www.backlash.co.jp/item/4945826112680/ (retailer)",
+    "https://sumizoku.com/squiditem (other categories checked: ONBU, 柔, 剛, ノーマル, ディープ, シャロー, 限定 - none marketed for boat/tip-run)"
+  ]
+}

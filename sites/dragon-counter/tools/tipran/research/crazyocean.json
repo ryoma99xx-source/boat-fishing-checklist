@@ -1,0 +1,208 @@
+{
+ "maker": "クレイジーオーシャン",
+ "egis": [
+  {
+   "series": "ティップランナー",
+   "url": "https://crazy-ocean.com/itemlist/%E3%83%86%E3%82%A3%E3%83%83%E3%83%97%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC",
+   "sizes": [
+    {
+     "size": "3.0",
+     "weights": [
+      25
+     ]
+    },
+    {
+     "size": "3.5",
+     "weights": [
+      30
+     ]
+    }
+   ],
+   "colors": [
+    "#01 アジ/ゴールド",
+    "#02 アジ/レッド",
+    "#03 パープル/パープル",
+    "#04 パープル/レッドアジ",
+    "#05 パープル/グリーン",
+    "#06 ピンクパープル/ゴールド",
+    "#08 オレンジピンク/マーブル",
+    "#09 ピンク/グロー",
+    "#10 トロピカルライム/ゴールド",
+    "#11 マジカルケイムラ/クリア",
+    "#12 アジ/パープル",
+    "#13 コノシロ/ホロ",
+    "#14 ブラウン/レッド",
+    "#15 グリーン/グリーン",
+    "#16 ジュエルケイムラ",
+    "#17 ブラウン/ブルー",
+    "#18 トロピカルピーチ/クリアピンクUV",
+    "#19 紫陽花/クリアパープルUV",
+    "#20 アカハタモドキ/オレンジ",
+    "#101 シルエットブラック"
+   ],
+   "note": "Tip-run dedicated egi. Same 20 colours in both sizes. #18-#20 are 2026年新色. Made in Philippines. ¥1,400 (3号) / ¥1,450 (3.5号) excl. tax.",
+   "discontinued": false
+  },
+  {
+   "series": "ティップランナー響",
+   "url": "https://crazy-ocean.com/itemlist/%E3%83%86%E3%82%A3%E3%83%83%E3%83%97%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC%E9%9F%BF",
+   "sizes": [
+    {
+     "size": "3.0",
+     "weights": [
+      25
+     ],
+     "sink": "rattle model; 品番 TRNH-30"
+    },
+    {
+     "size": "3.5",
+     "weights": [
+      30
+     ],
+     "sink": "rattle model; 品番 TRNH-35"
+    }
+   ],
+   "colors": [
+    "#01 アジ/ゴールド",
+    "#02 アジ/レッド",
+    "#03 パープル/パープル",
+    "#05 パープル/グリーン",
+    "#11 マジカルケイムラ/クリア",
+    "#12 アジ/パープル"
+   ],
+   "note": "Rattle-equipped high-appeal version of ティップランナー; same 6 colours in both sizes.",
+   "discontinued": false
+  },
+  {
+   "series": "ティップランナーChibi",
+   "url": "https://crazy-ocean.com/itemlist/%E3%83%86%E3%82%A3%E3%83%83%E3%83%97%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BCchibi",
+   "sizes": [
+    {
+     "size": "2.5",
+     "weights": [
+      14
+     ]
+    }
+   ],
+   "colors": [
+    "#01 アジ/ゴールド",
+    "#02 アジ/レッド",
+    "#03 パープル/パープル",
+    "#04 パープル/レッドアジ",
+    "#05 パープル/グリーン",
+    "#06 ピンクパープル/ゴールド",
+    "#08 オレンジピンク/マーブル",
+    "#09 ピンクグロー",
+    "#10 トロピカルライム/ゴールド",
+    "#11 マジカルケイムラ/クリア",
+    "#12 アジ/パープル",
+    "#13 コノシロ/ホロ",
+    "#14 ブラウン/レッド",
+    "#15 グリーン/グリーン",
+    "#16 ジュエルケイムラ",
+    "#17 ブラウン/ブルー",
+    "#18 トロピカルピーチ/クリアピンクUV",
+    "#19 紫陽花/クリアパープルUV",
+    "#20 アカハタモドキ/オレンジ",
+    "#101 シルエットブラック"
+   ],
+   "note": "URL slug 'ティップランナーchibi'. Colour chart lists #09 ピンクグロー but the spec/JAN table omits #09 (possible gap). #18-#20 are 2026年新色.",
+   "discontinued": false
+  },
+  {
+   "series": "ティップランナーチビ響",
+   "url": "https://crazy-ocean.com/itemlist/%E3%83%86%E3%82%A3%E3%83%83%E3%83%97%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC%E3%83%81%E3%83%93%E9%9F%BF",
+   "sizes": [
+    {
+     "size": "2.5",
+     "weights": [
+      14
+     ],
+     "sink": "rattle model; 品番 TRNH-25"
+    }
+   ],
+   "colors": [
+    "#01 アジ/ゴールド",
+    "#02 アジ/レッド",
+    "#03 パープル/パープル",
+    "#05 パープル/グリーン",
+    "#11 マジカルケイムラ/クリア",
+    "#12 アジ/パープル"
+   ],
+   "note": "Rattle version of ティップランナーChibi.",
+   "discontinued": false
+  },
+  {
+   "series": "ティップランナードリフト",
+   "url": "https://crazy-ocean.com/itemlist/%E3%83%89%E3%83%AA%E3%83%95%E3%83%88",
+   "sizes": [
+    {
+     "size": "3.0",
+     "weights": [
+      21
+     ],
+     "sink": "controlled (slower) fall for mid-season tough conditions"
+    }
+   ],
+   "colors": [
+    "#01 アジ/ゴールド",
+    "#02 アジ/レッド",
+    "#03 パープル/パープル",
+    "#05 パープル/グリーン",
+    "#11 マジカルケイムラ/クリア",
+    "#12 アジ/パープル",
+    "#16 ジュエルケイムラ"
+   ],
+   "note": "Page (2025.12) says '今期生産分の受注は終了いたしました' (orders for this season's production closed) - not marked discontinued.",
+   "discontinued": false
+  },
+  {
+   "series": "キャストランナー",
+   "url": "https://crazy-ocean.com/itemlist/%E3%82%AD%E3%83%A3%E3%82%B9%E3%83%88%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC",
+   "sizes": [
+    {
+     "size": "3.0",
+     "weights": [
+      12
+     ],
+     "sink": "sinker hanger for split shot weight adjustment"
+    },
+    {
+     "size": "3.5",
+     "weights": [
+      18
+     ],
+     "sink": "sinker hanger for split shot weight adjustment"
+    }
+   ],
+   "colors": [
+    "#01 アジ/ゴールド",
+    "#02 アジ/レッド",
+    "#03 パープル/パープル",
+    "#04 パープル/レッド",
+    "#05 パープル/グリーン",
+    "#06 ピンクパープル/ゴールド",
+    "#07 お花畑/マーブル",
+    "#08 茹でエビ/レッド",
+    "#09 アカハタモドキ/オレンジ",
+    "#10 パッション/ピンク",
+    "#11 コノシロ/シルバー",
+    "#12 クリスタルピンク/ケイムラ",
+    "#13 オーロラスカイ/ケイムラ",
+    "#14 イトヨリ/夜光",
+    "#15 アナハゼ/夜光"
+   ],
+   "note": "UNCERTAIN SCOPE: tagged 'ティップラン（ボートエギング）' and 'オフショア' on the official site but not listed in the エギ・スッテ＞ティップラン category; light casting egi with sinker hanger (released 2025.12). Made in China. ¥1,200 excl. tax.",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://crazy-ocean.com/itemlist_category/egisutte-tiprun",
+  "https://crazy-ocean.com/itemlist/%E3%83%86%E3%82%A3%E3%83%83%E3%83%97%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC",
+  "https://crazy-ocean.com/itemlist/%E3%83%86%E3%82%A3%E3%83%83%E3%83%97%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC%E9%9F%BF",
+  "https://crazy-ocean.com/itemlist/%E3%83%86%E3%82%A3%E3%83%83%E3%83%97%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BCchibi",
+  "https://crazy-ocean.com/itemlist/%E3%83%86%E3%82%A3%E3%83%83%E3%83%97%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC%E3%83%81%E3%83%93%E9%9F%BF",
+  "https://crazy-ocean.com/itemlist/%E3%83%89%E3%83%AA%E3%83%95%E3%83%88",
+  "https://crazy-ocean.com/itemlist/%E3%82%AD%E3%83%A3%E3%82%B9%E3%83%88%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC"
+ ]
+}

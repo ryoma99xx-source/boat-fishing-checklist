@@ -1,0 +1,84 @@
+{
+ "maker": "フィッシュリーグ",
+ "egis": [
+  {
+   "series": "ダートマックス TRZ",
+   "url": "https://ecogear.jp/fishleague/dartmax-trz/",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      30,
+      40
+     ]
+    }
+   ],
+   "colors": [
+    "TZ01 ディープパープルボーダーパープル",
+    "TZ02 ディープパープルボーダーレッド",
+    "TZ03 レッドオレンジボーダーレッド",
+    "TZ04 スーパーアジゴールド",
+    "TZ05 パープルボーダーグリーン",
+    "TZ06 オレンジヘッド/ダークグリーンボーダーレッド",
+    "TZ07 オレンジヘッド/パープルボーダーパープル",
+    "TZ29 パープルボーダーパープル"
+   ],
+   "note": "Official spec: DARTMAX TRZ 3.5号 30g / 40g, body 3.5号クラス (110mm). No sink type or sink rate stated. All 8 colours are offered in both 30g and 40g (no gaps). Successor to ダートマックスTR (2010); the official video title calls it ティップラン専用エギ. Announced 2025-10-01 for release mid-Nov 2025. Fits the TRZ アップウエイト add-on sinker (15g/20g/30g), which is an accessory and not listed here.",
+   "discontinued": false
+  },
+  {
+   "series": "エギリー・ダートマックスTR",
+   "url": "https://ecogear.jp/fishleague/dartmax_tr/",
+   "sizes": [
+    {
+     "size": null,
+     "weights": [
+      30,
+      40
+     ]
+    }
+   ],
+   "colors": [
+    "TR17 レッドオレンジボーダーレッド",
+    "TR18 UVタイガーファイヤーレッド",
+    "TR19 UVタイガーバニーパープル",
+    "TR20 UVグリーンタイガー",
+    "TR21 オレンジヘッド/ダークグリーンアジレッド",
+    "TR22 オレンジヘッド/パープルボーダーパープル"
+   ],
+   "note": "LEGACY / INCOMPLETE. The predecessor of TRZ. Its official product page (URL above) now returns 404 and the model is no longer in the official FishLeague product list or sitemap (checked 2026-11-12). No page explicitly says it is discontinued, so discontinued is left false, but treat it as not part of the current official lineup. Models named on the official news posts: エギリー・ダートマックスTR30g-BK and TR40g-BK. The 号 size is not stated on any page I could reach, so size is null. The colours are only the ones named in official news posts (2022-2025), not the full chart. TR18 was announced for 40g-BK only (2025-07-23). TR17, TR19, TR20, TR21 and TR22 are in 40g-BK (2024-09-03), and that post says they were already in 30g-BK. The full TR colour chart and specs could not be retrieved because the Wayback Machine was unreachable.",
+   "discontinued": false,
+   "listed_on_official_site": false,
+   "exclude": "公式サイトに掲載なし（旧製品）"
+  }
+ ],
+ "excluded": [
+  {
+   "series": "エギリー・ダートマックス",
+   "url": "https://ecogear.jp/fishleague/dartmax/",
+   "reason": "Listed under the official 'EGIING & TIP-RUN' category, but it is the shore (おかっぱり) egi: 2.5号 11g 4.4秒/m, 3号 17g 3.0秒/m, 3.5号 19g 2.7秒/m. Its description never mentions boat or tip-run."
+  },
+  {
+   "series": "TRZ アップウエイト",
+   "url": "https://ecogear.jp/fishleague/trz_up-weight/",
+   "reason": "An add-on sinker for TR/TRZ (15g/20g/30g; colours TU01-TU04), not an egi."
+  },
+  {
+   "series": "エギリー・ダートマックス　オモリグスペシャル",
+   "url": "https://ecogear.jp/fishleague/dart_max_omorig_sp/",
+   "reason": "Listed under IKA-METAL. It is an オモリグ egi, not tip-run."
+  }
+ ],
+ "sources": [
+  "https://ecogear.jp/fishleague/ (official FishLeague product list, operated by WELL-F / マルキュー; fishleague.jp does not resolve)",
+  "https://ecogear.jp/fishleague/dartmax-trz/",
+  "https://ecogear.jp/wp-sitemap-posts-fishleague-1.xml",
+  "https://ecogear.jp/info/20251001-dartmax-trz/",
+  "https://ecogear.jp/info/220220822_new_color/",
+  "https://ecogear.jp/info/20230928_new_color/",
+  "https://ecogear.jp/info/20240903_new_color/",
+  "https://ecogear.jp/info/20250723_dartmax_tr/",
+  "https://ecogear.jp/fishleague/trz_up-weight/",
+  "https://ecogear.jp/fishleague/dartmax/"
+ ]
+}

@@ -1,0 +1,128 @@
+{
+ "maker": "シマノ",
+ "egis": [
+  {
+   "series": "アントラージュ 3.5号/3.5号 フラッシュブースト",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/boateging/egi_dropper/a15f900000faq4eiad.html",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      30
+     ],
+     "sink": "シンキング"
+    }
+   ],
+   "colors": [
+    "001 キンアジ",
+    "002 ブラック",
+    "003 パープルグリーン",
+    "004 フルパープル",
+    "005 アカテパープル",
+    "006 アカテグリーン",
+    "007 ミドテパープル",
+    "008 ミドテゼブラ",
+    "FLASH BOOST 001 パープルケイムラ",
+    "FLASH BOOST 002 ナマアジ"
+   ],
+   "note": "品番: ノーマル QT-Y35Z（8色）／フラッシュブースト QT-X35Z（2色: 001 パープルケイムラ、002 ナマアジ）。全10色。ティップエギング専用、スタビライザーフィン、3.8号カンナ。シマノ2026 AUTUMN & WINTER新製品。本体価格 1,800円（ノーマル）/1,850円（FB）。沈下速度の記載は確認できず。公式ページは取得不可（403）のため、つりそく記事とフィッシングポイント（小売）掲載のスペック、および公式ページの検索インデックス抜粋による。",
+   "discontinued": false
+  },
+  {
+   "series": "アントラージュ 3.0号/3.0号 フラッシュブースト",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/boateging/egi_dropper/a155f00000drzpjqab.html",
+   "sizes": [
+    {
+     "size": "3.0",
+     "weights": [
+      21
+     ],
+     "sink": "シンキング"
+    }
+   ],
+   "colors": [
+    "001 キンアジ",
+    "002 ブラック",
+    "003 パープルグロー",
+    "004 オレキン",
+    "005 パープルグリーン",
+    "006 フルパープル",
+    "007 ケイムラブルー",
+    "008 オレンジBグロー",
+    "009 アカテパープル",
+    "010 アカテグリーン",
+    "011 ミドテパープル",
+    "012 ミドテゼブラ",
+    "FLASH BOOST 001 パープルケイムラ",
+    "FLASH BOOST 002 ナマアジ"
+   ],
+   "note": "品番: ノーマル QT-Y30X／フラッシュブースト QT-X30X（001 パープルケイムラ、002 ナマアジの2色のみ）。2024年9月発売。009〜012は追加色（2026年08月発売）。全14色（うちFB2色）。ティップエギング向け、スタビライザーフィン。カラー名「オレンジBグロー」はつりそく記事では「オレンジＢグロー」（全角B）表記。沈下速度の記載は確認できず。公式ページは取得不可（403）のため、つりそく記事（発売時スペック表）・釣具のFTO Yahoo!店・フィッシングポイント・ルアマガプラス掲載情報による。",
+   "discontinued": false
+  },
+  {
+   "series": "セフィア アントラージュ シーグル 3.5号",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/boateging/egi_dropper/a155f00000dsbrcqad.html",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      25,
+      28,
+      35,
+      43
+     ]
+    }
+   ],
+   "colors": [
+    "001 フルパープル",
+    "002 オレンジBグロー",
+    "003 キンアジ",
+    "004 ケイムラブルー",
+    "005 シルエットレッド"
+   ],
+   "note": "ノーマル（フラッシュブースト非搭載、全色下地テープ入り）。品番/タイプ: QT-X00W=S0 25g、QT-X01W=S1 28g、QT-X02W=S2 35g、QT-X03W=S3 43g。シンクタイプ名の記載なし（S0〜S3は重量違い）。タイプ別のカラー欠けは未確認（小売の在庫表示は一部のみ）。公式ページは取得不可（403）のため、ルアマガプラス記事・楽天市場の出品一覧・公式ページの検索インデックス抜粋による。",
+   "discontinued": false
+  },
+  {
+   "series": "セフィア アントラージュ シーグル フラッシュブースト 3.5号",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/boateging/egi_dropper/a155f00000c5d0aqav_p.html",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      25,
+      28,
+      35,
+      43
+     ]
+    }
+   ],
+   "colors": [
+    "001 Fパープル",
+    "002 Fホットオレンジ",
+    "004 Fキンアジ",
+    "009 Fパープルエビ",
+    "010 Fピンクエビケイムラ",
+    "011 ケイムラブルー",
+    "012 シルエットブラック"
+   ],
+   "note": "品番/タイプ: QT-X00U=S0 25g、QT-X01U=S1 28g、QT-X02U=S2 35g、QT-X03U=S3 43g。本体価格 S0・S1 1,500円、S2・S3 1,550円。対応水深の目安（発売時記事）: S0 5〜15m、S2 25〜35m、S3 35〜45m。カラー番号003・005〜008は欠番（掲載なし）。011・012は2023年追加色。タイプ別のカラー欠けは未確認。公式ページは取得不可（403）のため、ルアーニュースR・ルアマガプラス記事・楽天市場の出品一覧・公式ページの検索インデックス抜粋による。",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://fish.shimano.com/ja-JP/product/lure/boateging/egi_dropper/a15f900000faq4eiad.html (公式・403で直接取得不可)",
+  "https://fish.shimano.com/ja-JP/product/lure/boateging/egi_dropper/a155f00000drzpjqab.html (公式・403で直接取得不可)",
+  "https://fish.shimano.com/ja-JP/product/lure/boateging/egi_dropper/a155f00000dsbrcqad.html (公式・403で直接取得不可)",
+  "https://fish.shimano.com/ja-JP/product/lure/boateging/egi_dropper/a155f00000c5d0aqav_p.html (公式・403で直接取得不可)",
+  "https://www.tsurisoku.com/news/198660",
+  "https://fishing-point.org/items/shimano_sephia_26_entourage/",
+  "https://www.tsurisoku.com/news/124496/",
+  "https://store.shopping.yahoo.co.jp/yfto/4969363124692.html",
+  "https://store.shopping.yahoo.co.jp/point-eastjapan/4969363124753.html",
+  "https://plus.luremaga.jp/2026/09/25/496136",
+  "https://plus.luremaga.jp/2023/11/04/305254/",
+  "https://www.lurenewsr.com/181017/",
+  "https://search.rakuten.co.jp/search/mall/%E3%82%B7%E3%83%9E%E3%83%8E+%E3%82%A2%E3%83%B3%E3%83%88%E3%83%A9%E3%83%BC%E3%82%B8%E3%83%A5+%E3%82%B7%E3%83%BC%E3%82%B0%E3%83%AB/"
+ ]
+}

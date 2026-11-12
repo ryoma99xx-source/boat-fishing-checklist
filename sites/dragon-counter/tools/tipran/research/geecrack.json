@@ -1,0 +1,123 @@
+{
+ "maker": "ジークラック（GEECRACK）",
+ "egis": [
+  {
+   "series": "ローハイド紫煙",
+   "url": "https://www.geecrack.com/saltwater/product/detail/?id=236",
+   "sizes": [
+    {
+     "size": "2.5",
+     "weights": [
+      20,
+      25,
+      30
+     ],
+     "sink": "swappable 'カチッとシンカー'; ships with 20g sinker, 25g/30g sold separately"
+    },
+    {
+     "size": "3.0",
+     "weights": [
+      30,
+      40
+     ],
+     "sink": "swappable 'カチッとシンカー'; ships with 30g, 40g sold separately"
+    },
+    {
+     "size": "3.0 ラトルモデル (RT)",
+     "weights": [
+      30,
+      40
+     ],
+     "sink": "rattle; swappable sinker (30g用)"
+    },
+    {
+     "size": "3.5",
+     "weights": [
+      30,
+      40
+     ],
+     "sink": "swappable 'カチッとシンカー'; ships with 30g, 40g sold separately"
+    },
+    {
+     "size": "3.5 ラトルモデル (RT)",
+     "weights": [
+      30,
+      40
+     ],
+     "sink": "rattle; swappable sinker (30g用)"
+    }
+   ],
+   "colors": [
+    "#001 ストライプパープル",
+    "#002 ストライプパープル/レッド",
+    "#003 ストライプパープル/グリーン",
+    "#004 オリーブ/レッド",
+    "#005 ストライプパープル/ピンク",
+    "#006 UVセクシーピンク/パープル",
+    "#007 マダムピンク/パープル",
+    "#008 UVオーシャンブルー",
+    "#009 情熱オレンジ/ピンク",
+    "#010 オリーブアジ",
+    "#011 パープル/パープル",
+    "#012 プリズムパープル",
+    "#013 プリズムパープル/ピンク",
+    "#014 オレンジへッドパープル",
+    "#024 ストライプエメラルドGR",
+    "#025 ストライプあずき",
+    "#026 ストライプパープル/YEGR",
+    "#027 煌めきブルー/パープル",
+    "#028 オレンジマーブルG",
+    "#029 ピンクマーブルS",
+    "#015RT ストライプパープル",
+    "#016RT オリーブレッド",
+    "#017RT シマシマピンク/パープル",
+    "#018RT シマシマチャート/PR",
+    "#019RT シマシマ金アジ",
+    "#020RT トロピカルパープル"
+   ],
+   "note": "LOWHIDE SHIEN. Tip-run dedicated egi with one-touch swappable sinker. Weights are SINKER weights (spec says e.g. '3号 (シンカー：30g用)'); total egi weight not stated. Colour availability per colour chart: #001-#007 and #010 = 2.5/3/3.5号; #008 UVオーシャンブルー and #009 情熱オレンジ/ピンク = 2.5号 only; #011-#014 and #024-#029 = 3/3.5号 only; #015RT-#020RT = rattle models 3号RT/3.5号RT only. NOTE: the page's summary text line numbers colours differently (#001-#026, '全26色', e.g. #008 オリーブアジ, #021 ストライプエメラルドGR); the numbering used here is from the colour chart images. All parts SUS316 stainless. ¥1,550-1,650 excl. tax.",
+   "discontinued": false
+  },
+  {
+   "series": "ローハイド波音",
+   "url": "https://www.geecrack.com/saltwater/product/detail/?id=249",
+   "sizes": [
+    {
+     "size": "3.0",
+     "weights": [
+      25
+     ]
+    },
+    {
+     "size": "3.5",
+     "weights": [
+      30
+     ]
+    }
+   ],
+   "colors": [
+    "#001 ストライプパープル",
+    "#002 ストライプパープル/レッド",
+    "#003 ストライプパープル/グリーン",
+    "#004 オリーブ/レッド",
+    "#005 ストライプパープル/ピンク",
+    "#021 煌めきパープル/ピンク",
+    "#022 ストライプマダムブルー",
+    "#023 金アジ",
+    "#024 ストライプエメラルドグリーン",
+    "#025 ストライプあずき",
+    "#026 ストライプパープル/イエローGR",
+    "#027 煌めきブルー/パープル",
+    "#028 オレンジマーブルG",
+    "#029 ピンクマーブルS"
+   ],
+   "note": "LOWHIDE HAON. Basic, lower-priced tip-run dedicated egi; flat belly for water-push wave action. Japanese hooks. Per-size colour availability not stated (assumed both). Page summary line numbers colours #001-#014 ('全14色') while the colour chart uses #001-#005 and #021-#029 (used chart numbering). ¥1,240 (3号) / ¥1,270 (3.5号) excl. tax.",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://www.geecrack.com/saltwater/product/ika/",
+  "https://www.geecrack.com/saltwater/product/detail/?id=236",
+  "https://www.geecrack.com/saltwater/product/detail/?id=249"
+ ]
+}

@@ -1,0 +1,94 @@
+{
+  "maker": "メジャークラフト",
+  "egis": [
+    {
+      "series": "エギゾー TR スマートフィット",
+      "url": "https://www.majorcraft.co.jp/lure/etsf3-5/",
+      "sizes": [
+        {
+          "size": "2.5",
+          "weights": [
+            15
+          ]
+        },
+        {
+          "size": "3.0",
+          "weights": [
+            23
+          ]
+        },
+        {
+          "size": "3.5",
+          "weights": [
+            30
+          ]
+        }
+      ],
+      "colors": [
+        "#1 パープルパープル",
+        "#2 パープルネイビー",
+        "#3 レッドパープル",
+        "#4 レッドグリーン",
+        "#5 ゴールドオレンジ",
+        "#6 夜光パープル",
+        "#7 ケイムラピンクパープル",
+        "#8 ケイムラオリーブ",
+        "#9 クリアアピールレッド",
+        "#10 パープルディープパープル",
+        "#11 グリーングリーン",
+        "#12 オレンジオレンジ",
+        "#13 ピンクパープル",
+        "#14 ブルー夜光アピールピンク",
+        "#15 ケイムラパープル"
+      ],
+      "note": "ティップラン専用 (zinc-alloy ゴウキンヘッド). Sink type not stated. ¥1,300 (税込¥1,430) all sizes. Page has no per-size colour table; the linked JAN sheet (ETSF_20260427.pdf) has three 15-row tables, i.e. all 15 colours appear to exist in all 3 sizes (PDF text is mis-encoded, so this was checked by row count/pattern, not read cleanly). Inconsistency on page: headline says new sizes are 2.5号 and 3.5号, but the spec table marks 2.5号 and 3.0号 as NEW. #10-#15 are new colours (#10 is marked NEW in the colour table but not in the LINEUP list).",
+      "discontinued": false
+    },
+    {
+      "series": "餌木蔵 ベイトフェザー TR",
+      "url": "https://www.majorcraft.co.jp/lure/ebft/",
+      "sizes": [
+        {
+          "size": "2.5",
+          "weights": [
+            20
+          ]
+        },
+        {
+          "size": "3.0",
+          "weights": [
+            25
+          ]
+        },
+        {
+          "size": "3.5",
+          "weights": [
+            30,
+            40
+          ]
+        }
+      ],
+      "colors": [
+        "#1 パープルパープル",
+        "#2 グローゴールドオレンジ",
+        "#3 ブルー夜光マーブルブルー",
+        "#4 ブルー夜光ゴールドブラウン",
+        "#5 ケイムラオレンジ",
+        "#6 ケイムラパープル",
+        "#7 ケイムラレッドパープル",
+        "#8 クリアアピールレッド",
+        "#9 クリアベイト",
+        "#10 クリアモノトーン"
+      ],
+      "note": "ティップランモデル with blue-glow スタビライザー. 3.5号 40g is the 'ビッグカンナ仕様'. Sink type not stated. ¥1,100 (税込¥1,210). Page gives no per-size colour availability and its JAN PDF link is dead, so size/colour gaps unknown.",
+      "discontinued": false
+    }
+  ],
+  "sources": [
+    "https://www.majorcraft.co.jp/lure/?lure_cate=squid_jig",
+    "https://www.majorcraft.co.jp/lure/etsf3-5/",
+    "https://www.majorcraft.co.jp/wp-content/uploads/2026/04/ETSF_20260427.pdf",
+    "https://www.majorcraft.co.jp/lure/ebft/",
+    "https://www.majorcraft.co.jp/discontinued/"
+  ]
+}

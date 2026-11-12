@@ -1,0 +1,154 @@
+{
+ "maker": "キーストン（Keystone）",
+ "egis": [
+  {
+   "series": "Day break デイブレイク",
+   "url": "https://item.rakuten.co.jp/keystone-ds/c/0000000333/",
+   "sizes": [
+    {
+     "size": "3.3",
+     "weights": [
+      35
+     ]
+    },
+    {
+     "size": "4.0",
+     "weights": [
+      39
+     ]
+    }
+   ],
+   "colors": [
+    "スカイフラミンゴ",
+    "ラグナチェイス",
+    "リーフトータス",
+    "エアラグーン",
+    "ソイルトラッカー",
+    "スゴイグレー",
+    "ハカナピンク",
+    "ギャラクシーグローオリーブ",
+    "ギャラクシーグローグリーン",
+    "ギャラクシーグローパープル",
+    "ウィッチブラック",
+    "チタニウムショコラ",
+    "るるパープル",
+    "レッドアジオレンジ"
+   ],
+   "note": "Listed as 'ティップラン専用エギ' / 'TRエギ'. Same 14 colours in 3.3号(35g) and 4.0号(39g). Body: 硬質発泡ウレタン. Sold-out at time of check (2026-11): 3.3号 ハカナピンク/ギャラクシーグローグリーン/チタニウムショコラ; 4.0号 ギャラクシーグローパープル (sold out, not discontinued). 4.0号 category: https://item.rakuten.co.jp/keystone-ds/c/0000000379/",
+   "discontinued": false
+  },
+  {
+   "series": "Day break デイブレイク パープルエディション",
+   "url": "https://item.rakuten.co.jp/keystone-ds/c/0000000397/",
+   "sizes": [
+    {
+     "size": null,
+     "weights": []
+    }
+   ],
+   "colors": [
+    "オレンジアジパープル",
+    "ソルティパープル",
+    "パープルサーディン",
+    "UVレッドパープル",
+    "イエローアジパープル"
+   ],
+   "note": "2026ティップラン/パープルエディション. Item pages (e.g. DB-OAP) do NOT state size or weight - left blank. Same 5 purple-edition colours also offered in Jet chaser 2.5号/2.6号.",
+   "discontinued": false
+  },
+  {
+   "series": "Jet chaser ジェットチェイサー",
+   "url": "https://item.rakuten.co.jp/keystone-ds/c/0000000385/",
+   "sizes": [
+    {
+     "size": "2.5",
+     "weights": [
+      20
+     ]
+    },
+    {
+     "size": "2.6",
+     "weights": [
+      22
+     ]
+    },
+    {
+     "size": "3.0",
+     "weights": [
+      22
+     ]
+    },
+    {
+     "size": "3.1",
+     "weights": [
+      24
+     ]
+    }
+   ],
+   "colors": [
+    "スカイフラミンゴ",
+    "ラグナチェイス",
+    "リーフトータス",
+    "エアラグーン",
+    "ソイルトラッカー",
+    "スゴイグレー",
+    "ハカナピンク",
+    "ギャラクシーグローオリーブ",
+    "ギャラクシーグローグリーン",
+    "ギャラクシーグローパープル",
+    "ウィッチブラック",
+    "チタニウムショコラ",
+    "るるパープル",
+    "レッドアジオレンジ",
+    "オレンジアジパープル",
+    "ソルティパープル",
+    "パープルサーディン",
+    "UVレッドパープル",
+    "イエローアジパープル"
+   ],
+   "note": "Listed as 'ティップランエギ' ('2025NEWティップランエギ' category). Colour gaps: the 14 base colours exist in all four sizes; the 5 パープルエディション colours (オレンジアジパープル, ソルティパープル, パープルサーディン, UVレッドパープル, イエローアジパープル) only in 2.5号(20g) and 2.6号(22g). One 3.1号 listing (レッドアジオレンジ) says 23g instead of 24g (probable typo). 3.0号 category https://item.rakuten.co.jp/keystone-ds/c/0000000402/ , 3.1号 https://item.rakuten.co.jp/keystone-ds/c/0000000400/",
+   "discontinued": false
+  },
+  {
+   "series": "2026 Trial Collar REVOLT ジェットチェイサー",
+   "url": "https://item.rakuten.co.jp/keystone-ds/c/0000000349/",
+   "sizes": [
+    {
+     "size": "3.1",
+     "weights": [
+      24
+     ]
+    }
+   ],
+   "colors": [
+    "ソルティブルー",
+    "ソルティグリーン",
+    "ソルティパープル",
+    "レッドアジオレンジ",
+    "グリーンアジブラック",
+    "べにあずま",
+    "マットパープル",
+    "ヨコシマパープル",
+    "イエローアジブルー",
+    "ヨコシマUVレッド",
+    "リアルベイトオリーブ",
+    "ド・ピンク",
+    "レッドアジブラウン",
+    "デイロックブラウン"
+   ],
+   "note": "2026 trial/limited colour batch of Jet chaser 3.1号24g. Many colours were 売り切れ when checked (ソルティパープル, レッドアジオレンジ, べにあずま, マットパープル, ヨコシマパープル, リアルベイトオリーブ, ド・ピンク, レッドアジブラウン). Could be merged into Jet chaser as colours.",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://www.rakuten.co.jp/keystone-ds/ (maker's own direct shop 'キーストンDS 楽天市場店' - no separate official product site found)",
+  "https://item.rakuten.co.jp/keystone-ds/c/0000000333/",
+  "https://item.rakuten.co.jp/keystone-ds/c/0000000379/",
+  "https://item.rakuten.co.jp/keystone-ds/c/0000000397/",
+  "https://item.rakuten.co.jp/keystone-ds/c/0000000385/",
+  "https://item.rakuten.co.jp/keystone-ds/c/0000000400/",
+  "https://item.rakuten.co.jp/keystone-ds/c/0000000402/",
+  "https://item.rakuten.co.jp/keystone-ds/c/0000000349/",
+  "https://item.rakuten.co.jp/keystone-ds/4540019231829/"
+ ]
+}

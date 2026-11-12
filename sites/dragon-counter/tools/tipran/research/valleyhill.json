@@ -1,0 +1,415 @@
+{
+ "maker": "バレーヒル",
+ "egis": [
+  {
+   "series": "Squid Seeker 23 Micros [ スクイッドシーカー 23 ミクロス ]",
+   "url": "https://valleyhill1.jp/397",
+   "sizes": [
+    {
+     "size": "3.0",
+     "weights": [
+      23
+     ],
+     "sink": "対応水深～25m"
+    }
+   ],
+   "colors": [
+    "#01MCR ピンク/杉/金",
+    "#02MCR オレンジ/杉/金",
+    "#03MCR アジ/金",
+    "#05MCR キビナゴ",
+    "#06MCR ピンク/杉/赤",
+    "#07MCR オレンジ/杉/赤",
+    "#08MCR アジ/杉/赤",
+    "#09MCR パープル/杉/赤",
+    "#11MCR パープル/パープル",
+    "#12MCR ピンク/杉/虹",
+    "#13MCR オレンジ/杉/虹",
+    "#15MCR パープル/杉/虹",
+    "#16MCR ナデシコ",
+    "#18MCR ナデシコ/オレンジ",
+    "#19MCR レーザーウルメ",
+    "#20MCR オリーブ/杉/金ホロ",
+    "#23MCR オリーブ/杉/虹",
+    "#24MCR ナデシコ/ブルー",
+    "#25MCR アジ/赤",
+    "#43MCR パープル/グリーン",
+    "#44MCR イカナゴールド",
+    "#45MCR DKグリーン/杉/赤ホロ",
+    "#46MCR オリーブ/杉/緑ホロ",
+    "#52MCR パープル/ブルー",
+    "#GL-1 ピンク/グロー",
+    "#GL-2 オレンジ/グロー",
+    "#GL-3 グリーン/チャート/グロー",
+    "#GL-4 ナイトブラック",
+    "#GL-5 グローベイト",
+    "#GL-6 ナイトパープル",
+    "#GL-7 ナイトレッド"
+   ],
+   "note": "Weight listed as '23.0class'. Price ¥1,320 tax-incl (glow/#43MCR,#52MCR,GL-6,GL-7 ¥1,540). NEW: #43MCR, #52MCR, GL-6, GL-7.",
+   "discontinued": false
+  },
+  {
+   "series": "Squid Seeker Micros LightTune [ スクイッドシーカー ミクロス ライトチューン ]",
+   "url": "https://valleyhill1.jp/37201",
+   "sizes": [
+    {
+     "size": "3.0",
+     "weights": [
+      17
+     ],
+     "sink": "スローフォール; 対応水深～15m"
+    }
+   ],
+   "colors": [
+    "#03 アジ/金ホロ",
+    "#05 キビナゴ",
+    "#08 アジ/杉/赤ホロ",
+    "#09 パープル/赤ホロ",
+    "#11 パープル/パープルホロ",
+    "#15 パープル/杉/虹",
+    "#19 レーザーウルメ",
+    "#25 アジ/赤ホロ",
+    "#46 ピンク/オレンジ/虹",
+    "#47 オレンジ/ピンク/金ホロ",
+    "#48 スミレパープル",
+    "#50 オリーブ/アジ銀ホロ",
+    "#DC-2 レーザウルメ/金/銀"
+   ],
+   "note": "Weight listed as '17.0class'. Same body size as 23 Micros with lighter sinker for slow fall. #DC-2 is NEW.",
+   "discontinued": false
+  },
+  {
+   "series": "Squid Seeker Micros 2.5 [ スクイッドシーカー ミクロス 2.5]",
+   "url": "https://valleyhill1.jp/375806",
+   "sizes": [
+    {
+     "size": "2.5",
+     "weights": [
+      17
+     ],
+     "sink": "対応水深～20m"
+    }
+   ],
+   "colors": [
+    "#03 アジ/金ホロ",
+    "#05 キビナゴ",
+    "#08 アジ/杉/赤ホロ",
+    "#09 パープル/赤ホロ",
+    "#11 パープル/パープル",
+    "#15 パープル/杉/虹",
+    "#25 アジ/赤ホロ",
+    "#43 パープル/グリーン",
+    "#45 ダークグリーン/杉/赤ホロ",
+    "#46 オリーブ/杉/緑ホロ",
+    "#48 スミレパープル",
+    "#49 ピンク/パープル/赤ホロ",
+    "#51 スナイパー",
+    "#DC-1 ナデシコ/パープル",
+    "#DC-2 レーザーウルメ/金銀",
+    "#DC-3 オレンジ/ピンク/金虹",
+    "#GL-4 ナイトブラック",
+    "#GL-6 ナイトパープル",
+    "#GL-7 ナイトレッド",
+    "#LTD#01 ブラック/杉/赤",
+    "#LTD#02 ガンメタ/杉/ガンメタ"
+   ],
+   "note": "Weight '約17g'. JAN table on page lists 'オリーブ/杉/緑ホロ' as #26 while the colour chart lists it as #46 (used #46). NEW: #43, #51, GL-7. LTD#01/#02 are limited colours.",
+   "discontinued": false
+  },
+  {
+   "series": "Squid Seeker Micros ラトリン [ スクイッドシーカー ミクロス ラトリン♪]",
+   "url": "https://valleyhill1.jp/378910",
+   "sizes": [
+    {
+     "size": "3.0",
+     "weights": [
+      20
+     ],
+     "sink": "対応水深～20m; rattle model"
+    }
+   ],
+   "colors": [
+    "#01 アジ/ゴールド",
+    "#02 モジャコ",
+    "#03 パープル/パープル",
+    "#05 パープル/レッド",
+    "#08 スカラベ",
+    "#10 オレンジ/ゴールド",
+    "#21 パープル/パープルホロ",
+    "#25 アジ/レッド",
+    "#48 スミレパープル",
+    "#50 パープル/ピンク"
+   ],
+   "note": "Weight '約20g'. Rattle model of Micros 3号. Made in Japan. All colours marked NEW.",
+   "discontinued": false
+  },
+  {
+   "series": "Squid Seeker 30 Regular ［スクイッドシーカー 30 Regular］",
+   "url": "https://valleyhill1.jp/563",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      30
+     ],
+     "sink": "対応水深～30m"
+    }
+   ],
+   "colors": [
+    "#03RG オリーブアジ/金",
+    "#08RG アジ/赤",
+    "#09RG パープル/赤",
+    "#11RG パープル/パープル",
+    "#12RG ピンク/杉/虹",
+    "#13RG オレンジ/杉/虹",
+    "#14RG オリーブ/杉/虹",
+    "#16RG オリーブアジ/銀",
+    "#18RG グリーンチャート/金",
+    "#21RG パープル/パープルホロ",
+    "#22RG パープル/杉/赤ホロ",
+    "#23RG オリーブアジ/金ホロ",
+    "#25RG パープル/杉/虹",
+    "#26RG ピンク/杉/赤ホロ",
+    "#28RG アジ/赤ホロ",
+    "#31RG ピンク/杉/金ホロ",
+    "#32RG オレンジ/杉/金ホロ",
+    "#33RG オリーブ/杉/金ホロ",
+    "#34RG ブラウン/杉/赤ホロ",
+    "#35RG オレンジ・ピンク/赤ホロ",
+    "#36RG キビナゴ",
+    "#39RG パープル/杉/グリーンホロ",
+    "#40RG ナデシコホロ",
+    "#41RG ナデシコ/オレンジ",
+    "#42RG ナデシコ/ブルー",
+    "#43RG パープル/グリーンホロ",
+    "#44RG イカナゴールド",
+    "#45RG DKグリーン/杉/赤ホロ",
+    "#46RG オリーブ/杉/グリーンホロ",
+    "#GL-1 ピンク/グロー",
+    "#GL-2 オレンジ/グロー",
+    "#GL-3 グリーン/チャート/グロー",
+    "#GL-4 ナイトブラック",
+    "#GL-5 グローベイト"
+   ],
+   "note": "Weight '30.0class'. 'パイロットエギ'. JAN table writes #42RG as 'ナデシコブルー', colour chart as 'ナデシコ/ブルー'.",
+   "discontinued": false
+  },
+  {
+   "series": "Squid Seeker VERTICAL ［スクイッドシーカー バーティカル］",
+   "url": "https://valleyhill1.jp/37316",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      30
+     ],
+     "sink": "対応水深～30m; vertical tip-run design"
+    }
+   ],
+   "colors": [
+    "#02 オレンジ/金",
+    "#03 オリーブアジ/金",
+    "#06 ピンク/赤",
+    "#08 アジ/金",
+    "#09 パープル/赤",
+    "#11 パープル/パープル",
+    "#25 パープル杉/虹",
+    "#35 オレンジ・ピンク/赤",
+    "#40 ナデシコ",
+    "#42 ナデシコ/ブルー",
+    "#43 パープル/グリーン",
+    "#46 オリーブ/杉/グリーンホロ",
+    "#47 オレンジ・ピンク/虹",
+    "#48 スミレパープル",
+    "#49 ピンク/パープル/赤ホロ",
+    "#50 ピンク/パープル/金ホロ",
+    "#51 スナイパー",
+    "#52 パープル/ブルー"
+   ],
+   "note": "Weight '30.0class'. NEW: #08, #46, #52.",
+   "discontinued": false
+  },
+  {
+   "series": "Squid Seeker 35 Medium Heavy ［スクイッドシーカー35ミディアムヘビー］",
+   "url": "https://valleyhill1.jp/614",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      35
+     ],
+     "sink": "対応水深～40m"
+    }
+   ],
+   "colors": [
+    "#01MH ピンク/金",
+    "#02MH オレンジ/杉/金",
+    "#03MH オリーブアジ/金",
+    "#05MH ピンク/赤",
+    "#07MH オリーブアジ/赤",
+    "#08MH パープル/赤",
+    "#09MH ブラウン/杉/赤",
+    "#11MH パープル/パープル",
+    "#18MH パープル/緑",
+    "#21MH パープル/パープルホロ",
+    "#22MH パープル/杉/赤ホロ",
+    "#23MH オリーブアジ/金ホロ",
+    "#25MH パープル杉/虹",
+    "#26MH ピンク/杉/赤ホロ",
+    "#28MH アジ/赤ホロ",
+    "#29MH ピンク杉/虹",
+    "#30MH オレンジ杉/虹",
+    "#31MH ピンク/杉/金ホロ",
+    "#32MH オレンジ/杉/金ホロ",
+    "#35MH オレンジ・ピンク/赤ホロ",
+    "#37MH オリーブ/杉/金ホロ",
+    "#38MH キビナゴ/ドット",
+    "#40MH ナデシコ",
+    "#41MH ナデシコ/オレンジ",
+    "#42MH ナデシコ/ブルー",
+    "#44MH イカナゴールド",
+    "#45MH DKグリーン/杉/赤ホロ",
+    "#46MH オリーブ/杉/グリーンホロ"
+   ],
+   "note": "Weight '35.0class'.",
+   "discontinued": false
+  },
+  {
+   "series": "Squid Seeker 40 Heavy[ スクイッドシーカー 40 ヘビー ]",
+   "url": "https://valleyhill1.jp/28161",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      40
+     ],
+     "sink": "対応水深～40m"
+    }
+   ],
+   "colors": [
+    "#01 アジ/ゴールド",
+    "#02 モジャコ",
+    "#03 パープル/パープル",
+    "#04 ネオン/ローズ",
+    "#05 パープル/レッド",
+    "#06 ピンク/レッド",
+    "#07 オリーブ/レッド",
+    "#08 スカラベ",
+    "#09 オレピン/レッド",
+    "#10 オレンジ/ゴールド",
+    "#11 ピンオレ/マダラ",
+    "#12 パープル/マダラ",
+    "#13 瑠璃（ルリ）",
+    "#14 シースルー/ベイト",
+    "#15 ルナビートル"
+   ],
+   "note": "ABS resin body. Made in Japan.",
+   "discontinued": false
+  },
+  {
+   "series": "Squid Seeker 40H ラトリン [ スクイッドシーカー 40 ヘビー ラトリン♪ ]",
+   "url": "https://valleyhill1.jp/30723",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      40
+     ],
+     "sink": "対応水深～40m; rattle model"
+    }
+   ],
+   "colors": [
+    "#01 アジ/ゴールド",
+    "#03 パープル/パープル",
+    "#04 ネオン/ローズ",
+    "#05 パープル/レッド",
+    "#06 ピンク/レッド",
+    "#08 スカラベ",
+    "#09 オレピン/レッド",
+    "#10 オレンジ/ゴールド",
+    "#13 瑠璃(ルリ)",
+    "#14 シースルー/ベイト"
+   ],
+   "note": "Rattle version of 40 Heavy (ABS body), lamé-filled cloth. Colour chart writes #13 as just '瑠璃'. Made in Japan.",
+   "discontinued": false
+  },
+  {
+   "series": "Squid Seeker 43 HM[ スクイッドシーカー 43 ヘビーメタル ]",
+   "url": "https://valleyhill1.jp/7774",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      43
+     ],
+     "sink": "対応水深～45m; tungsten-alloy head"
+    }
+   ],
+   "colors": [
+    "#01N ピンク/杉/金",
+    "#03N アジ/金",
+    "#04N ピンク/杉/赤ホロ",
+    "#07N アジ/杉/赤ホロ",
+    "#08N ナデシコ",
+    "#09N ナデシコ/ブルー",
+    "#10N ナデシコ/ピンク",
+    "#11N オレンジ・ピンク/赤ホロ",
+    "#12N オリーブ/杉/金ホロ",
+    "#13N オレンジ/杉/金",
+    "#14N ピンク・チャート/赤ホロ",
+    "#15N グリーンチャート/金"
+   ],
+   "note": "Weight '43.0class'. Same shape as 30 Regular with tungsten head.",
+   "discontinued": false
+  },
+  {
+   "series": "Squid Seeker 4 Regular[ スクイッドシーカー 4 レギュラー ]",
+   "url": "https://valleyhill1.jp/12519",
+   "sizes": [
+    {
+     "size": "4.0",
+     "weights": [
+      40
+     ],
+     "sink": "対応水深～35m"
+    }
+   ],
+   "colors": [
+    "#01N ピンク/杉/金",
+    "#02N ピンク/杉/赤",
+    "#03N パープル/パープル",
+    "#05N ナデシコピンク",
+    "#06N オレンジ/ピンク/赤ホロ",
+    "#08N オレンジ/杉/金",
+    "#09N ピンク/チャート/赤ホロ",
+    "#10N グリーン/チャート/金",
+    "#11N ナデシコホロ",
+    "#12N パープル/パープルホロ",
+    "#13N ピンク/杉/虹",
+    "#14N オレンジ/杉/虹",
+    "#15N パープル/杉/虹",
+    "#16N イカナゴールド/杉",
+    "#17N オリーブ/杉/緑ホロ",
+    "#18N パープル/赤",
+    "#19N ブラウン/杉/赤ホロ"
+   ],
+   "note": "Weight '40.0class', size '4'. Mid-to-large squid model.",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://valleyhill1.jp/category/item/salt-water/genrelist/tipruneging",
+  "https://valleyhill1.jp/397",
+  "https://valleyhill1.jp/37201",
+  "https://valleyhill1.jp/375806",
+  "https://valleyhill1.jp/378910",
+  "https://valleyhill1.jp/563",
+  "https://valleyhill1.jp/37316",
+  "https://valleyhill1.jp/614",
+  "https://valleyhill1.jp/28161",
+  "https://valleyhill1.jp/30723",
+  "https://valleyhill1.jp/7774",
+  "https://valleyhill1.jp/12519"
+ ]
+}

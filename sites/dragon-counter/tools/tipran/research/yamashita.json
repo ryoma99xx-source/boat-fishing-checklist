@@ -1,0 +1,51 @@
+{
+  "maker": "ヤマシタ",
+  "egis": [
+    {
+      "series": "エギ王 TR",
+      "url": "https://www.yamaria.co.jp/yamashita/product/detail/626",
+      "sizes": [
+        {
+          "size": "3.0",
+          "weights": [
+            21
+          ],
+          "sink": "1.5秒/m"
+        },
+        {
+          "size": "3.5",
+          "weights": [
+            27
+          ],
+          "sink": "1.2秒/m"
+        }
+      ],
+      "colors": [
+        "001 金アジ",
+        "006 軍艦グリーン",
+        "023 オレピンケイムラ",
+        "026 オレンジゴールド",
+        "029 ピンクマーブル",
+        "033 レッドグレープ",
+        "038 コハダフラッシュ",
+        "056 パープルパープル",
+        "057 カジメブラウン",
+        "058 グリーンゴールド",
+        "059 ケイムラピンク",
+        "060 ケイムラブルー",
+        "061 ミステリーパープル",
+        "100 ノーザンライト",
+        "101 フロストピンク",
+        "102 シャドウグロー",
+        "103 レモンミンティ"
+      ],
+      "note": "ティップラン専用エギ. 2026 renewal (デカ針・錫ウエイト): 3号 2026年7月下旬発売, 3.5号 2026年9月中旬発売. Spec table: 3号 = 全長(針ヌキ)95mm, 3.5号 = 105mm. Gap: 038 コハダフラッシュ is 3.5号 only; all other 16 colours in both sizes. NEW colours: 023, 100, 101, 102, 103. Colour strings are '<number> <name>' as written on the page (page prefixes 'エギ王TR'). Fixed weights only (no sinker variants); add-on エギ王TRシンカー (detail/532) is a separate accessory and not included. No 'エギ王 TR HF' (or any other TR/boat egi) is listed in the current Yamashita product catalogue.",
+      "discontinued": false
+    }
+  ],
+  "sources": [
+    "https://www.yamaria.co.jp/yamashita/product/detail/626",
+    "https://www.yamaria.co.jp/yamashita/product (full product list, all pages, checked 2026-11-12)",
+    "https://www.yamaria.co.jp/yamashita/product/gy/eging"
+  ]
+}

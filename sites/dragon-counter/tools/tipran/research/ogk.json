@@ -1,0 +1,32 @@
+{
+ "maker": "大阪漁具（OGK）",
+ "egis": [
+  {
+   "series": "烏賊墨TR",
+   "url": "https://www.osakagyogu.co.jp/lineup/item/8674",
+   "sizes": [
+    {
+     "size": null,
+     "weights": [
+      35,
+      45
+     ],
+     "sink": "ボトムがとれる35g/45g; sinker eye for adding extra sinker"
+    }
+   ],
+   "colors": [
+    "アジ",
+    "オレンジ",
+    "ピンク",
+    "パープルピンク",
+    "パープル"
+   ],
+   "note": "ティップランエギング専用モデル. Official page gives only weight 'サイズ(g)' 35/45 and no 号 size (left null - not stated). All 5 colours in both weights. Item codes EGITR35A/O/PI/PP/PU and EGITR45A/O/PI/PP/PU; price OPEN.",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://www.osakagyogu.co.jp/lineup/category/lure/lure-egi",
+  "https://www.osakagyogu.co.jp/lineup/item/8674"
+ ]
+}
