@@ -1309,7 +1309,10 @@ function sharePayload(t){const r3=x=>typeof x==='number'?Math.round(x*1e3)/1e3:x
     events:(t.events||[]).map(e=>{const g=e.gsp||e.sp;return {t:e.t,kind:e.kind,sp:e.sp,gsp:e.gsp,v:e.v,rig:e.rig||'',rigName:nm(g,'rigs',e.rig),bait:e.bait||'',baitName:nm(g,'baits',e.bait),size:e.size||'',dragon:!!e.dragon,sa:e.sa||'',ka:e.ka||'',fish:e.kind==='gedo'?(e.name||''):'',tackle:e.tk?tkLabelOf(t,e.tk):'',...(isFinite(e.lat)?{lat:r3(e.lat),lon:r3(e.lon)}:{})}}),tackle:t.tk&&t.tk.snap?Object.values(t.tk.snap).map(x=>({rod:x.rod,rodMaker:x.rodMaker,reel:x.reel,reelMaker:x.reelMaker,line:x.line})):[],
     states:(t.states||[]).map(x=>{const y={...x};delete y.id;delete y.memo;delete y.note;return y}),
     gear:(t.gearLog||[]).map(g=>({t:g.t,sp:g.sp,rig:g.rig||'',rigName:nm(g.sp,'rigs',g.rig),bait:g.bait||'',baitName:nm(g.sp,'baits',g.bait)})),
-    points:(t.points||[]).map(q=>({t:q.t,lat:r3(q.lat),lon:r3(q.lon)}))}}
+    points:(t.points||[]).map(q=>({t:q.t,lat:r3(q.lat),lon:r3(q.lon)})),
+    /* この釣行で使った、カタログにないテンヤ（自分で登録したもの）：メーカー・製品・号数・色。カタログに足す候補を知るため */
+    custom:(()=>{const ids=new Set([...(t.events||[]).map(e=>e.rig),...(t.gearLog||[]).map(g=>g.rig)].filter(Boolean)),cu=(S.cfg&&S.cfg.tenya&&S.cfg.tenya.custom)||[];
+      return cu.filter(x=>ids.has(x.id)).map(x=>({id:x.id,m:x.m||'',p:x.p||'',z:x.z||'',c:x.c||'',name:x.name||''}))})()}}
 let shareTimer=null,sharing=false;function shareQueue(){clearTimeout(shareTimer);shareTimer=setTimeout(shareFlush,4000)}
 async function shareFlush(){if(sharing||!shareCan()||!navigator.onLine)return;sharing=true;
   const post=b=>fetch(SHARE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b),keepalive:true}).then(r=>r.ok);

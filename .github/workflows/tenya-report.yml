@@ -1,0 +1,35 @@
+# カタログにないテンヤの集計（ドラゴンカウンター）。sites/dragon-counter/REPORT を書き換えて push すると動く。
+# サーバーの .data/trips（匿名の釣行）をドラゴンカウンターの FTP アカウントで読み、テンヤの部分だけを集計する。
+# 結果は Artifacts の tenya-report（14日で消える）。釣り場・船・時刻などは書き出さない。
+name: Tenya report (dragon-counter)
+
+on:
+  push:
+    branches: [claude/relaxed-mayer-1u2nhq]
+    paths: ['sites/dragon-counter/REPORT']
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Count tenya not in the catalog
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME_DRAGON }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD_DRAGON }}
+        run: |
+          python3 sites/dragon-counter/tools/tenya_report.py --ftp out | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tenya-report
+          path: out/
+          retention-days: 14
