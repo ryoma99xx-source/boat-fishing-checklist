@@ -23,15 +23,350 @@
     "TZ07 オレンジヘッド/パープルボーダーパープル",
     "TZ29 パープルボーダーパープル"
    ],
-   "note": "Official spec: DARTMAX TRZ 3.5号 30g / 40g, body 3.5号クラス (110mm). No sink type or sink rate stated. All 8 colours are offered in both 30g and 40g (no gaps). Successor to ダートマックスTR (2010); the official video title calls it ティップラン専用エギ. Announced 2025-10-01 for release mid-Nov 2025. Fits the TRZ アップウエイト add-on sinker (15g/20g/30g), which is an accessory and not listed here.",
-   "discontinued": false
+   "color_info": {
+    "TZ01 ディープパープルボーダーパープル": {
+     "kind": "regular",
+     "where": "",
+     "source": "https://ecogear.jp/fishleague/dartmax-trz/"
+    },
+    "TZ02 ディープパープルボーダーレッド": {
+     "kind": "regular",
+     "where": "",
+     "source": "https://ecogear.jp/fishleague/dartmax-trz/"
+    },
+    "TZ03 レッドオレンジボーダーレッド": {
+     "kind": "regular",
+     "where": "",
+     "source": "https://ecogear.jp/fishleague/dartmax-trz/"
+    },
+    "TZ04 スーパーアジゴールド": {
+     "kind": "regular",
+     "where": "",
+     "source": "https://ecogear.jp/fishleague/dartmax-trz/"
+    },
+    "TZ05 パープルボーダーグリーン": {
+     "kind": "regular",
+     "where": "",
+     "source": "https://ecogear.jp/fishleague/dartmax-trz/"
+    },
+    "TZ06 オレンジヘッド/ダークグリーンボーダーレッド": {
+     "kind": "regular",
+     "where": "",
+     "source": "https://ecogear.jp/fishleague/dartmax-trz/"
+    },
+    "TZ07 オレンジヘッド/パープルボーダーパープル": {
+     "kind": "regular",
+     "where": "",
+     "source": "https://ecogear.jp/fishleague/dartmax-trz/"
+    },
+    "TZ29 パープルボーダーパープル": {
+     "kind": "regular",
+     "where": "",
+     "source": "https://ecogear.jp/fishleague/dartmax-trz/"
+    }
+   },
+   "note": "公式カラーチャートは8色・全色30g/40g共通。2025年10月1日告知・11月中旬発売。2026年11月12日時点で公式NEWS(ecogear.jp/info)にTRZ本体の新色・新サイズ告知なし（2026年のTRZ関連はTRZ アップウエイト 30g〔7月〕/15g・20g〔11月〕=追加シンカーのみ）。LureNewsR(2025)は「新たなサイズ展開なども進行中」と記載するが未発表。限定・ショップ別注カラーは確認できず。",
+   "discontinued": false,
+   "year": 2025
+  },
+  {
+   "series": "エギリー・ダートマックスTR30g-BK",
+   "url": "https://ecogear.jp/info/20230928_new_color/",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      30
+     ]
+    }
+   ],
+   "colors": [
+    "TR01 オレンジボーダーゴールド",
+    "TR02 ピンクボーダーゴールド",
+    "TR03 スーパーアジゴールド",
+    "TR05 ディープパープルボーダーパープル",
+    "TR06 ディープパープルボーダーレッド",
+    "TR07 ブラックボーダーシルバー",
+    "TR08 レッドパープルレッド",
+    "TR09 モスバックグリーンゴールド",
+    "TR10 パープルボーダーグリーン",
+    "TR11 リアルコノシロシルバー",
+    "TR13 UVパープルボーダーゴールド",
+    "TR14 オレンジタイガーカモマーブル",
+    "TR15 パープルボーダーレッド",
+    "TR16 グリーンストライプゴールドオレンジ",
+    "TR17 レッドオレンジボーダーレッド",
+    "TR18 UVファイヤータイガーレッド",
+    "TR19 UVタイガーバニーパープル",
+    "TR20 UVグリーンタイガー",
+    "TR21 オレンジヘッド/ダークグリーンアジレッド",
+    "TR22 オレンジヘッド/パープルボーダーパープル",
+    "TR29 パープルボーダーパープル"
+   ],
+   "color_info": {
+    "TR01 オレンジボーダーゴールド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR02 ピンクボーダーゴールド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。オンリーワン掲載",
+     "source": "https://onlyone-shop.jp/?pid=71326549"
+    },
+    "TR03 スーパーアジゴールド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR05 ディープパープルボーダーパープル": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR06 ディープパープルボーダーレッド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR07 ブラックボーダーシルバー": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR08 レッドパープルレッド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR09 モスバックグリーンゴールド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR10 パープルボーダーグリーン": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR11 リアルコノシロシルバー": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR13 UVパープルボーダーゴールド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR14 オレンジタイガーカモマーブル": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR15 パープルボーダーレッド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR16 グリーンストライプゴールドオレンジ": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    },
+    "TR17 レッドオレンジボーダーレッド": {
+     "kind": "discontinued",
+     "where": "2020年秋追加（30gのみで登場）",
+     "source": "https://www.lurenewsr.com/120681/"
+    },
+    "TR18 UVファイヤータイガーレッド": {
+     "kind": "discontinued",
+     "where": "2020年秋追加",
+     "source": "https://www.lurenewsr.com/120681/"
+    },
+    "TR19 UVタイガーバニーパープル": {
+     "kind": "discontinued",
+     "where": "2020年秋追加",
+     "source": "https://www.lurenewsr.com/120681/"
+    },
+    "TR20 UVグリーンタイガー": {
+     "kind": "discontinued",
+     "where": "2022年9月追加",
+     "source": "https://ecogear.jp/info/220220822_new_color/"
+    },
+    "TR21 オレンジヘッド/ダークグリーンアジレッド": {
+     "kind": "discontinued",
+     "where": "2023年10月下旬追加",
+     "source": "https://ecogear.jp/info/20230928_new_color/"
+    },
+    "TR22 オレンジヘッド/パープルボーダーパープル": {
+     "kind": "discontinued",
+     "where": "2023年10月下旬追加",
+     "source": "https://ecogear.jp/info/20230928_new_color/"
+    },
+    "TR29 パープルボーダーパープル": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000006086"
+    }
+   },
+   "note": "3.5号クラス(110mm)・30g・ビッグカンナ仕様。BKは2013年追加（Backlash商品説明）。21色確認（いのまた釣具店20色＋オンリーワンのTR02）。TR04/TR12の30g-BK設定有無は未確認。公式製品ページ(ecogear.jp/fishleague/dartmax_tr/)はTRZ発売後に削除済み（404、サイトマップにも無し）。公式の「廃盤」告知文は未確認だが、公式はTRZを「正統後継製品」と明記。Wayback Machineのスナップショット(2025-06-16)は存在するがこの環境から web.archive.org に接続できず、最終期の公式カラーチャートは未照合。色名は小売店品番リスト・旧公式チャートのスクリーンショット・公式NEWSによる。TR18は2020年の資料では「UVファイヤータイガーレッド」、2025年7月の公式NEWSでは「UVタイガーファイヤーレッド」と表記揺れあり。限定・ショップ別注カラーは確認できず。",
+   "discontinued": true,
+   "year": 2013,
+   "legacy": true
+  },
+  {
+   "series": "エギリー・ダートマックスTR40g-BK",
+   "url": "https://ecogear.jp/info/20240903_new_color/",
+   "sizes": [
+    {
+     "size": "3.5",
+     "weights": [
+      40
+     ]
+    }
+   ],
+   "colors": [
+    "TR01 オレンジボーダーゴールド",
+    "TR02 ピンクボーダーゴールド",
+    "TR03 スーパーアジゴールド",
+    "TR04 ゴールドシュリンプゴールド",
+    "TR05 ディープパープルボーダーパープル",
+    "TR06 ディープパープルボーダーレッド",
+    "TR07 ブラックボーダーシルバー",
+    "TR08 レッドパープルレッド",
+    "TR09 モスバックグリーンゴールド",
+    "TR10 パープルボーダーグリーン",
+    "TR11 リアルコノシロシルバー",
+    "TR13 UVパープルボーダーゴールド",
+    "TR14 オレンジタイガーカモマーブル",
+    "TR15 パープルボーダーレッド",
+    "TR17 レッドオレンジボーダーレッド",
+    "TR18 UVファイヤータイガーレッド",
+    "TR19 UVタイガーバニーパープル",
+    "TR20 UVグリーンタイガー",
+    "TR21 オレンジヘッド/ダークグリーンアジレッド",
+    "TR22 オレンジヘッド/パープルボーダーパープル",
+    "TR29 パープルボーダーパープル"
+   ],
+   "color_info": {
+    "TR01 オレンジボーダーゴールド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR02 ピンクボーダーゴールド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR03 スーパーアジゴールド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR04 ゴールドシュリンプゴールド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR05 ディープパープルボーダーパープル": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR06 ディープパープルボーダーレッド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR07 ブラックボーダーシルバー": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR08 レッドパープルレッド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR09 モスバックグリーンゴールド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR10 パープルボーダーグリーン": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR11 リアルコノシロシルバー": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR13 UVパープルボーダーゴールド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR14 オレンジタイガーカモマーブル": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）。Backlash掲載の旧公式チャート",
+     "source": "https://www.backlash.co.jp/sp/item/4905789127077/"
+    },
+    "TR15 パープルボーダーレッド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000009344"
+    },
+    "TR17 レッドオレンジボーダーレッド": {
+     "kind": "discontinued",
+     "where": "2024年9月追加（40g-BK）",
+     "source": "https://ecogear.jp/info/20240903_new_color/"
+    },
+    "TR18 UVファイヤータイガーレッド": {
+     "kind": "discontinued",
+     "where": "2025年9月追加（40g-BK。公式NEWS表記はUVタイガーファイヤーレッド）",
+     "source": "https://ecogear.jp/info/20250723_dartmax_tr/"
+    },
+    "TR19 UVタイガーバニーパープル": {
+     "kind": "discontinued",
+     "where": "2024年9月追加（40g-BK）",
+     "source": "https://ecogear.jp/info/20240903_new_color/"
+    },
+    "TR20 UVグリーンタイガー": {
+     "kind": "discontinued",
+     "where": "2024年9月追加（40g-BK）",
+     "source": "https://ecogear.jp/info/20240903_new_color/"
+    },
+    "TR21 オレンジヘッド/ダークグリーンアジレッド": {
+     "kind": "discontinued",
+     "where": "2024年9月追加（40g-BK）",
+     "source": "https://ecogear.jp/info/20240903_new_color/"
+    },
+    "TR22 オレンジヘッド/パープルボーダーパープル": {
+     "kind": "discontinued",
+     "where": "2024年9月追加（40g-BK）",
+     "source": "https://ecogear.jp/info/20240903_new_color/"
+    },
+    "TR29 パープルボーダーパープル": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（後継TRZ）",
+     "source": "https://www.e-inomata.com/view/item/000000009344"
+    }
+   },
+   "note": "3.5号クラス(110mm)・40g・ビッグカンナ仕様。21色確認。TR16の40g-BK設定は未確認、TR12はBK無しの40gでのみ確認。公式製品ページ(ecogear.jp/fishleague/dartmax_tr/)はTRZ発売後に削除済み（404、サイトマップにも無し）。公式の「廃盤」告知文は未確認だが、公式はTRZを「正統後継製品」と明記。Wayback Machineのスナップショット(2025-06-16)は存在するがこの環境から web.archive.org に接続できず、最終期の公式カラーチャートは未照合。色名は小売店品番リスト・旧公式チャートのスクリーンショット・公式NEWSによる。TR18は2020年の資料では「UVファイヤータイガーレッド」、2025年7月の公式NEWSでは「UVタイガーファイヤーレッド」と表記揺れあり。限定・ショップ別注カラーは確認できず。",
+   "discontinued": true,
+   "year": 2013,
+   "legacy": true
   },
   {
    "series": "エギリー・ダートマックスTR",
-   "url": "https://ecogear.jp/fishleague/dartmax_tr/",
+   "url": "https://www.backlash.co.jp/sp/item/4905789098568/",
    "sizes": [
     {
-     "size": null,
+     "size": "3.5",
      "weights": [
       30,
       40
@@ -39,46 +374,167 @@
     }
    ],
    "colors": [
-    "TR17 レッドオレンジボーダーレッド",
-    "TR18 UVタイガーファイヤーレッド",
-    "TR19 UVタイガーバニーパープル",
-    "TR20 UVグリーンタイガー",
-    "TR21 オレンジヘッド/ダークグリーンアジレッド",
-    "TR22 オレンジヘッド/パープルボーダーパープル"
+    "TR01 オレンジボーダーゴールド",
+    "TR02 ピンクボーダーゴールド",
+    "TR03 スーパーアジゴールド",
+    "TR04 ゴールドシュリンプゴールド",
+    "TR05 ディープパープルボーダーパープル",
+    "TR06 ディープパープルボーダーレッド"
    ],
-   "note": "LEGACY / INCOMPLETE. The predecessor of TRZ. Its official product page (URL above) now returns 404 and the model is no longer in the official FishLeague product list or sitemap (checked 2026-11-12). No page explicitly says it is discontinued, so discontinued is left false, but treat it as not part of the current official lineup. Models named on the official news posts: エギリー・ダートマックスTR30g-BK and TR40g-BK. The 号 size is not stated on any page I could reach, so size is null. The colours are only the ones named in official news posts (2022-2025), not the full chart. TR18 was announced for 40g-BK only (2025-07-23). TR17, TR19, TR20, TR21 and TR22 are in 40g-BK (2024-09-03), and that post says they were already in 30g-BK. The full TR colour chart and specs could not be retrieved because the Wayback Machine was unreachable.",
-   "discontinued": false,
-   "listed_on_official_site": false,
-   "exclude": "公式サイトに掲載なし（旧製品）"
-  }
- ],
- "excluded": [
-  {
-   "series": "エギリー・ダートマックス",
-   "url": "https://ecogear.jp/fishleague/dartmax/",
-   "reason": "Listed under the official 'EGIING & TIP-RUN' category, but it is the shore (おかっぱり) egi: 2.5号 11g 4.4秒/m, 3号 17g 3.0秒/m, 3.5号 19g 2.7秒/m. Its description never mentions boat or tip-run."
+   "color_info": {
+    "TR01 オレンジボーダーゴールド": {
+     "kind": "discontinued",
+     "where": "30g/40g（BK無しの初代）。廃盤",
+     "source": "https://www.backlash.co.jp/sp/item/4905789098568/"
+    },
+    "TR02 ピンクボーダーゴールド": {
+     "kind": "discontinued",
+     "where": "30g/40g（BK無しの初代）。廃盤",
+     "source": "https://www.backlash.co.jp/sp/item/4905789098568/"
+    },
+    "TR03 スーパーアジゴールド": {
+     "kind": "discontinued",
+     "where": "30g/40g（BK無しの初代）。廃盤",
+     "source": "https://www.backlash.co.jp/sp/item/4905789098568/"
+    },
+    "TR04 ゴールドシュリンプゴールド": {
+     "kind": "discontinued",
+     "where": "30g/40g（BK無しの初代）。廃盤",
+     "source": "https://www.backlash.co.jp/sp/item/4905789098568/"
+    },
+    "TR05 ディープパープルボーダーパープル": {
+     "kind": "discontinued",
+     "where": "30g/40g（BK無しの初代）。廃盤",
+     "source": "https://www.backlash.co.jp/sp/item/4905789098568/"
+    },
+    "TR06 ディープパープルボーダーレッド": {
+     "kind": "discontinued",
+     "where": "30g/40g（BK無しの初代）。廃盤",
+     "source": "https://www.backlash.co.jp/sp/item/4905789098568/"
+    },
+    "TR12 （カラー名未確認）": {
+     "kind": "discontinued",
+     "where": "40g（BK無し）でのみ確認。色名は確認できず（茶系ボディにグリーンの鱗模様）",
+     "source": "https://www.backlash.co.jp/sp/item/4905789124946/"
+    }
+   },
+   "note": "2010年登場の初代（ビッグカンナでない標準カンナ版）。3.5号クラス(110mm)・30g/40g。Backlashの売り切れ商品ページのチャートでTR01〜TR06を確認（30gページのチャートはコード無しで同じ6色）。TR12は40gの単品ページで存在のみ確認。TR07以降の非BK設定有無・3.0号等の他サイズは確認できず=不完全の可能性あり。公式ページは削除済み。",
+   "discontinued": true,
+   "year": 2010,
+   "legacy": true
   },
   {
-   "series": "TRZ アップウエイト",
-   "url": "https://ecogear.jp/fishleague/trz_up-weight/",
-   "reason": "An add-on sinker for TR/TRZ (15g/20g/30g; colours TU01-TU04), not an egi."
-  },
-  {
-   "series": "エギリー・ダートマックス　オモリグスペシャル",
-   "url": "https://ecogear.jp/fishleague/dart_max_omorig_sp/",
-   "reason": "Listed under IKA-METAL. It is an オモリグ egi, not tip-run."
+   "series": "エギリー・ダートマックスOT",
+   "url": "https://www.backlash.co.jp/sp/item/49057489117863/",
+   "sizes": [
+    {
+     "size": "2.5",
+     "weights": [
+      11
+     ]
+    }
+   ],
+   "colors": [
+    "01 ホワイティンクリスタルシルバー",
+    "02 タイガーバニークリスタルパープル",
+    "03 スーパーアジゴールド",
+    "04 レッドパープルレッド",
+    "05 パープルボーダーグリーン",
+    "06 パープルボーダークリスタルパープル"
+   ],
+   "color_info": {
+    "01 ホワイティンクリスタルシルバー": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（公式から消滅）",
+     "source": "https://www.backlash.co.jp/sp/item/49057489117863/"
+    },
+    "02 タイガーバニークリスタルパープル": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（公式から消滅）",
+     "source": "https://www.backlash.co.jp/sp/item/49057489117863/"
+    },
+    "03 スーパーアジゴールド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（公式から消滅）",
+     "source": "https://www.backlash.co.jp/sp/item/49057489117863/"
+    },
+    "04 レッドパープルレッド": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（公式から消滅）",
+     "source": "https://www.backlash.co.jp/sp/item/49057489117863/"
+    },
+    "05 パープルボーダーグリーン": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（公式から消滅）",
+     "source": "https://www.backlash.co.jp/sp/item/49057489117863/"
+    },
+    "06 パープルボーダークリスタルパープル": {
+     "kind": "discontinued",
+     "where": "シリーズごと廃盤（公式から消滅）",
+     "source": "https://www.backlash.co.jp/sp/item/49057489117863/"
+    }
+   },
+   "note": "ティップランの「お助けリグ」（メインエギの上に付ける小型エギ）専用。2.5号・11g・シングルカンナ。Backlashの売り切れ商品ページでのみ確認。チャートの番号は01〜06（メーカー品番の接頭辞は未確認）、色名はチャートの略称（SL/PUP）をシルバー/パープルに読み替えた。発売年未確認。",
+   "discontinued": true,
+   "year": null,
+   "legacy": true
   }
  ],
  "sources": [
-  "https://ecogear.jp/fishleague/ (official FishLeague product list, operated by WELL-F / マルキュー; fishleague.jp does not resolve)",
+  "https://ecogear.jp/fishleague/",
   "https://ecogear.jp/fishleague/dartmax-trz/",
-  "https://ecogear.jp/wp-sitemap-posts-fishleague-1.xml",
-  "https://ecogear.jp/info/20251001-dartmax-trz/",
-  "https://ecogear.jp/info/220220822_new_color/",
-  "https://ecogear.jp/info/20230928_new_color/",
-  "https://ecogear.jp/info/20240903_new_color/",
-  "https://ecogear.jp/info/20250723_dartmax_tr/",
+  "https://ecogear.jp/fishleague/dartmax/",
+  "https://ecogear.jp/fishleague/dart_max_omorig_sp/",
   "https://ecogear.jp/fishleague/trz_up-weight/",
-  "https://ecogear.jp/fishleague/dartmax/"
- ]
+  "https://ecogear.jp/info",
+  "https://ecogear.jp/info/20251001-dartmax-trz/",
+  "https://ecogear.jp/info/20250723_dartmax_tr/",
+  "https://ecogear.jp/info/20240903_new_color/",
+  "https://ecogear.jp/info/20230928_new_color/",
+  "https://ecogear.jp/info/220220822_new_color/",
+  "https://ecogear.jp/info/20230529_price/",
+  "https://ecogear.jp/info/20251022_dartmax/",
+  "https://ecogear.jp/info/20241021_new_color_dart_max/",
+  "https://ecogear.jp/info/20260624_dartmax_25/",
+  "https://ecogear.jp/info/20260729_dartmax3/",
+  "https://ecogear.jp/info/https-ecogear-jp-info-20260903_dartmax35/",
+  "https://ecogear.jp/info/20210714_new_product/",
+  "https://ecogear.jp/info/20230615_new_color/",
+  "https://ecogear.jp/info/20240708_new_color/",
+  "https://ecogear.jp/info/20240820_new_color/",
+  "https://ecogear.jp/info/20250409_omorig_sp/",
+  "https://ecogear.jp/info/20260527-dart-max-omorig-sp/",
+  "https://ecogear.jp/info/20260603-trz_up_weight-30g/",
+  "https://ecogear.jp/info/20261007-trz_up_weight_sinker_15g-20g/",
+  "https://ecogear.jp/wp-sitemap-posts-fishleague-1.xml",
+  "https://www.e-inomata.com/view/item/000000006086",
+  "https://www.e-inomata.com/view/item/000000009344",
+  "https://www.e-inomata.com/view/item/000000018813",
+  "https://www.e-inomata.com/view/item/000000007534",
+  "https://www.e-inomata.com/view/item/000000014053",
+  "https://www.e-inomata.com/view/item/000000007535",
+  "https://www.e-inomata.com/view/item/000000010087",
+  "https://www.e-inomata.com/view/item/000000019774",
+  "https://www.e-inomata.com/view/item/000000019775",
+  "https://onlyone-shop.jp/?pid=71326549",
+  "https://www.backlash.co.jp/sp/item_list/?kw=%E3%83%80%E3%83%BC%E3%83%88%E3%83%9E%E3%83%83%E3%82%AF%E3%82%B9",
+  "https://www.backlash.co.jp/sp/item/4905789094553/",
+  "https://www.backlash.co.jp/sp/item/4905789098568/",
+  "https://www.backlash.co.jp/sp/item/4905789124946/",
+  "https://www.backlash.co.jp/sp/item/4905789113216/",
+  "https://www.backlash.co.jp/sp/item/4905789127077/",
+  "https://www.backlash.co.jp/sp/item/49057489117863/",
+  "https://www.backlash.co.jp/sp/item/4905789114916/",
+  "https://www.backlash.co.jp/sp/item/4905789043865/",
+  "https://www.backlash.co.jp/sp/item/4905789025724/",
+  "https://www.backlash.co.jp/sp/item/10005763/",
+  "https://www.backlash.co.jp/sp/item/4905789027919/",
+  "https://www.backlash.co.jp/sp/item/4905789027902/",
+  "https://www.backlash.co.jp/sp/item/4905789093297/",
+  "https://www.lurenewsr.com/120681/",
+  "https://www.lurenewsr.com/405347/",
+  "https://www.lurenewsr.com/393567/",
+  "https://www.aorinetshop.jp/product-list/256"
+ ],
+ "note": "2026-11-12: TR系の過去モデルとOTを追加（オーナーの指示）。エギリー・ダートマックス（無印・4号）とオモリグスペシャルはティップラン用ではないため入れない。"
 }

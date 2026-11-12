@@ -82,7 +82,7 @@ def main():
         m = re.sub(r'\(.*?\)$', '', norm(d.get('maker', ''))).strip()  # 「キーストン(Keystone)」→「キーストン」
         m = MAKER.get(m, m)
         for e in d.get('egis', []):
-            if e.get('discontinued') or e.get('exclude'):  # exclude: ティップラン用ではないと判断したもの
+            if (e.get('discontinued') and not e.get('legacy')) or e.get('exclude'):   # legacy：生産終了でも、持っている人のために「旧モデル」として入れる  # exclude: ティップラン用ではないと判断したもの
                 continue
             c = []
             for x in e.get('colors') or []:
@@ -102,7 +102,7 @@ def main():
             if not c or not o:
                 continue
             o.sort(key=lambda t: (float(t['z']), t['g']))
-            rows.append({'m': m, 's': norm(e['series']), 'o': o, 'w': list(range(len(o))), 'c': c, 'u': e.get('url', ''), 'note': ''})  # 調査メモ（英語まじり）は画面に出さない。research/*.json に残る
+            rows.append({'m': m, 's': norm(e['series']), 'o': o, 'w': list(range(len(o))), 'c': c, 'u': e.get('url', ''), 'note': '旧モデル（生産終了）' if e.get('legacy') else ''})  # 調査メモ（英語まじり）は画面に出さない。research/*.json に残る
     rows.sort(key=lambda r: (ORDER.index(r['m']) if r['m'] in ORDER else 99, r['m']))
     sk = sinkers(os.path.join(HERE, 'tipran', 'research-sinkers'))
     json.dump({'v': date, 'heads': rows, 'ties': [], 'skirts': sk}, open(OUT, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
