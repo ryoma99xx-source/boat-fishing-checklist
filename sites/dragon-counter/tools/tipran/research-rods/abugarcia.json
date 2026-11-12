@@ -1,0 +1,24 @@
+{
+ "maker": "アブガルシア",
+ "rods": [
+  {
+   "series": "OCEANFIELD IKA（オーシャンフィールド イカ）",
+   "model": "OIKS-5112MLS-TIPRUN",
+   "type": "spinning",
+   "length_m": 1.8,
+   "egi_g": "18-70",
+   "pe": "0.4-0.8",
+   "tip": "ソリッドティップ",
+   "price_jpy": 18500,
+   "year": 2026,
+   "url": "https://abugarcia.jp/products/oceanfield-ika",
+   "status": "",
+   "source": "official"
+  }
+ ],
+ "sources": [
+  "https://abugarcia.jp/collections/rods （公式ストア・ロッド全84製品を確認。発売年は公式ストアの掲載開始(2026年)による。ティップラン専用機種は OCEANFIELD IKA の OIKS-5112MLS-TIPRUN のみ。全長は公式表記 5'11\"/180.3cm）",
+  "https://abugarcia.jp/products/oceanfield-ika",
+  "https://pfj-parts2.com/ （PureFishing Japan ロッドパーツリスト：旧 Egisis Finesse TipRun EFTS-632LML / EFTS-5102LML / EFTS-682ML を確認、いずれもスピニングのため未収録）"
+ ]
+}

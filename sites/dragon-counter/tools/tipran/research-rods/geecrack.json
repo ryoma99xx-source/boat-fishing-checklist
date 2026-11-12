@@ -1,0 +1,73 @@
+{
+ "maker": "ジークラック",
+ "rods": [
+  {
+   "series": "SUMIKAGE HIBIKI 墨影HIBIKI響",
+   "model": "SKTR-HIBIKI-S62ML",
+   "type": "spinning",
+   "length_m": 1.88,
+   "egi_g": "〜70",
+   "pe": "0.3-0.8",
+   "tip": "カーボンソリッド",
+   "price_jpy": 48000,
+   "year": null,
+   "url": "https://www.geecrack.com/saltwater/product/detail/?id=248",
+   "status": "",
+   "source": "official",
+   "note": "錘負荷MAX70g"
+  },
+  {
+   "series": "SUMIKAGE HIBIKI 墨影HIBIKI響",
+   "model": "SKTR-HIBIKI-S65ML",
+   "type": "spinning",
+   "length_m": 1.98,
+   "egi_g": "〜70",
+   "pe": "0.3-0.8",
+   "tip": "カーボンソリッド",
+   "price_jpy": 48500,
+   "year": null,
+   "url": "https://www.geecrack.com/saltwater/product/detail/?id=248",
+   "status": "",
+   "source": "official",
+   "note": "錘負荷MAX70g"
+  },
+  {
+   "series": "SUMIKAGE HIBIKI 墨影HIBIKI響",
+   "model": "SKTR-HIBIKI-S68M",
+   "type": "spinning",
+   "length_m": 2.07,
+   "egi_g": "〜100",
+   "pe": "0.4-1.0",
+   "tip": "カーボンソリッド",
+   "price_jpy": 49000,
+   "year": null,
+   "url": "https://www.geecrack.com/saltwater/product/detail/?id=248",
+   "status": "",
+   "source": "official",
+   "note": "錘負荷MAX100g"
+  },
+  {
+   "series": "SUMIKAGE 墨影",
+   "model": "墨影（スピニングモデル）",
+   "type": "spinning",
+   "length_m": 2.29,
+   "egi_g": "〜120",
+   "pe": "0.4-1.0",
+   "tip": "チューブラー(カーボンチューブラ)",
+   "price_jpy": 49000,
+   "year": null,
+   "url": "https://www.geecrack.com/saltwater/product/detail/?id=242",
+   "status": "",
+   "source": "official",
+   "note": "ディープティップラン対応。ページに型番表記なし。長さ7ft6in→m換算。価格は「販売価格￥53,900（税込）」から税抜換算"
+  }
+ ],
+ "sources": [
+  "https://www.geecrack.com/saltwater/product/detail/?id=248",
+  "https://www.geecrack.com/saltwater/product/detail/?id=242",
+  "https://www.geecrack.com/saltwater/product/rod/"
+ ],
+ "notes": [
+  "ソルトのROD一覧のうちティップラン用は「墨影」「墨影HIBIKI響」の2シリーズ、全てスピニングモデル表記。泥棒竿シリーズ(イカメタル/オモリグ/バチコン)は除外。ベイトのティップラン機種なし。発売年の記載なし。"
+ ]
+}

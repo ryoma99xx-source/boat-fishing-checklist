@@ -1,0 +1,43 @@
+{
+ "maker": "タカミヤ（釣具のポイント）",
+ "rods": [
+  {
+   "series": "アークシオン ティップラン（ARCXION TIPRUN）",
+   "model": "S66ML",
+   "type": "spinning",
+   "length_m": 1.98,
+   "egi_g": "〜60",
+   "pe": "〜1.0",
+   "tip": null,
+   "price_jpy": null,
+   "year": 2026,
+   "url": "https://www.point-official.shop/shop/g/g4996774072328/",
+   "status": "",
+   "source": "shop(point-official.shop)",
+   "note": "オープン価格。ストア価格 税込¥6,980。自重87g"
+  },
+  {
+   "series": "アークシオン ティップラン（ARCXION TIPRUN）",
+   "model": "S66M",
+   "type": "spinning",
+   "length_m": 1.98,
+   "egi_g": "〜80",
+   "pe": "〜1.0",
+   "tip": null,
+   "price_jpy": null,
+   "year": 2026,
+   "url": "https://www.point-official.shop/shop/g/g4996774072335/",
+   "status": "",
+   "source": "shop(point-official.shop)",
+   "note": "オープン価格。ストア価格 税込¥6,980。自重95g"
+  }
+ ],
+ "sources": [
+  "https://www.point-i.jp/private_brands/3258768",
+  "https://www.point-official.shop/shop/g/g4996774072328/",
+  "https://www.point-official.shop/shop/g/g4996774072335/"
+ ],
+ "notes": [
+  "依頼リスト外で見つけたショップブランド(釣具のポイント/タカミヤのオリジナル)。出典は釣具のポイント公式サイトの商品企画記事(2026-09-14)と公式オンラインストア。メーカー希望小売価格は「オープン価格」のため price_jpy=null(ストア表示価格は税込¥6,980)。スピニング/ベイトの明記は無く型番先頭「S」からスピニングと判断。穂先素材の記載なし。商品説明タグ[26new01]と記事の「新登場」から year=2026。ストアのティップランロッド カテゴリ一覧はスクリプト描画で取得できず、他のタカミヤ系ティップラン機種の有無は未確認。"
+ ]
+}

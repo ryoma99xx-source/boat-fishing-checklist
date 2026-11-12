@@ -1,0 +1,72 @@
+{
+ "maker": "CRONO（クロノ／カンジインターナショナル）",
+ "rods": [
+  {
+   "series": "GRASP（グラスプ）",
+   "model": "510 LIGHT SCENE",
+   "type": "spinning",
+   "length_m": 1.78,
+   "egi_g": "〜80",
+   "pe": "0.6号基準",
+   "tip": "ゴリラソリッド(ソリッド)",
+   "price_jpy": 51000,
+   "year": null,
+   "url": "https://crono.design/archives/7891",
+   "status": "",
+   "source": "official",
+   "note": "税込¥56,100。5.10ft表記→m換算"
+  },
+  {
+   "series": "GRASP（グラスプ）",
+   "model": "510 HEAVY SCENE",
+   "type": "spinning",
+   "length_m": 1.78,
+   "egi_g": "〜120",
+   "pe": "0.6号基準",
+   "tip": "ゴリラソリッド(ソリッド)",
+   "price_jpy": 51000,
+   "year": null,
+   "url": "https://crono.design/archives/7891",
+   "status": "",
+   "source": "official",
+   "note": "税込¥56,100。5.10ft表記→m換算"
+  },
+  {
+   "series": "GRASP（グラスプ）",
+   "model": "604 LIGHT SCENE",
+   "type": "spinning",
+   "length_m": 1.93,
+   "egi_g": "〜80",
+   "pe": "0.6号基準",
+   "tip": "ゴリラソリッド(ソリッド)",
+   "price_jpy": 52000,
+   "year": null,
+   "url": "https://crono.design/archives/7891",
+   "status": "",
+   "source": "official",
+   "note": "税込¥57,200。6.4ft表記→m換算"
+  },
+  {
+   "series": "GRASP（グラスプ）",
+   "model": "604 HEAVY SCENE",
+   "type": "spinning",
+   "length_m": 1.93,
+   "egi_g": "〜120",
+   "pe": "0.6号基準",
+   "tip": "ゴリラソリッド(ソリッド)",
+   "price_jpy": 52000,
+   "year": null,
+   "url": "https://crono.design/archives/7891",
+   "status": "",
+   "source": "official",
+   "note": "税込¥57,200。6.4ft表記→m換算"
+  }
+ ],
+ "sources": [
+  "https://crono.design/archives/7891",
+  "https://crono.design/archives/category/products/tiprun"
+ ],
+ "notes": [
+  "kanji-international.com は crono.design に転送される。ティップランロッドは GRASP の4機種のみ。ページにスピニング/ベイトの明記は無いが、リールシートVSS-16(Fujiのスピニング用シート)採用と記載のためスピニングと判断。ベイト機種なし。価格は税込表示のため price_jpy は1.1で割った税抜換算値。長さは「5.10ft」「6.4ft」表記(5'10\"/6'4\"と解釈してm換算)。PEは「0.6号を基準としたその前後」表記。発売年の記載なし。"
+ ]
+}

@@ -1,0 +1,42 @@
+{
+ "maker": "アルファタックル（エイテック）",
+ "rods": [
+  {
+   "series": "クレイジー ティップラン CRAZEE TIPRUN",
+   "model": "S5102M",
+   "type": "spinning",
+   "length_m": 1.78,
+   "egi_g": "〜60",
+   "pe": null,
+   "tip": null,
+   "price_jpy": 11000,
+   "year": null,
+   "url": "https://www.alphatackle.com/product/crazee-tiprun/",
+   "status": "",
+   "source": "official",
+   "note": "全長5.10(ft in)→m換算"
+  },
+  {
+   "series": "クレイジー ティップラン CRAZEE TIPRUN",
+   "model": "S652MH",
+   "type": "spinning",
+   "length_m": 1.96,
+   "egi_g": "〜80",
+   "pe": null,
+   "tip": null,
+   "price_jpy": 12000,
+   "year": null,
+   "url": "https://www.alphatackle.com/product/crazee-tiprun/",
+   "status": "",
+   "source": "official",
+   "note": "全長6.5(ft in)→m換算"
+  }
+ ],
+ "sources": [
+  "https://www.alphatackle.com/product/crazee-tiprun/",
+  "https://www.alphatackle.com/products/lure-rod/"
+ ],
+ "notes": [
+  "ルアーロッド一覧でティップラン用は クレイジー ティップラン の2機種のみ。ページにスピニング/ベイトの明記は無く、型番先頭「S」とクレイジーシリーズの命名規則からスピニングと判断(要目視確認)。適合PE・穂先素材・発売年の記載なし。長さは「5.10」「6.5」(ft in)表記→m換算。価格は「メーカー希望小売価格(円)」欄の値(税別か税込かの明記なし)。"
+ ]
+}

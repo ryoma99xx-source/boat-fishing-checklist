@@ -1,0 +1,90 @@
+{
+ "maker": "宇崎日新（ARES）",
+ "rods": [
+  {
+   "series": "BLUE PORTER TR",
+   "model": "6.7",
+   "type": "spinning",
+   "length_m": 2.01,
+   "egi_g": "〜60",
+   "pe": "0.4-0.8",
+   "tip": "ソリッド",
+   "price_jpy": 31000,
+   "year": null,
+   "url": "https://ares-rod.com/item/3257",
+   "status": "",
+   "source": "official",
+   "note": "商品コード1700374"
+  },
+  {
+   "series": "LESTER 夢墨 GVX TR",
+   "model": "6.2",
+   "type": "spinning",
+   "length_m": 1.88,
+   "egi_g": "〜70",
+   "pe": "0.4-0.8",
+   "tip": "ソリッド",
+   "price_jpy": 59000,
+   "year": null,
+   "url": "https://ares-rod.com/item/4459",
+   "status": "",
+   "source": "official",
+   "note": "商品コード1700411"
+  },
+  {
+   "series": "LESTER 夢墨 GVX TR",
+   "model": "6.7",
+   "type": "spinning",
+   "length_m": 2.01,
+   "egi_g": "〜70",
+   "pe": "0.4-0.8",
+   "tip": "ソリッド",
+   "price_jpy": 60000,
+   "year": null,
+   "url": "https://ares-rod.com/item/4459",
+   "status": "",
+   "source": "official",
+   "note": "商品コード1700412"
+  },
+  {
+   "series": "LESTER 夢墨 GVX TR",
+   "model": "6.2 Light tune",
+   "type": "spinning",
+   "length_m": 1.88,
+   "egi_g": "〜70",
+   "pe": "0.4-0.8",
+   "tip": "ソリッド",
+   "price_jpy": 59000,
+   "year": null,
+   "url": "https://ares-rod.com/item/4459",
+   "status": "",
+   "source": "official",
+   "note": "New! Light tune。商品コード1700428"
+  },
+  {
+   "series": "LESTER 夢墨 GVX TR",
+   "model": "6.7 Light tune",
+   "type": "spinning",
+   "length_m": 2.01,
+   "egi_g": "〜70",
+   "pe": "0.4-0.8",
+   "tip": "ソリッド",
+   "price_jpy": 60000,
+   "year": null,
+   "url": "https://ares-rod.com/item/4459",
+   "status": "",
+   "source": "official",
+   "note": "New! Light tune。商品コード1700429"
+  }
+ ],
+ "sources": [
+  "https://ares-rod.com/item/3257",
+  "https://ares-rod.com/item/4459",
+  "https://ares-rod.com/item_cat/eging",
+  "https://www.u-nissin.co.jp/"
+ ],
+ "notes": [
+  "宇崎日新のルアーロッドはARES(アレス)ブランド(ares-rod.com)。ティップラン専用は BLUE PORTER TR と LESTER 夢墨 GVX TR。スピニング/ベイトの明記は無いが、ガイドがKLガイド始まり・(GVX TRは)VSSリールシートと記載のためスピニングと判断。ベイトのティップラン機種なし。品番欄は「6.7」等の数字のみ。発売年の記載なし。価格は希望本体価格(税別)。",
+  "BLUE PORTER NK / NKS METALTIP は「中錘式」(中オモリ式ボートエギング)専用でティップランではないため未収録。あおりねっと☆のアオリライド エギングTR S63 タイプNは宇崎日新とのコラボ品(aorinet.json参照)。"
+ ]
+}

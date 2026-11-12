@@ -1,0 +1,59 @@
+{
+ "maker": "スクイッドマニア",
+ "rods": [
+  {
+   "series": "ZERO-G Evolution",
+   "model": "ZERO-G 603 SEA SOUNDS M46X BORON TiS 2nd",
+   "type": "spinning",
+   "length_m": 1.91,
+   "egi_g": "〜70",
+   "pe": "0.4-0.8",
+   "tip": "チタンソリッド(TITANIUM Solid)",
+   "price_jpy": 81420,
+   "year": null,
+   "url": "https://www.squid-mania.com/product/13245",
+   "status": "",
+   "source": "shop(squid-mania.com)",
+   "note": "TIPRUN専用。税込89,562円。「極鱗丸HPにて受付」表記"
+  },
+  {
+   "series": "ZERO-G Evolution",
+   "model": "ZERO-G 603 SEA SOUNDS M46X BORON TiS 限定color",
+   "type": "spinning",
+   "length_m": 1.91,
+   "egi_g": "〜70",
+   "pe": "0.4-0.8",
+   "tip": "チタンソリッド(TITANIUM Solid)",
+   "price_jpy": 81420,
+   "year": null,
+   "url": "https://www.squid-mania.com/product/13189",
+   "status": "",
+   "source": "shop(squid-mania.com)",
+   "note": "上記の限定カラー版(スペック同一)。税込89,562円"
+  },
+  {
+   "series": "ZERO-G Evolution",
+   "model": "ZERO-G EVOLUTION X-FOR TZ 608S B-TR tune 『1st model』",
+   "type": "spinning",
+   "length_m": 2.07,
+   "egi_g": "〜70",
+   "pe": "0.4-0.8",
+   "tip": "ソリッド",
+   "price_jpy": 61000,
+   "year": null,
+   "url": "https://www.squid-mania.com/product/13126",
+   "status": "",
+   "source": "shop(squid-mania.com)",
+   "note": "TIPRUN専用・限定モデル。6.8ft表記→m換算。税込67,100円"
+  }
+ ],
+ "sources": [
+  "https://www.squid-mania.com/product-list/1696",
+  "https://www.squid-mania.com/product/13245",
+  "https://www.squid-mania.com/product/13189",
+  "https://www.squid-mania.com/product/13126"
+ ],
+ "notes": [
+  "エギングショップ SQUID MANIA のオリジナル(ZERO-G Evolution、(株)M's selection.の登録商標と記載)。出典は自社通販 squid-mania.com(squidmania.jp は接続不可)。価格は「希望小売価格（税込）」表示のため price_jpy は1.1で割った税抜換算値。スピニング/ベイトの明記は無く、商品画像のリールシート形状とKLガイド構成からスピニングと判断。ベイト機種は確認できず。発売年の記載なし。"
+ ]
+}

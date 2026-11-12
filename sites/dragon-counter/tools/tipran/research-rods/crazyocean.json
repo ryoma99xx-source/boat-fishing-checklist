@@ -1,0 +1,122 @@
+{
+ "maker": "クレイジーオーシャン",
+ "rods": [
+  {
+   "series": "オーシャンソード Vertex",
+   "model": "OSV-53ML",
+   "type": "spinning",
+   "length_m": 1.6,
+   "egi_g": "〜75",
+   "pe": "〜0.8",
+   "tip": "テクニカルトップ(チタントップ)",
+   "price_jpy": 48000,
+   "year": 2023,
+   "url": "https://crazy-ocean.com/itemlist/%e3%82%aa%e3%83%bc%e3%82%b7%e3%83%a3%e3%83%b3%e3%82%bd%e3%83%bc%e3%83%89-vertex",
+   "status": "",
+   "source": "official",
+   "note": "ラインMAX PE0.8 / ウエイトMAX 75g。2026年生産分は受注締切の告知あり"
+  },
+  {
+   "series": "オーシャンソード Vertex",
+   "model": "OSV-57L",
+   "type": "spinning",
+   "length_m": 1.7,
+   "egi_g": "〜40",
+   "pe": "〜0.8",
+   "tip": "テクニカルトップ(チタントップ)",
+   "price_jpy": 49000,
+   "year": 2025,
+   "url": "https://crazy-ocean.com/itemlist/%e3%82%aa%e3%83%bc%e3%82%b7%e3%83%a3%e3%83%b3%e3%82%bd%e3%83%bc%e3%83%89-vertex",
+   "status": "",
+   "source": "official",
+   "note": "ティップランナーChibi単体使用向け"
+  },
+  {
+   "series": "オーシャンソード Vertex",
+   "model": "OSV-511MLL",
+   "type": "spinning",
+   "length_m": 1.8,
+   "egi_g": "〜60",
+   "pe": "〜0.8",
+   "tip": "テクニカルトップ(チタントップ)",
+   "price_jpy": 53000,
+   "year": 2026,
+   "url": "https://crazy-ocean.com/itemlist/%e3%82%aa%e3%83%bc%e3%82%b7%e3%83%a3%e3%83%b3%e3%82%bd%e3%83%bc%e3%83%89-vertex",
+   "status": "",
+   "source": "official",
+   "note": "2026年追加モデル"
+  },
+  {
+   "series": "オーシャンビームTR",
+   "model": "OBTR-511M",
+   "type": "spinning",
+   "length_m": 1.8,
+   "egi_g": "〜60",
+   "pe": "〜0.8",
+   "tip": "ソリッド",
+   "price_jpy": 17800,
+   "year": null,
+   "url": "https://crazy-ocean.com/itemlist/%e3%82%aa%e3%83%bc%e3%82%b7%e3%83%a3%e3%83%b3%e3%83%93%e3%83%bc%e3%83%a0tr",
+   "status": "",
+   "source": "official",
+   "note": "TiprunウエイトMAX 60g"
+  },
+  {
+   "series": "オーシャンビームTR",
+   "model": "OBTR-65ML",
+   "type": "spinning",
+   "length_m": 1.96,
+   "egi_g": "〜60",
+   "pe": "〜0.8",
+   "tip": "ソリッド(ホワイトティップ)",
+   "price_jpy": 18000,
+   "year": 2025,
+   "url": "https://crazy-ocean.com/itemlist/%e3%82%aa%e3%83%bc%e3%82%b7%e3%83%a3%e3%83%b3%e3%83%93%e3%83%bc%e3%83%a0tr",
+   "status": "",
+   "source": "official",
+   "note": "2025年追加モデル"
+  },
+  {
+   "series": "オーシャンウィップTR",
+   "model": "OWTR-B75M",
+   "type": "bait",
+   "length_m": 2.25,
+   "egi_g": "〜110",
+   "pe": "〜1.0",
+   "tip": null,
+   "price_jpy": null,
+   "year": null,
+   "url": "https://www.naturum.co.jp/product/?itemcd=2831948",
+   "status": "旧モデル",
+   "source": "retailer(naturum, 検索結果の抜粋のみ)",
+   "note": "ナチュラムの商品ページは自動取得を拒否(403)。値(全長2.25m/仕舞116cm/2継/約149g/ラインMAX PE1号/ウェイトMAX110g)は検索エンジンの抜粋による未検証値。定価・発売年・穂先は未確認"
+  },
+  {
+   "series": "オーシャンソード",
+   "model": "テクニカルライト６７B",
+   "type": "bait",
+   "length_m": null,
+   "egi_g": null,
+   "pe": null,
+   "tip": null,
+   "price_jpy": null,
+   "year": null,
+   "url": "https://crazy-ocean.com/%e3%83%99%e3%82%a4%e3%83%88%e3%83%86%e3%82%a3%e3%83%83%e3%83%97%e3%83%a9%e3%83%b3%e3%81%ae%e6%9c%89%e5%8a%b9%e6%80%a7.html",
+   "status": "旧モデル",
+   "source": "official(お知らせ記事 2013-05-11)",
+   "note": "公式お知らせ「ベイトティップランの有効性」(2013-05-11)の使用タックル欄に記載されたベイト機種名。型番・スペック・価格のページは見つからず全て未確認(名前の存在のみ確認)。"
+  }
+ ],
+ "sources": [
+  "https://crazy-ocean.com/itemlist_category/tiprun-rod",
+  "https://crazy-ocean.com/itemlist/%e3%82%aa%e3%83%bc%e3%82%b7%e3%83%a3%e3%83%b3%e3%82%bd%e3%83%bc%e3%83%89-vertex",
+  "https://crazy-ocean.com/itemlist/%e3%82%aa%e3%83%bc%e3%82%b7%e3%83%a3%e3%83%b3%e3%83%93%e3%83%bc%e3%83%a0tr",
+  "https://crazy-ocean.com/2015%e5%b9%b4%e7%a7%8b%e3%81%ae%e6%96%b0%e4%bd%9c%e3%83%ad%e3%83%83%e3%83%89%e7%99%ba%e8%a1%a8%ef%bc%81.html",
+  "https://www.naturum.co.jp/product/?itemcd=2831948",
+  "https://crazy-ocean.com/%e3%83%99%e3%82%a4%e3%83%88%e3%83%86%e3%82%a3%e3%83%83%e3%83%97%e3%83%a9%e3%83%b3%e3%81%ae%e6%9c%89%e5%8a%b9%e6%80%a7.html"
+ ],
+ "notes": [
+  "公式サイトの「ティップラン＞ロッド」カテゴリは現在2シリーズ(オーシャンソード Vertex / オーシャンビームTR)のみで、どちらもスピニング。現行にベイトのティップラン機種は無い。オーシャンセイバー OSA-S73ML-Sは「ボートキャストエギング」用(ティップランではない)ため除外。",
+  "オーシャンウィップTRは公式サイトに商品ページが残っていない(注文書ページ名「オーシャンウィップＴＲ（スピニング）」「同（ベイト）」のみ残存、中身は空)。2015年8月下旬発売の初期2機種OWTR-S64ML(6.4ft/60g/25,000円)・OWTR-S69ML(6.9ft/60g/26,000円)は公式告知画像で確認(いずれもスピニング、旧モデルのため未収録)。ベイトはOWTR-B75Mのみナチュラムの検索結果抜粋で確認。依頼文にあったOWTR-B69MLM、OWTR-68Lはどのページでも確認できず未収録。"
+ ]
+}

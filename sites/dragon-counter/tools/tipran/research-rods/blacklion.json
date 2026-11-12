@@ -1,0 +1,75 @@
+{
+ "maker": "ブラックライオン",
+ "rods": [
+  {
+   "series": "SQUIDRUN Series",
+   "model": "SQUIDRUN64",
+   "type": "spinning",
+   "length_m": 1.95,
+   "egi_g": "20-60",
+   "pe": null,
+   "tip": "ソリッド",
+   "price_jpy": 48900,
+   "year": null,
+   "url": "https://www.black-lion.jp/squidrun64.html",
+   "status": "",
+   "source": "official",
+   "note": "6.4ft表記(6'4\"として1.93m、6.4ftなら1.95m)。税込¥53,790"
+  },
+  {
+   "series": "SQUIDRUN Series",
+   "model": "SQUIDRUN64h",
+   "type": "spinning",
+   "length_m": 1.95,
+   "egi_g": "40-100",
+   "pe": null,
+   "tip": "ソリッド",
+   "price_jpy": 48900,
+   "year": null,
+   "url": "https://www.black-lion.jp/squidrun64h.html",
+   "status": "",
+   "source": "official",
+   "note": "沖縄や50m以深・60〜100gのエギ向けと記載。税込¥53,790"
+  },
+  {
+   "series": "SQUIDRUN Series",
+   "model": "SQUIDRUN 75",
+   "type": "spinning",
+   "length_m": 2.29,
+   "egi_g": "23-50",
+   "pe": "0.6-0.8",
+   "tip": "チューブラー",
+   "price_jpy": 54000,
+   "year": null,
+   "url": "https://www.black-lion.jp/squidrun75.html",
+   "status": "",
+   "source": "official",
+   "note": "スピニング/ベイト未確認。レッドモンスター狙いに焦点と記載。7.5ft表記→m換算。税込¥59,400。画像にSOLD OUT表示"
+  },
+  {
+   "series": "SQUIDRUN Series",
+   "model": "SQUIDRUN 75MH",
+   "type": "spinning",
+   "length_m": 2.29,
+   "egi_g": "30-70",
+   "pe": "0.6-0.8",
+   "tip": "チューブラー",
+   "price_jpy": 54000,
+   "year": null,
+   "url": "https://www.black-lion.jp/squidrun75mh.html",
+   "status": "",
+   "source": "official",
+   "note": "スピニング/ベイト未確認。7.5ft表記→m換算。税込¥59,400"
+  }
+ ],
+ "sources": [
+  "https://www.black-lion.jp/rod.html",
+  "https://www.black-lion.jp/squidrun64.html",
+  "https://www.black-lion.jp/squidrun64h.html",
+  "https://www.black-lion.jp/squidrun75.html",
+  "https://www.black-lion.jp/squidrun75mh.html"
+ ],
+ "notes": [
+  "依頼リスト外で見つけたメーカー。公式ROD一覧の「SQUIDRUN Series ティップランロッド」4機種。スピニング/ベイトの明記は無い。SQUIDRUN64は商品画像(スピニング用シート・ガイド)でスピニングと確認、64hは同型の硬さ違いとして同扱い、75/75MHは画像で判別できず未確認(スピニングと仮置き)。価格は「販売価格(税込)」表示のため1.1で割った税抜換算値。PEは64/64hに記載なし。発売年は記載なし。SQUIDRUN 75は商品画像にSOLD OUT表示あり。SQUIDRUN74OMはオモリグ用で除外。"
+ ]
+}

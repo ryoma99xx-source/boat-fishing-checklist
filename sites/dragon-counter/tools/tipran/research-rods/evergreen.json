@@ -1,0 +1,61 @@
+{
+ "maker": "エバーグリーン",
+ "rods": [
+  {
+   "series": "インペリアル",
+   "model": "NIMC-63XUL/LST ドラッギンマスターC63",
+   "type": "bait",
+   "length_m": 1.91,
+   "egi_g": "20-100",
+   "pe": "0.5-1.0",
+   "tip": "グラスソリッド",
+   "price_jpy": 76000,
+   "year": null,
+   "url": "https://www.evergreen-fishing.com/goods_list/TheDragginMasterC63.html",
+   "status": "",
+   "source": "official",
+   "note": "ボートエギング専用(ドラッギング)。イカメタル・中オモリエギングにも対応と記載"
+  },
+  {
+   "series": "インペリアル",
+   "model": "NIMS-63XUL/LST ドラッギンマスターS63",
+   "type": "spinning",
+   "length_m": 1.91,
+   "egi_g": "20-100",
+   "pe": "0.5-1.0",
+   "tip": "グラスソリッド",
+   "price_jpy": 74000,
+   "year": null,
+   "url": "https://www.evergreen-fishing.com/goods_list/TheDragginMasterS63.html",
+   "status": "",
+   "source": "official",
+   "note": "ボートエギング専用(ドラッギング)。C63と同一ブランクス"
+  },
+  {
+   "series": "インペリアル",
+   "model": "NIMC-70MST ディープエモーション70",
+   "type": "bait",
+   "length_m": 2.12,
+   "egi_g": "〜150",
+   "pe": "0.5-1.0",
+   "tip": "カーボンソリッド",
+   "price_jpy": 74000,
+   "year": null,
+   "url": "https://www.evergreen-fishing.com/goods_list/TheDeepEmotion70.html",
+   "status": "",
+   "source": "official",
+   "note": "【参考・ティップランではない】オフショアディープエギング専用。ルアー範囲表記: Deep Eging Max150g / Light Jigging Max120g / DeepTairaba Max200g"
+  }
+ ],
+ "sources": [
+  "https://www.evergreen-fishing.com/goods_list/goods_list_22rod.php?vctt_no=2&vcts_no=55&r=2&s_no=55",
+  "https://www.evergreen-fishing.com/goods_list/TheDragginMasterC63.html",
+  "https://www.evergreen-fishing.com/goods_list/TheDragginMasterS63.html",
+  "https://www.evergreen-fishing.com/goods_list/TheDeepEmotion70.html"
+ ],
+ "notes": [
+  "エバーグリーンは公式ページで「ティップラン」という語を使わず「ボートドラッギングエギング／ボートエギング専用モデル」と表記(船を流しながらエギを引き、穂先の目感度でアタリを取る釣り=ティップラン相当)。スキッドロウ インペリアルのドラッギンマスターC63(ベイト)・S63(スピニング)が該当。発売年は公式ページに記載なし。",
+  "ディープエモーション70 (NIMC-70MST)は「オフショアディープエギング」(沖縄・紀南のレッドモンスター狙い、Max150g)専用のベイト機種でティップランそのものではないが、ボートエギング専用のベイトロッドとして参考収録(noteで区別)。他のスキッドロウ機種(ショアエギング、イカメタル/オモリグ)は除外。ポセイドン、ソルティセンセーション等の各シリーズにボートエギング機種は見当たらず。",
+  "公式サイトのシリーズ表記は「インペリアル」(ソルトロッド>インペリアル)。一般に「スキッドロウ インペリアル」と呼ばれるが、製品ページ本文にその表記は無かったため series は公式表記に合わせた。"
+ ]
+}

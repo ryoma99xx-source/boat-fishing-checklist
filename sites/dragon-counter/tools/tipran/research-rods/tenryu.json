@@ -1,0 +1,59 @@
+{
+ "maker": "天龍",
+ "rods": [
+  {
+   "series": "BRIGADE Flip TR ブリゲイド フリップ TR",
+   "model": "BFT5112S-MLS",
+   "type": "spinning",
+   "length_m": 1.8,
+   "egi_g": "〜60",
+   "pe": "〜0.8",
+   "tip": "カーボンソリッド(マグナフレックス製法)",
+   "price_jpy": 45500,
+   "year": null,
+   "url": "https://fishing.tenryu-magna.com/offshore/brigade_flip_tr.html",
+   "status": "",
+   "source": "official",
+   "note": "ルアーウェイト MAX60 (Cast MAX25)"
+  },
+  {
+   "series": "BRIGADE Flip TR ブリゲイド フリップ TR",
+   "model": "BFT672S-MS",
+   "type": "spinning",
+   "length_m": 2.0,
+   "egi_g": "〜80",
+   "pe": "〜1.0",
+   "tip": "カーボンソリッド(マグナフレックス製法)",
+   "price_jpy": 47500,
+   "year": null,
+   "url": "https://fishing.tenryu-magna.com/offshore/brigade_flip_tr.html",
+   "status": "",
+   "source": "official",
+   "note": "ルアーウェイト MAX80 (Cast MAX30)"
+  },
+  {
+   "series": "BRIGADE Flip TR ブリゲイド フリップ TR",
+   "model": "BFT632S-MHS",
+   "type": "spinning",
+   "length_m": 1.9,
+   "egi_g": "〜100",
+   "pe": "〜1.0",
+   "tip": "カーボンソリッド(マグナフレックス製法)",
+   "price_jpy": 45500,
+   "year": null,
+   "url": "https://fishing.tenryu-magna.com/offshore/brigade_flip_tr.html",
+   "status": "",
+   "source": "official",
+   "note": "ルアーウェイト MAX100 (Cast MAX35)"
+  }
+ ],
+ "sources": [
+  "https://fishing.tenryu-magna.com/offshore/brigade_flip_tr.html",
+  "https://fishing.tenryu-magna.com/offshore/brigade_tr.html",
+  "https://fishing.tenryu-magna.com/offshore/"
+ ],
+ "notes": [
+  "公式サイトは fishing.tenryu-magna.com。現行のティップラン機種はブリゲイド フリップ TR(「ユーティリティ・ティップランモデル」、ティップラン/イカメタル/バチコン/軽量ジグ兼用)の3機種のみで全てスピニング。ベイトのティップラン機種は現行・旧ともに確認できず。発売年は公式ページに記載なし。",
+  "旧シリーズ「ブリゲイド TR」(BTC75H/BTC76L/BTC77M、全てスピニング、2019年1月製造終了)は旧スピニングのため未収録。"
+ ]
+}

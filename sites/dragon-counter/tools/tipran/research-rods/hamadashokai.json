@@ -1,0 +1,104 @@
+{
+ "maker": "プロマリン（浜田商会）",
+ "rods": [
+  {
+   "series": "アルベルトボートエギング",
+   "model": "602ML",
+   "type": "spinning",
+   "length_m": 1.8,
+   "egi_g": "〜70",
+   "pe": "0.4-1.0",
+   "tip": "ソリッド",
+   "price_jpy": null,
+   "year": null,
+   "url": "https://www.hamadashokai.co.jp/goods/detail.php?match_code=4997223612522",
+   "status": "",
+   "source": "official",
+   "note": "JAN 4997223612522"
+  },
+  {
+   "series": "アルベルトボートエギング",
+   "model": "662ML",
+   "type": "spinning",
+   "length_m": 1.98,
+   "egi_g": "〜70",
+   "pe": "0.4-1.0",
+   "tip": "ソリッド",
+   "price_jpy": null,
+   "year": null,
+   "url": "https://www.hamadashokai.co.jp/goods/detail.php?match_code=4997223612522",
+   "status": "",
+   "source": "official",
+   "note": "JAN 4997223612539"
+  },
+  {
+   "series": "アーティライドボートエギング",
+   "model": "602ML",
+   "type": "spinning",
+   "length_m": 1.8,
+   "egi_g": "〜70",
+   "pe": "0.4-1.0",
+   "tip": "ソリッド",
+   "price_jpy": null,
+   "year": null,
+   "url": "https://www.hamadashokai.co.jp/goods/detail.php?match_code=4997223324784",
+   "status": "",
+   "source": "official",
+   "note": "JAN 4997223324784"
+  },
+  {
+   "series": "アーティライドボートエギング",
+   "model": "662ML",
+   "type": "spinning",
+   "length_m": 1.98,
+   "egi_g": "〜70",
+   "pe": "0.4-1.0",
+   "tip": "ソリッド",
+   "price_jpy": null,
+   "year": null,
+   "url": "https://www.hamadashokai.co.jp/goods/detail.php?match_code=4997223324784",
+   "status": "",
+   "source": "official",
+   "note": "JAN 4997223324791"
+  },
+  {
+   "series": "ライトレーダーメタルボートエギング",
+   "model": "602ML",
+   "type": "spinning",
+   "length_m": 1.8,
+   "egi_g": "〜70",
+   "pe": "0.4-1.0",
+   "tip": "形状記憶メタルティップ",
+   "price_jpy": null,
+   "year": null,
+   "url": "https://www.hamadashokai.co.jp/goods/detail.php?match_code=4997223612577",
+   "status": "",
+   "source": "official",
+   "note": "JAN 4997223612577"
+  },
+  {
+   "series": "ライトレーダーメタルボートエギング",
+   "model": "662ML",
+   "type": "spinning",
+   "length_m": 1.98,
+   "egi_g": "〜70",
+   "pe": "0.4-1.0",
+   "tip": "形状記憶メタルティップ",
+   "price_jpy": null,
+   "year": null,
+   "url": "https://www.hamadashokai.co.jp/goods/detail.php?match_code=4997223612577",
+   "status": "",
+   "source": "official",
+   "note": "JAN 4997223612584"
+  }
+ ],
+ "sources": [
+  "https://www.hamadashokai.co.jp/goods/cate3.php?cate_code=02110000",
+  "https://www.hamadashokai.co.jp/goods/detail.php?match_code=4997223612522",
+  "https://www.hamadashokai.co.jp/goods/detail.php?match_code=4997223324784",
+  "https://www.hamadashokai.co.jp/goods/detail.php?match_code=4997223612577"
+ ],
+ "notes": [
+  "浜田商会の商品DBでは「イカメタルロッド」カテゴリ内に「〜ボートエギング」名のティップラン専用3シリーズがあり、全て《スピニングモデル》表記。品番欄は空で規格(602ML/662ML)のみ。価格・発売年の掲載なし(price_jpy=null)。ベイトのティップラン機種なし。"
+ ]
+}

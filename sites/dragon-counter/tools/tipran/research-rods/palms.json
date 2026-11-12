@@ -1,0 +1,57 @@
+{
+ "maker": "パームス",
+ "rods": [
+  {
+   "series": "Armorclad TR アーマークラッドTR",
+   "model": "ATGS-511 SPRINT",
+   "type": "spinning",
+   "length_m": 1.8,
+   "egi_g": "〜45",
+   "pe": "0.4-1",
+   "tip": "ソリッド",
+   "price_jpy": 20700,
+   "year": null,
+   "url": "https://www.palmsjapan.com/rod/product/?name=armorclad-tr",
+   "status": "",
+   "source": "official",
+   "note": "餌木2.5-4号(Max45g)。5ft.11inc.→m換算"
+  },
+  {
+   "series": "Armorclad TR アーマークラッドTR",
+   "model": "ATGS-63 SPRINT",
+   "type": "spinning",
+   "length_m": 1.91,
+   "egi_g": null,
+   "pe": "0.4-1",
+   "tip": "ソリッド",
+   "price_jpy": 20300,
+   "year": null,
+   "url": "https://www.palmsjapan.com/rod/product/?name=armorclad-tr",
+   "status": "",
+   "source": "official",
+   "note": "餌木2.5-4号(g表記なし)。6ft.3inc.→m換算"
+  },
+  {
+   "series": "Armorclad TR アーマークラッドTR",
+   "model": "ATGS-66 MUSCLE",
+   "type": "spinning",
+   "length_m": 1.98,
+   "egi_g": null,
+   "pe": "0.6-1.2",
+   "tip": "ソリッド",
+   "price_jpy": 20800,
+   "year": null,
+   "url": "https://www.palmsjapan.com/rod/product/?name=armorclad-tr",
+   "status": "",
+   "source": "official",
+   "note": "餌木3-4.5号(g表記なし)。6ft.6inc.→m換算"
+  }
+ ],
+ "sources": [
+  "https://www.palmsjapan.com/rod/product/?name=armorclad-tr",
+  "https://www.palmsjapan.com/rod/"
+ ],
+ "notes": [
+  "アーマークラッドTR(「ティップランとイカメタルの専用シリーズ」)のうち「Tip Run Models [ティップランモデル]」3機種(ATGS=スピニング)のみ収録。ATGC-66 LIGHT SPRINT / ATGC-66 SPRINT はイカメタル(鉛スッテ)用ベイトのため除外。ベイトのティップラン機種は無し。長さはft/in表記のみのためm換算。適合エギは号数表記が基本でg表記はATGS-511のMax45gのみ。発売年の記載なし。旧世代ページ(armorclad-tr-old, 型番ASGS/ASGC)は中身を取得できず未確認。"
+ ]
+}

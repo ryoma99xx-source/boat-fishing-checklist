@@ -1,0 +1,75 @@
+{
+ "maker": "プロックス",
+ "rods": [
+  {
+   "series": "エギンガー ティップラン エアーK FE",
+   "model": "ETRAKF66M",
+   "type": "spinning",
+   "length_m": 2.01,
+   "egi_g": "〜60",
+   "pe": "0.4-0.8",
+   "tip": "カーボンソリッド",
+   "price_jpy": 11000,
+   "year": 2025,
+   "url": "https://www.proxinc.co.jp/lineup/item/9890",
+   "status": "",
+   "source": "official",
+   "note": "規格66M"
+  },
+  {
+   "series": "エギンガー ティップラン エアーK FE",
+   "model": "ETRAKF66MH",
+   "type": "spinning",
+   "length_m": 2.01,
+   "egi_g": "〜80",
+   "pe": "0.4-1.0",
+   "tip": "カーボンソリッド",
+   "price_jpy": 11000,
+   "year": 2025,
+   "url": "https://www.proxinc.co.jp/lineup/item/9890",
+   "status": "",
+   "source": "official",
+   "note": "規格66MH"
+  },
+  {
+   "series": "エギンガーティップラン エアーＫ",
+   "model": "ETRAK78M",
+   "type": "spinning",
+   "length_m": 2.33,
+   "egi_g": "〜40",
+   "pe": "0.4-0.8",
+   "tip": null,
+   "price_jpy": 9800,
+   "year": null,
+   "url": "https://www.proxinc.co.jp/lineup/item/5464",
+   "status": "旧モデル",
+   "source": "official",
+   "note": "公式ページで「完売」表示。VSSスピニングリールシート"
+  },
+  {
+   "series": "エギンガーティップラン エアーＫ",
+   "model": "ETRAK78MH",
+   "type": "spinning",
+   "length_m": 2.33,
+   "egi_g": "〜50",
+   "pe": "0.4-0.8",
+   "tip": null,
+   "price_jpy": 9800,
+   "year": null,
+   "url": "https://www.proxinc.co.jp/lineup/item/5464",
+   "status": "旧モデル",
+   "source": "official",
+   "note": "公式ページで「完売」表示。VSSスピニングリールシート"
+  }
+ ],
+ "sources": [
+  "https://www.proxinc.co.jp/lineup/item/9890",
+  "https://www.proxinc.co.jp/lineup/item/5464",
+  "https://www.proxinc.co.jp/lineup/item/13700",
+  "https://www.proxinc.co.jp/lineup/category/lure-rod"
+ ],
+ "notes": [
+  "公式サイトは proxinc.co.jp。ティップラン専用はエギンガー ティップラン エアーK FE(現行)と旧エギンガーティップラン エアーK(公式ページで全規格「完売」表示)。どちらもスピニング(FEはページにスピニング/ベイトの明記なし。ガイド構成がKLガイド始まり=同社がスピニングモデルと説明する構成、のためスピニングと判断)。",
+  "マルチゲームタイプK(MGTK66MC=ベイト エギMax90g / MGTK66MLS=スピニング エギMax60g、各12,000円、2026年7月発売)はイカメタル・ティップラン・タイラバ・ライトジギング・バチコン兼用の汎用オフショアロッドのため未収録。スキッドメタル系はイカメタル用で除外。"
+ ]
+}

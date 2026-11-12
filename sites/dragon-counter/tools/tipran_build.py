@@ -262,6 +262,33 @@ R("${tbList('skirts')}",
   "${tbList('skirts')}${TB_CAT.skirts.length?`<button class=\"btn sm\" data-act=\"tbcOpen\" data-kind=\"skirts\" style=\"margin:8px 0\">📖 カタログから選ぶ（${[...new Set(TB_CAT.skirts.map(r=>r.m))].length}社・${TB_CAT.skirts.length}製品）</button><p class=\"muted\" style=\"margin:0\">カタログにないものは、下に重さを入れて登録</p>`:''}")
 R("使う重さを登録しておくと、記録のときに選べます。", "メーカーのカタログから選ぶか、使う重さを登録しておくと、記録のときに選べます。")
 
+# ───────── 竿とリールのカタログ（tools/tipran/tackle.json、tipran_tackle.py が作る）
+# タチウオ用のカタログをティップラン用に差し替える。スピニングとベイトを同じ一覧に入れ、絞り込みで分ける。
+# rods [id,メーカー,シリーズ,品番,長さm,spinning|bait,エギの重さg,状態] / reels [id,メーカー,シリーズ,品番,spinning|bait,カウンター0|1,状態]
+_tp = os.path.join(HERE, 'tipran', 'tackle.json')
+if os.path.exists(_tp):
+    TK = json.load(open(_tp, encoding='utf-8'))
+    _mk = lambda L: list(dict.fromkeys(a[1] for a in L))
+    _d = lambda x: json.dumps(x, ensure_ascii=False, separators=(',', ':'))
+    RX(r"const TCAT=\{.*?\}; //", lambda m: 'const TCAT=' + _d({'v': '2026年11月', 'rods': TK['rods'], 'reels': TK['reels']}) + '; //', flags=re.S)
+    RX(r"const TK_MK=\{[^}]*\};\nconst TK_MAKERS=\{[^}]*\};", lambda m: 'const TK_MK={};\nconst TK_MAKERS=' + _d({'rod': _mk(TK['rods']), 'reel': _mk(TK['reels'])}) + ';')
+    R("(TCAT.rods||[]).forEach(a=>tcBy[a[0]]={id:a[0],k:'rod',m:a[1],s:a[2],model:a[3],len:a[4],tier:a[5],st:a[6]||''});(TCAT.reels||[]).forEach(a=>tcBy[a[0]]={id:a[0],k:'reel',m:a[1],s:a[2],model:a[3],kind:a[4],st:a[5]||''});",
+      "(TCAT.rods||[]).forEach(a=>tcBy[a[0]]={id:a[0],k:'rod',m:a[1],s:a[2],model:a[3],len:a[4],kind:a[5],egi:a[6]||'',st:a[7]||''});(TCAT.reels||[]).forEach(a=>tcBy[a[0]]={id:a[0],k:'reel',m:a[1],s:a[2],model:a[3],kind:a[4],counter:!!a[5],st:a[6]||''});")
+    R("const tkKind=it=>it&&it.kind==='electric'?'電動':'';", "const tkKind=it=>it&&it.kind==='bait'?'ベイト':'';")
+    # 絞り込み：竿はスピニング／ベイト、リールはスピニング／ベイト／カウンター付き
+    R("(!tkQ.kind||(tkQ.kind==='electric')===(x.kind==='electric'))", "(!tkQ.kind||(tkQ.kind==='counter'?x.counter:x.kind===tkQ.kind))")
+    R("${k==='reel'?`<div class=\"seg tk-kind\">${[['','すべて'],['bait','ベイト'],['electric','電動']].map(",
+      "${1?`<div class=\"seg tk-kind\">${(k==='rod'?[['','すべて'],['spinning','スピニング'],['bait','ベイト']]:[['','すべて'],['spinning','スピニング'],['bait','ベイト'],['counter','カウンター']]).map(")
+    R("${x.len?`<small>${x.len}m</small>`:''}${x.kind==='electric'?'<small>電動</small>':''}",
+      "${x.len?`<small>${x.len}m</small>`:''}${x.kind==='bait'?'<small>ベイト</small>':''}${x.egi?`<small>${esc(x.egi)}g</small>`:''}${x.counter?'<small>カウンター付き</small>':''}")
+    R("placeholder=\"${k==='rod'?'例：極鋭、サーベルマスター、175':'例：ソルティガ、フォースマスター、200'}\"", "placeholder=\"${k==='rod'?'例：エメラルダス、セフィア、65':'例：セフィア、エメラルダス、C3000'}\"")
+    R("placeholder=\"${k==='rod'?'例：極鋭タチウオテンヤSP EX MH-175':'例：ソルティガ BJ 100SH'}\"", "placeholder=\"${k==='rod'?'例：エメラルダス AIR BOAT 65MLS-S':'例：セフィア XR C3000SDH'}\"")
+    # ティップランの標準の糸：PE0.6号・200m（タチウオ用は1.5号）
+    ALL("pe:'1.5'", "pe:'0.6'")
+    R("...(k==='reel'?{kind:'bait'}:{})", "...(k==='reel'?{kind:''}:{})")
+    # メーカーが多いので、メーカーの並びは1行で横に送る。絞り込みの文字は折り返さない大きさに
+    R(".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}", ".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}\n.chips.wrap.tk-mk{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px}.seg.tk-kind button{font-size:14px;padding-left:4px;padding-right:4px;white-space:nowrap}")
+
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
 

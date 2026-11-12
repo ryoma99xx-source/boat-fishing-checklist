@@ -1,0 +1,76 @@
+{
+ "maker": "ヤマガブランクス",
+ "rods": [
+  {
+   "series": "BattleWhip TR",
+   "model": "TR510/N",
+   "type": "spinning",
+   "length_m": 1.801,
+   "egi_g": "14-50",
+   "pe": "0.4-0.8",
+   "tip": "カーボンソリッド",
+   "price_jpy": 29000,
+   "year": 2026,
+   "url": "https://yamaga-blanks.com/battlewhip-tr510n/",
+   "status": "",
+   "source": "official",
+   "note": "Type-N（No Look）。2026年4月発売"
+  },
+  {
+   "series": "BattleWhip TR",
+   "model": "TR63/N",
+   "type": "spinning",
+   "length_m": 1.92,
+   "egi_g": "30-60",
+   "pe": "0.4-0.8",
+   "tip": "カーボンソリッド",
+   "price_jpy": 30000,
+   "year": null,
+   "url": "https://yamaga-blanks.com/battlewhip-tr63n/",
+   "status": "",
+   "source": "official",
+   "note": "Type-N（No Look）"
+  },
+  {
+   "series": "BattleWhip TR",
+   "model": "TR73/S",
+   "type": "spinning",
+   "length_m": 2.225,
+   "egi_g": "20-40",
+   "pe": "0.4-0.8",
+   "tip": "カーボンソリッド",
+   "price_jpy": 31500,
+   "year": null,
+   "url": "https://yamaga-blanks.com/battlewhip-tr73s/",
+   "status": "",
+   "source": "official",
+   "note": "Type-S（Shallow）。エギ4号キャスト可"
+  },
+  {
+   "series": "BattleWhip TR",
+   "model": "TR69/D",
+   "type": "spinning",
+   "length_m": 2.075,
+   "egi_g": "50-80",
+   "pe": "0.6-1",
+   "tip": "カーボンソリッド",
+   "price_jpy": 32500,
+   "year": null,
+   "url": "https://yamaga-blanks.com/battlewhip-tr69d/",
+   "status": "",
+   "source": "official",
+   "note": "Type-D（Deep）"
+  }
+ ],
+ "sources": [
+  "https://yamaga-blanks.com/product/eging/battlewhiptr/",
+  "https://yamaga-blanks.com/battlewhip-tr510n/",
+  "https://yamaga-blanks.com/battlewhip-tr63n/",
+  "https://yamaga-blanks.com/battlewhip-tr73s/",
+  "https://yamaga-blanks.com/battlewhip-tr69d/",
+  "https://yamaga-blanks.com/product/eging/"
+ ],
+ "notes": [
+  "公式のEGINGカテゴリは Calista / Mebius / BattleWhip TR / BattleWhip IM・OR の4シリーズ。ティップラン用は BattleWhip TR の4機種のみで全てスピニング(リールシートVSS16、適合リールはスピニング番手表記)。「カリスタ TR」というシリーズは公式サイトに無い。ベイトのティップラン機種なし(BattleWhip IM/ORはイカメタル・オモリグ用のため除外)。"
+ ]
+}

@@ -1,0 +1,41 @@
+{
+ "maker": "ゼスタ",
+ "rods": [
+  {
+   "series": "ASSAULTJET TYPE TR",
+   "model": "ST510M-S SOLID TECHNICA",
+   "type": "spinning",
+   "length_m": 1.78,
+   "egi_g": "〜100",
+   "pe": "0.4-1.2",
+   "tip": "カーボンソリッド",
+   "price_jpy": 34000,
+   "year": null,
+   "url": "https://xesta.jp/assaultjet-type-tr-2/",
+   "status": "",
+   "source": "official",
+   "note": "レッドモンスター/ディープ対応のショートパワーモデルと記載"
+  },
+  {
+   "series": "ASSAULTJET TYPE TR",
+   "model": "SV63ML-S SOLID VERSATILE",
+   "type": "spinning",
+   "length_m": 1.9,
+   "egi_g": "〜60",
+   "pe": "0.4-1.0",
+   "tip": "グラスソリッド",
+   "price_jpy": 35000,
+   "year": null,
+   "url": "https://xesta.jp/assaultjet-type-tr-2/",
+   "status": "",
+   "source": "official"
+  }
+ ],
+ "sources": [
+  "https://xesta.jp/assaultjet-type-tr-2/",
+  "https://xesta.jp/xesta-rods/"
+ ],
+ "notes": [
+  "ティップラン専用は ASSAULT JET TYPE TR の2機種(スピニング、VSSリールシート)。ベイト機種なし。発売年の記載なし。アサルトジェット(ショア)・Type S・イカメタルは除外。"
+ ]
+}

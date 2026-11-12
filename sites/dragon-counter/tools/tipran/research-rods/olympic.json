@@ -1,0 +1,95 @@
+{
+ "maker": "オリムピック",
+ "rods": [
+  {
+   "series": "カラマレッティー・プロトタイプ ＜ティップエギングモデル＞",
+   "model": "25GCALPS-5112M-TS",
+   "type": "spinning",
+   "length_m": 1.8,
+   "egi_g": "〜70",
+   "pe": "0.4-0.8",
+   "tip": "チタンソリッドティップ",
+   "price_jpy": 55000,
+   "year": 2025,
+   "url": "https://olympic-co-ltd.jp/fishing/products/25-calamaretti-prototype-tipeging/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "カラマレッティー・プロトタイプ ＜ティップエギングモデル＞",
+   "model": "25GCALPS-642ML-TS",
+   "type": "spinning",
+   "length_m": 1.93,
+   "egi_g": "〜60",
+   "pe": "0.4-0.8",
+   "tip": "チタンソリッドティップ",
+   "price_jpy": 57000,
+   "year": 2025,
+   "url": "https://olympic-co-ltd.jp/fishing/products/25-calamaretti-prototype-tipeging/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "カラマレッティー・プロトタイプ ＜ティップエギングモデル＞",
+   "model": "25GCALPS-6102ML/M-S",
+   "type": "spinning",
+   "length_m": 2.08,
+   "egi_g": "〜70",
+   "pe": "0.4-1.0",
+   "tip": "ソリッドティップ",
+   "price_jpy": 59000,
+   "year": 2025,
+   "url": "https://olympic-co-ltd.jp/fishing/products/25-calamaretti-prototype-tipeging/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "カラマレッティー・プロトタイプ ＜ティップエギングモデル＞",
+   "model": "26GCALPS-6102MH-HS+",
+   "type": "spinning",
+   "length_m": 2.08,
+   "egi_g": "〜90",
+   "pe": "0.4-1.0",
+   "tip": "トレカ®T1100GソリッドHS+",
+   "price_jpy": 60000,
+   "year": 2026,
+   "url": "https://olympic-co-ltd.jp/fishing/products/25-calamaretti-prototype-tipeging/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "カラマレッティーUX ＜ティップエギングモデル＞",
+   "model": "23GCALUS-5112M-S-TE",
+   "type": "spinning",
+   "length_m": 1.81,
+   "egi_g": "〜70",
+   "pe": "0.4-1.0",
+   "tip": "ソリッドティップ",
+   "price_jpy": 25000,
+   "year": 2023,
+   "url": "https://olympic-co-ltd.jp/fishing/products/23-calamaretti-ux-tipeging/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "カラマレッティーUX ＜ティップエギングモデル＞",
+   "model": "26GCALUS-662ML-S-TE",
+   "type": "spinning",
+   "length_m": 1.98,
+   "egi_g": "〜60",
+   "pe": "0.4-0.8",
+   "tip": "ソリッドティップ",
+   "price_jpy": 26000,
+   "year": 2026,
+   "url": "https://olympic-co-ltd.jp/fishing/products/23-calamaretti-ux-tipeging/",
+   "status": "",
+   "source": "official"
+  }
+ ],
+ "sources": [
+  "https://olympic-co-ltd.jp/fishing/offshoreeging_lineup/ （公式・オフショアエギングロッド一覧）",
+  "https://olympic-co-ltd.jp/fishing/products/25-calamaretti-prototype-tipeging/",
+  "https://olympic-co-ltd.jp/fishing/products/23-calamaretti-ux-tipeging/",
+  "発売年は品番の年式プレフィックス(23/25/26)による"
+ ]
+}
