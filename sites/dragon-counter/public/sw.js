@@ -9,7 +9,7 @@ const timeout=ms=>new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),ms))
 async function netFirst(req,key){const c=await caches.open(VER);try{const res=await Promise.race([fetch(req),timeout(4000)]);if(res&&res.ok)c.put(key,res.clone());return res}catch(err){return (await c.match(key))||Response.error()}}
 self.addEventListener('fetch',e=>{
   const req=e.request;if(req.method!=='GET')return;const url=new URL(req.url);
-  if(url.pathname.startsWith('/tairaba/')||url.pathname.startsWith('/tipran/'))return; // タイラバカウンター（別アプリ）は自分の service worker が扱う
+  if(url.pathname.startsWith('/tairaba/')||url.pathname.startsWith('/tipran/')||url.pathname.startsWith('/tenya-catalog/'))return; // タイラバ・ティップランは自分の service worker が扱う。テンヤカタログは読むページ（アプリにしない）
   if(req.mode==='navigate'){e.respondWith(netFirst(req,PAGE));return}
   if(url.origin===location.origin&&url.pathname===EXTRA){e.respondWith(netFirst(req,EXTRA));return}
   if(url.origin===location.origin&&url.pathname==='/tenya/index.json'){e.respondWith(netFirst(req,'/tenya/index.json'));return}   // the photo list carries the photos' version: always ask the network first

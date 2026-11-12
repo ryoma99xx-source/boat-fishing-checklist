@@ -364,6 +364,7 @@ def export():
     hh = hashlib.sha256()
     for x in sorted(ids): hh.update(x.encode()); hh.update(open(os.path.join(OUT, x + ".webp"), "rb").read())
     json.dump({"v": hh.hexdigest()[:10], "ids": sorted(ids)}, open(os.path.join(OUT, "index.json"), "w"))
+    import tenya_page; tenya_page.main()   # the public catalog page shows the same photos
     size = sum(os.path.getsize(os.path.join(OUT, x)) for x in os.listdir(OUT)); print(f"書き出し {n} 枚、合計 {size/1024:.0f}KB")
 
 if __name__ == "__main__":

@@ -56,6 +56,8 @@ def export_all(have, updated):
             cur = head; lines.append(f"## {head}")
         lines.append(f"{r['m']}｜{r['p']}｜{r['z']}号｜{r['c']}｜{r['s']}")
     open(os.path.join(SITE, "public", "catalog-all.txt"), "w", encoding="utf-8").write("\n".join(lines) + "\n")
+    # the public catalog page (/tenya-catalog/) is made from the same list
+    sys.path.insert(0, HERE); import tenya_page; tenya_page.main()
 
 
 def refresh_hashes(name):
