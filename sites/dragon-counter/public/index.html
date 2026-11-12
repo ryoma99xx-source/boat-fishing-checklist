@@ -2087,6 +2087,7 @@ function tbRows(){const T=TEN();const mine=new Set(myTenya());
   let list=CAT.list.concat(T.custom.filter(x=>!x.hidden).map(x=>({...x,custom:true})));
   if(tb.only==='mine')list=list.filter(t=>mine.has(t.id));else if(tb.only==='new')list=list.filter(t=>isNewTenya(t)||t.s==='発売予定');
   if(tb.z)list=list.filter(t=>String(t.z)===tb.z);if(tb.m)list=list.filter(t=>t.m===tb.m);
+  if(tb.tg)list=list.filter(t=>/(^|[^A-Za-z])TG([^A-Za-z]|$)|タングステン/.test(String(t.p||'')));   // タングステン（TG）だけ。テンヤカタログのページと同じ見分け方
   if(tb.q.trim()){const terms=normQ(tb.q).split(/\s+/).filter(Boolean);
     list=list.filter(t=>{const h=normQ(`${t.m} ${MK[t.m]||''} ${t.p} ${tenyaAbbr(t)} ${t.z}号 ${t.c} ${t.name||''} ${t.s||''} ${t.custom?'自分で追加':''}`),h2=h.replace(/[\s・･\-]/g,'');return terms.every(q=>{const n=q.replace(/号$/,'');if(/^\d+$/.test(n))return String(t.z)===n; return h.includes(q)||h2.includes(q.replace(/[・･\-]/g,''))})})}
   // 製品はシリーズ名で並べる（ダイワの「船タチウオテンヤSS Rhythm …」と「船タチウオテンヤ Rhythm 替えヘッド」が離れないように、共通の頭を外して比べる）
@@ -2127,6 +2128,7 @@ function normQ(x){return String(x||'').normalize('NFKC').toLowerCase().replace(/
 function tbBarHTML(){const makers=[...new Set(CAT.list.map(t=>t.m))].sort();
   return `<div class="seg">${[['','全号数'],['30','30号'],['40','40号'],['50','50号']].map(([v,l])=>`<button class="${tb.z===v?'on':''}" data-act="tbZ" data-d="${v}">${l}</button>`).join('')}</div>
    <div class="seg">${[['all','すべて'],['mine','所有だけ'],['new','新商品だけ']].map(([v,l])=>`<button class="${tb.only===v?'on':''}" data-act="tbOnly" data-d="${v}">${l}</button>`).join('')}</div>
+   <div class="seg">${[['','すべての素材'],['1','タングステンだけ']].map(([v,l])=>`<button class="${(tb.tg||'')===v?'on':''}" data-act="tbTg" data-d="${v}">${l}</button>`).join('')}</div>
    <select id="tbM" data-tbm="1" aria-label="メーカー"><option value="">すべてのメーカー</option>${makers.map(m=>`<option value="${esc(m)}" ${tb.m===m?'selected':''}>${esc(MK[m]?m+'（'+MK[m]+'）':m)}</option>`).join('')}</select>
    ${tb.mode==='mine'?`<p class="tb-own">「＋ 所有に追加」を押すと、その場で所有テンヤに入ります（左のチェックでも同じ）。<b>所有テンヤ：${myTenya().length}種・${ownTotal()}個</b></p>`:''}
    <p class="muted tb-help">${tb.only==='mine'?'「所有だけ」：チェックを付けた、持っているテンヤだけを表示しています。':tb.only==='new'?`「新商品だけ」：発売予定のものと、ここ2か月以内にカタログへ追加されたテンヤです（カタログ ${esc(CAT.ver||'')} 時点）。`:''}</p>`}
@@ -2543,7 +2545,7 @@ const acts={
   tbToMine:()=>{tb={q:'',z:'',m:'',only:'all',mode:'mine',backSet:tb.setId};openTenyaSheet()},
   tbBackSet:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'set',setId:tb.backSet};openTenyaSheet()},
   setEdit:b=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'set',setId:b.dataset.set};openTenyaSheet()},
-  tbZ:b=>{tb.z=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},tbFold:b=>{tb.fold=tb.fold||{};const z=b.dataset.z;tb.fold[z]=!tb.fold[z];tbRefresh()},tbOnly:b=>{tb.only=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},
+  tbZ:b=>{tb.z=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},tbFold:b=>{tb.fold=tb.fold||{};const z=b.dataset.z;tb.fold[z]=!tb.fold[z];tbRefresh()},tbOnly:b=>{tb.only=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},tbTg:b=>{tb.tg=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},
   tbSetQuick:b=>{const T=TEN(),st=T.sets.find(x=>x.id===b.dataset.set),id=b.dataset.id;if(!st)return;const add=!st.items.includes(id);st.items=add?st.items.concat([id]):st.items.filter(x=>x!==id);cfgTouch();tbRefresh();toast(add?`「${st.name}」に入れました`:`「${st.name}」から外しました`)},
   tbSetNew:b=>{const T=TEN();const st={id:uid(),name:SET_NAMES[0],items:[b.dataset.id]};T.sets.push(st);cfgTouch();tbRefresh();toast(`「${st.name}」を作って入れました`)},
   tbMine:b=>{const T=TEN(),id=b.dataset.id;const add=!T.mine.includes(id);T.mine=add?T.mine.concat([id]):T.mine.filter(x=>x!==id);cfgTouch();tbRefresh();const t=tenyaOf(id);toast(`${t?tenyaMain(t):'テンヤ'}を所有テンヤ${add?'に追加しました':'から外しました'}（${myTenya().length}種）`)},
