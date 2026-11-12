@@ -79,8 +79,6 @@ def build_article():
     makers = [m for m in T.ORDER if any(r['m'] == m for r in plist)]
     ncol = sum(len(r['cols']) for r in plist)
     upd = allc.get('updated', '')
-    toc = ''.join('<a href="#mk-%s" style="display:inline-block;border:1px solid #44566e;border-radius:999px;padding:4px 12px;margin:0 6px 8px 0;text-decoration:none">%s</a>'
-                  % (SLUG.get(m, 'x'), E(T.JP.get(m, m))) for m in makers)
     body = []
     for m in makers:
         rs = [r for r in plist if r['m'] == m]
@@ -136,13 +134,6 @@ def build_article():
              '<li>色の名前と号数はメーカーの表記のままです。写真はメーカーの製品写真を切り抜いたものです。</li>'
              '<li>メーカーごとに、今の製品 → 替えヘッド → 旧型（今は作られていない前のモデル）の順です。旧型も、在庫や手持ちで見かけるので載せています。</li></ul>')
     a.append('<p><b>一覧の上で、号数・新商品・タングステン（TG）・メーカーで絞り込み、色や製品の名前で検索できます。</b>ドラゴンカウンターのカタログと同じ探し方です。「ケイムラ 40」「ダイワ グロー」のように、空白で区切って続けて入れると、全部に当てはまるものだけが残ります。数字だけ入れると号数で探します。</p>')
-    sizes = sorted({z for r in plist for z in r['z']})
-    a.append('<h2><span class="en">SIZE</span>号数で探す</h2>')
-    a.append('<p>このカタログに載せているのは、%sのテンヤです。号数ごとに、その号数がある製品をまとめました。製品名を押すと、その製品の色の一覧に飛びます（写真の下に、その色がある号数が出ています）。</p>' % '・'.join(T.zs(z) + '号' for z in sizes))
-    for z in sizes:
-        rs = [r for r in plist if z in r['z']]
-        items = ''.join('<li><a href="#tp-%d">%s %s</a>（%d色）</li>' % (plist.index(r), E(T.JP.get(r['m'], r['m'])), E(r['p']), sum(1 for c in r['cols'].values() if z in c['z'])) for r in rs)
-        a.append('<details style="border:1px solid #44566e;border-radius:10px;padding:10px 14px;margin:0 0 10px"><summary style="cursor:pointer;font-weight:700;font-size:17px">%s号のテンヤ（%d製品）</summary><ul style="margin:8px 0 0">%s</ul></details>' % (T.zs(z), len(rs), items))
     a.append('<h2><span class="en">WORDS</span>色や製品名によく出てくる言葉</h2>')
     a.append('<ul><li><b>グロー・夜光</b>：光をためて、暗いところで光る塗装。</li>'
              '<li><b>ケイムラ</b>：紫外線が当たると青白く光る塗装。</li>'
@@ -158,12 +149,12 @@ def build_article():
     a.append('<ul><li>このページと同じリストから、持っているテンヤを登録・個数を管理</li><li>釣り場を選ぶと、潮回りと満潮・干潮が自動で入る</li><li>アタリ・バラシ・釣れた時刻を、ボタン1つで記録</li><li>ドラゴン（120cm以上）や大漁も記録できる</li><li>記録はスマホの中に保存。ホーム画面に置けばアプリのように使える</li></ul>')
     a.append('<p style="text-align:center;margin:20px 0"><a href="%s" style="display:inline-block;background:#41c9c6;color:#03161c !important;font-size:17px;font-weight:700;padding:14px 28px;border-radius:8px;text-decoration:none;margin:6px">ドラゴンカウンターを開く →</a>'
              '<a href="https://cutlassfish.tokyo/article/dragon-counter/" style="display:inline-block;border:2px solid #41c9c6;color:inherit;font-size:16px;font-weight:700;padding:12px 22px;border-radius:8px;text-decoration:none;margin:6px">使い方の記事を読む</a></p>' % APP)
-    a.append('<h2><span class="en">CATALOG</span>メーカー別の一覧</h2>')
-    a.append('<div data-tcat="1">\n<p data-tcat-static="1">%s</p>\n<div data-tcat-bar="1"></div>\n%s\n</div>' % (toc, '\n'.join(body)))
+    a.append('<h2><span class="en">CATALOG</span>テンヤの一覧</h2>')
+    a.append('<div data-tcat="1">\n<div data-tcat-bar="1"></div>\n%s\n</div>' % '\n'.join(body))
     a.append('<p><small>%s 時点の内容です。価格や在庫は各ショップで確かめてください。Amazonのアソシエイトとして、このサイトは適格販売により収入を得ています。</small></p>' % E(upd))
     art = {'version': 1,
            'title': '船タチウオテンヤ カタログ｜%dメーカー・%d色を写真で一覧（毎月更新）' % (len(makers), ncol),
-           'excerpt': 'ダイワ・シマノ・ハヤブサなど%dメーカーの船タチウオテンヤ%d製品・%d色を、写真で一覧にしました。号数と色の名前の見方、メーカー別の目次付き。釣果記録アプリ「ドラゴンカウンター」と同じデータで毎月更新します。' % (len(makers), len(plist), ncol),
+           'excerpt': 'ダイワ・シマノ・ハヤブサなど%dメーカーの船タチウオテンヤ%d製品・%d色を、写真で一覧にしました。号数・新商品・タングステン・メーカーで絞り込めて、色や製品の名前で検索できます。釣果記録アプリ「ドラゴンカウンター」と同じデータで毎月更新します。' % (len(makers), len(plist), ncol),
            'images': [{'id': 'tenya-collage', 'file': 'images/tenya-collage.jpg', 'alt': '船タチウオテンヤの写真を並べたもの'}],
            'featured_image': 'tenya-collage'}
     os.makedirs(os.path.join(OUT, 'images'), exist_ok=True)

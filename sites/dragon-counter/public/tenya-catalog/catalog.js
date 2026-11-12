@@ -1,7 +1,7 @@
 /* テンヤカタログの絞り込み・検索・釣れ筋・ランキング。
    ツール版のページ（/tenya-catalog/）と cutlassfish.tokyo の記事（プラグイン cutlassfish-tenya-catalog が読み込む）で同じものを使う。
    絞り込みと検索は、ドラゴンカウンターのカタログと同じ決まり：
-   - 号数（全号数・30・40・50号）、すべて／新商品だけ（発売予定と、2か月以内にカタログに入ったもの）、メーカー
+   - メーカー、号数（全号数・30・40・50号）、すべて／新商品だけ（発売予定と、2か月以内にカタログに入ったもの）、メーカー
    - 素材：すべて／タングステン（TG）だけ（製品の data-tg）
    - 検索は空白で区切った語をすべて含むもの。数字だけ（「40」「40号」）は号数。ひらがなはカタカナと同じに扱う
    ページ側の印：[data-tcat] の中に [data-tcat-bar]（ここに操作部品を作る）・[data-tcat-cnt]、製品 [data-tcat-p]、色 [data-tcat-c]、
@@ -59,11 +59,11 @@ const sizes=[...new Set(figs.flatMap(f=>(f.dataset.z||'').split(' ').filter(Bool
 const makers=[];prods.forEach(p=>{if(!makers.some(x=>x[0]===p.dataset.m))makers.push([p.dataset.m,p.dataset.mj||p.dataset.m])});
 const bar=root.querySelector('[data-tcat-bar]');
 if(bar){bar.className='tcat-bar';bar.innerHTML=`
+ <div class="tcat-row" style="margin:0 0 8px"><select aria-label="メーカー"><option value="">すべてのメーカー</option>${makers.map(([m,j])=>`<option value="${esc(m)}">${esc(j===m?m:m+'（'+j+'）')}</option>`).join('')}</select></div>
  <div class="tcat-seg" data-k="z">${[['','全号数'],...sizes.map(z=>[z,z+'号'])].map(([v,l])=>`<button type="button" data-v="${v}" class="${v===''?'on':''}">${l}</button>`).join('')}</div>
  <div class="tcat-seg" data-k="only"><button type="button" data-v="" class="on">すべて</button><button type="button" data-v="new">新商品だけ</button></div>
  ${prods.some(p=>p.dataset.tg)?`<div class="tcat-seg" data-k="tg"><button type="button" data-v="" class="on">すべての素材</button><button type="button" data-v="1">タングステン（TG）だけ</button></div>`:''}
- <div class="tcat-row"><select aria-label="メーカー"><option value="">すべてのメーカー</option>${makers.map(([m,j])=>`<option value="${esc(m)}">${esc(j===m?m:m+'（'+j+'）')}</option>`).join('')}</select>
- <div class="tcat-q"><input type="search" placeholder="検索（例：ケイムラ 40、ダイワ グロー）" autocomplete="off" enterkeyhint="search" aria-label="テンヤを検索"><button type="button" aria-label="検索を消す" hidden>×</button></div></div>
+ <div class="tcat-row"><div class="tcat-q"><input type="search" placeholder="検索（例：ケイムラ 40、ダイワ グロー）" autocomplete="off" enterkeyhint="search" aria-label="テンヤを検索"><button type="button" aria-label="検索を消す" hidden>×</button></div></div>
  <p class="tcat-help" hidden>「新商品だけ」：発売予定のものと、ここ2か月以内にカタログへ追加されたテンヤです。</p>
  <p class="tcat-cnt"></p>`;
  bar.addEventListener('click',e=>{const b=e.target.closest('.tcat-seg button');if(b){const k=b.parentNode.dataset.k;st[k]=b.dataset.v;$$('button',b.parentNode).forEach(x=>x.classList.toggle('on',x===b));apply();return}
