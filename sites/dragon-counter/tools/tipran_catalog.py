@@ -25,7 +25,8 @@ def size(z):
         v = float(z)
     except ValueError:
         return None
-    return v, ('%.1f' % v)
+    t = '%g' % v  # 2.75号・3.25号もそのまま（3 → 3.0）
+    return v, (t if '.' in t else t + '.0')
 
 
 def main():
