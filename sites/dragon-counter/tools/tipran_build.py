@@ -146,6 +146,21 @@ R("return chips+`<div class=\"zones\">${['ミヨシ寄り','胴の間','トモ�
 R("o.push(TX(xl-40,240,'左舷',{size:14,fill:P.muted,anchor:'middle'}));o.push(TX(xr+40,240,'右舷',{size:14,fill:P.muted,anchor:'middle'}));",
   "if(tr.lay!=='one'){o.push(TX(xl-40,240,'左舷',{size:14,fill:P.muted,anchor:'middle'}));o.push(TX(xr+40,240,'右舷',{size:14,fill:P.muted,anchor:'middle'}))}else o.push(TX(tr.side==='L'?xl-40:xr+40,240,tr.side==='L'?'左舷':'右舷',{size:14,fill:P.muted,anchor:'middle'}));")
 
+# ───────── エギのカタログ（文字だけ）：tools/tipran/catalog.json（tipran_catalog.py が作る）
+# 行の形 {m:メーカー, s:製品, o:[{z:'3.0',g:30},…], w:[0,1,…], c:[色…], u:URL, note}。w は o の番号（ヘッド用の重さ選びをそのまま使うため）
+import json
+_cp = os.path.join(HERE, 'tipran', 'catalog.json')
+EGI = json.load(open(_cp, encoding='utf-8')) if os.path.exists(_cp) else {'v': '', 'heads': [], 'ties': [], 'skirts': []}
+RX(r"const TB_CAT=\{.*?\};\n", lambda m: 'const TB_CAT=' + json.dumps(EGI, ensure_ascii=False, separators=(',', ':')) + ';\n', flags=re.S)
+R("TBC_JP={rigs:'ヘッド',", "TBC_JP={rigs:'エギ',")
+R("${tbc.kind==='rigs'&&cur.w.length?`<div class=\"field\"><span>重さ（持っているものを全部）</span><div class=\"chips wrap\">${cur.w.map(g=>`<button class=\"chip ${tbc.w.has(g)?'on':''}\" data-act=\"tbcW\" data-d=\"${g}\">${g}g</button>`).join('')}</div></div>`:''}",
+  "${tbc.kind==='rigs'&&cur.w.length?`<div class=\"field\"><span>号数・重さ（持っているものを全部）</span><div class=\"chips wrap\">${cur.w.map(g=>{const o=cur.o[g]||{};return `<button class=\"chip ${tbc.w.has(g)?'on':''}\" data-act=\"tbcW\" data-d=\"${g}\">${esc(o.z)}号${o.g?' '+o.g+'g':''}</button>`}).join('')}</div></div>`:''}")
+R("for(const g of ws)for(const c of r.c.filter(x=>tbc.c.has(x))){const x={maker:r.m,series:r.s,g:g?String(g):'',color:c,shape:r.sh||'',cat:true,id:uid()};",
+  "for(const g of ws)for(const c of r.c.filter(x=>tbc.c.has(x))){const o=(r.o||[])[g]||{};const x={maker:r.m,series:r.s,g:o.g?String(o.g):'',color:c,shape:o.z||'',cat:true,id:uid()};")
+R("function tbName(k,x){if(k==='skirts')return x.g?x.g+'g':'';return [x.maker,", "function tbName(k,x){if(k==='skirts')return x.g?x.g+'g':'';return [x.series||x.maker,")
+R("<p class=\"muted\">メーカー・号数・重さ・色を入れて登録します。記録では「ダイワ 3.5号 40g 赤テープ」のように出ます。</p>${tbList('rigs')}",
+  "<p class=\"muted\">メーカーのカタログから選ぶか、メーカー・号数・重さ・色を入れて登録します。</p>${tbList('rigs')}${TB_CAT.heads.length?`<button class=\"btn sm\" data-act=\"tbcOpen\" data-kind=\"rigs\" style=\"margin:8px 0\">📖 カタログから選ぶ（${[...new Set(TB_CAT.heads.map(r=>r.m))].length}社・${TB_CAT.heads.length}製品）</button><p class=\"muted\" style=\"margin:0\">カタログにないものは、下に入れて登録</p>`:''}")
+
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
 
