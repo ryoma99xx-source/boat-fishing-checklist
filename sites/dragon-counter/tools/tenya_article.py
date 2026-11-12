@@ -6,7 +6,7 @@ Output: wordpress/tenya-catalog/{article.json, article.html, images/tenya-collag
 Same data and links as the tool page (/tenya-catalog/), which stays as the version with filters and the ranking.
 WordPress removes scripts, so the article finds things by a maker table of contents instead of filters.
 Photos are loaded from dragon-counter.cutlassfish.tokyo (the app's own cut photos); the featured image is a
-collage of those photos (only arranged, not edited)."""
+collage of those photos (only arranged, not edited) with a title band, 1080x1350 for Instagram."""
 import html, json, os, shutil, urllib.parse, urllib.request
 from PIL import Image
 
@@ -27,24 +27,56 @@ def photo(i, pv):
     return 'https://dragon-counter.cutlassfish.tokyo/tenya/%s.webp%s' % (i, '?v=' + urllib.parse.quote(pv) if pv else '')
 
 
-def collage(plist, pv, path):
-    """1200x630: one photo from each product, in a grid on the site's dark colour."""
+def collage(plist, pv, path, nmk, ncol):
+    """Featured image, 1080x1350 (4:5, the tallest shape Instagram shows in full): 24 tenya photos, 3 rows above and
+    3 rows below a title band. The band is in the middle so a landscape or square crop (site cards, X) still shows it.
+    Photos are only arranged and made smaller; the title is drawn on the band, not on the photos."""
+    from PIL import ImageDraw, ImageFont
     src = os.path.join(T.PUB, 'tenya')
-    pics = []
+    # one product from each maker in turn, a different colour each time, so the grid is not all one maker
+    by = {}
     for r in plist:
-        for c in r['cols'].values():
-            if c['img'] and '旧型' not in r['p'] and not r['h']:
-                pics.append(c['img']); break
-    W, H, cols, rows = 1200, 630, 6, 4
-    cw, ch = W // cols, H // rows
+        if '旧型' in r['p'] or r['h']:
+            continue
+        cs = [c['img'] for c in r['cols'].values() if c['img']]
+        if cs:
+            by.setdefault(r['m'], []).append(cs)
+    pics, k = [], 0
+    while len(pics) < 24 and any(by.values()):
+        for m in list(by):
+            if by[m] and len(pics) < 24:
+                cs = by[m].pop(0)
+                pics.append(cs[k % len(cs)]); k += 1
+    W, H, cols, th, band = 1080, 1350, 4, 180, 270
+    cw = W // cols
     im = Image.new('RGB', (W, H), (6, 10, 17))
-    for n, i in enumerate(pics[:cols * rows]):
+    for n, i in enumerate(pics):
+        row = n // cols
+        y = row * th + (band if row >= 3 else 0)
         p = Image.open(os.path.join(src, i + '.webp')).convert('RGBA')
-        p.thumbnail((cw - 12, ch - 12), Image.LANCZOS)
-        tile = Image.new('RGBA', (cw - 8, ch - 8), (255, 255, 255, 255))
+        p.thumbnail((cw - 16, th - 12), Image.LANCZOS)
+        tile = Image.new('RGBA', (cw - 8, th - 8), (255, 255, 255, 255))
         tile.alpha_composite(p, ((tile.width - p.width) // 2, (tile.height - p.height) // 2))
-        im.paste(tile.convert('RGB'), ((n % cols) * cw + 4, (n // cols) * ch + 4))
-    im.save(path, 'JPEG', quality=85)
+        im.paste(tile.convert('RGB'), ((n % cols) * cw + 4, y + 4))
+    d = ImageDraw.Draw(im)
+    fd = os.path.join(T.HERE, 'fonts')
+    jp = lambda z: ImageFont.truetype(os.path.join(fd, 'NotoSansJP-Bold.ttf'), z)
+    en = ImageFont.truetype(os.path.join(fd, 'BarlowCondensed-SemiBold.ttf'), 40)
+    y0 = 3 * th
+    d.rectangle([0, y0, W, y0 + band], fill=(11, 20, 34))
+    d.rectangle([0, y0, W, y0 + 5], fill=(227, 164, 59)); d.rectangle([0, y0 + band - 5, W, y0 + band], fill=(227, 164, 59))
+
+    def centre(text, font, y, fill, spacing=0):
+        w = d.textlength(text, font=font) + spacing * (len(text) - 1)
+        x = (W - w) / 2
+        if not spacing:
+            d.text((x, y), text, font=font, fill=fill); return
+        for ch in text:
+            d.text((x, y), ch, font=font, fill=fill); x += d.textlength(ch, font=font) + spacing
+    centre('TENYA CATALOG', en, y0 + 26, (65, 201, 198), 8)
+    centre('船タチウオテンヤ カタログ', jp(78), y0 + 68, (238, 243, 248))
+    centre('%dメーカー・%d色を写真で一覧' % (nmk, ncol), jp(42), y0 + 182, (227, 164, 59))
+    im.save(path, 'JPEG', quality=88)
 
 
 def tsure_keys():
@@ -158,7 +190,7 @@ def build_article():
            'images': [{'id': 'tenya-collage', 'file': 'images/tenya-collage.jpg', 'alt': '船タチウオテンヤの写真を並べたもの'}],
            'featured_image': 'tenya-collage'}
     os.makedirs(os.path.join(OUT, 'images'), exist_ok=True)
-    collage(plist, pv, os.path.join(OUT, 'images', 'tenya-collage.jpg'))
+    collage(plist, pv, os.path.join(OUT, 'images', 'tenya-collage.jpg'), len(makers), ncol)
     open(os.path.join(OUT, 'article.html'), 'w', encoding='utf-8').write('\n\n'.join(a) + '\n')
     json.dump(art, open(os.path.join(OUT, 'article.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print('article:', art['title'], sum(len(x) for x in a) // 1024, 'KB')
