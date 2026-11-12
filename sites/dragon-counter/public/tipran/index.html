@@ -2096,7 +2096,7 @@ const rigIm=(sp,id)=>egiIm((spOf(sp).rigs||[]).find(x=>x.id===id));
 function tbName(k,x){if(k==='skirts')return [x.series,x.g?x.g+'g':'',x.color].filter(Boolean).join(' ');return [x.series||x.maker,x.shape?x.shape+'号':'',x.g?x.g+'g':'',x.color].filter(Boolean).join(' ')}
 function tbList(k){const s=spOf(SOLO),l=s[k]||[];return l.length?l.map(g=>`<div class="grow ${g.hidden?'hid':''}">${k==='rigs'?eimg(egiIm(g),'row'):''}<span class="tb-nm">${esc(g.name)}</span><button class="btn sm" data-act="itemHide" data-sp="${SOLO}" data-kind="${k}" data-id="${g.id}">${g.hidden?'表示する':'隠す'}</button><button class="btn sm" data-act="tbDel" data-kind="${k}" data-id="${g.id}">消す</button></div>`).join(''):'<p class="muted">まだありません。</p>'}
 function tbPartsHTML(){
-  return `<div class="card" id="tbHeads"><h2>エギ</h2><p class="muted">メーカーのカタログから選ぶか、メーカー・号数・重さ・色を入れて登録します。</p>${tbList('rigs')}${TB_CAT.heads.length?`<button class="btn sm" data-act="tbcOpen" data-kind="rigs" style="margin:8px 0">📖 カタログから選ぶ（${[...new Set(TB_CAT.heads.map(r=>r.m))].length}社・${TB_CAT.heads.length}製品）</button><p class="muted" style="margin:0">カタログにないものは、下に入れて登録</p>`:''}
+  return `<div class="card" id="tbHeads"><h2>所有エギを登録する</h2><p class="muted">メーカーのカタログから選ぶか、メーカー・号数・重さ・色を入れて登録します。</p>${tbList('rigs')}${TB_CAT.heads.length?`<button class="btn sm" data-act="tbcOpen" data-kind="rigs" style="margin:8px 0">📖 カタログから選ぶ（${[...new Set(TB_CAT.heads.map(r=>r.m))].length}社・${TB_CAT.heads.length}製品）</button><p class="muted" style="margin:0">カタログにないものは、下に入れて登録</p>`:''}
    <div class="tb-form"><label class="field"><span>メーカー</span><input type="text" id="tbHm" list="tbHmL" placeholder="例：ダイワ">${tbDl('tbHmL','mk')}</label>
     <label class="field"><span>号数</span><input type="text" id="tbHs" list="tbHsL" inputmode="decimal" placeholder="例：3.5">${tbDl('tbHsL','sz')}</label>
     <label class="field"><span>重さ（g）</span><input type="number" id="tbHg" inputmode="numeric" min="1" max="300" placeholder="例：40"></label>
@@ -2885,7 +2885,7 @@ function tutArt(i){const tx=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${
     <circle cx="214" cy="120" r="15" style="fill:rgba(255,255,255,.25);stroke:#fff" stroke-width="2"/>`;
   if(i===1){const row=(y,on,t,sub)=>`<rect x="20" y="${y}" width="260" height="34" rx="9" style="fill:var(--surface2);stroke:var(--line)"/><rect x="30" y="${y+8}" width="18" height="18" rx="5" style="fill:${on?'var(--teal)':'none'};stroke:${on?'var(--teal)':'var(--muted)'}" stroke-width="1.5"/>${on?`<path d="M34 ${y+17} l4 4 l8 -9" style="stroke:#04161a;fill:none" stroke-width="2.4" stroke-linecap="round"/>`:''}${tx(58,y+16,t,{s:12,w:700})}${tx(58,y+29,sub,{s:9.5,f:'var(--muted)'})}`;
     return row(10,true,'エギ王 TR 3.5号 30g 金アジ','エギ・ヤマシタ')+row(48,true,'エメラルダス ボート 3.5号 赤テープ','エギ・ダイワ')+row(86,true,'エギ王TRシンカー 20g','シンカー（増し錘）')+
-      `<path d="M150 126 v8" style="stroke:var(--muted)" stroke-width="2"/><rect x="88" y="136" width="124" height="28" rx="14" style="fill:rgba(227,164,59,.14);stroke:var(--amber)"/>${tx(150,155,'カタログから選べます',{s:12.5,w:700,a:'middle',f:'var(--amber)'})}`}
+      `<path d="M150 126 v8" style="stroke:var(--muted)" stroke-width="2"/><rect x="66" y="136" width="168" height="28" rx="14" style="fill:rgba(227,164,59,.14);stroke:var(--amber)"/>${tx(150,155,'カタログから選べます',{s:12.5,w:700,a:'middle',f:'var(--amber)'})}`}
   if(i===2){const [cx,cy]=toXY(139.8,35.36),w=58,h=w*170/150;
     const [px,py]=toXY(139.775,35.258);const u=w/40;
     let curve='';for(let k=0;k<=40;k++){const x=166+k*3,y=118-Math.sin(k/40*Math.PI*1.7+.6)*26;curve+=(k?'L':'M')+x.toFixed(1)+','+y.toFixed(1)}
@@ -2908,7 +2908,7 @@ function tutArt(i){const tx=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${
   [[60,1],[92,0],[110,1],[150,0],[176,0],[198,1]].forEach(([x,d])=>{const k=(x-24)/4,y=78-Math.sin(k/60*Math.PI*1.6+.4)*30;dots+=`<circle cx="${x}" cy="${y.toFixed(1)}" r="${d?5:3.6}" style="fill:${d?'var(--amber)':'var(--teal)'}"/>`});
   return `<rect x="10" y="10" width="280" height="96" rx="12" style="fill:var(--surface2);stroke:var(--line)"/><path d="${curve}" style="fill:none;stroke:#f2d64b" stroke-width="2.2"/>${dots}
     <path d="M40,122 L236,122 Q262,126 276,138 Q262,150 236,154 L40,154 Q34,138 40,122 Z" style="fill:var(--surface2);stroke:var(--ink)" stroke-width="1.5"/>
-    ${[0,1,2,3,4,5,6].map(j=>`<circle cx="${226-j*28}" cy="130" r="${j===2?7:4}" style="fill:${j===2?'var(--amber)':'var(--muted)'}"/><circle cx="${226-j*28}" cy="146" r="4" style="fill:var(--muted)"/>`).join('')}`}
+    ${[0,1,2,3,4,5,6].map(j=>`<circle cx="${226-j*28}" cy="138" r="${j===2?7:4.5}" style="fill:${j===2?'var(--amber)':'var(--muted)'}"/>`).join('')}`}
 const TUT=[
   {k:'ようこそ',t:'釣果を時間の経過と共に記録',d:'ティップランカウンターは、ティップランのアオリイカの釣果を時間の経過と共に、使ったエギ・シンカー・潮・流れと一緒に記録するアプリです。全国どこの釣り場でも使えます。釣果データは匿名で集めて傾向の分析に使います。使うことでこれに同意したものとします。'},
   {k:'準備',t:'エギとシンカー（増し錘）を登録',d:'画面下の右端にある「登録」タブで、持っているエギ（メーカー・号数・重さ・色）と、使うシンカーの重さを登録します。竿・リール・糸も登録できます。'},

@@ -300,6 +300,14 @@ R("時刻・テンヤ・種類（釣れた／アタリ／バラシ）", "時刻�
 R("設定（釣り場・船・テンヤ）は、新しいほうを使います。", "設定（釣り場・船・エギ）は、新しいほうを使います。")
 R("テンヤは、その時刻にアプリで選んでいたものになります。", "エギは、その時刻にアプリで選んでいたものになります。")
 
+# ───────── 使い方の絵：「カタログから選べます」の枠を文字に合わせて広げる。沖上がりの座席の図は片舷（1列）
+R('<rect x="88" y="136" width="124" height="28" rx="14" style="fill:rgba(227,164,59,.14);stroke:var(--amber)"/>',
+  '<rect x="66" y="136" width="168" height="28" rx="14" style="fill:rgba(227,164,59,.14);stroke:var(--amber)"/>')
+R("""${[0,1,2,3,4,5,6].map(j=>`<circle cx="${226-j*28}" cy="130" r="${j===2?7:4}" style="fill:${j===2?'var(--amber)':'var(--muted)'}"/><circle cx="${226-j*28}" cy="146" r="4" style="fill:var(--muted)"/>`).join('')}""",
+  """${[0,1,2,3,4,5,6].map(j=>`<circle cx="${226-j*28}" cy="138" r="${j===2?7:4.5}" style="fill:${j===2?'var(--amber)':'var(--muted)'}"/>`).join('')}""")
+# ───────── 登録タブのエギの欄の見出し
+R('<div class="card" id="tbHeads"><h2>エギ</h2>', '<div class="card" id="tbHeads"><h2>所有エギを登録する</h2>')
+
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
 
