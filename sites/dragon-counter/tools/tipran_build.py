@@ -343,6 +343,10 @@ R("押すと所有に追加／もう一度押すと外れます。${TCAT.v?`カ�
   "押すと所有に追加／もう一度押すと外れます。${TCAT.v?`カタログ：${esc(TCAT.v)}時点。`:''}</p>\n   <div class=\"tb-foot\"><button class=\"btn primary\" data-act=\"tkCatDone\">所有タックルを保存して戻る</button></div>`,{kind:'tkcat'})}")
 R("  closeSheet:()=>closeSheet(),", "  closeSheet:()=>closeSheet(),\n  tkCatDone:()=>{const t=TK();closeSheet();cfgTouch();render();toast(`保存しました（ロッド${t.rods.mine.length}・リール${t.reels.mine.length}）`)},")
 
+# ───────── 船の登録：例は武丸、いつもの人数は7人
+R('<input type="text" id="add-boat" placeholder="例：忠彦丸">', '<input type="text" id="add-boat" placeholder="例：武丸">')
+R('<input type="number" id="add-boat-seats" inputmode="numeric" value="16" min="2" max="40">', '<input type="number" id="add-boat-seats" inputmode="numeric" value="7" min="2" max="40">')
+
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
 
