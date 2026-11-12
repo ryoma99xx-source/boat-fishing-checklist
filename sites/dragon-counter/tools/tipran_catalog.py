@@ -35,7 +35,7 @@ def main():
         d = json.load(open(f, encoding='utf-8'))
         m = norm(d.get('maker', ''))
         for e in d.get('egis', []):
-            if e.get('discontinued'):
+            if e.get('discontinued') or e.get('exclude'):  # exclude: ティップラン用ではないと判断したもの
                 continue
             c = []
             for x in e.get('colors') or []:
