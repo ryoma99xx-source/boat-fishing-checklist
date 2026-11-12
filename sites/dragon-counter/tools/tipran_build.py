@@ -347,6 +347,9 @@ R("  closeSheet:()=>closeSheet(),", "  closeSheet:()=>closeSheet(),\n  tkCatDone
 R('<input type="text" id="add-boat" placeholder="例：忠彦丸">', '<input type="text" id="add-boat" placeholder="例：武丸">')
 R('<input type="number" id="add-boat-seats" inputmode="numeric" value="16" min="2" max="40">', '<input type="number" id="add-boat-seats" inputmode="numeric" value="7" min="2" max="40">')
 
+# ───────── メモの例（出船前の見込み）をティップラン向けに
+ALL('placeholder="例：北風が予報より強く、午後は釣りにくくなりそう／前回は朝の上げ潮で反応が集中"', 'placeholder="例：予報より風が強く、船が流されて底が取りにくそう／前回は朝マズメに反応が集中"')
+
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
 

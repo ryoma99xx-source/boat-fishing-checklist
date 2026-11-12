@@ -1159,7 +1159,7 @@ const tenyaMain=t=>t.name?t.name:`${t.z?t.z+'号 ':''}${t.c||''}`.trim();
 const tenyaSub=t=>t.name?'':`${MK[t.m]||t.m||''} ${prodShort(t.p)}`.trim();
 function tenyaLabel(id){const t=tenyaOf(id);if(!t)return null;return tenyaShort(t)}
 function tenyaFull(id){const t=tenyaOf(id);if(!t)return '';const a=tenyaMain(t),b=tenyaSub(t);return b?`${b} ${a}`:a}
-const isNewTenya=t=>t&&t.a&&(Date.now()-new Date(t.a).getTime())<60*864e5;
+const isNewTenya=t=>{if(!t||!t.a)return false;const d=new Date(t.a);d.setMonth(d.getMonth()+3);return Date.now()<d.getTime()};   // カタログに入ってから3か月は新商品（テンヤカタログのページと同じ）
 function tenyaBadges(t){const b=[];if(isNewTenya(t))b.push('<span class="tb new">新商品</span>');if(t.s)b.push(`<span class="tb">${esc(t.s)}</span>`);if(t.h)b.push('<span class="tb">替えヘッド</span>');if(t.custom)b.push('<span class="tb own">自分で追加</span>');else if(t.id&&!CAT.by[t.id])b.push('<span class="tb">カタログから外れました（控えから表示）</span>');return b.join('')}
 /* head photos: public/tenya/<id>.webp, listed in tenya/index.json (derived from maker photos, see tools/tenya_images.py) */
 let TIMG=new Set(),TV='';
@@ -1321,7 +1321,10 @@ function sharePayload(t){const r3=x=>typeof x==='number'?Math.round(x*1e3)/1e3:x
     events:(t.events||[]).map(e=>{const g=e.gsp||e.sp;return {t:e.t,kind:e.kind,sp:e.sp,gsp:e.gsp,v:e.v,rig:e.rig||'',rigName:nm(g,'rigs',e.rig),bait:e.bait||'',baitName:nm(g,'baits',e.bait),hook:e.hook||'',hookName:nm(g,'hooks',e.hook),skirt:e.skirt||'',skirtName:nm(g,'skirts',e.skirt),size:e.size||'',dragon:!!e.dragon,sa:e.sa||'',ka:e.ka||'',fish:e.kind==='gedo'?(e.name||''):'',tackle:e.tk?tkLabelOf(t,e.tk):'',...(isFinite(e.lat)?{lat:r3(e.lat),lon:r3(e.lon)}:{})}}),tackle:t.tk&&t.tk.snap?Object.values(t.tk.snap).map(x=>({rod:x.rod,rodMaker:x.rodMaker,reel:x.reel,reelMaker:x.reelMaker,line:x.line})):[],
     states:(t.states||[]).map(x=>{const y={...x};delete y.id;delete y.memo;delete y.note;return y}),
     gear:(t.gearLog||[]).map(g=>({t:g.t,sp:g.sp,rig:g.rig||'',rigName:nm(g.sp,'rigs',g.rig),bait:g.bait||'',baitName:nm(g.sp,'baits',g.bait)})),
-    points:(t.points||[]).map(q=>({t:q.t,lat:r3(q.lat),lon:r3(q.lon)}))}}
+    points:(t.points||[]).map(q=>({t:q.t,lat:r3(q.lat),lon:r3(q.lon)})),
+    /* この釣行で使った、カタログにないテンヤ（自分で登録したもの）：メーカー・製品・号数・色。カタログに足す候補を知るため */
+    custom:(()=>{const ids=new Set([...(t.events||[]).map(e=>e.rig),...(t.gearLog||[]).map(g=>g.rig)].filter(Boolean)),cu=(S.cfg&&S.cfg.tenya&&S.cfg.tenya.custom)||[];
+      return cu.filter(x=>ids.has(x.id)).map(x=>({id:x.id,m:x.m||'',p:x.p||'',z:x.z||'',c:x.c||'',name:x.name||''}))})()}}
 let shareTimer=null,sharing=false;function shareQueue(){clearTimeout(shareTimer);shareTimer=setTimeout(shareFlush,4000)}
 async function shareFlush(){if(sharing||!shareCan()||!navigator.onLine)return;sharing=true;
   const post=b=>fetch(SHARE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b),keepalive:true}).then(r=>r.ok);
@@ -1503,8 +1506,8 @@ function formHTML(f){const boats=S.cfg.boats.map(b=>`<option value="${esc(b.name
   <div class="card"><div class="card-h"><h2>釣り場</h2><button class="golink" data-act="goSec" data-sec="secSpots">登録・編集 →</button></div><div id="spotChips">${spotChipsHTML(f)}</div><div id="tideInner">${tideInnerHTML(f)}</div></div>
   ${f.mode==='new'?`<div class="card"><h2>エギとシンカー</h2>${SOLO?'':spChipsHTML(f.sp,'fSp')}<div class="${SOLO?'':'nest'}" id="fGear">${fGearHTML(f)}</div></div>`:''}
   ${f.mode==='new'?fTackleHTML(f):''}
-  <div class="card"><h2>メモ<small class="opt">任意</small></h2><p class="muted">タックル（竿の調子・リール・道糸）や気づいたことを、自由に残せます。釣行中も記録画面の「📝メモ」から書き足せます。</p>
-   <textarea id="fMemo" data-f="memo" rows="3" class="memo-ta" placeholder="例：竿 極鋭EX178／リール ソルティガBJ／PE0.8号・リーダー6号／底から10mまで反応">${esc(f.memo||'')}</textarea>
+  <div class="card"><h2>メモ<small class="opt">任意</small></h2><p class="muted">その日の天気・風・潮の見込みや、気づいたことを自由に残せます。釣行中も記録画面の「📝メモ」から書き足せます。</p>
+   <textarea id="fMemo" data-f="memo" rows="3" class="memo-ta" placeholder="例：予報より風が強く、船が流されて底が取りにくそう／前回は朝マズメに反応が集中">${esc(f.memo||'')}</textarea>
    ${f.mode==='new'&&lastMemo()&&!(f.memo||'').trim()?`<button class="golink" data-act="memoCopyLast">前回のメモを入れる →</button>`:''}</div>`}
 function methodSelHTML(sp,g,id){return `<label class="field msel"><span>仕掛け</span><select id="${id}" data-method="${sp}">${['tenya','tenbin'].map(m=>`<option value="${m}" ${methodOf(sp,g)===m?'selected':''}>${METHOD_JP[m]}</option>`).join('')}</select></label>`}
 function fGearHTML(f){const g=fGear(f,f.sp),sp=f.sp,s=spOf(sp);return (SOLO?'':`<div class="nest-h">${esc(s.name)}の道具</div>`)+(s.catalog?methodSelHTML(sp,g,'fMethod')+(isTenya(sp,g)?setPickHTML(g.set,'fSet'):''):chipsHTML(sp,'rigs',g.rig,'fRig')+chipsHTML(sp,'hooks',g.hook,'fHook')+skirtChips(g.skirt,'fSkirt'))+(needBait(sp,g)?(isBzSp(sp)?bzHTML(sp,g.bait,'f'):chipsHTML(sp,'baits',g.bait,'fBait')):'')}
@@ -1964,8 +1967,8 @@ const undoHint=tr=>{const e=tr.events[tr.events.length-1];return e?`${hm(e.t)} $
 const lastMemo=()=>{const t=trips().filter(x=>!x.sample&&(x.memo||'').trim()).sort((a,b)=>b.start-a.start)[0];return t?t.memo.trim():''};
 function memoSheet(id){const tr=S.trips[id];if(!tr)return;
   openSheet(`<div class="sheet-h"><h2>この釣行のメモ</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
-   <p class="muted">タックル（竿の調子・リール・道糸）や気づいたことを自由に。メモは釣果データとしては送られません。</p>
-   <textarea id="memoTa" rows="7" class="memo-ta" placeholder="例：竿 極鋭EX178／リール ソルティガBJ／PE0.8号・リーダー6号／底から10mまで反応">${esc(tr.memo||'')}</textarea>
+   <p class="muted">その日の状況や気づいたことを自由に。メモは釣果データとしては送られません。</p>
+   <textarea id="memoTa" rows="7" class="memo-ta" placeholder="例：予報より風が強く、船が流されて底が取りにくそう／前回は朝マズメに反応が集中">${esc(tr.memo||'')}</textarea>
    ${!(tr.memo||'').trim()&&lastMemo()?`<button class="golink" data-act="memoCopyLast" data-into="memoTa">前回のメモを入れる →</button>`:''}
    <button class="btn primary big" data-act="memoSave" data-id="${id}">保存する</button>`,{kind:'memo'});setTimeout(()=>{const t=$('#memoTa');if(t&&!t.value)t.focus()},250)}
 const memoHTML=t=>(t.memo||'').trim()?`<div class="memo-box">📝 ${esc(t.memo.trim()).replace(/\n/g,'<br>')}</div>`:'';
@@ -2159,6 +2162,7 @@ function tbRows(){const T=TEN();const mine=new Set(myTenya());
   let list=CAT.list.concat(T.custom.filter(x=>!x.hidden).map(x=>({...x,custom:true})));
   if(tb.only==='mine')list=list.filter(t=>mine.has(t.id));else if(tb.only==='new')list=list.filter(t=>isNewTenya(t)||t.s==='発売予定');
   if(tb.z)list=list.filter(t=>String(t.z)===tb.z);if(tb.m)list=list.filter(t=>t.m===tb.m);
+  if(tb.tg)list=list.filter(t=>/(^|[^A-Za-z])TG([^A-Za-z]|$)|タングステン/.test(String(t.p||'')));   // タングステン（TG）だけ。テンヤカタログのページと同じ見分け方
   if(tb.q.trim()){const terms=normQ(tb.q).split(/\s+/).filter(Boolean);
     list=list.filter(t=>{const h=normQ(`${t.m} ${MK[t.m]||''} ${t.p} ${tenyaAbbr(t)} ${t.z}号 ${t.c} ${t.name||''} ${t.s||''} ${t.custom?'自分で追加':''}`),h2=h.replace(/[\s・･\-]/g,'');return terms.every(q=>{const n=q.replace(/号$/,'');if(/^\d+$/.test(n))return String(t.z)===n; return h.includes(q)||h2.includes(q.replace(/[・･\-]/g,''))})})}
   // 製品はシリーズ名で並べる（ダイワの「船タチウオテンヤSS Rhythm …」と「船タチウオテンヤ Rhythm 替えヘッド」が離れないように、共通の頭を外して比べる）
@@ -2199,9 +2203,10 @@ function normQ(x){return String(x||'').normalize('NFKC').toLowerCase().replace(/
 function tbBarHTML(){const makers=[...new Set(CAT.list.map(t=>t.m))].sort();
   return `<div class="seg">${[['','全号数'],['30','30号'],['40','40号'],['50','50号']].map(([v,l])=>`<button class="${tb.z===v?'on':''}" data-act="tbZ" data-d="${v}">${l}</button>`).join('')}</div>
    <div class="seg">${[['all','すべて'],['mine','所有だけ'],['new','新商品だけ']].map(([v,l])=>`<button class="${tb.only===v?'on':''}" data-act="tbOnly" data-d="${v}">${l}</button>`).join('')}</div>
+   <div class="seg">${[['','すべての素材'],['1','タングステンだけ']].map(([v,l])=>`<button class="${(tb.tg||'')===v?'on':''}" data-act="tbTg" data-d="${v}">${l}</button>`).join('')}</div>
    <select id="tbM" data-tbm="1" aria-label="メーカー"><option value="">すべてのメーカー</option>${makers.map(m=>`<option value="${esc(m)}" ${tb.m===m?'selected':''}>${esc(MK[m]?m+'（'+MK[m]+'）':m)}</option>`).join('')}</select>
    ${tb.mode==='mine'?`<p class="tb-own">「＋ 所有に追加」を押すと、その場で所有テンヤに入ります（左のチェックでも同じ）。<b>所有テンヤ：${myTenya().length}種・${ownTotal()}個</b></p>`:''}
-   <p class="muted tb-help">${tb.only==='mine'?'「所有だけ」：チェックを付けた、持っているテンヤだけを表示しています。':tb.only==='new'?`「新商品だけ」：発売予定のものと、ここ2か月以内にカタログへ追加されたテンヤです（カタログ ${esc(CAT.ver||'')} 時点）。`:''}</p>`}
+   <p class="muted tb-help">${tb.only==='mine'?'「所有だけ」：チェックを付けた、持っているテンヤだけを表示しています。':tb.only==='new'?`「新商品だけ」：発売予定のものと、ここ3か月以内にカタログへ追加されたテンヤです（カタログ ${esc(CAT.ver||'')} 時点）。`:''}</p>`}
 function openTenyaSheet(){const close=tb.mode==='catch'||tb.mode==='cur';const title=tb.mode==='cur'?'使うテンヤを選ぶ':tb.mode==='catch'?'釣れたテンヤを選ぶ':tb.mode==='set'?`「${esc((TEN().sets.find(x=>x.id===tb.setId)||{}).name||'')}」に入れるテンヤ`:'カタログから所有テンヤに追加';
   const back=tb.mode==='mine'&&tb.backSet;const backName=back?((TEN().sets.find(x=>x.id===tb.backSet)||{}).name||'リスト'):'';
   const doneAct=close?'closeSheet':back?'tbBackSet':'tbDone';
@@ -2622,7 +2627,7 @@ const acts={
   tbToMine:()=>{tb={q:'',z:'',m:'',only:'all',mode:'mine',backSet:tb.setId};openTenyaSheet()},
   tbBackSet:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'set',setId:tb.backSet};openTenyaSheet()},
   setEdit:b=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'set',setId:b.dataset.set};openTenyaSheet()},
-  tbZ:b=>{tb.z=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},tbFold:b=>{tb.fold=tb.fold||{};const z=b.dataset.z;tb.fold[z]=!tb.fold[z];tbRefresh()},tbOnly:b=>{tb.only=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},
+  tbZ:b=>{tb.z=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},tbFold:b=>{tb.fold=tb.fold||{};const z=b.dataset.z;tb.fold[z]=!tb.fold[z];tbRefresh()},tbOnly:b=>{tb.only=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},tbTg:b=>{tb.tg=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},
   tbSetQuick:b=>{const T=TEN(),st=T.sets.find(x=>x.id===b.dataset.set),id=b.dataset.id;if(!st)return;const add=!st.items.includes(id);st.items=add?st.items.concat([id]):st.items.filter(x=>x!==id);cfgTouch();tbRefresh();toast(add?`「${st.name}」に入れました`:`「${st.name}」から外しました`)},
   tbSetNew:b=>{const T=TEN();const st={id:uid(),name:SET_NAMES[0],items:[b.dataset.id]};T.sets.push(st);cfgTouch();tbRefresh();toast(`「${st.name}」を作って入れました`)},
   tbMine:b=>{const T=TEN(),id=b.dataset.id;const add=!T.mine.includes(id);T.mine=add?T.mine.concat([id]):T.mine.filter(x=>x!==id);cfgTouch();tbRefresh();const t=tenyaOf(id);toast(`${t?tenyaMain(t):'テンヤ'}を所有テンヤ${add?'に追加しました':'から外しました'}（${myTenya().length}種）`)},

@@ -1491,8 +1491,8 @@ function formHTML(f){const boats=S.cfg.boats.map(b=>`<option value="${esc(b.name
   <div class="card"><div class="card-h"><h2>釣り場</h2><button class="golink" data-act="goSec" data-sec="secSpots">登録・編集 →</button></div><div id="spotChips">${spotChipsHTML(f)}</div><div id="tideInner">${tideInnerHTML(f)}</div></div>
   ${f.mode==='new'?`<div class="card"><h2>仕掛けと餌</h2>${SOLO?'':spChipsHTML(f.sp,'fSp')}<div class="${SOLO?'':'nest'}" id="fGear">${fGearHTML(f)}</div></div>`:''}
   ${f.mode==='new'?fTackleHTML(f):''}
-  <div class="card"><h2>メモ<small class="opt">任意</small></h2><p class="muted">タックル（竿の調子・リール・道糸）や気づいたことを、自由に残せます。釣行中も記録画面の「📝メモ」から書き足せます。</p>
-   <textarea id="fMemo" data-f="memo" rows="3" class="memo-ta" placeholder="例：竿 極鋭EX178／リール ソルティガBJ／PE0.8号・リーダー6号／底から10mまで反応">${esc(f.memo||'')}</textarea>
+  <div class="card"><h2>メモ<small class="opt">任意</small></h2><p class="muted">その日の天気・風・潮の見込みや、気づいたことを自由に残せます。釣行中も記録画面の「📝メモ」から書き足せます。</p>
+   <textarea id="fMemo" data-f="memo" rows="3" class="memo-ta" placeholder="例：北風が予報より強く、午後は釣りにくくなりそう／前回は朝の上げ潮で反応が集中">${esc(f.memo||'')}</textarea>
    ${f.mode==='new'&&lastMemo()&&!(f.memo||'').trim()?`<button class="golink" data-act="memoCopyLast">前回のメモを入れる →</button>`:''}</div>`}
 function methodSelHTML(sp,g,id){return `<label class="field msel"><span>仕掛け</span><select id="${id}" data-method="${sp}">${['tenya','tenbin'].map(m=>`<option value="${m}" ${methodOf(sp,g)===m?'selected':''}>${METHOD_JP[m]}</option>`).join('')}</select></label>`}
 function fGearHTML(f){const g=fGear(f,f.sp),sp=f.sp,s=spOf(sp);return (SOLO?'':`<div class="nest-h">${esc(s.name)}の道具</div>`)+(s.catalog?methodSelHTML(sp,g,'fMethod')+(isTenya(sp,g)?setPickHTML(g.set,'fSet'):''):chipsHTML(sp,'rigs',g.rig,'fRig'))+(needBait(sp,g)?(isBzSp(sp)?bzHTML(sp,g.bait,'f'):chipsHTML(sp,'baits',g.bait,'fBait')):'')}
@@ -1950,8 +1950,8 @@ const undoHint=tr=>{const e=tr.events[tr.events.length-1];return e?`${hm(e.t)} $
 const lastMemo=()=>{const t=trips().filter(x=>!x.sample&&(x.memo||'').trim()).sort((a,b)=>b.start-a.start)[0];return t?t.memo.trim():''};
 function memoSheet(id){const tr=S.trips[id];if(!tr)return;
   openSheet(`<div class="sheet-h"><h2>この釣行のメモ</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
-   <p class="muted">タックル（竿の調子・リール・道糸）や気づいたことを自由に。メモは釣果データとしては送られません。</p>
-   <textarea id="memoTa" rows="7" class="memo-ta" placeholder="例：竿 極鋭EX178／リール ソルティガBJ／PE0.8号・リーダー6号／底から10mまで反応">${esc(tr.memo||'')}</textarea>
+   <p class="muted">その日の状況や気づいたことを自由に。メモは釣果データとしては送られません。</p>
+   <textarea id="memoTa" rows="7" class="memo-ta" placeholder="例：北風が予報より強く、午後は釣りにくくなりそう／前回は朝の上げ潮で反応が集中">${esc(tr.memo||'')}</textarea>
    ${!(tr.memo||'').trim()&&lastMemo()?`<button class="golink" data-act="memoCopyLast" data-into="memoTa">前回のメモを入れる →</button>`:''}
    <button class="btn primary big" data-act="memoSave" data-id="${id}">保存する</button>`,{kind:'memo'});setTimeout(()=>{const t=$('#memoTa');if(t&&!t.value)t.focus()},250)}
 const memoHTML=t=>(t.memo||'').trim()?`<div class="memo-box">📝 ${esc(t.memo.trim()).replace(/\n/g,'<br>')}</div>`:'';
