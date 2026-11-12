@@ -132,7 +132,8 @@ def page(allc, plist, pv):
         title='船タチウオテンヤ カタログ｜%dメーカー・%d色を写真で比較' % (len(makers), ncol), desc=E(desc), url=URL,
         lead='主要%dメーカーの船タチウオテンヤ %d製品・%d色（号数違いまで数えると%d種類）を写真で一覧にしました。メーカー・号数・色の名前で絞り込めます。' % (len(makers), len(plist), ncol, len(allc['items'])),
         upd=E(upd), makers=''.join('<button class="chip" data-mk="%s">%s</button>' % (E(m), E(JP.get(m, m))) for m in makers),
-        sizes=''.join('<option value="%s">%s号</option>' % (zs(z), zs(z)) for z in sizes),
+        sizes=''.join('<button class="chip" data-z="%s">%s号</button>' % (zs(z), zs(z)) for z in sizes),
+        zlist='・'.join(zs(z) + '号' for z in sizes),
         cards='\n'.join(cards), idx=json.dumps(idx, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/'),
         pv=json.dumps(pv))
 
@@ -180,7 +181,7 @@ h1{{font-size:26px;line-height:1.35;margin:4px 0 10px}}
 .chip.on{{background:var(--teal);border-color:var(--teal);color:#03161c;font-weight:700}}
 .frow{{display:flex;gap:8px;margin-top:8px}}
 .frow select,.frow input{{min-height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);font:inherit;font-size:16px;padding:6px 10px}}
-.frow select{{flex:0 0 108px}}.frow input{{flex:1;min-width:0}}
+.szc .chip{{min-width:64px}}.frow input{{flex:1;min-width:0}}
 .count{{color:var(--muted);font-size:13px;margin:8px 0 0}}
 .pd{{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:14px 0;scroll-margin-top:130px}}
 .pd h2{{font-size:18px;line-height:1.4;margin:0}}.pd h2 small{{display:block;font-size:13px;color:var(--teal);font-weight:500}}
@@ -214,7 +215,7 @@ footer{{color:var(--muted);font-size:13px;border-top:1px solid var(--line);margi
 <p class="eyebrow">TENYA CATALOG</p>
 <h1>船タチウオテンヤ カタログ</h1>
 <p class="lead">{lead}</p>
-<p class="note">色の名前・号数はメーカーの表記です。{upd} 時点。最新の情報はメーカーのページで確かめてください。</p>
+<p class="note"><b style="color:var(--ink)">号数は {zlist}</b>のテンヤを載せています。号数のボタンで絞り込めます。色の名前・号数はメーカーの表記です。{upd} 時点。最新の情報はメーカーのページで確かめてください。</p>
 <span class="pr">PR：このページはアフィリエイト広告（Amazon・楽天・Yahoo!ショッピング）を利用しています</span>
 
 <section class="box tsure-box" id="tsure" hidden>
@@ -230,7 +231,8 @@ footer{{color:var(--muted);font-size:13px;border-top:1px solid var(--line);margi
 
 <div class="filters">
  <div class="chips" id="mk"><button class="chip on" data-mk="">すべて</button>{makers}</div>
- <div class="frow"><select id="sz" aria-label="号数"><option value="">号数</option>{sizes}</select><input id="q" type="search" placeholder="色・製品名で探す（例：グロー、ゼブラ）" aria-label="色・製品名で探す"></div>
+ <div class="chips szc" id="szc" style="margin-top:8px"><button class="chip on" data-z="">全部の号数</button>{sizes}</div>
+ <div class="frow"><input id="q" type="search" placeholder="色・製品名で探す（例：グロー、ゼブラ）" aria-label="色・製品名で探す"></div>
  <p class="count" id="cnt"></p>
 </div>
 
@@ -239,8 +241,8 @@ footer{{color:var(--muted);font-size:13px;border-top:1px solid var(--line);margi
 <section class="box app-box">
  <div class="app-head"><img src="/icon-192.png" alt="" width="64" height="64"><div><b>ドラゴンカウンター</b><small>タチウオの釣果記録アプリ（無料・登録なし）</small></div></div>
  <a class="app-banner" href="/"><img src="/og.png" alt="ドラゴンカウンター：タチウオの釣果を時間の経過と共に、テンヤ・潮・船の向きと一緒に記録" width="1200" height="630" loading="lazy"></a>
- <p>このカタログは、ドラゴンカウンターのテンヤカタログと同じものです。持っているテンヤをここから選んでおけば、釣れたときにボタンを押すだけで「どのテンヤで、何時に釣れたか」が残ります。</p>
- <ul><li>釣り場を選ぶと、潮回りと満潮・干潮が自動で入る</li><li>アタリ・バラシ・釣れた時刻を、ボタン1つで記録</li><li>ドラゴン（120cm以上）や大漁も記録できる</li><li>記録はスマホの中に保存。アプリとしてホーム画面にも置ける</li></ul>
+ <p>ドラゴンカウンターは釣果を数えるアプリですが、<b>持っているテンヤの管理</b>もできます。このページと同じテンヤのリストを持っているので、持っているテンヤを選んで個数まで一覧にしておけます。その中から選んでおけば、釣れたときにボタンを押すだけで「どのテンヤで、何時に釣れたか」が残ります。</p>
+ <ul><li>このページと同じリストから、持っているテンヤを登録・個数を管理</li><li>釣り場を選ぶと、潮回りと満潮・干潮が自動で入る</li><li>アタリ・バラシ・釣れた時刻を、ボタン1つで記録</li><li>ドラゴン（120cm以上）や大漁も記録できる</li><li>記録はスマホの中に保存。アプリとしてホーム画面にも置ける</li></ul>
  <div class="app-btns"><a class="btn" href="/">ドラゴンカウンターを開く</a><a class="btn sub" href="https://cutlassfish.tokyo/article/dragon-counter/">使い方の記事を読む</a></div>
 </section>
 
@@ -255,18 +257,19 @@ footer{{color:var(--muted);font-size:13px;border-top:1px solid var(--line);margi
 const IDX={idx},PV={pv};
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 let mk='';
-function apply(){{const z=$('#sz').value,q=$('#q').value.trim().toLowerCase();let np=0,nc=0;
+let zSel='';
+function apply(){{const z=zSel,q=$('#q').value.trim().toLowerCase();let np=0,nc=0;
  $$('.pd').forEach(p=>{{let show=(!mk||p.dataset.m===mk)&&(!z||p.dataset.z.split(' ').includes(z));
   const pn=p.querySelector('h2').textContent.toLowerCase();let k=0;
   p.querySelectorAll('.cl').forEach(c=>{{const ok=show&&(!z||c.dataset.z.split(' ').includes(z))&&(!q||pn.includes(q)||c.dataset.c.toLowerCase().includes(q));c.classList.toggle('hide',!ok);if(ok)k++}});
   p.classList.toggle('hide',!k);if(k){{np++;nc+=k}}}});
  $('#cnt').textContent=`${{np}}製品・${{nc}}色`}}
 $('#mk').addEventListener('click',e=>{{const b=e.target.closest('[data-mk]');if(!b)return;mk=b.dataset.mk;$$('#mk .chip').forEach(x=>x.classList.toggle('on',x===b));apply()}});
-$('#sz').addEventListener('change',apply);$('#q').addEventListener('input',apply);apply();
+$('#szc').addEventListener('click',e=>{{const b=e.target.closest('[data-z]');if(!b)return;zSel=b.dataset.z;$$('#szc .chip').forEach(x=>x.classList.toggle('on',x===b));apply()}});$('#q').addEventListener('input',apply);apply();
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}}[c]));
 const li=k=>{{const x=IDX[k];if(!x)return '';const im=x.img?`<img src="/tenya/${{x.img}}.webp${{PV?'?v='+encodeURIComponent(PV):''}}" alt="" loading="lazy">`:'<span class="noimg"></span>';
  return `<li>${{im}}<a href="#${{x.a}}" data-go="${{x.a}}">${{esc(x.n)}}<small>${{esc(x.mk)}}</small></a></li>`}};
-fetch('/tenya-rank.php',{{cache:'no-cache'}}).then(r=>r.ok?r.json():null).then(d=>{{if(!d)return;let any=false;
+fetch('/tenya-rank.php?h='+Math.floor(Date.now()/36e5),{{cache:'no-cache'}}).then(r=>r.ok?r.json():null).then(d=>{{if(!d)return;let any=false;
  const top=(d.top||[]).filter(x=>IDX[x]).slice(0,3);
  if(top.length){{$('#tsure .ts-list').innerHTML=top.map(k=>{{const x=IDX[k],f=document.getElementById(x.a);if(f)f.classList.add('ts');const pd=f&&f.closest('.pd');
    const ln=pd?[...pd.querySelectorAll('.links a.buy')].map(a=>a.outerHTML.replace('で探す<','<')).join(''):'';
@@ -274,7 +277,7 @@ fetch('/tenya-rank.php',{{cache:'no-cache'}}).then(r=>r.ok?r.json():null).then(d
    return `<div class="ts-card"><a href="#${{x.a}}" data-go="${{x.a}}">${{im}}</a><div><b>${{esc(x.n)}}</b><small>${{esc(x.mk)}}</small><p class="links">${{ln}}</p></div></div>`}}).join('');$('#tsure').hidden=false}}
  for(const [k,id] of [['catch','rkCatch'],['use','rkUse']]){{const l=(d[k]||[]).filter(x=>IDX[x]);const el=$('#'+id);if(l.length>=10){{el.querySelector('ol').innerHTML=l.slice(0,10).map(li).join('');any=true}}else el.remove()}}
  if(any)$('#rank').hidden=false}}).catch(()=>{{}});
-document.addEventListener('click',e=>{{const a=e.target.closest('[data-go]');if(!a)return;mk='';$$('#mk .chip').forEach((x,i)=>x.classList.toggle('on',i===0));$('#sz').value='';$('#q').value='';apply();
+document.addEventListener('click',e=>{{const a=e.target.closest('[data-go]');if(!a)return;mk='';$$('#mk .chip').forEach((x,i)=>x.classList.toggle('on',i===0));zSel='';$$('#szc .chip').forEach((x,i)=>x.classList.toggle('on',i===0));$('#q').value='';apply();
  $$('.cl.hit').forEach(x=>x.classList.remove('hit'));const t=document.getElementById(a.dataset.go);if(t)t.classList.add('hit')}});
 }})();
 </script>

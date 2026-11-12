@@ -35,7 +35,7 @@
 # (the service worker caches the app for offline use); images are kept for a day.
 <IfModule mod_headers.c>
   Header set Cache-Control "public, max-age=86400"
-  <FilesMatch "^(index\.html|sw\.js|catalog-extra\.json|manifest\.webmanifest|robots\.txt)$">
+  <FilesMatch "^(index\.html|sw\.js|catalog-extra\.json|manifest\.webmanifest|robots\.txt|tenya-rank\.php)$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
   <Files "sw.js">
