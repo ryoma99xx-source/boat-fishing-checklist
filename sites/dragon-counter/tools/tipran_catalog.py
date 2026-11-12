@@ -15,7 +15,8 @@ ORDER = ['ダイワ', 'シマノ', 'ヤマシタ', 'デュエル', 'ハリミツ
 def norm(x):
     x = unicodedata.normalize('NFKC', str(x))
     x = re.sub(r'\s+', ' ', x).strip()
-    return re.sub(r'^(?:[A-Z]{0,3}-?\d{2,5}|#\d{1,4})\s+', '', x)
+    # 品番を外す：「001 金アジ」「01.BLBP ブルー夜光…」「B1 レッド」「#12 …」
+    return re.sub(r'^(?:\d{1,3}\.[A-Z]{1,6}|[A-Z]{0,3}-?\d{2,5}|[A-Z]{1,3}\d{1,2}|#\d{1,4})\s+', '', x)
 
 
 def size(z):
