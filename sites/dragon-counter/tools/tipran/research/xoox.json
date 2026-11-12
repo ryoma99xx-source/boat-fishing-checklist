@@ -1,0 +1,41 @@
+{
+  "maker": "XOOX（タカミヤ / 釣具のポイント）",
+  "egis": [
+    {
+      "series": "ジェットクロー TR",
+      "url": "https://www.point-official.shop/shop/g/g4996774263023/",
+      "sizes": [
+        {
+          "size": "3.5",
+          "weights": [
+            30
+          ]
+        }
+      ],
+      "colors": [
+        "パープルムラサキ",
+        "レッドミドリ",
+        "ケイムラピンク",
+        "ケイムラムラサキ",
+        "レッドオレンジ",
+        "ゴールデンベイト",
+        "アカムラベイト",
+        "ブルーベイト"
+      ],
+      "note": "Source: 釣具のポイント 公式オンラインストア (point-official.shop, run by Takamiya Corporation) product pages, plus the point-i.jp product catalogue and the point-i.jp article dated 2026/09/14 that introduces it as a new tip-run egi for autumn 2026. Category: ティップラン用エギ. Product code JI-116. Spec on every colour page: サイズ 3.5号, 自重 30g, 船釣り（イカ）, アオリイカ. 880円 (税込). Only 3.5号30g exists (8 JANs in a row: 4996774263023, 4996774263030, 4996774263047, 4996774263054, 4996774263061, 4996774263078, 4996774263085, 4996774263092; the neighbouring JANs are other products or empty). No other size and no other XOOX tip-run egi were found. The URL is the パープルムラサキ page; the other colours are at https://www.point-official.shop/shop/g/g<JAN>/. The xoox.jp/takamiya brand pages were unreachable (gateway 502).",
+      "discontinued": false
+    }
+  ],
+  "sources": [
+    "https://www.point-i.jp/private_brands/3258768",
+    "https://www.point-i.jp/products?free_word=%E3%82%B8%E3%82%A7%E3%83%83%E3%83%88%E3%82%AF%E3%83%AD%E3%83%BC",
+    "https://www.point-official.shop/shop/g/g4996774263023/",
+    "https://www.point-official.shop/shop/g/g4996774263030/",
+    "https://www.point-official.shop/shop/g/g4996774263047/",
+    "https://www.point-official.shop/shop/g/g4996774263054/",
+    "https://www.point-official.shop/shop/g/g4996774263061/",
+    "https://www.point-official.shop/shop/g/g4996774263078/",
+    "https://www.point-official.shop/shop/g/g4996774263085/",
+    "https://www.point-official.shop/shop/g/g4996774263092/"
+  ]
+}

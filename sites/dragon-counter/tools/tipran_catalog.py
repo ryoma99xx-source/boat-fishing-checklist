@@ -9,14 +9,16 @@ import glob, json, os, re, sys, unicodedata
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, 'tipran', 'catalog.json')
-ORDER = ['ダイワ', 'シマノ', 'ヤマシタ', 'デュエル', 'バレーヒル', 'クレイジーオーシャン', 'フィッシュリーグ', 'ジャッカル', 'メジャークラフト', 'エバーグリーン', 'ジークラック', 'キーストン', 'マルシン漁具', 'ハリミツ']
+# 表示名の統一（フィッシュリーグはマルキユーのブランド、ケストレルはカンジインターナショナルのクロノ）
+MAKER = {'フィッシュリーグ': 'マルキユー', 'カンジインターナショナル': 'クロノ'}
+ORDER = ['ダイワ', 'シマノ', 'ヤマシタ', 'デュエル', 'バレーヒル', 'クレイジーオーシャン', 'マルキユー', 'ジャッカル', 'メジャークラフト', 'エバーグリーン', 'ジークラック', 'キーストン', 'マルシン漁具', 'ハリミツ', 'スクイッドマニア', 'クロノ', 'XOOX']
 
 
 def norm(x):
     x = unicodedata.normalize('NFKC', str(x))
     x = re.sub(r'\s+', ' ', x).strip()
     # 品番を外す：「001 金アジ」「01.BLBP ブルー夜光…」「B1 レッド」「#12 …」
-    return re.sub(r'^(?:\d{1,3}\.[A-Z]{1,6}|[A-Z]{0,3}-?\d{2,5}|[A-Z]{1,3}\d{1,2}|#\d{1,4})\s+', '', x)
+    return re.sub(r'^(?:\d{1,3}\.[A-Z]{1,6}|[A-Z]{0,3}-?\d{2,5}|[A-Z]{1,3}\d{1,2}|#[A-Z]{0,4}\d{1,4})\s+', '', x)
 
 
 def size(z):
@@ -36,6 +38,7 @@ def main():
     for f in sorted(glob.glob(os.path.join(src, '*.json'))):
         d = json.load(open(f, encoding='utf-8'))
         m = re.sub(r'\(.*?\)$', '', norm(d.get('maker', ''))).strip()  # 「キーストン(Keystone)」→「キーストン」
+        m = MAKER.get(m, m)
         for e in d.get('egis', []):
             if e.get('discontinued') or e.get('exclude'):  # exclude: ティップラン用ではないと判断したもの
                 continue

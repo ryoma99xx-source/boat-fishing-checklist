@@ -1048,7 +1048,7 @@
    "note": "UNCERTAIN SCOPE: tagged 'ティップラン(ボートエギング)' and 'オフショア' on the official site but n"
   },
   {
-   "m": "フィッシュリーグ",
+   "m": "マルキユー",
    "s": "ダートマックス TRZ",
    "o": [
     {
@@ -1562,6 +1562,151 @@
    ],
    "u": "https://sumizoku.com/squiditem/tiprun",
    "note": "Official Sumizoku page (category 'ティップラン(BB)', banner 'ディープレンジサイレントモデル', '抜群のティッ"
+  },
+  {
+   "m": "スクイッドマニア",
+   "s": "ワイルドチェイス B-TR",
+   "o": [
+    {
+     "z": "2.5",
+     "g": 15
+    },
+    {
+     "z": "3.0",
+     "g": 25
+    },
+    {
+     "z": "3.5",
+     "g": 30
+    }
+   ],
+   "w": [
+    0,
+    1,
+    2
+   ],
+   "c": [
+    "メロメロチェリーパイ(UV)",
+    "パパイヤマンゴーUV",
+    "マズメキラー(UV)",
+    "即抱きグリーン(UV)",
+    "ムーンパープル(UV)",
+    "入れ食いマメアジ",
+    "それいけコノシロ(UV)",
+    "澄み潮パープル(UV)",
+    "たまたまRED(UV)",
+    "たまたま金レッド(UV)",
+    "爆乗りピンク (UV&RED-glow)",
+    "爆乗りオレンジ (UV&RED-glow)",
+    "爆乗りパープル (UV&REDglow)",
+    "覚聖レッド(UV&RED-glow)",
+    "REAL ヌマエビ (UV&RED-glow)",
+    "上弦レッド(UV&RED-glow)",
+    "下弦パープルレッド(UV&RED-glow)",
+    "鬼ダルマピンク(RED-glow)",
+    "鬼ハタオレンジ(RED-glow)",
+    "鬼ゴチパープル(RED-glow)",
+    "鬼ベラグリーン(RED-glow)",
+    "鬼ハゼレッド(RED-glow)",
+    "夢幻レイヤーレッド(UV)",
+    "夢幻レイヤーグリーン(UV)",
+    "夢幻レイヤーパープル(UV)",
+    "闇堕ちBLACK(UV)",
+    "夢幻 Fire RED(UV)"
+   ],
+   "u": "https://www.squid-mania.com/product-list/1590",
+   "note": "Official SQUID MANIA shop (squid-mania.com, linked from the brand site squid-man"
+  },
+  {
+   "m": "スクイッドマニア",
+   "s": "ワイルドチェイス B-TR RT(ラトル入り)",
+   "o": [
+    {
+     "z": "3.5",
+     "g": 30
+    }
+   ],
+   "w": [
+    0
+   ],
+   "c": [
+    "メロメロチェリーパイ(UV)",
+    "パパイヤマンゴーUV",
+    "マズメキラー(UV)",
+    "即抱きグリーン(UV)",
+    "ムーンパープル(UV)",
+    "入れ食いマメアジ",
+    "それいけコノシロ(UV)",
+    "澄み潮パープル(UV)",
+    "たまたまRED(UV)",
+    "たまたま金レッド(UV)",
+    "爆乗りピンク (UV&RED-glow)",
+    "爆乗りオレンジ (UV&RED-glow)",
+    "爆乗りパープル (UV&REDglow)",
+    "覚聖レッド(UV&RED-glow)",
+    "REAL ヌマエビ (UV&RED-glow)",
+    "上弦レッド(UV&RED-glow)",
+    "下弦パープルレッド(UV&RED-glow)",
+    "鬼ダルマピンク(RED-glow)",
+    "鬼ハタオレンジ(RED-glow)",
+    "鬼ゴチパープル(RED-glow)",
+    "鬼ベラグリーン(RED-glow)",
+    "鬼ハゼレッド(RED-glow)"
+   ],
+   "u": "https://www.squid-mania.com/product-list/1673",
+   "note": "Shop category 'B-TR 3.5号30gRT'; item titles start 'RT3.5号 30gB-TR (BTxx)...'. Th"
+  },
+  {
+   "m": "クロノ",
+   "s": "ケストレル(Kestrel)",
+   "o": [
+    {
+     "z": "3.5",
+     "g": 30
+    }
+   ],
+   "w": [
+    0
+   ],
+   "c": [
+    "ポイズン",
+    "毒リンゴ",
+    "毒ガエル",
+    "青鬼",
+    "コガネムシ",
+    "アカマムシ",
+    "UV こたつミカン(腹部グロー)(全体ケイムラ)",
+    "UV 爽快ミント(腹部グロー)(全体ケイムラ)",
+    "ヒミツの扉",
+    "パンドラの箱(腹部グロー)"
+   ],
+   "u": "https://crono.design/archives/7883",
+   "note": "Official CRONO site (crono.design; kanji-international.com redirects there; kanj"
+  },
+  {
+   "m": "XOOX",
+   "s": "ジェットクロー TR",
+   "o": [
+    {
+     "z": "3.5",
+     "g": 30
+    }
+   ],
+   "w": [
+    0
+   ],
+   "c": [
+    "パープルムラサキ",
+    "レッドミドリ",
+    "ケイムラピンク",
+    "ケイムラムラサキ",
+    "レッドオレンジ",
+    "ゴールデンベイト",
+    "アカムラベイト",
+    "ブルーベイト"
+   ],
+   "u": "https://www.point-official.shop/shop/g/g4996774263023/",
+   "note": "Source: 釣具のポイント 公式オンラインストア (point-official.shop, run by Takamiya Corporation) pr"
   }
  ],
  "ties": [],

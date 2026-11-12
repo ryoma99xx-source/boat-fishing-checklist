@@ -1,0 +1,38 @@
+{
+  "maker": "カンジインターナショナル（CRONO / クロノ）",
+  "egis": [
+    {
+      "series": "ケストレル（Kestrel）",
+      "url": "https://crono.design/archives/7883",
+      "sizes": [
+        {
+          "size": "3.5",
+          "weights": [
+            30
+          ]
+        }
+      ],
+      "colors": [
+        "#KES01 ポイズン",
+        "#KES02 毒リンゴ",
+        "#KES03 毒ガエル",
+        "#KES04 青鬼",
+        "#KES05 コガネムシ",
+        "#KES06 アカマムシ",
+        "#KES07 UV こたつミカン（腹部グロー）（全体ケイムラ）",
+        "#KES08 UV 爽快ミント（腹部グロー）（全体ケイムラ）",
+        "#KES09 ヒミツの扉",
+        "#KES10 パンドラの箱（腹部グロー）"
+      ],
+      "note": "Official CRONO site (crono.design; kanji-international.com redirects there; kanji-international.co.jp is unreachable). Listed in the Products > tiprun category. The spec table writes the size as '3.5寸' (CRONO uses 寸 instead of 号 on all its egi; retailers list it as 3.5号-30g). Only one size: 30g, 10色, ¥1,870 (税込). Recommended sinker: YAMASHITA エギ王 TRシンカー. The page says the hook material changed from production in September 2026 (2026年9月生産分より). Not listed on either official web shop (store.crono.design = support items only; crono.shopselect.net EGI category = a PROSPEC blank only). The only other item in the tip-run category is the GRASP tip-run rod; the PROSPEC egi are shore egi.",
+      "discontinued": false
+    }
+  ],
+  "sources": [
+    "https://crono.design/archives/7883",
+    "https://crono.design/archives/category/products/tiprun",
+    "https://crono.design/archives/category/products/egging",
+    "https://store.crono.design/",
+    "https://crono.shopselect.net/categories/6578470"
+  ]
+}

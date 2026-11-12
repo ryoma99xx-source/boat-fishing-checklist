@@ -1,0 +1,122 @@
+{
+  "maker": "スクイッドマニア",
+  "egis": [
+    {
+      "series": "ワイルドチェイス B-TR",
+      "url": "https://www.squid-mania.com/product-list/1590",
+      "sizes": [
+        {
+          "size": "2.5",
+          "weights": [
+            15
+          ]
+        },
+        {
+          "size": "3.0",
+          "weights": [
+            25
+          ]
+        },
+        {
+          "size": "3.5",
+          "weights": [
+            30
+          ]
+        }
+      ],
+      "colors": [
+        "BT01 メロメロチェリーパイ(UV)",
+        "BT02 パパイヤマンゴーUV",
+        "BT03 マズメキラー（UV)",
+        "BT04 即抱きグリーン(UV)",
+        "BT05 ムーンパープル(UV)",
+        "BT06 入れ食いマメアジ",
+        "BT07 それいけコノシロ(UV)",
+        "BT08 澄み潮パープル(UV)",
+        "BT09 たまたまRED(UV)",
+        "BT10 たまたま金レッド(UV)",
+        "BT11 爆乗りピンク (UV＆RED-glow)",
+        "BT12 爆乗りオレンジ (UV＆RED-glow)",
+        "BT13 爆乗りパープル (UV＆REDglow)",
+        "BT14 覚聖レッド(UV＆RED-glow)",
+        "BT15 REAL ヌマエビ (UV＆RED-glow)",
+        "BT16 上弦レッド(UV＆RED-glow)",
+        "BT17 下弦パープルレッド(UV＆RED-glow)",
+        "BT18 鬼ダルマピンク(RED-glow)",
+        "BT19 鬼ハタオレンジ(RED-glow)",
+        "BT20 鬼ゴチパープル（RED-glow)",
+        "BT21 鬼ベラグリーン（RED-glow)",
+        "BT22 鬼ハゼレッド(RED-glow)",
+        "BT23 夢幻レイヤーレッド(UV)",
+        "BT24 夢幻レイヤーグリーン(UV)",
+        "BT25 夢幻レイヤーパープル(UV)",
+        "BT26 闇堕ちBLACK(UV)",
+        "BT27 夢幻 Fire RED(UV)"
+      ],
+      "note": "Official SQUID MANIA shop (squid-mania.com, linked from the brand site squid-mania.jp; the brand site itself has no B-TR spec page). Category 'Boat/Tip-Run'. Size pages: 2.5号15g https://www.squid-mania.com/product-list/1635 , 3.0号25g https://www.squid-mania.com/product-list/1634 , 3.5号30g https://www.squid-mania.com/product-list/1591 . Items are titled e.g. '3.5号 30ｇB-TR (BT27)夢幻 Fire RED(UV)[オレンジ/金/銀]'; colours here = code + name, the bracketed part after the name is the 下地/base description and is omitted. All 27 colours (BT01-BT27) are listed in all three sizes, no gaps. One weight per size. Price 1,540円 (税込). Stock varies per item (several show [×] = out of stock on 2026-11-12).",
+      "discontinued": false
+    },
+    {
+      "series": "ワイルドチェイス B-TR RT（ラトル入り）",
+      "url": "https://www.squid-mania.com/product-list/1673",
+      "sizes": [
+        {
+          "size": "3.5",
+          "weights": [
+            30
+          ]
+        }
+      ],
+      "colors": [
+        "BT01 メロメロチェリーパイ(UV)",
+        "BT02 パパイヤマンゴーUV",
+        "BT03 マズメキラー（UV)",
+        "BT04 即抱きグリーン(UV)",
+        "BT05 ムーンパープル(UV)",
+        "BT06 入れ食いマメアジ",
+        "BT07 それいけコノシロ(UV)",
+        "BT08 澄み潮パープル(UV)",
+        "BT09 たまたまRED(UV)",
+        "BT10 たまたま金レッド(UV)",
+        "BT11 爆乗りピンク (UV＆RED-glow)",
+        "BT12 爆乗りオレンジ (UV＆RED-glow)",
+        "BT13 爆乗りパープル (UV＆REDglow)",
+        "BT14 覚聖レッド(UV＆RED-glow)",
+        "BT15 REAL ヌマエビ (UV＆RED-glow)",
+        "BT16 上弦レッド(UV＆RED-glow)",
+        "BT17 下弦パープルレッド(UV＆RED-glow)",
+        "BT18 鬼ダルマピンク(RED-glow)",
+        "BT19 鬼ハタオレンジ(RED-glow)",
+        "BT20 鬼ゴチパープル（RED-glow)",
+        "BT21 鬼ベラグリーン（RED-glow)",
+        "BT22 鬼ハゼレッド(RED-glow)"
+      ],
+      "note": "Shop category 'B-TR 3.5号30ｇRT'; item titles start 'RT3.5号 30ｇB-TR (BTxx)...'. The product page describes it as ラトル入り (rattle). Only 3.5号30g. Colours BT01-BT22 only; BT23-BT27 are not offered in RT. 21 of 22 items showed [×] (out of stock) on 2026-11-12, but they are still listed. 1,540円 (税込).",
+      "discontinued": false
+    },
+    {
+      "series": "BTR3.5デカ針",
+      "url": "https://www.squid-mania.com/product-list/1698",
+      "sizes": [
+        {
+          "size": "3.5",
+          "weights": null
+        }
+      ],
+      "colors": [],
+      "note": "Shop sub-category under Boat/Tip-Run, described as '極鱗丸オリジナルモデル' (a charter-boat original model; enquiries to 極鱗丸). On 2026-11-12 it lists 0 items (登録アイテム数 0件), so no weight or colours are stated. Size 3.5 comes only from the category name. Whether it is discontinued or just out of stock is not stated.",
+      "discontinued": null
+    }
+  ],
+  "sources": [
+    "https://www.squid-mania.com/product-list/1590",
+    "https://www.squid-mania.com/product-list/1635",
+    "https://www.squid-mania.com/product-list/1634",
+    "https://www.squid-mania.com/product-list/1591",
+    "https://www.squid-mania.com/product-list/1673",
+    "https://www.squid-mania.com/product-list/1698",
+    "https://www.squid-mania.com/product/13162",
+    "https://www.squid-mania.com/product/13029",
+    "https://squid-mania.jp/"
+  ]
+}
