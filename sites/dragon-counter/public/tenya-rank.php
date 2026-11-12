@@ -7,6 +7,9 @@ ini_set('display_errors', '0');
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: public, max-age=600');
 header('X-Content-Type-Options: nosniff');
+// cutlassfish.tokyo のテンヤカタログの記事からも読む（プラグイン cutlassfish-tenya-catalog）
+header('Access-Control-Allow-Origin: https://cutlassfish.tokyo');
+header('Vary: Origin');
 
 $cache = __DIR__ . '/.data/tenya-rank2.json';
 if (is_file($cache) && time() - filemtime($cache) < 3600) { readfile($cache); exit; }
