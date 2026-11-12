@@ -60,7 +60,7 @@ def main():
             if not c or not o:
                 continue
             o.sort(key=lambda t: (float(t['z']), t['g']))
-            rows.append({'m': m, 's': norm(e['series']), 'o': o, 'w': list(range(len(o))), 'c': c, 'u': e.get('url', ''), 'note': norm(e.get('note') or '')[:80]})
+            rows.append({'m': m, 's': norm(e['series']), 'o': o, 'w': list(range(len(o))), 'c': c, 'u': e.get('url', ''), 'note': ''})  # 調査メモ（英語まじり）は画面に出さない。research/*.json に残る
     rows.sort(key=lambda r: (ORDER.index(r['m']) if r['m'] in ORDER else 99, r['m']))
     json.dump({'v': date, 'heads': rows, 'ties': [], 'skirts': []}, open(OUT, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print(len(rows), 'products', sorted({r['m'] for r in rows}))

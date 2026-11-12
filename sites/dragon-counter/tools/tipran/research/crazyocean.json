@@ -88,7 +88,6 @@
     "#01 アジ/ゴールド",
     "#02 アジ/レッド",
     "#03 パープル/パープル",
-    "#04 パープル/レッドアジ",
     "#05 パープル/グリーン",
     "#06 ピンクパープル/ゴールド",
     "#08 オレンジピンク/マーブル",
@@ -106,7 +105,7 @@
     "#20 アカハタモドキ/オレンジ",
     "#101 シルエットブラック"
    ],
-   "note": "URL slug 'ティップランナーchibi'. Colour chart lists #09 ピンクグロー but the spec/JAN table omits #09 (possible gap). #18-#20 are 2026年新色.",
+   "note": "URL slug 'ティップランナーchibi'. Colour chart lists #09 ピンクグロー but the spec/JAN table omits #09 (possible gap). #18-#20 are 2026年新色. 2026-11-12: #04 パープル/レッドアジ removed (not on the official Chibi page or JAN list; 3号 ティップランナー only).",
    "discontinued": false
   },
   {

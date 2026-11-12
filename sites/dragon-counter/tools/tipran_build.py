@@ -161,6 +161,40 @@ R("function tbName(k,x){if(k==='skirts')return x.g?x.g+'g':'';return [x.maker,",
 R("<p class=\"muted\">メーカー・号数・重さ・色を入れて登録します。記録では「ダイワ 3.5号 40g 赤テープ」のように出ます。</p>${tbList('rigs')}",
   "<p class=\"muted\">メーカーのカタログから選ぶか、メーカー・号数・重さ・色を入れて登録します。</p>${tbList('rigs')}${TB_CAT.heads.length?`<button class=\"btn sm\" data-act=\"tbcOpen\" data-kind=\"rigs\" style=\"margin:8px 0\">📖 カタログから選ぶ（${[...new Set(TB_CAT.heads.map(r=>r.m))].length}社・${TB_CAT.heads.length}製品）</button><p class=\"muted\" style=\"margin:0\">カタログにないものは、下に入れて登録</p>`:''}")
 
+# ───────── エギの写真（tipran_images.py が切り抜いて縮めたもの）：カタログの色ごと。行の i は c と同じ並びの写真番号
+_ip = os.path.join(HERE, 'tipran', 'egi-images.json')
+IMG = json.load(open(_ip, encoding='utf-8')) if os.path.exists(_ip) else {}
+for r in EGI['heads']:
+    ii = [(IMG.get('%s|%s|%s' % (r['m'], r['s'], c)) or {}).get('id', '') for c in r['c']]
+    ii = [i if i and os.path.exists(os.path.join(OUT, 'egi', i + '.webp')) else '' for i in ii]
+    if any(ii):
+        r['i'] = ii
+RX(r"const TB_CAT=\{.*?\};\n", lambda m: 'const TB_CAT=' + json.dumps(EGI, ensure_ascii=False, separators=(',', ':')) + ';\n', flags=re.S)
+R("function tbName(k,x){",
+  """/* 写真：登録したエギのメーカー・製品・色でカタログを引く（前に登録したものにも出る） */
+const eimg=(id,cls)=>id?`<img class="eimg ${cls||''}" src="/tipran/egi/${id}.webp" alt="" loading="lazy" decoding="async" onerror="this.remove()">`:'';
+function egiIm(x){if(!x||!x.series)return '';const r=TB_CAT.heads.find(r=>r.m===x.maker&&r.s===x.series);if(!r||!r.i)return '';return r.i[r.c.indexOf(x.color)]||''}
+const rigIm=(sp,id)=>egiIm((spOf(sp).rigs||[]).find(x=>x.id===id));
+function tbName(k,x){""")
+R("""${cur.c.map(c=>`<button class="chip ${tbc.c.has(c)?'on':''}" data-act="tbcC" data-d="${esc(c)}">${esc(c)}</button>`).join('')}""",
+  """${cur.c.map((c,j)=>{const im=cur.i&&cur.i[j];return `<button class="chip ${im?'cimg':''} ${tbc.c.has(c)?'on':''}" data-act="tbcC" data-d="${esc(c)}">${eimg(im,'cc')}<span>${esc(c)}</span></button>`}).join('')}""")
+R("""l.map(g=>`<div class="grow ${g.hidden?'hid':''}"><span class="tb-nm">${esc(g.name)}</span>""",
+  """l.map(g=>`<div class="grow ${g.hidden?'hid':''}">${k==='rigs'?eimg(egiIm(g),'row'):''}<span class="tb-nm">${esc(g.name)}</span>""")
+R("""`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">""",
+  """`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${k==='rigs'?eimg(egiIm(g),'ch'):''}${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">""")
+R("""<button class="td-tenya ${ten&&curGear(tr).rig&&TIMG.has(curGear(tr).rig)?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):''}""",
+  """<button class="td-tenya ${(ten?curGear(tr).rig&&TIMG.has(curGear(tr).rig):rigIm(sp,curGear(tr).rig))?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):eimg(rigIm(sp,curGear(tr).rig),'cur')}""")
+R(".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}",
+  ".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}\n"
+  ".eimg{flex:none;object-fit:contain;background:#fff;border-radius:6px}\n"
+  ".eimg.cur{grid-column:1;grid-row:1;width:64px;height:28px}\n"
+  ".eimg.row{width:76px;height:34px}\n"
+  ".eimg.ch{width:56px;height:26px;vertical-align:middle;margin:-4px 8px -4px -6px}\n"
+  ".chips.wrap .chip.cimg{box-sizing:border-box;display:inline-flex;flex-direction:column;align-items:stretch;gap:4px;flex:0 0 calc(50% - 4px);width:calc(50% - 4px);max-width:calc(50% - 4px);min-width:0;border-radius:12px;padding:6px;white-space:normal;text-align:center;font-size:14px;line-height:1.3}\n"
+  ".eimg.cc{width:100%;height:60px;border-radius:8px}\n"
+  ".chip.cimg.on .eimg{outline:3px solid var(--chipon);outline-offset:-3px}\n"
+  "[data-act=tbcSeries]{max-width:100%;white-space:normal;text-align:left;border-radius:14px}")
+
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
 
