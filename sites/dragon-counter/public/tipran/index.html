@@ -1291,7 +1291,7 @@ function stateSegs(tr,tEnd){const out=[];
 const flowTxt=q=>q.flow==='C'?'潮止まり':`${flowName(q.flow)}・${SPEED_JP[q.speed]||''}`;
 function lastState(tr){const s=(tr.states||[]).slice().sort((a,b)=>a.t-b.t);return s[s.length-1]||null}
 function tAt(tr,h){let t=atTime(tr.date,h);if(tr.start&&t<tr.start-3*3600e3)t+=864e5;return t}
-function seatLabel(tr){if(tr.lay==='one'){const i=tr.seat,n=tr.seats;if(i===1)return 'ミヨシ';if(i===n)return 'トモ';return `${i}番（${seatZone(tr)}）`}const s=tr.side==='L'?'左':'右',i=tr.seat,n=tr.seats;if(i===1)return s+'ミヨシ';if(i===n)return s+'トモ';return `${s}舷${i}番（${seatZone(tr)}）`}
+function seatLabel(tr){const s=tr.side==='L'?'左':'右',i=tr.seat,n=tr.seats;if(i===1)return s+'ミヨシ';if(i===n)return s+'トモ';return `${s}舷${i}番（${seatZone(tr)}）`}
 const seatShort=tr=>seatLabel(tr).replace(/（.*）/,'');
 function seatZone(tr){const p=(tr.seat-1)/Math.max(1,tr.seats-1);return p<.34?'ミヨシ寄り':p>.66?'トモ寄り':'胴の間'}
 const tideNameOf=tr=>tr.tideName||shioName(tr.date);
@@ -1419,7 +1419,7 @@ function dayTideText(station,date){if(!TIDE.st[station])return '';const a=daySta
 let startDraft=null,curForm=null;
 const nowHM=()=>hm2(Date.now());
 function newForm(){return fixPeople(newForm0())}
-function fixPeople(f){f.people=clampP(f.people);f.lay=f.lay||'one';f.seats=f.lay==='one'?f.people:perSide(f.people);if(f.lay==='one')f.side='R';if(f.seat&&f.seat>f.seats)f.seat=f.seats;return f}
+function fixPeople(f){f.people=clampP(f.people);f.lay=f.lay||'one';f.seats=f.lay==='one'?f.people:perSide(f.people);if(f.side!=='L')f.side='R';if(f.seat&&f.seat>f.seats)f.seat=f.seats;return f}
 function newForm0(){const p=S.prefs,b=S.cfg.boats.find(x=>x.name===p.boat);const sp=SOLO||(spOf(p.sp).id!=='?'?p.sp:spVisible()[0].id);
   const spot=S.cfg.spots.find(x=>x.id===p.spotId)||S.cfg.spots.find(x=>inArea(x,S.cfg.area||'tokyo'))||S.cfg.spots[0]||null;
   return {mode:'new',date:ymd(Date.now()),boat:p.boat||'',people:b?(b.people||b.seats*2):(p.people||(p.seats||8)*2),seats:0,side:p.side||'R',seat:p.seat||null,
@@ -1443,17 +1443,17 @@ const OSAKA_ST=['KB','AK','J5','AM','OS','SI','IO','J2','KK','TN','ST','EI','WY'
 function stOptions(sel){const G=[['全国（北から）',Object.keys(ST_LL).filter(c=>TIDE.st[c]).sort((a,b)=>ST_LL[b][0]-ST_LL[a][0])]];
   return `<option value="" ${!sel?'selected':''}>いちばん近い地点（自動）</option>`+G.map(([g,cs])=>`<optgroup label="${g}">${cs.map(c=>`<option value="${c}" ${sel===c?'selected':''}>${TIDE.st[c].n}</option>`).join('')}</optgroup>`).join('')}
 function fGear(f,sp){f.g[sp]=f.g[sp]||{};const g=f.g[sp];if(spOf(sp).catalog&&!g.method)g.method=spOf(sp).method||'tenya';if(spOf(sp).catalog&&!isTenya(sp,g)&&(!g.rig||tenyaOf(g.rig)))g.rig=firstVis(sp,'rigs');if(spOf(sp).catalog){if(!g.set||g.setAuto||(g.set!=='mine'&&!TEN().sets.some(x=>x.id===g.set))){g.set=(TEN().sets[0]||{}).id||'mine';g.setAuto=true}}else if(!g.rig)g.rig=firstVis(sp,'rigs');if(!g.hook)g.hook=firstVis(sp,'hooks');if(!g.bait)g.bait=isBzSp(sp)?BZ_DEF:firstVis(sp,'baits');else if(isBzSp(sp)&&!g.bait.startsWith('bz:')&&bzLegacy((spOf(sp).baits||[]).find(x=>x.id===g.bait)))g.bait=bzId(bzParse(sp,g.bait));return g}
-function layHTML(f){const l=f.lay||'one';return `<div class="seg" id="laySeg" style="margin:4px 0 8px"><button class="${l==='one'?'on':''}" data-act="pickLay" data-d="one">片舷流し<small>（基本）</small></button><button class="${l==='both'?'on':''}" data-act="pickLay" data-d="both">両舷<small>（バーティカル）</small></button></div>`}
+function layHTML(f){const l=f.lay||'one';return `<div class="seg" id="laySeg" style="margin:4px 0 8px"><button class="${l==='one'?'on':''}" data-act="pickLay" data-d="one">片舷流し<small>（基本）</small></button><button class="${l==='both'?'on':''}" data-act="pickLay" data-d="both">両舷<small>（バーティカル）</small></button></div>${l==='one'?`<div class="chips" id="sideSeg" style="margin:0 0 8px"><span class="muted" style="align-self:center">釣り座の舷</span>${[['R','右舷'],['L','左舷']].map(([k,t])=>`<button class="chip ${(f.side||'R')===k?'on':''}" data-act="pickSide" data-d="${k}" aria-pressed="${(f.side||'R')===k}">${t}</button>`).join('')}</div>`:''}`}
 function seatPickerSVG(f){ // horizontal boat: bow (ミヨシ) to the right, so 左舷 is the top row and 右舷 the bottom row
   const n=f.seats,x0=290,x1=46,xs=i=>n<2?x0:x0-(i-1)*(x0-x1)/(n-1);let s='';
-  for(const side of (f.lay==='one'?['R']:['L','R']))for(let i=1;i<=n;i++){const y=side==='L'?34:96,x=xs(i),on=f.side===side&&f.seat===i;
+  for(const side of (f.lay==='one'?[f.side||'R']:['L','R']))for(let i=1;i<=n;i++){const y=side==='L'?34:96,x=xs(i),on=f.side===side&&f.seat===i;
     s+=`<g class="seat-hit" data-act="pickSeat" data-side="${side}" data-i="${i}" role="button" aria-label="${side==='L'?'左':'右'}舷 前から${i}番目"><circle cx="${r1(x)}" cy="${y}" r="15" fill="transparent"/><circle cx="${r1(x)}" cy="${y}" r="${on?10:6}" style="fill:${on?'var(--amber)':'var(--muted)'};stroke:var(--surface);stroke-width:${on?3:0}"/></g>`}
   return `<svg viewBox="0 0 360 132" aria-label="座席を選ぶ（右がミヨシ）">
    <path d="M24,34 L300,34 Q336,40 352,65 Q336,90 300,96 L24,96 Q18,65 24,34 Z" style="fill:var(--surface2);stroke:var(--ink)" stroke-width="2"/>
    <text x="340" y="22" text-anchor="end" font-size="12" font-weight="700" style="fill:var(--teal)">ミヨシ →</text><text x="24" y="22" font-size="12" font-weight="700" style="fill:var(--teal)">トモ</text>
-   ${f.lay==='one'?'<text x="180" y="124" text-anchor="middle" font-size="12" style="fill:var(--muted)">釣り座（片舷流し）</text>':'<text x="180" y="20" text-anchor="middle" font-size="12" style="fill:var(--muted)">左舷</text><text x="180" y="124" text-anchor="middle" font-size="12" style="fill:var(--muted)">右舷</text>'}${s}</svg>`}
+   ${f.lay==='one'?`<text x="180" y="${f.side==='L'?20:124}" text-anchor="middle" font-size="12" style="fill:var(--muted)">${f.side==='L'?'左':'右'}舷（片舷流し）</text>`:'<text x="180" y="20" text-anchor="middle" font-size="12" style="fill:var(--muted)">左舷</text><text x="180" y="124" text-anchor="middle" font-size="12" style="fill:var(--muted)">右舷</text>'}${s}</svg>`}
 function seatNoteHTML(f){if(!f.seat)return `<b>席をタップ</b><span class="muted">右がミヨシ（船首）です。当日の人数を合わせてから選んでください。</span>`;
-  return `<span class="muted">あなたの席</span><b>${esc(seatLabel({side:f.side,seat:f.seat,seats:f.seats,lay:f.lay}))}</b><span class="muted">${f.lay==='one'?`片舷流し・前から${f.seat}番目／${f.people}人`:`${f.side==='L'?'左':'右'}舷・前から${f.seat}番目／${f.people}人（片舷${f.seats}席）`}</span>`}
+  return `<span class="muted">あなたの席</span><b>${esc(seatLabel({side:f.side,seat:f.seat,seats:f.seats,lay:f.lay}))}</b><span class="muted">${f.lay==='one'?`片舷流し（${f.side==='L'?'左':'右'}舷）・前から${f.seat}番目／${f.people}人`:`${f.side==='L'?'左':'右'}舷・前から${f.seat}番目／${f.people}人（片舷${f.seats}席）`}</span>`}
 const boatOf=name=>S.cfg.boats.find(x=>x.name===String(name||'').trim())||null;
 const boatSpots=bt=>bt?(bt.spots||[]).filter(id=>S.cfg.spots.some(x=>x.id===id)):[];
 function spotChipsHTML(f){const a=fArea(f),all=S.cfg.spots.filter(x=>inArea(x,a)||x.id===f.spotId);
@@ -1882,7 +1882,7 @@ function seatSVG(tr,sp){
   const cx=300,xl=222,xr=378,y0=272,y1=590,ys=i=>n<2?y0:y0+(i-1)*(y1-y0)/(n-1);
   o.push(TX(cx,160,'ミヨシ',{size:18,bold:1,fill:P.tide,anchor:'middle'}));
   o.push(`<path d="M${xl},612 L${xl},262 Q${xl},206 ${cx},172 Q${xr},206 ${xr},262 L${xr},612 Q${cx},632 ${xl},612 Z" fill="${P.hull}" stroke="${P.ink}" stroke-width="3"/>`);
-  o.push(TX(cx,662,'トモ',{size:18,bold:1,fill:P.tide,anchor:'middle'}));if(tr.lay!=='one'){o.push(TX(xl-40,240,'左舷',{size:14,fill:P.muted,anchor:'middle'}));o.push(TX(xr+40,240,'右舷',{size:14,fill:P.muted,anchor:'middle'}))}else o.push(TX(xr+40,240,'釣り座',{size:14,fill:P.muted,anchor:'middle'}));
+  o.push(TX(cx,662,'トモ',{size:18,bold:1,fill:P.tide,anchor:'middle'}));if(tr.lay!=='one'){o.push(TX(xl-40,240,'左舷',{size:14,fill:P.muted,anchor:'middle'}));o.push(TX(xr+40,240,'右舷',{size:14,fill:P.muted,anchor:'middle'}))}else o.push(TX(tr.side==='L'?xl-40:xr+40,240,tr.side==='L'?'左舷':'右舷',{size:14,fill:P.muted,anchor:'middle'}));
   const [t0,t1]=range(tr);const tE=tr.end||t1;const hs=headSegs(tr,tE),st=stateSegs(tr,tE);const rep=st[0];
   if(rep){if(rep.flow!=='C'){const [vx,vy]=vec(rep.flow);const my=430;o.push(arrowSVG(cx-vx*62,my-vy*62,cx+vx*62,my+vy*62,P.tide,7,18));o.push(TX(cx-vx*62-vy*20,my-vy*62+vx*20+6,'潮',{size:16,bold:1,fill:P.tide,anchor:'middle'}))}
     else o.push(TX(cx,436,'潮止まり',{size:17,bold:1,fill:P.muted,anchor:'middle'}));
@@ -1896,7 +1896,7 @@ function seatSVG(tr,sp){
   if(st.length>1){const lx=R?30:398,mx=R?204:572;let ly=286;o.push(TX(lx,ly,'潮の向きの変化',{size:13,bold:1,fill:P.tide}));const maxRows=8;
     st.slice(0,maxRows).forEach(q=>{ly+=19;o.push(TX(lx,ly,`${hm(q.t)}〜${hm(q.te)}${hs.length>1?'・船首'+HEAD_JP[q.heading]:''}`,{size:11.5,fill:P.muted}));ly+=17;o.push(TX(lx,ly,clip(flowTxt(q),mx-lx,12),{size:12,bold:1}))});
     if(st.length>maxRows){ly+=19;o.push(TX(lx,ly,`ほか${st.length-maxRows}件は下の一覧`,{size:11.5,fill:P.muted}))}}
-  for(const side of (tr.lay==='one'?['R']:['L','R']))for(let i=1;i<=n;i++){const x=side==='L'?xl:xr,y=ys(i),me=tr.side===side&&tr.seat===i;
+  for(const side of (tr.lay==='one'?[tr.side||'R']:['L','R']))for(let i=1;i<=n;i++){const x=side==='L'?xl:xr,y=ys(i),me=tr.side===side&&tr.seat===i;
     o.push(me?`<circle cx="${x}" cy="${r1(y)}" r="13" fill="${P.catch}" stroke="#fff" stroke-width="3"/>`:`<circle cx="${x}" cy="${r1(y)}" r="6.5" fill="${P.seatOff}"/>`)}
   {const y=ys(tr.seat),R=tr.side==='R',x=R?xr+28:xl-28,an=R?'start':'end';o.push(TX(x,y-12,seatShort(tr),{size:17,bold:1,anchor:an}));o.push(TX(x,y+32,`${N}${s.unit}`,{size:42,bold:1,fill:P.catch,anchor:an}))}
   let y=746;const X0=32,X1=310;const span=tripEndT(tr,ev.length?ev[ev.length-1].t:tr.start)-tr.start;
@@ -2498,7 +2498,8 @@ const acts={
   closeSheet:()=>closeSheet(),
   goGear:()=>{const tr=active();S.ui.gearSp=tr?tr.cur.sp:(startDraft?startDraft.sp:S.ui.gearSp);S.ui.tab='gear';if(!$('#sheet').hidden)$('#sheet').hidden=true;render();scrollTo(0,0)},
   seats:b=>{const f=curForm;f.people=clampP(f.people+(+b.dataset.d));fixPeople(f);refreshSeat()},
-  pickLay:b=>{const f=curForm;if(!f)return;f.lay=b.dataset.d;f.seat=null;fixPeople(f);refreshSeat();const g=$('#laySeg');if(g)g.outerHTML=layHTML(f)},
+  pickLay:b=>{const f=curForm;if(!f)return;f.lay=b.dataset.d;f.seat=null;fixPeople(f);refreshSeat();const g=$('#laySeg'),h=$('#sideSeg');if(h)h.remove();if(g)g.outerHTML=layHTML(f)},
+  pickSide:b=>{const f=curForm;if(!f)return;f.side=b.dataset.d;f.seat=null;refreshSeat();const g=$('#laySeg'),h=$('#sideSeg');if(h)h.remove();if(g)g.outerHTML=layHTML(f)},
   pickSeat:b=>{const f=curForm;f.side=b.dataset.side;f.seat=+b.dataset.i;refreshSeat()},
   pickSpot:b=>{const x=S.cfg.spots.find(y=>y.id===b.dataset.id);if(!x)return;const f=curForm;f.spotId=x.id;f.spot=spotCopy(x);f.station=spotSt(x);f.area=null;refreshTide()},
   pickArea:b=>{const f=curForm,a=b.dataset.d;if(!f||fArea(f)===a)return;let ch=a==='osaka'&&addOsakaSpots();if(S.cfg.area!==a){S.cfg.area=a;ch=true}if(ch)cfgTouch();
