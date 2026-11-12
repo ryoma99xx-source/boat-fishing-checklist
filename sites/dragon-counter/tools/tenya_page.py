@@ -216,7 +216,7 @@ h1{{font-size:26px;line-height:1.35;margin:4px 0 10px}}
 .frow select,.frow input{{min-height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);font:inherit;font-size:16px;padding:6px 10px}}
 .szc .chip{{min-width:64px}}.frow input{{flex:1;min-width:0}}
 .count{{color:var(--muted);font-size:13px;margin:8px 0 0}}
-.pd{{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:14px 0;scroll-margin-top:130px}}
+.pd{{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:14px 0}}
 .pd h2{{font-size:18px;line-height:1.4;margin:0}}.pd h2 small{{display:block;font-size:13px;color:var(--teal);font-weight:500}}
 .meta{{color:var(--muted);font-size:14px;margin:2px 0 8px}}
 .links{{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}}

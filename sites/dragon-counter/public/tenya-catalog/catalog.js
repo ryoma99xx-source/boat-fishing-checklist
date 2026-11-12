@@ -23,17 +23,23 @@ const isDark=(()=>{for(let el=root;el;el=el.parentElement){const m=getComputedSt
 const C=isDark?{bg:'rgba(6,10,17,.96)',line:'#1f2d42',chip:'#0b1422',field:'#101c2e',ink:'#eef3f8',muted:'#9cabbd'}
              :{bg:'rgba(255,255,255,.97)',line:'#c9d1db',chip:'#fff',field:'#fff',ink:'#222',muted:'#667'};
 const css=document.createElement('style');css.textContent=`
-.tcat-bar{position:sticky;top:0;z-index:20;background:var(--tcat-bg,${C.bg});border-bottom:1px solid var(--tcat-line,${C.line});padding:10px 0;margin:0 0 10px}
+.tcat-bar{background:var(--tcat-chip,${C.chip})!important;border:1px solid var(--tcat-line,${C.line});border-radius:12px;padding:12px;margin:0 0 14px}
 .tcat-seg{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px}
-.tcat-seg button{min-height:38px;padding:4px 14px;border-radius:999px;border:1px solid var(--tcat-line,${C.line});background:var(--tcat-chip,${C.chip});color:var(--tcat-ink,${C.ink});font:inherit;font-size:14px;cursor:pointer}
-.tcat-seg button.on{background:var(--tcat-on,#41c9c6);border-color:var(--tcat-on,#41c9c6);color:var(--tcat-on-ink,#03161c);font-weight:700}
+.tcat-seg button{min-height:38px;padding:4px 14px;border-radius:999px;border:1px solid var(--tcat-line,${C.line})!important;background:var(--tcat-field,${C.field})!important;color:var(--tcat-ink,${C.ink})!important;font:inherit;font-size:14px;line-height:1.3;cursor:pointer;box-shadow:none}
+.tcat-seg button.on{background:var(--tcat-on,#41c9c6)!important;border-color:var(--tcat-on,#41c9c6)!important;color:var(--tcat-on-ink,#03161c)!important;font-weight:700}
 .tcat-row{display:flex;gap:8px;flex-wrap:wrap}
-.tcat-row select,.tcat-q input{min-height:42px;border-radius:10px;border:1px solid var(--tcat-line,${C.line});background:var(--tcat-field,${C.field});color:var(--tcat-ink,${C.ink});font:inherit;font-size:16px;padding:6px 10px}
+.tcat-row select,.tcat-q input{min-height:42px;border-radius:10px;border:1px solid var(--tcat-line,${C.line})!important;background:var(--tcat-field,${C.field})!important;color:var(--tcat-ink,${C.ink})!important;font:inherit;font-size:16px;padding:6px 10px;margin:0}
+.tcat-q input::placeholder{color:var(--tcat-muted,${C.muted});opacity:1}.tcat-q input::-webkit-search-cancel-button{display:none}
 .tcat-row select{flex:1 1 160px;min-width:0}
 .tcat-q{position:relative;flex:2 1 220px;min-width:0}.tcat-q input{width:100%;box-sizing:border-box;padding-right:40px}
-.tcat-q button{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;background:none;color:var(--tcat-muted,${C.muted});font-size:20px;cursor:pointer}
-.tcat-cnt{font-size:13px;color:var(--tcat-muted,${C.muted});margin:6px 0 0}.tcat-help{font-size:13px;color:var(--tcat-muted,${C.muted});margin:4px 0 0}
-.tcat-none{padding:16px;text-align:center;color:var(--tcat-muted,${C.muted})}
+.tcat-q button{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;background:none!important;color:var(--tcat-muted,${C.muted})!important;font-size:20px;cursor:pointer}
+.tcat-bar .tcat-cnt{font-size:14px;font-weight:700;color:var(--tcat-ink,${C.ink})!important;margin:8px 0 0}.tcat-bar .tcat-help{font-size:13px;color:var(--tcat-muted,${C.muted})!important;margin:6px 0 0}
+p.tcat-none{padding:16px;text-align:center;color:var(--tcat-muted,${C.muted})!important}
+/* 一覧を下へ進んだあとも、絞り込み・検索へ戻れる小さなボタン（サイトの固定ヘッダーの下に出す） */
+.tcat-mini{position:sticky;top:var(--tcat-top,0px);height:0;z-index:20;pointer-events:none}
+.tcat-mini button{position:absolute;right:0;top:8px;display:none;pointer-events:auto;border:0;border-radius:999px;padding:8px 14px;background:#41c9c6!important;color:#03161c!important;font:inherit;font-size:13px;font-weight:700;line-height:1.3;box-shadow:0 2px 10px rgba(0,0,0,.45);cursor:pointer}
+.tcat-mini.on button{display:block}
+[data-tcat] [id]{scroll-margin-top:calc(var(--tcat-top,0px) + 16px)}
 [data-tcat-c].tcat-ts{border:3px solid #e3a43b!important;position:relative}
 [data-tcat-c].tcat-ts::before{content:"釣れ筋";position:absolute;top:6px;left:6px;z-index:1;background:#e3a43b;color:#1a1200;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px}
 [data-tcat-c].tcat-hit{outline:3px solid #e3a43b;outline-offset:2px}
@@ -65,7 +71,16 @@ if(bar){bar.className='tcat-bar';bar.innerHTML=`
  bar.querySelector('select').addEventListener('change',e=>{st.m=e.target.value;apply()});
  bar.querySelector('.tcat-q input').addEventListener('input',e=>{st.q=e.target.value;apply()})}
 const none=document.createElement('p');none.className='tcat-none tcat-hide';none.textContent='当てはまるテンヤがありません。';
-if(bar)bar.after(none);
+const mini=document.createElement('div');mini.className='tcat-mini';mini.innerHTML='<button type="button"></button>';
+/* サイトの固定ヘッダーの高さ（その下に小さなボタンを出し、飛び先が隠れないようにする） */
+function topOff(){let y=0;for(const el of document.elementsFromPoint(innerWidth/2,1)){if(root.contains(el))continue;
+    for(let e=el;e&&e!==document.documentElement;e=e.parentElement){const ps=getComputedStyle(e).position;if(ps==='fixed'||ps==='sticky'){const b=e.getBoundingClientRect().bottom;if(b<innerHeight/2)y=Math.max(y,b);break}}}
+  return Math.round(y)}
+if(bar){bar.after(none);none.after(mini);
+  let tick=0;const upd=()=>{tick=0;root.style.setProperty('--tcat-top',topOff()+'px')};
+  addEventListener('scroll',()=>{if(!tick)tick=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',upd);upd();
+  if('IntersectionObserver' in window)new IntersectionObserver(es=>es.forEach(e=>mini.classList.toggle('on',!e.isIntersecting&&e.boundingClientRect.top<0))).observe(bar);
+  mini.firstChild.addEventListener('click',()=>scrollTo({top:bar.getBoundingClientRect().top+scrollY-topOff()-8,behavior:'smooth'}))}
 
 function apply(){const terms=normQ(st.q).split(/\s+/).filter(Boolean);let np=0,nc=0;
   prods.forEach(p=>{let k=0;const okP=(!st.m||p.dataset.m===st.m)&&(!st.tg||p.dataset.tg==='1');
@@ -76,6 +91,7 @@ function apply(){const terms=normQ(st.q).split(/\s+/).filter(Boolean);let np=0,n
     p.classList.toggle('tcat-hide',!k);if(k){np++;nc+=k}});
   $$('[data-tcat-mkb]',root).forEach(b=>b.classList.toggle('tcat-hide',!b.querySelector('[data-tcat-p]:not(.tcat-hide)')));
   $$('[data-tcat-static]',root).forEach(b=>b.classList.toggle('tcat-hide',!!(st.z||st.only||st.tg||st.m||terms.length)));
+  mini.firstChild.textContent=`絞り込み・検索（${np}製品・${nc}色）`;
   if(bar){bar.querySelector('.tcat-cnt').textContent=`${np}製品・${nc}色`;bar.querySelector('.tcat-help').hidden=st.only!=='new';bar.querySelector('.tcat-q button').hidden=!st.q}
   none.classList.toggle('tcat-hide',np>0)}
 apply();
