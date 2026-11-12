@@ -195,6 +195,58 @@ R(".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}",
   ".chip.cimg.on .eimg{outline:3px solid var(--chipon);outline-offset:-3px}\n"
   "[data-act=tbcSeries]{max-width:100%;white-space:normal;text-align:left;border-radius:14px}")
 
+# ───────── カタログに自分の製品・号数・色を足す（メーカーごと）。足したものは spOf(SOLO).own に残り、次からカタログに一緒に出る
+# own = {p:[{m,s}], o:{'m|s':[{z,g}]}, c:{'m|s':[色]}}。カタログの行に足した分は no/nc より後ろ（点線で出す）
+RX(r"function tbcRows\(\)\{.*?,\{kind:'tbc'\}\)\}\n", lambda m: r"""function tbcOwn(){const s=spOf(SOLO);return s.own=s.own||{p:[],o:{},c:{}}}
+function tbcRows(){const L=TB_CAT[TBC_KEY[tbc.kind]]||[];if(tbc.kind!=='rigs')return L;const ow=tbcOwn();
+  return L.map(r=>{const k=r.m+'|'+r.s,xo=ow.o[k]||[],xc=ow.c[k]||[];if(!xo.length&&!xc.length)return r;const o=[...(r.o||[]),...xo];return {...r,o,w:o.map((_,i)=>i),c:[...r.c,...xc],no:(r.o||[]).length,nc:r.c.length}})
+   .concat(ow.p.map(p=>{const k=p.m+'|'+p.s,o=ow.o[k]||[];return {m:p.m,s:p.s,o,w:o.map((_,i)=>i),c:ow.c[k]||[],mine:1,no:0,nc:0}}))}
+const tbcMineO=(r,j)=>j>=(r.no??(r.o||[]).length),tbcMineC=(r,j)=>j>=(r.nc??r.c.length);
+function tbcAddForm(t){if(tbc.add!==t)return '';const inp=(id,l,ph,x)=>`<label class="field"><span>${l}</span><input type="${x||'text'}" id="${id}" placeholder="${ph}"${x==='number'?' inputmode="numeric" min="1" max="300"':''}></label>`;
+  return `<div class="tbc-add">${t==='m'?inp('tbcM','メーカー','例：〇〇釣具')+inp('tbcP','製品','例：〇〇TR'):t==='p'?inp('tbcP','製品',`例：${esc(tbc.m)}の製品名`):t==='o'?inp('tbcZ','号数','例：3.5')+inp('tbcG','重さ（g）','例：30','number'):inp('tbcCn','色','例：赤テープ')}
+   <div class="tbc-add-b"><button class="btn sm primary" data-act="tbcAddOk">追加</button><button class="btn sm ghost" data-act="tbcAdd" data-d="">やめる</button></div></div>`}
+function tbcSheet(){const rows=tbcRows(),makers=[...new Set(rows.map(r=>r.m))];if(!tbc.m)tbc.m=makers[0]||'';const rig=tbc.kind==='rigs',dl=tbc.del;
+  const ser=rows.map((r,i)=>[r,i]).filter(([r])=>r.m===tbc.m),cur=tbc.i>=0?rows[tbc.i]:null;
+  const n=cur?(rig&&cur.w.length?tbc.w.size:1)*tbc.c.size:0;
+  const plus=(t,l)=>rig&&!dl?`<button class="chip add ${tbc.add===t?'on':''}" data-act="tbcAdd" data-d="${t}">＋ ${l}</button>`:'';
+  const anyMine=rig&&(rows.some(r=>r.mine||r.no!=null));
+  openSheet(`<div class="sheet-h stick"><h2>カタログ（${TBC_JP[tbc.kind]}）</h2><button class="btn sm ghost" data-act="tbcClose">閉じる</button></div>
+   ${rig?`<p class="muted" style="margin:0">カタログにない製品・号数・色は「＋」で足せます。足したものは点線で、次からも出ます。</p>`:''}
+   <div class="field"><span>メーカー</span><div class="chips wrap">${makers.map(m=>`<button class="chip ${m===tbc.m?'on':''}" data-act="tbcMaker" data-d="${esc(m)}">${esc(m)}</button>`).join('')}${plus('m','メーカー')}</div>${tbcAddForm('m')}</div>
+   <div class="field"><span>製品</span><div class="chips wrap">${ser.map(([r,i])=>`<button class="chip ${r.mine?'mine':''} ${dl&&r.mine?'del':''} ${i===tbc.i?'on':''}" data-act="${dl&&r.mine?'tbcDelP':'tbcSeries'}" data-i="${i}">${dl&&r.mine?'✕ ':''}${esc(r.s)}${r.mat==='TG'?'<small>（TG）</small>':''}</button>`).join('')}${plus('p','製品')}</div>${tbcAddForm('p')}</div>
+   ${cur?`${cur.note?`<p class="muted" style="margin:0">${esc(cur.note)}</p>`:''}
+    ${rig?`<div class="field"><span>号数・重さ（持っているものを全部）</span><div class="chips wrap">${cur.w.map(g=>{const o=cur.o[g]||{},mi=tbcMineO(cur,g);return `<button class="chip ${mi?'mine':''} ${dl&&mi?'del':''} ${tbc.w.has(g)?'on':''}" data-act="${dl&&mi?'tbcDelW':'tbcW'}" data-d="${g}">${dl&&mi?'✕ ':''}${o.z?esc(o.z)+'号':''}${o.g?' '+o.g+'g':''}</button>`}).join('')}${plus('o','号数・重さ')}</div>${tbcAddForm('o')}</div>`:''}
+    <div class="field"><span>色（持っているものを全部）</span><div class="chips wrap">${cur.c.map((c,j)=>{const im=cur.i&&cur.i[j],mi=rig&&tbcMineC(cur,j);return `<button class="chip ${im?'cimg':''} ${mi?'mine':''} ${dl&&mi?'del':''} ${tbc.c.has(c)?'on':''}" data-act="${dl&&mi?'tbcDelC':'tbcC'}" data-d="${esc(c)}">${eimg(im,'cc')}<span>${dl&&mi?'✕ ':''}${esc(c)}</span></button>`}).join('')}${plus('c','色')}</div>${tbcAddForm('c')}</div>
+    ${cur.u?`<a class="golink" href="${esc(cur.u)}" target="_blank" rel="noopener">メーカーのページで見る ↗</a>`:''}`:'<p class="muted">製品を選んでください。</p>'}
+   ${anyMine?`<button class="btn sm ghost" data-act="tbcDelMode" style="align-self:flex-start">${dl?'整理を終わる':'自分で足したものを整理（消す）'}</button>`:''}
+   <div class="tb-foot"><button class="btn primary" data-act="tbcSave" ${n&&!dl?'':'disabled'}>${dl?'整理中（✕を押すと消えます）':n?`${n}件を登録`:!cur?'製品を選んでください':rig&&cur.w.length&&!tbc.w.size?'号数・重さを選んでください':'色を選んでください'}</button></div>`,{kind:'tbc'});
+  if(tbc.add){const el=$('#'+({m:'tbcM',p:'tbcP',o:'tbcZ',c:'tbcCn'}[tbc.add]));if(el)setTimeout(()=>el.focus(),30)}}
+""", flags=re.S)
+RX(r"  tbcMaker:b=>\{tbc\.m=b\.dataset\.d;", "  tbcMaker:b=>{tbc.add='';tbc.m=b.dataset.d;")
+RX(r"  tbcSeries:b=>\{tbc\.i=\+b\.dataset\.i;", "  tbcSeries:b=>{tbc.add='';tbc.i=+b.dataset.i;")
+R("  tbcSave:()=>{const r=tbcRows()[tbc.i];if(!r)return;",
+  """  tbcAdd:b=>{tbc.add=tbc.add===b.dataset.d?'':b.dataset.d;tbcSheet()},
+  tbcDelMode:()=>{tbc.del=!tbc.del;tbc.add='';tbcSheet()},
+  tbcAddOk:()=>{const t=tbc.add,ow=tbcOwn(),rows=tbcRows(),r=rows[tbc.i];
+    if(t==='m'||t==='p'){const m=t==='m'?tbVal('tbcM'):tbc.m,p=tbVal('tbcP');if(!m||!p)return toast(t==='m'?'メーカーと製品を入れてください':'製品名を入れてください');
+      if(!rows.some(x=>x.m===m&&x.s===p))ow.p.push({m,s:p});tbc.m=m;tbc.i=tbcRows().findIndex(x=>x.m===m&&x.s===p);tbc.w=new Set();tbc.c=new Set()}
+    else if(t==='o'){if(!r)return;const z=tbVal('tbcZ').replace(/号$/,''),g=Math.round(+tbVal('tbcG')||0);if(!z&&!g)return toast('号数か重さを入れてください');const k=r.m+'|'+r.s;
+      let j=r.o.findIndex(o=>String(o.z||'')===z&&(+o.g||0)===g);if(j<0){(ow.o[k]=ow.o[k]||[]).push({z,g});j=r.o.length}tbc.w.add(j)}
+    else if(t==='c'){if(!r)return;const c=tbVal('tbcCn');if(!c)return toast('色を入れてください');const k=r.m+'|'+r.s;if(!r.c.includes(c))(ow.c[k]=ow.c[k]||[]).push(c);tbc.c.add(c)}
+    tbc.add='';cfgTouch();tbcSheet()},
+  tbcDelP:b=>{const r=tbcRows()[+b.dataset.i];if(!r||!r.mine)return;const ow=tbcOwn(),k=r.m+'|'+r.s;ow.p=ow.p.filter(p=>!(p.m===r.m&&p.s===r.s));delete ow.o[k];delete ow.c[k];
+    tbc.i=-1;tbc.w=new Set();tbc.c=new Set();if(!tbcRows().some(x=>x.m===tbc.m))tbc.m='';cfgTouch();tbcSheet()},
+  tbcDelW:b=>{const r=tbcRows()[tbc.i];if(!r)return;const ow=tbcOwn(),k=r.m+'|'+r.s,j=+b.dataset.d-(r.no||0);(ow.o[k]||[]).splice(j,1);tbc.w=new Set();cfgTouch();tbcSheet()},
+  tbcDelC:b=>{const r=tbcRows()[tbc.i];if(!r)return;const ow=tbcOwn(),k=r.m+'|'+r.s,c=b.dataset.d;ow.c[k]=(ow.c[k]||[]).filter(x=>x!==c);tbc.c.delete(c);cfgTouch();tbcSheet()},
+  tbcSave:()=>{const r=tbcRows()[tbc.i];if(!r||tbc.del)return;""")
+R("const ws=k==='rigs'&&r.w.length?[...tbc.w].sort((a,b)=>a-b):[''];", "const ws=k==='rigs'&&r.w.length?[...tbc.w].sort((a,b)=>a-b):[-1];")
+R("color:c,shape:o.z||'',cat:true,id:uid()};", "color:c,shape:o.z||'',cat:!r.mine,id:uid()};")
+R(".tb-form{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin:8px 0}",
+  ".tb-form{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin:8px 0}"
+  ".chip.mine{border-style:dashed}.chip.del{border-color:var(--pink);color:var(--pink)}"
+  ".tbc-add{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin-top:10px;padding:10px;border:1px dashed var(--line);border-radius:12px}"
+  ".tbc-add .field:only-of-type{grid-column:1/-1}.tbc-add-b{grid-column:1/-1;display:flex;gap:8px}")
+
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
 
