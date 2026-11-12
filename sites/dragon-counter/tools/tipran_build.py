@@ -334,7 +334,7 @@ R("function chipsHTML(sp,k,sel,act){",
   "function rigZRow(l){const zs=[...new Set((l||[]).filter(g=>!g.hidden&&g.shape).map(g=>String(g.shape)))].sort((a,b)=>a-b);if(zs.length<2)return '';\n"
   "  return `<div class=\"chips rigz\">${['',...zs].map(z=>`<button class=\"chip ${z?'':'on'}\" data-act=\"rigZ\" data-d=\"${esc(z)}\">${z?esc(z)+'号':'全号数'}</button>`).join('')}</div>`}\n"
   "function chipsHTML(sp,k,sel,act){")
-R(".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}", ".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}\n.chips.rigz{margin:2px 0 6px}.chips.rigz .chip{min-height:34px;padding:4px 12px;font-size:14px}")
+R(".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}", ".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}\n.gearpick .chips.wrap .chip{max-width:100%;white-space:normal;text-align:left;line-height:1.35;display:inline-flex;align-items:center;overflow-wrap:anywhere}.gearpick .chips.wrap .chip .eimg.ch{flex:none}\n.chips.rigz{margin:2px 0 6px}.chips.rigz .chip{min-height:34px;padding:4px 12px;font-size:14px}")
 
 R("<div class=\"card\"><h2>仕掛けと餌</h2>", "<div class=\"card\"><h2>エギとシンカー</h2>")
 
