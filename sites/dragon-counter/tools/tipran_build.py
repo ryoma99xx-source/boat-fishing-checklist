@@ -118,6 +118,35 @@ R("tx(168,64,'80g オレンジ'", "tx(168,64,'3.5号 赤テープ'")
 R("tx(196,116,'針'", "tx(196,116,'キロアップ'")
 R("tx(196,132,'自作 2本針'", "tx(196,132,'1kg以上'")
 
+# ───────── 座席：基本は片舷流し（全員が片側に並ぶ）。両舷・バーティカルも選べる。trip.lay = 'one' | 'both'
+R("function fixPeople(f){f.people=clampP(f.people);f.seats=perSide(f.people);",
+  "function fixPeople(f){f.people=clampP(f.people);f.lay=f.lay||'one';f.seats=f.lay==='one'?f.people:perSide(f.people);if(f.lay==='one')f.side='R';")
+R("end:(b&&b.end)||'13:30',memo:''}}", "end:(b&&b.end)||'13:30',memo:'',lay:S.prefs.lay||'one'}}")
+R("function formFromTrip(tr){return {mode:'edit',id:tr.id,date:tr.date,boat:tr.boat,people:tr.people||tr.seats*2,seats:tr.seats,side:tr.side,seat:tr.seat,",
+  "function formFromTrip(tr){return {mode:'edit',id:tr.id,date:tr.date,boat:tr.boat,lay:tr.lay||'one',people:tr.people||(tr.lay==='both'?tr.seats*2:tr.seats),seats:tr.seats,side:tr.side,seat:tr.seat,")
+R("people:f.people,seats:f.seats,side:f.side,seat:f.seat,station:f.station,", "people:f.people,seats:f.seats,side:f.side,seat:f.seat,lay:f.lay||'one',station:f.station,")
+R("Object.assign(tr,{date:f.date,boat:f.boat.trim(),people:f.people,seats:f.seats,side:f.side,seat:f.seat,memo:f.memo});",
+  "Object.assign(tr,{date:f.date,boat:f.boat.trim(),people:f.people,seats:f.seats,side:f.side,seat:f.seat,lay:f.lay||'one',memo:f.memo});")
+R("Object.assign(S.prefs,{boat:tr.boat,seats:tr.seats,side:tr.side,seat:tr.seat,", "Object.assign(S.prefs,{boat:tr.boat,seats:tr.seats,side:tr.side,seat:tr.seat,lay:tr.lay,")
+R("function seatLabel(tr){", "function seatLabel(tr){if(tr.lay==='one'){const i=tr.seat,n=tr.seats;if(i===1)return 'ミヨシ';if(i===n)return 'トモ';return `${i}番（${seatZone(tr)}）`}")
+R("<b>${esc(seatLabel({side:f.side,seat:f.seat,seats:f.seats}))}</b><span class=\"muted\">${f.side==='L'?'左':'右'}舷・前から${f.seat}番目／${f.people}人（片舷${f.seats}席）</span>",
+  "<b>${esc(seatLabel({side:f.side,seat:f.seat,seats:f.seats,lay:f.lay}))}</b><span class=\"muted\">${f.lay==='one'?`片舷流し・前から${f.seat}番目／${f.people}人`:`${f.side==='L'?'左':'右'}舷・前から${f.seat}番目／${f.people}人（片舷${f.seats}席）`}</span>")
+R("for(const side of ['L','R'])for(let i=1;i<=n;i++){const y=side==='L'?34:96,", "for(const side of (f.lay==='one'?['R']:['L','R']))for(let i=1;i<=n;i++){const y=side==='L'?34:96,")
+R("for(const side of ['L','R'])for(let i=1;i<=n;i++){const x=side==='L'?xl:xr,", "for(const side of (tr.lay==='one'?['R']:['L','R']))for(let i=1;i<=n;i++){const x=side==='L'?xl:xr,")
+R('<text x="180" y="20" text-anchor="middle" font-size="12" style="fill:var(--muted)">左舷</text><text x="180" y="124" text-anchor="middle" font-size="12" style="fill:var(--muted)">右舷</text>',
+  '${f.lay===\'one\'?\'<text x="180" y="124" text-anchor="middle" font-size="12" style="fill:var(--muted)">釣り座（片舷流し）</text>\':\'<text x="180" y="20" text-anchor="middle" font-size="12" style="fill:var(--muted)">左舷</text><text x="180" y="124" text-anchor="middle" font-size="12" style="fill:var(--muted)">右舷</text>\'}')
+R('   <div class="seatwrap"><div id="seatPick">${seatPickerSVG(f)}</div>',
+  '   ${layHTML(f)}<div class="seatwrap"><div id="seatPick">${seatPickerSVG(f)}</div>')
+R("function seatPickerSVG(f){", "function layHTML(f){const l=f.lay||'one';return `<div class=\"seg\" id=\"laySeg\" style=\"margin:4px 0 8px\"><button class=\"${l==='one'?'on':''}\" data-act=\"pickLay\" data-d=\"one\">片舷流し<small>（基本）</small></button><button class=\"${l==='both'?'on':''}\" data-act=\"pickLay\" data-d=\"both\">両舷<small>（バーティカル）</small></button></div>`}\nfunction seatPickerSVG(f){")
+R("  pickSeat:b=>{", "  pickLay:b=>{const f=curForm;if(!f)return;f.lay=b.dataset.d;f.seat=null;fixPeople(f);refreshSeat();const g=$('#laySeg');if(g)g.outerHTML=layHTML(f)},\n  pickSeat:b=>{")
+R("const z={};real.forEach(t=>{const k=t.side+seatZone(t);", "const z={};real.forEach(t=>{const k=(t.lay==='one'?'O':t.side)+seatZone(t);")
+R("const nm=(side==='L'?'左':'右')+zone;", "const nm=(side==='L'?'左':side==='O'?'':'右')+zone;")
+R("return chips+`<div class=\"zones\">${['ミヨシ寄り','胴の間','トモ寄り'].map(zn=>cell('L',zn)+cell('R',zn)).join('')}</div><div class=\"zones-foot\">トモ</div>`}",
+  "const one=Object.keys(z).some(k=>k[0]==='O'),both=Object.keys(z).some(k=>k[0]!=='O');return chips+(one?`<p class=\"muted\" style=\"margin:6px 0 4px\">片舷流し</p><div class=\"zones\" style=\"grid-template-columns:1fr\">${['ミヨシ寄り','胴の間','トモ寄り'].map(zn=>cell('O',zn)).join('')}</div>`:'')+(both?`${one?'<p class=\"muted\" style=\"margin:10px 0 4px\">両舷・バーティカル</p>':''}<div class=\"zones\">${['ミヨシ寄り','胴の間','トモ寄り'].map(zn=>cell('L',zn)+cell('R',zn)).join('')}</div><div class=\"zones-foot\">トモ</div>`:'')}")
+
+R("o.push(TX(xl-40,240,'左舷',{size:14,fill:P.muted,anchor:'middle'}));o.push(TX(xr+40,240,'右舷',{size:14,fill:P.muted,anchor:'middle'}));",
+  "if(tr.lay!=='one'){o.push(TX(xl-40,240,'左舷',{size:14,fill:P.muted,anchor:'middle'}));o.push(TX(xr+40,240,'右舷',{size:14,fill:P.muted,anchor:'middle'}))}else o.push(TX(xr+40,240,'釣り座',{size:14,fill:P.muted,anchor:'middle'}));")
+
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
 
