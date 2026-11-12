@@ -266,7 +266,7 @@ R("使う重さを登録しておくと、記録のときに選べます。", "�
 # タチウオ用のカタログをティップラン用に差し替える。スピニングとベイトを同じ一覧に入れ、絞り込みで分ける。
 # rods [id,メーカー,シリーズ,品番,長さm,spinning|bait,エギの重さg,状態] / reels [id,メーカー,シリーズ,品番,spinning|bait,カウンター0|1,状態]
 _tp = os.path.join(HERE, 'tipran', 'tackle.json')
-if os.path.exists(_tp):
+if os.path.exists(_tp) and not os.environ.get('TIPRAN_HOLD_TACKLE'):   # TIPRAN_HOLD_TACKLE=1：竿・リールのカタログを入れずに作る（公開の指示を待つ間）
     TK = json.load(open(_tp, encoding='utf-8'))
     _mk = lambda L: list(dict.fromkeys(a[1] for a in L))
     _d = lambda x: json.dumps(x, ensure_ascii=False, separators=(',', ':'))
@@ -288,6 +288,17 @@ if os.path.exists(_tp):
     R("...(k==='reel'?{kind:'bait'}:{})", "...(k==='reel'?{kind:''}:{})")
     # メーカーが多いので、メーカーの並びは1行で横に送る。絞り込みの文字は折り返さない大きさに
     R(".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}", ".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}\n.chips.wrap.tk-mk{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px}.seg.tk-kind button{font-size:14px;padding-left:4px;padding-right:4px;white-space:nowrap}")
+
+# ───────── 片舷流しの人数は、はじめ8人（両舷は16人）。前に選んだ人数があればそれを使う
+R("people:b?(b.people||b.seats*2):(p.people||(p.seats||8)*2)", "people:b?(b.people||b.seats*2):(p.people||((p.lay||'one')==='one'?8:16))")
+# ───────── 使い方（チュートリアル）の絵と、残っていたタチウオ・テンヤの言葉
+R("return row(10,true,'40号 パープルグロー','ダイワ SS AH')+row(48,true,'40号 ケイムラ','シマノ サーベルマスター')+row(86,false,'50号 ゴールド','ハヤブサ')+",
+  "return row(10,true,'エギ王 TR 3.5号 30g 金アジ','エギ・ヤマシタ')+row(48,true,'エメラルダス ボート 3.5号 赤テープ','エギ・ダイワ')+row(86,true,'エギ王TRシンカー 20g','シンカー（増し錘）')+")
+R("'一軍リスト（2）'", "'カタログから選べます'")
+R("タチウオ以外に釣れた魚を、今の時刻と使用テンヤで1匹記録します（タチウオの本数には入りません）。", "アオリイカ以外に釣れたものを、今の時刻と使っているエギで1匹記録します（杯数には入りません）。")
+R("時刻・テンヤ・種類（釣れた／アタリ／バラシ）", "時刻・エギ・種類（釣れた／アタリ／バラシ）")
+R("設定（釣り場・船・テンヤ）は、新しいほうを使います。", "設定（釣り場・船・エギ）は、新しいほうを使います。")
+R("テンヤは、その時刻にアプリで選んでいたものになります。", "エギは、その時刻にアプリで選んでいたものになります。")
 
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
