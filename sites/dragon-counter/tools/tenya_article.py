@@ -197,7 +197,7 @@ def build_article():
     print('article:', art['title'], sum(len(x) for x in a) // 1024, 'KB')
 
 
-POST_ID = 1316   # https://cutlassfish.tokyo/shopping/tachiuo-tenya-catalog/ （公開中）
+POST_ID = 1316   # https://cutlassfish.tokyo/article/tachiuo-tenya-catalog/ （公開中）
 FEAT = os.path.join(OUT, 'featured.json')   # いま記事に付いているアイキャッチ {sha256, media_id}
 
 
@@ -237,7 +237,7 @@ def push():
                 m = re.search(r'"tenya-collage":\s*(\d+)', r.stdout)
                 if m:
                     json.dump({'sha256': sha, 'media_id': int(m.group(1))}, open(FEAT, 'w', encoding='utf-8'))
-            print('記事を更新しました（公開中のまま）: https://cutlassfish.tokyo/shopping/tachiuo-tenya-catalog/'); return 0
+            print('記事を更新しました（公開中のまま）: https://cutlassfish.tokyo/article/tachiuo-tenya-catalog/'); return 0
         if 'HTTP 403' not in out:
             print('記事の更新に失敗しました:', out[-300:]); return 1
     print('記事の更新に失敗しました：ファイアウォール（SiteGuard）に6回断られました'); return 1
