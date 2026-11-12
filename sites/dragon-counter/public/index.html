@@ -1147,7 +1147,7 @@ const tenyaMain=t=>t.name?t.name:`${t.z?t.z+'号 ':''}${t.c||''}`.trim();
 const tenyaSub=t=>t.name?'':`${MK[t.m]||t.m||''} ${prodShort(t.p)}`.trim();
 function tenyaLabel(id){const t=tenyaOf(id);if(!t)return null;return tenyaShort(t)}
 function tenyaFull(id){const t=tenyaOf(id);if(!t)return '';const a=tenyaMain(t),b=tenyaSub(t);return b?`${b} ${a}`:a}
-const isNewTenya=t=>t&&t.a&&(Date.now()-new Date(t.a).getTime())<60*864e5;
+const isNewTenya=t=>{if(!t||!t.a)return false;const d=new Date(t.a);d.setMonth(d.getMonth()+3);return Date.now()<d.getTime()};   // カタログに入ってから3か月は新商品（テンヤカタログのページと同じ）
 function tenyaBadges(t){const b=[];if(isNewTenya(t))b.push('<span class="tb new">新商品</span>');if(t.s)b.push(`<span class="tb">${esc(t.s)}</span>`);if(t.h)b.push('<span class="tb">替えヘッド</span>');if(t.custom)b.push('<span class="tb own">自分で追加</span>');else if(t.id&&!CAT.by[t.id])b.push('<span class="tb">カタログから外れました（控えから表示）</span>');return b.join('')}
 /* head photos: public/tenya/<id>.webp, listed in tenya/index.json (derived from maker photos, see tools/tenya_images.py) */
 let TIMG=new Set(),TV='';
@@ -2131,7 +2131,7 @@ function tbBarHTML(){const makers=[...new Set(CAT.list.map(t=>t.m))].sort();
    <div class="seg">${[['','すべての素材'],['1','タングステンだけ']].map(([v,l])=>`<button class="${(tb.tg||'')===v?'on':''}" data-act="tbTg" data-d="${v}">${l}</button>`).join('')}</div>
    <select id="tbM" data-tbm="1" aria-label="メーカー"><option value="">すべてのメーカー</option>${makers.map(m=>`<option value="${esc(m)}" ${tb.m===m?'selected':''}>${esc(MK[m]?m+'（'+MK[m]+'）':m)}</option>`).join('')}</select>
    ${tb.mode==='mine'?`<p class="tb-own">「＋ 所有に追加」を押すと、その場で所有テンヤに入ります（左のチェックでも同じ）。<b>所有テンヤ：${myTenya().length}種・${ownTotal()}個</b></p>`:''}
-   <p class="muted tb-help">${tb.only==='mine'?'「所有だけ」：チェックを付けた、持っているテンヤだけを表示しています。':tb.only==='new'?`「新商品だけ」：発売予定のものと、ここ2か月以内にカタログへ追加されたテンヤです（カタログ ${esc(CAT.ver||'')} 時点）。`:''}</p>`}
+   <p class="muted tb-help">${tb.only==='mine'?'「所有だけ」：チェックを付けた、持っているテンヤだけを表示しています。':tb.only==='new'?`「新商品だけ」：発売予定のものと、ここ3か月以内にカタログへ追加されたテンヤです（カタログ ${esc(CAT.ver||'')} 時点）。`:''}</p>`}
 function openTenyaSheet(){const close=tb.mode==='catch'||tb.mode==='cur';const title=tb.mode==='cur'?'使うテンヤを選ぶ':tb.mode==='catch'?'釣れたテンヤを選ぶ':tb.mode==='set'?`「${esc((TEN().sets.find(x=>x.id===tb.setId)||{}).name||'')}」に入れるテンヤ`:'カタログから所有テンヤに追加';
   const back=tb.mode==='mine'&&tb.backSet;const backName=back?((TEN().sets.find(x=>x.id===tb.backSet)||{}).name||'リスト'):'';
   const doneAct=close?'closeSheet':back?'tbBackSet':'tbDone';

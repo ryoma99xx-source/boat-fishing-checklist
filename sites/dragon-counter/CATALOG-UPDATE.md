@@ -31,8 +31,13 @@
    - `python3 sites/dragon-counter/tools/tenya_images.py cut <id…>` で切り出し、**必ず確認シートを作って目で見る**（頭だけか・縁が白く荒くないか・色の取り違えが無いか）。欠ける／枠や文字が混ざるときは元画像を頭だけに手で切り抜いて `retail.json` に `plain: true`
    - 写真が見つからない id は、最後の報告に「写真なし：…」と書く（カタログには足したままでよい）
 8. `git add sites/dragon-counter` → commit → push（DEPLOY が変わったコミットの push で公開される。写真だけ足したときは `sites/dragon-counter/DEPLOY` の日時行を書き換えてから commit）。数分後に https://dragon-counter.cutlassfish.tokyo/catalog-all.json の `updated`/`count` と https://dragon-counter.cutlassfish.tokyo/tenya/index.json の `ids` の数が変わったことを確認
-9. 台帳に記録：ToolSearch で `select:ArtifactData` を読み込み、https://claude.ai/artifact/T4YTywvucGbbGSaWmu3VFQ の `features/f-dragon-catalog` を `get` → `if_version` 付きで `update`：`logs` に `{at, by:'Claude', text:'月次更新：追加 n 件・状態 n 件・写真 n 件（調べたメーカー…）。追加したもの：…。写真なし：…'}` を足し、`status:'公開済み'`、`next:'次回は <翌月1日>'`、`updatedAt`。`meta/heartbeat` も `{at, note:'カタログ更新'}` で更新
-10. 最後に、調べたメーカー、追加したテンヤ、状態を変えたテンヤ、足した写真、確かめられず外したもの・写真が無いものを日本語で5行以内にまとめる。足すものが無ければ「追加なし」と一言
+9. **記事も更新する**：公開を確認したら `python3 sites/dragon-counter/tools/tenya_article.py --push` を実行する。テンヤカタログの記事（https://cutlassfish.tokyo/shopping/tachiuo-tenya-catalog/ 、公開中）の本文とアイキャッチが、いまのカタログで差し替わる（オーナーの指示で、この記事はカタログに合わせて自動で更新する）。
+   - `--write` や写真の切り出しのときに、ツール版のページ（`public/tenya-catalog/`）と記事の元（`wordpress/tenya-catalog/`）は自動で作り直されている。`--push` はそれを WordPress に送るだけ
+   - 環境変数 `WP_USER` / `WP_APP_PASSWORD` が要る（値は表示しない）。無いとき・失敗したときは、そのまま報告に書く（カタログのページは更新済みなので、作業は止めない）
+   - 終わったら `git add wordpress/tenya-catalog` → commit → push（アイキャッチが変わったときは `featured.json` が書き換わる）
+   - 新しく足したテンヤは、カタログに入ってから3か月、アプリでは「新商品」、ページと記事では NEW の印が付き、「新商品だけ」の絞り込みに出る（`catalog_add.py` が付ける追加日 `a` で決まる。手を入れるところは無い）
+10. 台帳に記録：ToolSearch で `select:ArtifactData` を読み込み、https://claude.ai/artifact/T4YTywvucGbbGSaWmu3VFQ の `features/f-dragon-catalog` を `get` → `if_version` 付きで `update`：`logs` に `{at, by:'Claude', text:'月次更新：追加 n 件・状態 n 件・写真 n 件（調べたメーカー…）。追加したもの：…。写真なし：…'}` を足し、`status:'公開済み'`、`next:'次回は <翌月1日>'`、`updatedAt`。`meta/heartbeat` も `{at, note:'カタログ更新'}` で更新
+11. 最後に、記事を更新できたかどうかと、調べたメーカー、追加したテンヤ、状態を変えたテンヤ、足した写真、確かめられず外したもの・写真が無いものを日本語で5行以内にまとめる。足すものが無ければ「追加なし」と一言
 
 ## 手で全件リストをもらったとき（例：ChatGPT が出した一覧）
 

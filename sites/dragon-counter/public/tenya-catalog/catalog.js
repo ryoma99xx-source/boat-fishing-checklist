@@ -1,7 +1,7 @@
 /* テンヤカタログの絞り込み・検索・釣れ筋・ランキング。
    ツール版のページ（/tenya-catalog/）と cutlassfish.tokyo の記事（プラグイン cutlassfish-tenya-catalog が読み込む）で同じものを使う。
    絞り込みと検索は、ドラゴンカウンターのカタログと同じ決まり：
-   - メーカー、号数（全号数・30・40・50号）、すべて／新商品だけ（発売予定と、2か月以内にカタログに入ったもの）、メーカー
+   - メーカー、号数（全号数・30・40・50号）、すべて／新商品だけ（発売予定と、3か月以内にカタログに入ったもの。3か月の間は NEW の印）、メーカー
    - 素材：すべて／タングステン（TG）だけ（製品の data-tg）
    - 検索は空白で区切った語をすべて含むもの。数字だけ（「40」「40号」）は号数。ひらがなはカタカナと同じに扱う
    ページ側の印：[data-tcat] の中に [data-tcat-bar]（ここに操作部品を作る）・[data-tcat-cnt]、製品 [data-tcat-p]、色 [data-tcat-c]、
@@ -12,8 +12,9 @@ const RANK=/(^|\.)cutlassfish\.tokyo$/.test(location.hostname)&&location.hostnam
 const $$=(s,el)=>[...(el||document).querySelectorAll(s)];
 const normQ=x=>String(x||'').normalize('NFKC').toLowerCase().replace(/[ぁ-ゖ]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const NEW_MS=60*864e5;
-const isNew=f=>(f.dataset.st||'').includes('発売予定')||(f.dataset.a&&Date.now()-new Date(f.dataset.a).getTime()<NEW_MS);
+/* 新商品：カタログに入ってから3か月（アプリの isNewTenya と同じ）。その間は NEW の印を付ける。「新商品だけ」は、これと発売予定のもの */
+const isNewDate=f=>{if(!f.dataset.a)return false;const d=new Date(f.dataset.a);d.setMonth(d.getMonth()+3);return Date.now()<d.getTime()};
+const isNew=f=>(f.dataset.st||'').includes('発売予定')||isNewDate(f);
 const st={z:'',only:'',tg:'',m:'',q:''};
 const show=(el,on)=>{el.hidden=!on;el.style.display=on?'':'none'};
 
@@ -43,6 +44,7 @@ p.tcat-none{padding:16px;text-align:center;color:var(--tcat-muted,${C.muted})!im
 [data-tcat-c].tcat-ts{border:3px solid #e3a43b!important;position:relative}
 [data-tcat-c].tcat-ts::before{content:"釣れ筋";position:absolute;top:6px;left:6px;z-index:1;background:#e3a43b;color:#1a1200;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px}
 [data-tcat-c].tcat-hit{outline:3px solid #e3a43b;outline-offset:2px}
+[data-tcat-c]{position:relative}.tcat-new{position:absolute;top:6px;right:6px;z-index:1;background:#e5577f;color:#fff;font-size:12px;font-weight:700;letter-spacing:.06em;line-height:1.5;padding:1px 8px;border-radius:999px}
 .tcat-tsc{display:grid;grid-template-columns:minmax(100px,140px) 1fr;gap:12px;align-items:start;padding:10px 0;border-top:1px solid var(--tcat-ts-line,${C.line})}.tcat-tsc:first-child{border-top:0}
 .tcat-tsc img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#fff;border-radius:8px;border:2px solid #e3a43b}
 .tcat-tsl{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}.tcat-tsc small{color:var(--tcat-muted,${C.muted})}
@@ -64,7 +66,7 @@ if(bar){bar.className='tcat-bar';bar.innerHTML=`
  <div class="tcat-seg" data-k="only"><button type="button" data-v="" class="on">すべて</button><button type="button" data-v="new">新商品だけ</button></div>
  ${prods.some(p=>p.dataset.tg)?`<div class="tcat-seg" data-k="tg"><button type="button" data-v="" class="on">すべての素材</button><button type="button" data-v="1">タングステン（TG）だけ</button></div>`:''}
  <div class="tcat-row"><div class="tcat-q"><input type="search" placeholder="検索（例：ケイムラ 40、ダイワ グロー）" autocomplete="off" enterkeyhint="search" aria-label="テンヤを検索"><button type="button" aria-label="検索を消す" hidden>×</button></div></div>
- <p class="tcat-help" hidden>「新商品だけ」：発売予定のものと、ここ2か月以内にカタログへ追加されたテンヤです。</p>
+ <p class="tcat-help" hidden>「新商品だけ」：NEW の印が付いたテンヤ（ここ3か月以内にカタログへ追加）と、発売予定のものです。</p>
  <p class="tcat-cnt"></p>`;
  bar.addEventListener('click',e=>{const b=e.target.closest('.tcat-seg button');if(b){const k=b.parentNode.dataset.k;st[k]=b.dataset.v;$$('button',b.parentNode).forEach(x=>x.classList.toggle('on',x===b));apply();return}
    if(e.target.closest('.tcat-q button')){st.q='';bar.querySelector('.tcat-q input').value='';apply()}});
@@ -81,6 +83,8 @@ if(bar){bar.after(none);none.after(mini);
   addEventListener('scroll',()=>{if(!tick)tick=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',upd);upd();
   if('IntersectionObserver' in window)new IntersectionObserver(es=>es.forEach(e=>mini.classList.toggle('on',!e.isIntersecting&&e.boundingClientRect.top<0))).observe(bar);
   mini.firstChild.addEventListener('click',()=>scrollTo({top:bar.getBoundingClientRect().top+scrollY-topOff()-8,behavior:'smooth'}))}
+
+figs.forEach(f=>{if(isNewDate(f)&&!f.querySelector('.tcat-new')){const b=document.createElement('span');b.className='tcat-new';b.textContent='NEW';f.prepend(b)}});
 
 function apply(){const terms=normQ(st.q).split(/\s+/).filter(Boolean);let np=0,nc=0;
   prods.forEach(p=>{let k=0;const okP=(!st.m||p.dataset.m===st.m)&&(!st.tg||p.dataset.tg==='1');
