@@ -7,7 +7,7 @@ Same data and links as the tool page (/tenya-catalog/), which stays as the versi
 WordPress removes scripts, so the article finds things by a maker table of contents instead of filters.
 Photos are loaded from dragon-counter.cutlassfish.tokyo (the app's own cut photos); the featured image is a
 collage of those photos (only arranged, not edited)."""
-import html, json, os, urllib.parse
+import html, json, os, shutil, urllib.parse, urllib.request
 from PIL import Image
 
 import tenya_page as T
@@ -47,8 +47,36 @@ def collage(plist, pv, path):
     im.save(path, 'JPEG', quality=85)
 
 
+def tsure_keys():
+    """釣れ筋（"maker|product|colour" の上位3つ）。決め方はページに書かない。届かなければ無し"""
+    try:
+        with urllib.request.urlopen(T.URL.replace('tenya-catalog/', 'tenya-rank.php'), timeout=15) as r:
+            return [k for k in json.load(r).get('top', [])][:3]
+    except Exception as e:
+        print('釣れ筋を読めませんでした:', e)
+        return []
+
+
+def links_html(r, small=False):
+    kw = T.search_kw(r['m'], r['p'])
+    b = BTN + (';font-size:13px;padding:6px 10px' if small else '')
+    x = ''
+    if r['u'] and not small:
+        x += '<a href="%s" target="_blank" rel="noopener" style="%s;border:1px solid #99a;color:inherit">メーカーのページ</a>' % (E(r['u']), b)
+    x += '<a href="%s" target="_blank" rel="nofollow sponsored noopener" style="%s;background:#f3a847;color:#111 !important">Amazonで探す</a>' % (E(T.amazon(kw)), b)
+    x += '<a href="%s" target="_blank" rel="nofollow sponsored noopener" style="%s;background:#bf0000;color:#fff !important">楽天で探す</a>' % (E(T.rakuten(kw)), b)
+    x += '<a href="%s" target="_blank" rel="nofollow sponsored noopener" style="%s;background:#ff0033;color:#fff !important">Yahoo!で探す</a>' % (E(T.yahoo(kw)), b)
+    return x
+
+
+AMB = '#e3a43b'
+
+
 def build_article():
     allc, plist, _, pv = T.build()
+    top = tsure_keys()
+    topset = set(top)
+    anchor = {}
     makers = [m for m in T.ORDER if any(r['m'] == m for r in plist)]
     ncol = sum(len(r['cols']) for r in plist)
     upd = allc.get('updated', '')
@@ -69,21 +97,37 @@ def build_article():
                 bd = ''.join(' <span style="font-size:11px;color:#b5710b;border:1px solid #b5710b;border-radius:4px;padding:0 4px;white-space:nowrap">%s</span>' % E(s) for s in sorted(c['s']))
                 img = ('<img src="%s" alt="%s %s" width="240" height="180" loading="lazy" style="display:block;width:100%%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#fff">'
                        % (photo(c['img'], pv), E(r['p']), E(c['c']))) if c['img'] else ''
-                figs.append('<figure style="margin:0;border:1px solid #e3e6ea;border-radius:8px;overflow:hidden;background:#fff">%s'
+                k = '%s|%s|%s' % (r['m'], r['p'], c['c'])
+                ts = k in topset
+                fid = 'ts-%d' % (top.index(k) + 1) if ts else ''
+                if ts:
+                    anchor[k] = (r, c)
+                figs.append('<figure%s style="margin:0;border:%s;border-radius:8px;overflow:hidden;background:#fff;position:relative">%s%s'
                             '<figcaption style="padding:6px 8px;font-size:13px;line-height:1.4">%s<br><small style="color:#667">%s</small>%s</figcaption></figure>'
-                            % (img, E(c['c']), zz, bd))
-            links = ''
-            if r['u']:
-                links += '<a href="%s" target="_blank" rel="noopener" style="%s;border:1px solid #99a;color:inherit">メーカーのページ</a>' % (E(r['u']), BTN)
-            links += '<a href="%s" target="_blank" rel="nofollow sponsored noopener" style="%s;background:#f3a847;color:#111 !important">Amazonで探す</a>' % (E(T.amazon(kw)), BTN)
-            links += '<a href="%s" target="_blank" rel="nofollow sponsored noopener" style="%s;background:#bf0000;color:#fff !important">楽天で探す</a>' % (E(T.rakuten(kw)), BTN)
-            links += '<a href="%s" target="_blank" rel="nofollow sponsored noopener" style="%s;background:#ff0033;color:#fff !important">Yahoo!で探す</a>' % (E(T.yahoo(kw)), BTN)
+                            % (' id="%s"' % fid if fid else '', '3px solid ' + AMB if ts else '1px solid #e3e6ea',
+                               '<span style="position:absolute;top:6px;left:6px;background:%s;color:#1a1200;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px">釣れ筋</span>' % AMB if ts else '',
+                               img, E(c['c']), zz, bd))
+            links = links_html(r)
             body.append('<h3>%s</h3>\n<p>%s・%d色%s</p>\n<p>%s</p>\n<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin:0 0 28px">%s</div>'
                         % (E(r['p']), zr, len(r['cols']), '・替えヘッド' if r['h'] else ('・今は作られていない前のモデル' if '旧型' in r['p'] else ''), links, ''.join(figs)))
     a = []
-    a.append('<p class="lead">「このテンヤ、ほかにどんな色があったっけ？」と思っても、メーカーのページを行ったり来たりして探すのは面倒です。そこで、船タチウオテンヤを<strong>メーカー・製品ごとに、全部の色を写真で一覧</strong>にしました。%dメーカー・%d製品・%d色。釣果記録アプリ「ドラゴンカウンター」のテンヤカタログと同じデータで、新しいテンヤが出たら毎月足していきます。</p>'
-             % (len(makers), len(plist), ncol))
+    a.append('<p class="lead">「このテンヤ、ほかにどんな色があったっけ？」と思っても、メーカーのページを行ったり来たりして探すのは面倒です。そこで、船タチウオテンヤを<strong>メーカー・製品ごとに、全部の色を写真で一覧</strong>にしました。%dメーカー・%d製品・%d色、号数違いまで数えると%d種類です。釣果記録アプリ「ドラゴンカウンター」のテンヤカタログと同じデータで、新しいテンヤが出たら毎月足していきます。</p>'
+             % (len(makers), len(plist), ncol, len(allc['items'])))
     a.append('<p><small>※この記事には、Amazon・楽天市場・Yahoo!ショッピングへのアフィリエイトリンク（広告）が含まれます。</small></p>')
+    if anchor:
+        cards = []
+        for k in top:
+            if k not in anchor:
+                continue
+            r, c = anchor[k]
+            img = '<img src="%s" alt="%s %s" width="240" height="180" loading="lazy" style="display:block;width:100%%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#fff;border-radius:8px">' % (photo(c['img'], pv), E(r['p']), E(c['c'])) if c['img'] else ''
+            cards.append('<div style="display:grid;grid-template-columns:minmax(110px,160px) 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid #f0d9a8">'
+                         '<a href="#ts-%d">%s</a><div><b style="font-size:16px">%s</b><br>%s<br><small style="color:#667">%s</small><div style="margin-top:8px">%s</div></div></div>'
+                         % (top.index(k) + 1, img, E(c['c']), E(r['p']), E(T.JP.get(r['m'], r['m'])), links_html(r, True)))
+        a.append('<div style="border:3px solid %s;border-radius:12px;padding:14px 16px;margin:24px 0;background:#fffaf0"><p style="margin:0 0 4px;font-weight:700;color:#b5710b;font-size:18px">釣れ筋テンヤ</p>%s</div>' % (AMB, ''.join(cards)))
+    a.append('<div style="display:flex;gap:12px;align-items:center;border:1px solid #d6dde6;border-radius:12px;padding:12px 14px;margin:20px 0">'
+             '<a href="%s"><img src="{{image:dc-icon}}" alt="ドラゴンカウンター" width="56" height="56" style="width:56px;height:56px;border-radius:12px;display:block"></a>'
+             '<div style="font-size:14px;line-height:1.6">このカタログは、タチウオの釣果記録アプリ<a href="%s"><b>ドラゴンカウンター</b></a>のテンヤカタログと同じです。持っているテンヤを選んでおけば、どのテンヤで釣れたかをボタン1つで残せます。<a href="#dc-app">くわしくは下で ↓</a></div></div>' % (APP, APP))
     a.append('<h2><span class="en">HOW</span>このカタログの見方</h2>')
     a.append('<ul><li>製品ごとに、出ている号数と色の数、メーカーのページ、Amazon・楽天・Yahoo!ショッピングで探すボタンを並べています。</li>'
              '<li>写真の下は、色の名前と、その色がある号数です。「限定色」「生産終了・在庫のみ」「発売予定」などは印を付けています。</li>'
@@ -98,8 +142,12 @@ def build_article():
              '<li><b>シングル・ダブル</b>：針が1本か2本か。</li>'
              '<li><b>TG（タングステン）</b>：鉛より比重が大きい金属。同じ号数でもヘッドが小さくなります。</li>'
              '<li><b>替えヘッド</b>：ヘッド（オモリの部分）だけの交換用。対応する本体と組み合わせて使います。</li></ul>')
-    a.append('<h2><span class="en">APP</span>どのテンヤで釣れたかを残すなら</h2>')
-    a.append('<p>このカタログは、タチウオの釣果記録アプリ<a href="%s">ドラゴンカウンター</a>のテンヤカタログと同じものです。持っているテンヤをこのカタログから選んでおけば、釣れたときにボタンを押すだけで「どのテンヤで、何時に、どんな潮で釣れたか」が残ります。無料で、登録もいりません。</p>' % APP)
+    a.append('<h2 id="dc-app"><span class="en">APP</span>どのテンヤで釣れたかを残すなら「ドラゴンカウンター」</h2>')
+    a.append('<figure class="figure" style="max-width:720px;margin:20px auto"><a href="%s"><img src="{{image:dc-banner}}" alt="ドラゴンカウンター：タチウオの釣果を時間の経過と共に、テンヤ・潮・船の向きと一緒に記録" width="1200" height="630" style="border-radius:12px"></a></figure>' % APP)
+    a.append('<p>このカタログは、タチウオの釣果記録アプリ<a href="%s"><b>ドラゴンカウンター</b></a>のテンヤカタログと同じものです。持っているテンヤをこのカタログから選んでおけば、釣れたときにボタンを押すだけで「どのテンヤで、何時に、どんな潮で釣れたか」が残ります。無料で、登録もいりません。</p>' % APP)
+    a.append('<ul><li>釣り場を選ぶと、潮回りと満潮・干潮が自動で入る</li><li>アタリ・バラシ・釣れた時刻を、ボタン1つで記録</li><li>ドラゴン（120cm以上）や大漁も記録できる</li><li>記録はスマホの中に保存。ホーム画面に置けばアプリのように使える</li></ul>')
+    a.append('<p style="text-align:center;margin:20px 0"><a href="%s" style="display:inline-block;background:#41c9c6;color:#03161c !important;font-size:17px;font-weight:700;padding:14px 28px;border-radius:8px;text-decoration:none;margin:6px">ドラゴンカウンターを開く →</a>'
+             '<a href="https://cutlassfish.tokyo/article/dragon-counter/" style="display:inline-block;border:2px solid #41c9c6;color:inherit;font-size:16px;font-weight:700;padding:12px 22px;border-radius:8px;text-decoration:none;margin:6px">使い方の記事を読む</a></p>' % APP)
     a.append('<h2><span class="en">CATALOG</span>メーカー別の一覧</h2>')
     a.append('<p>%s</p>' % toc)
     a.extend(body)
@@ -107,10 +155,14 @@ def build_article():
     art = {'version': 1,
            'title': '船タチウオテンヤ カタログ｜%dメーカー・%d色を写真で一覧（毎月更新）' % (len(makers), ncol),
            'excerpt': 'ダイワ・シマノ・ハヤブサなど%dメーカーの船タチウオテンヤ%d製品・%d色を、写真で一覧にしました。号数と色の名前の見方、メーカー別の目次付き。釣果記録アプリ「ドラゴンカウンター」と同じデータで毎月更新します。' % (len(makers), len(plist), ncol),
-           'images': [{'id': 'tenya-collage', 'file': 'images/tenya-collage.jpg', 'alt': '船タチウオテンヤの写真を並べたもの'}],
+           'images': [{'id': 'tenya-collage', 'file': 'images/tenya-collage.jpg', 'alt': '船タチウオテンヤの写真を並べたもの'},
+                      {'id': 'dc-banner', 'file': 'images/dc-banner.png', 'alt': 'ドラゴンカウンター'},
+                      {'id': 'dc-icon', 'file': 'images/dc-icon.png', 'alt': 'ドラゴンカウンターのアイコン'}],
            'featured_image': 'tenya-collage'}
     os.makedirs(os.path.join(OUT, 'images'), exist_ok=True)
     collage(plist, pv, os.path.join(OUT, 'images', 'tenya-collage.jpg'))
+    shutil.copyfile(os.path.join(T.PUB, 'og.png'), os.path.join(OUT, 'images', 'dc-banner.png'))
+    shutil.copyfile(os.path.join(T.PUB, 'icon-192.png'), os.path.join(OUT, 'images', 'dc-icon.png'))
     open(os.path.join(OUT, 'article.html'), 'w', encoding='utf-8').write('\n\n'.join(a) + '\n')
     json.dump(art, open(os.path.join(OUT, 'article.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print('article:', art['title'], sum(len(x) for x in a) // 1024, 'KB')

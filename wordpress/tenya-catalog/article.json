@@ -7,6 +7,16 @@
    "id": "tenya-collage",
    "file": "images/tenya-collage.jpg",
    "alt": "船タチウオテンヤの写真を並べたもの"
+  },
+  {
+   "id": "dc-banner",
+   "file": "images/dc-banner.png",
+   "alt": "ドラゴンカウンター"
+  },
+  {
+   "id": "dc-icon",
+   "file": "images/dc-icon.png",
+   "alt": "ドラゴンカウンターのアイコン"
   }
  ],
  "featured_image": "tenya-collage"

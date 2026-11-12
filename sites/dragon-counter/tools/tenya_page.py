@@ -130,7 +130,7 @@ def page(allc, plist, pv):
     desc = '船タチウオテンヤの全カラーを写真で一覧。ダイワ・シマノ・ハヤブサなど%dメーカー%d製品・%d色を、号数・色で絞り込めます。釣果記録アプリ「ドラゴンカウンター」のテンヤカタログと同じデータで毎月更新。' % (len(makers), len(plist), ncol)
     return TPL.format(
         title='船タチウオテンヤ カタログ｜%dメーカー・%d色を写真で比較' % (len(makers), ncol), desc=E(desc), url=URL,
-        lead='主要%dメーカーの船タチウオテンヤ %d製品・%d色を写真で一覧にしました。メーカー・号数・色の名前で絞り込めます。' % (len(makers), len(plist), ncol),
+        lead='主要%dメーカーの船タチウオテンヤ %d製品・%d色（号数違いまで数えると%d種類）を写真で一覧にしました。メーカー・号数・色の名前で絞り込めます。' % (len(makers), len(plist), ncol, len(allc['items'])),
         upd=E(upd), makers=''.join('<button class="chip" data-mk="%s">%s</button>' % (E(m), E(JP.get(m, m))) for m in makers),
         sizes=''.join('<option value="%s">%s号</option>' % (zs(z), zs(z)) for z in sizes),
         cards='\n'.join(cards), idx=json.dumps(idx, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/'),
@@ -196,6 +196,13 @@ h1{{font-size:26px;line-height:1.35;margin:4px 0 10px}}
 .cl figcaption{{padding:6px 8px 8px;font-size:13px;line-height:1.35}}.cl b{{display:block;font-weight:500}}.cl small{{color:var(--muted)}}
 .bd{{display:inline-block;margin:4px 4px 0 0;font-size:11px;color:var(--amber);border:1px solid var(--amber);border-radius:4px;padding:0 4px}}
 .cl.hit{{outline:2px solid var(--amber)}}
+.cl{{position:relative}}.cl.ts{{border:3px solid var(--amber)}}.cl.ts::before{{content:"釣れ筋";position:absolute;top:6px;left:6px;z-index:1;background:var(--amber);color:#1a1200;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px}}
+.tsure-box{{border:2px solid var(--amber)}}.tsure-box h2{{color:var(--amber)}}
+.ts-card{{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}}.ts-card:first-of-type{{border-top:0}}
+.ts-card img{{width:120px;height:90px;object-fit:contain;background:#fff;border-radius:8px;border:2px solid var(--amber)}}
+.ts-card b{{display:block;font-size:15px;line-height:1.4}}.ts-card small{{color:var(--muted)}}.ts-card .links{{margin:8px 0 0}}.ts-card .links a{{min-height:34px;padding:4px 10px;font-size:13px}}
+.app-box{{display:grid;gap:12px}}.app-head{{display:flex;gap:12px;align-items:center}}.app-head img{{width:64px;height:64px;border-radius:14px}}.app-head b{{font-size:18px;display:block}}.app-head small{{color:var(--muted)}}
+.app-banner img{{display:block;width:100%;height:auto;border-radius:12px}}.app-box ul{{margin:0;padding-left:1.2em}}.app-box li{{margin:2px 0}}.app-btns{{display:flex;flex-wrap:wrap;gap:8px}}.app-btns a.sub{{background:transparent;color:var(--teal);border:1px solid var(--teal)}}
 .hide{{display:none!important}}
 .app-box p{{margin:0 0 10px}}.app-box a.btn{{display:inline-block;background:var(--teal);color:#03161c;font-weight:700;text-decoration:none;border-radius:10px;padding:10px 16px}}
 footer{{color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:28px;padding-top:14px}}
@@ -209,6 +216,11 @@ footer{{color:var(--muted);font-size:13px;border-top:1px solid var(--line);margi
 <p class="lead">{lead}</p>
 <p class="note">色の名前・号数はメーカーの表記です。{upd} 時点。最新の情報はメーカーのページで確かめてください。</p>
 <span class="pr">PR：このページはアフィリエイト広告（Amazon・楽天・Yahoo!ショッピング）を利用しています</span>
+
+<section class="box tsure-box" id="tsure" hidden>
+ <h2>釣れ筋テンヤ</h2>
+ <div class="ts-list"></div>
+</section>
 
 <section class="box" id="rank" hidden>
  <h2>ドラゴンカウンターのランキング</h2>
@@ -225,9 +237,11 @@ footer{{color:var(--muted);font-size:13px;border-top:1px solid var(--line);margi
 {cards}
 
 <section class="box app-box">
- <h2>釣れたテンヤを記録するなら</h2>
- <p>ドラゴンカウンターは、タチウオの釣果を時間・テンヤ・潮と一緒に記録する無料のアプリです。このカタログのテンヤから「持っているテンヤ」を選んでおけば、釣れたときにボタンを押すだけで記録できます。</p>
- <a class="btn" href="/">ドラゴンカウンターを開く</a>
+ <div class="app-head"><img src="/icon-192.png" alt="" width="64" height="64"><div><b>ドラゴンカウンター</b><small>タチウオの釣果記録アプリ（無料・登録なし）</small></div></div>
+ <a class="app-banner" href="/"><img src="/og.png" alt="ドラゴンカウンター：タチウオの釣果を時間の経過と共に、テンヤ・潮・船の向きと一緒に記録" width="1200" height="630" loading="lazy"></a>
+ <p>このカタログは、ドラゴンカウンターのテンヤカタログと同じものです。持っているテンヤをここから選んでおけば、釣れたときにボタンを押すだけで「どのテンヤで、何時に釣れたか」が残ります。</p>
+ <ul><li>釣り場を選ぶと、潮回りと満潮・干潮が自動で入る</li><li>アタリ・バラシ・釣れた時刻を、ボタン1つで記録</li><li>ドラゴン（120cm以上）や大漁も記録できる</li><li>記録はスマホの中に保存。アプリとしてホーム画面にも置ける</li></ul>
+ <div class="app-btns"><a class="btn" href="/">ドラゴンカウンターを開く</a><a class="btn sub" href="https://cutlassfish.tokyo/article/dragon-counter/">使い方の記事を読む</a></div>
 </section>
 
 <footer>
@@ -253,6 +267,11 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({{'&':'&amp;','<':'&lt;','>':'&gt;'
 const li=k=>{{const x=IDX[k];if(!x)return '';const im=x.img?`<img src="/tenya/${{x.img}}.webp${{PV?'?v='+encodeURIComponent(PV):''}}" alt="" loading="lazy">`:'<span class="noimg"></span>';
  return `<li>${{im}}<a href="#${{x.a}}" data-go="${{x.a}}">${{esc(x.n)}}<small>${{esc(x.mk)}}</small></a></li>`}};
 fetch('/tenya-rank.php',{{cache:'no-cache'}}).then(r=>r.ok?r.json():null).then(d=>{{if(!d)return;let any=false;
+ const top=(d.top||[]).filter(x=>IDX[x]).slice(0,3);
+ if(top.length){{$('#tsure .ts-list').innerHTML=top.map(k=>{{const x=IDX[k],f=document.getElementById(x.a);if(f)f.classList.add('ts');const pd=f&&f.closest('.pd');
+   const ln=pd?[...pd.querySelectorAll('.links a.buy')].map(a=>a.outerHTML.replace('で探す<','<')).join(''):'';
+   const im=x.img?`<img src="/tenya/${{x.img}}.webp${{PV?'?v='+encodeURIComponent(PV):''}}" alt="" loading="lazy">`:'';
+   return `<div class="ts-card"><a href="#${{x.a}}" data-go="${{x.a}}">${{im}}</a><div><b>${{esc(x.n)}}</b><small>${{esc(x.mk)}}</small><p class="links">${{ln}}</p></div></div>`}}).join('');$('#tsure').hidden=false}}
  for(const [k,id] of [['catch','rkCatch'],['use','rkUse']]){{const l=(d[k]||[]).filter(x=>IDX[x]);const el=$('#'+id);if(l.length>=10){{el.querySelector('ol').innerHTML=l.slice(0,10).map(li).join('');any=true}}else el.remove()}}
  if(any)$('#rank').hidden=false}}).catch(()=>{{}});
 document.addEventListener('click',e=>{{const a=e.target.closest('[data-go]');if(!a)return;mk='';$$('#mk .chip').forEach((x,i)=>x.classList.toggle('on',i===0));$('#sz').value='';$('#q').value='';apply();
