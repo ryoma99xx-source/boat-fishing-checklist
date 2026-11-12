@@ -2,6 +2,7 @@
    ツール版のページ（/tenya-catalog/）と cutlassfish.tokyo の記事（プラグイン cutlassfish-tenya-catalog が読み込む）で同じものを使う。
    絞り込みと検索は、ドラゴンカウンターのカタログと同じ決まり：
    - 号数（全号数・30・40・50号）、すべて／新商品だけ（発売予定と、2か月以内にカタログに入ったもの）、メーカー
+   - 素材：すべて／タングステン（TG）だけ（製品の data-tg）
    - 検索は空白で区切った語をすべて含むもの。数字だけ（「40」「40号」）は号数。ひらがなはカタカナと同じに扱う
    ページ側の印：[data-tcat] の中に [data-tcat-bar]（ここに操作部品を作る）・[data-tcat-cnt]、製品 [data-tcat-p]、色 [data-tcat-c]、
    メーカーのまとまり [data-tcat-mkb]、釣れ筋 [data-tcat-ts]、ランキング [data-tcat-rank]。 */
@@ -13,7 +14,7 @@ const normQ=x=>String(x||'').normalize('NFKC').toLowerCase().replace(/[ぁ-ゖ]/
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const NEW_MS=60*864e5;
 const isNew=f=>(f.dataset.st||'').includes('発売予定')||(f.dataset.a&&Date.now()-new Date(f.dataset.a).getTime()<NEW_MS);
-const st={z:'',only:'',m:'',q:''};
+const st={z:'',only:'',tg:'',m:'',q:''};
 const show=(el,on)=>{el.hidden=!on;el.style.display=on?'':'none'};
 
 const css=document.createElement('style');css.textContent=`
@@ -49,6 +50,7 @@ const bar=root.querySelector('[data-tcat-bar]');
 if(bar){bar.className='tcat-bar';bar.innerHTML=`
  <div class="tcat-seg" data-k="z">${[['','全号数'],...sizes.map(z=>[z,z+'号'])].map(([v,l])=>`<button type="button" data-v="${v}" class="${v===''?'on':''}">${l}</button>`).join('')}</div>
  <div class="tcat-seg" data-k="only"><button type="button" data-v="" class="on">すべて</button><button type="button" data-v="new">新商品だけ</button></div>
+ ${prods.some(p=>p.dataset.tg)?`<div class="tcat-seg" data-k="tg"><button type="button" data-v="" class="on">すべての素材</button><button type="button" data-v="1">タングステン（TG）だけ</button></div>`:''}
  <div class="tcat-row"><select aria-label="メーカー"><option value="">すべてのメーカー</option>${makers.map(([m,j])=>`<option value="${esc(m)}">${esc(j===m?m:m+'（'+j+'）')}</option>`).join('')}</select>
  <div class="tcat-q"><input type="search" placeholder="検索（例：ケイムラ 40、ダイワ グロー）" autocomplete="off" enterkeyhint="search" aria-label="テンヤを検索"><button type="button" aria-label="検索を消す" hidden>×</button></div></div>
  <p class="tcat-help" hidden>「新商品だけ」：発売予定のものと、ここ2か月以内にカタログへ追加されたテンヤです。</p>
@@ -61,21 +63,21 @@ const none=document.createElement('p');none.className='tcat-none tcat-hide';none
 if(bar)bar.after(none);
 
 function apply(){const terms=normQ(st.q).split(/\s+/).filter(Boolean);let np=0,nc=0;
-  prods.forEach(p=>{let k=0;const okP=!st.m||p.dataset.m===st.m;
+  prods.forEach(p=>{let k=0;const okP=(!st.m||p.dataset.m===st.m)&&(!st.tg||p.dataset.tg==='1');
     $$('[data-tcat-c]',p).forEach(f=>{const zs=(f.dataset.z||'').split(' ');let ok=okP&&(!st.z||zs.includes(st.z))&&(st.only!=='new'||isNew(f));
       if(ok&&terms.length){const h=f.dataset.q||'',h2=h.replace(/[\s・･\-]/g,'');
         ok=terms.every(q=>{const n=q.replace(/号$/,'');if(/^\d+$/.test(n))return zs.includes(n);return h.includes(q)||h2.includes(q.replace(/[・･\-]/g,''))})}
       f.classList.toggle('tcat-hide',!ok);if(ok)k++});
     p.classList.toggle('tcat-hide',!k);if(k){np++;nc+=k}});
   $$('[data-tcat-mkb]',root).forEach(b=>b.classList.toggle('tcat-hide',!b.querySelector('[data-tcat-p]:not(.tcat-hide)')));
-  $$('[data-tcat-static]',root).forEach(b=>b.classList.toggle('tcat-hide',!!(st.z||st.only||st.m||terms.length)));
+  $$('[data-tcat-static]',root).forEach(b=>b.classList.toggle('tcat-hide',!!(st.z||st.only||st.tg||st.m||terms.length)));
   if(bar){bar.querySelector('.tcat-cnt').textContent=`${np}製品・${nc}色`;bar.querySelector('.tcat-help').hidden=st.only!=='new';bar.querySelector('.tcat-q button').hidden=!st.q}
   none.classList.toggle('tcat-hide',np>0)}
 apply();
 
 /* 一覧の中のその色へ飛ぶ（絞り込みを外してから） */
 document.addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(!a)return;const t=document.getElementById(a.dataset.go);if(!t)return;e.preventDefault();
-  Object.assign(st,{z:'',only:'',m:'',q:''});if(bar){$$('.tcat-seg',bar).forEach(s=>$$('button',s).forEach((x,i)=>x.classList.toggle('on',i===0)));bar.querySelector('select').value='';bar.querySelector('.tcat-q input').value=''}
+  Object.assign(st,{z:'',only:'',tg:'',m:'',q:''});if(bar){$$('.tcat-seg',bar).forEach(s=>$$('button',s).forEach((x,i)=>x.classList.toggle('on',i===0)));bar.querySelector('select').value='';bar.querySelector('.tcat-q input').value=''}
   apply();$$('.tcat-hit').forEach(x=>x.classList.remove('tcat-hit'));t.classList.add('tcat-hit');t.scrollIntoView({behavior:'smooth',block:'center'})});
 
 /* 釣れ筋とランキング（ドラゴンカウンターの集計。回数は出さない） */

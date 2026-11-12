@@ -132,8 +132,13 @@ def fig_attrs(r, c, fid):
                ' data-a="%s"' % E(c['a']) if c['a'] else '', ' data-st="%s"' % E(' '.join(sorted(c['s']))) if c['s'] else ''))
 
 
+def is_tg(p):
+    """タングステン（TG）の製品。アプリの isTG と同じ見分け方"""
+    return bool(re.search(r'(^|[^A-Za-z])TG([^A-Za-z]|$)|タングステン', p))
+
+
 def prod_attrs(r):
-    return 'data-tcat-p="1" data-m="%s" data-mj="%s" data-name="%s"' % (E(r['m']), E(JP.get(r['m'], r['m'])), E(r['p']))
+    return 'data-tcat-p="1" data-m="%s" data-mj="%s" data-name="%s"%s' % (E(r['m']), E(JP.get(r['m'], r['m'])), E(r['p']), ' data-tg="1"' if is_tg(r['p']) else '')
 
 
 def page(allc, plist, pv):
@@ -166,7 +171,7 @@ def page(allc, plist, pv):
     desc = '船タチウオテンヤの全カラーを写真で一覧。ダイワ・シマノ・ハヤブサなど%dメーカー%d製品・%d色を、号数・色で絞り込めます。釣果記録アプリ「ドラゴンカウンター」のテンヤカタログと同じデータで毎月更新。' % (len(makers), len(plist), ncol)
     return TPL.format(
         title='船タチウオテンヤ カタログ｜%dメーカー・%d色を写真で比較' % (len(makers), ncol), desc=E(desc), url=URL,
-        lead='主要%dメーカーの船タチウオテンヤ %d製品・%d色（号数違いまで数えると%d種類）を写真で一覧にしました。号数・新商品・メーカーで絞り込めて、色や製品の名前で検索できます。' % (len(makers), len(plist), ncol, len(allc['items'])),
+        lead='主要%dメーカーの船タチウオテンヤ %d製品・%d色（号数違いまで数えると%d種類）を写真で一覧にしました。号数・新商品・タングステン・メーカーで絞り込めて、色や製品の名前で検索できます。' % (len(makers), len(plist), ncol, len(allc['items'])),
         upd=E(upd), zlist='・'.join(zs(z) + '号' for z in sizes), cards='\n'.join(cards),
         js=hashlib.sha256(open(os.path.join(OUT, 'catalog.js'), 'rb').read()).hexdigest()[:10])
 
