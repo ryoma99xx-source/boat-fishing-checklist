@@ -158,8 +158,8 @@ def build_article():
              '<div data-tcat-rank-catch="1" style="display:none;margin:0 0 14px"><p style="margin:0 0 4px;font-weight:700">よく釣れているテンヤ</p><ol></ol></div>'
              '<div data-tcat-rank-use="1" style="display:none"><p style="margin:0 0 4px;font-weight:700">よく使われているテンヤ</p><ol></ol></div></div>')
     a.append('<div style="display:flex;gap:12px;align-items:center;border:1px solid #44566e;border-radius:12px;padding:12px 14px;margin:20px 0">'
-             '<a href="%s"><img src="%sicon-192.png" alt="ドラゴンカウンター" width="56" height="56" style="width:56px;height:56px;border-radius:12px;display:block"></a>'
-             '<div style="font-size:14px;line-height:1.6">このカタログは、タチウオの釣果記録アプリ<a href="%s"><b>ドラゴンカウンター</b></a>のテンヤカタログと同じです。持っているテンヤの管理もでき、どのテンヤで釣れたかをボタン1つで残せます。<a href="#dc-app">くわしくは下で ↓</a></div></div>' % (APP, APP, APP))
+             '<a href="%s" style="flex:0 0 56px;width:56px;display:block"><img src="%sicon-192.png" alt="ドラゴンカウンター" width="56" height="56" style="width:56px;min-width:56px;max-width:none;height:56px;border-radius:12px;display:block;object-fit:cover"></a>'
+             '<div style="font-size:14px;line-height:1.6;flex:1 1 0;min-width:0">このカタログは、タチウオの釣果記録アプリ<a href="%s"><b>ドラゴンカウンター</b></a>のテンヤカタログと同じです。持っているテンヤの管理もでき、どのテンヤで釣れたかをボタン1つで残せます。<a href="#dc-app">くわしくは下で ↓</a></div></div>' % (APP, APP, APP))
     a.append('<h2><span class="en">HOW</span>このカタログの見方</h2>')
     a.append('<ul><li>製品ごとに、出ている号数と色の数、メーカーのページ、Amazon・楽天・Yahoo!ショッピングで探すボタンを並べています。</li>'
              '<li>写真の下は、色の名前と、その色がある号数です。「限定色」「生産終了・在庫のみ」「発売予定」などは印を付けています。</li>'
