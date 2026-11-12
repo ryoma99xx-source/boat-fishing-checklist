@@ -2,7 +2,8 @@
 
     python3 tools/tipran_images.py <folder with manifest-<maker>.json and raw/>
 
-Input: manifest-<maker>.json = [{series, color, image_url, file, source, note}] (file is relative to the folder).
+Input: manifest-<maker>.json = [{series, color, image_url, file, source, note, crop?, asis?}] (file is relative to the
+folder; crop and asis are explained at make()).
 The photos are only cut (the box around the egi) and made smaller. Pixels are not otherwise changed: no colour
 correction, no retouching, no generated content. A transparent background stays transparent.
 Output: public/tipran/egi/<id>.webp and tools/tipran/egi-images.json {"maker|series|color": {"id", "src"}}.
@@ -19,7 +20,7 @@ MAKER = {'フィッシュリーグ': 'マルキユー'}   # same names as tipran
 MAXW, MAXH = 320, 140                       # shown at about 160x70 CSS px
 # Store photos with printed labels next to the egi ("BASE : GOLD", "イメージ画像", a glow photo): keep only the box
 # around the biggest blob (the egi with its hooks), so the labels fall outside the cut.
-BLOB = {'シマノ'}
+BLOB = {'シマノ', 'ジークラック', 'XOOX'}   # ジークラック（波音）：下に別の写真の枠と文字がある。XOOX：ロゴと印、発光の写真が入る
 
 
 def key(m, s, c):
@@ -30,7 +31,7 @@ def box(im, blob=False):
     """The box around everything that is not background: transparent pixels, or white/near-white ones.
     Thin specks (JPEG noise, a 1px frame line) are ignored by eroding the mask before measuring."""
     if im.mode == 'RGBA' and (np.asarray(im)[:, :, 3] < 128).mean() > 0.05:
-        fg = np.asarray(im)[:, :, 3] >= 24
+        fg = np.asarray(im)[:, :, 3] >= 40   # 40: some cutouts have faint stray pixels far from the egi
     else:
         a = np.asarray(im.convert('RGB')).astype(int)
         fg = a.min(axis=2) < 236
@@ -61,11 +62,17 @@ def box(im, blob=False):
     return (max(0, xs.min() - pad), max(0, ys.min() - pad), min(im.width, xs.max() + 1 + pad), min(im.height, ys.max() + 1 + pad))
 
 
-def make(path, out, blob=False):
+def make(path, out, blob=False, crop=None, asis=False):
+    """crop: [x0, y0, x1, y1] in the photo's pixels, cut first (e.g. below a banner printed on the photo).
+    asis: keep that cut as it is, without looking for the egi's outline. For photos where the outline cannot be
+    found (a white egi on white, a second egi on a dark panel): the owner's rule is to cut such photos as they are
+    rather than clean the background."""
     src = Image.open(path)
     alpha = src.mode in ('RGBA', 'LA') or (src.mode == 'P' and 'transparency' in src.info)
     im = src.convert('RGBA' if alpha else 'RGB')
-    b = box(im, blob)
+    if crop:
+        im = im.crop(tuple(crop))
+    b = None if asis else box(im, blob)
     if b:
         im = im.crop(b)
     im.thumbnail((MAXW, MAXH), Image.LANCZOS)
@@ -87,7 +94,7 @@ def main():
                 continue
             k = key(maker, r['series'], r['color'])
             i = hashlib.sha1(k.encode('utf-8')).hexdigest()[:10]
-            make(p, os.path.join(OUT, i + '.webp'), maker in BLOB)
+            make(p, os.path.join(OUT, i + '.webp'), maker in BLOB, r.get('crop'), bool(r.get('asis')))
             mp[k] = {'id': i, 'src': r.get('image_url', '')}
             n += 1
         print(maker, n)
