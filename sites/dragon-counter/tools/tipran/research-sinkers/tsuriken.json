@@ -1,0 +1,79 @@
+{
+ "maker": "釣研",
+ "sinkers": [
+  {
+   "series": "エギスタTR シンカーQC（クイックチェンジ）",
+   "url": "https://tsuriken.shop-pro.jp/?pid=191459550",
+   "weights": [
+    10,
+    15,
+    20,
+    25,
+    30,
+    40
+   ],
+   "colors": [
+    "パープル",
+    "オレンジ"
+   ],
+   "material": null,
+   "fits": "汎用（2WAYバンドホールドで流線形・丸型シンカー等さまざまなエギに取付可。ティップランエギはスナップを外さず交換可、ショア用エギはスナップを外す必要あり）",
+   "pack": "2個入",
+   "price": "参考上代(税抜): 10g 900円 / 15g 950円 / 20g 1,000円 / 25g 1,050円 / 30g 1,100円 / 40g 1,200円",
+   "note": "PAT.P。2026年8月発売の新作（レビュー記事による）。公式WEBショップは在庫不足のため販売停止中（店頭で購入）。釣研公式サイト tsuriken.co.jp は取得時503のため公式WEBショップのページで確認。素材記載なし。",
+   "discontinued": false
+  },
+  {
+   "series": "エギスタ ボートシンカー",
+   "url": "https://tsuriken.shop-pro.jp/?pid=166880483",
+   "weights": [
+    5,
+    7,
+    10,
+    20,
+    30
+   ],
+   "colors": [
+    "ピンク",
+    "パープル",
+    "夜光"
+   ],
+   "material": null,
+   "fits": "汎用（「エギスタはもちろん大分型エギ全般に取付可能」。ウレタンバンド固定）",
+   "pack": "2個入",
+   "price": "参考上代(税抜): 5g 500円 / 7g 500円 / 10g 550円 / 20g 600円 / 30g 650円",
+   "note": "ヘッドキール付きのボートエギング用シンカー。素材記載なし。",
+   "discontinued": false
+  },
+  {
+   "series": "エギスタ TR シンカー",
+   "url": null,
+   "weights": [
+    10,
+    20,
+    30,
+    40,
+    50
+   ],
+   "colors": [
+    "ピンク",
+    "オレンジ",
+    "パープル"
+   ],
+   "material": null,
+   "fits": "未確認（公式ページを取得できず）",
+   "pack": "2個入（小売表記）",
+   "price": null,
+   "note": "QCではない従来型。公式WEBショップの旧ページ(pid=166880938)は404、公式サイトは503で確認できず。重量・色・入数は小売の商品名（価格.com掲載の各店リスティング）からの確認のみ。現行品か生産終了かは未確認。",
+   "discontinued": false,
+   "unconfirmed": true
+  }
+ ],
+ "sources": [
+  "https://tsuriken.shop-pro.jp/?pid=191459550",
+  "https://tsuriken.shop-pro.jp/?pid=166880483",
+  "https://tsuriken.shop-pro.jp/?mode=cate&cbid=2812043&csid=0&sort=p",
+  "https://search.kakaku.com/釣研 エギスタ TRシンカー/",
+  "https://tango-offshore-labo.com/sephia-surupita-sinker-review/"
+ ]
+}

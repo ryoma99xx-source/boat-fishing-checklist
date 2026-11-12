@@ -1,0 +1,73 @@
+{
+ "maker": "ヤマシタ",
+ "sinkers": [
+  {
+   "series": "エギ王TRシンカー",
+   "url": "https://www.yamaria.co.jp/yamashita/product/detail/532",
+   "weights": [
+    7,
+    10,
+    15,
+    20,
+    30,
+    40,
+    50,
+    60
+   ],
+   "colors": [
+    "O オレンジ",
+    "PU パープル",
+    "F 夜光"
+   ],
+   "colorsByWeight": {
+    "7": [
+     "O オレンジ",
+     "PU パープル",
+     "F 夜光"
+    ],
+    "10": [
+     "O オレンジ",
+     "PU パープル",
+     "F 夜光"
+    ],
+    "15": [
+     "O オレンジ",
+     "PU パープル",
+     "F 夜光"
+    ],
+    "20": [
+     "O オレンジ",
+     "PU パープル",
+     "F 夜光"
+    ],
+    "30": [
+     "O オレンジ",
+     "PU パープル",
+     "F 夜光"
+    ],
+    "40": [
+     "O オレンジ",
+     "PU パープル",
+     "F 夜光"
+    ],
+    "50": [
+     "O オレンジ"
+    ],
+    "60": [
+     "O オレンジ"
+    ]
+   },
+   "material": null,
+   "fits": "汎用（「市販されているほとんどのエギの形状に装着出来る」）。公式適合表: エギ王TR 3.0/3.5号、エギ王LIVE 2.5/3.0/3.5号（2.0号は×）、エギ王SEARCH 2.5号（15gまで）/3.0/3.5号、エギ王K 2.5/3.0/3.5/4.0号。スリット2箇所でショアエギのアイ位置にも対応",
+   "pack": "2個入（公式パッケージ画像で2個を確認。仕様表に入数の記載なし）",
+   "price": null,
+   "note": "メーカー表記は「ティップラン専用マスクシンカー」。公式仕様は8サイズ（25gは無い）。PU・Fは50g/60gの設定なし（公式に「※50g・60gはございません」）。素材・価格は公式ページに記載なし。固定用に別売「エギ王ヘッドバンド」(detail/627)あり。",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://www.yamaria.co.jp/yamashita/product/detail/532",
+  "https://www.yamaria.co.jp/cms/product/yamashita/2018/p532/TRsinker_map_fix.jpg",
+  "https://www.yamaria.co.jp/yamashita/product/gy/eging"
+ ]
+}

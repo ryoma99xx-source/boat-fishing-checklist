@@ -3,7 +3,7 @@
 タイラバカウンター is itself built from ドラゴンカウンター (tools/tairaba_build.py), so the chain is
     public/index.html  →  tairaba_build.py  →  public/tairaba/index.html  →  tipran_build.py  →  public/tipran/index.html
 Run tairaba_build.py first. What changes here: name and addresses, the target (アオリイカ, 杯, size in g),
-the parts (エギ and an optional 増し錘 instead of ヘッド・ネクタイ・針・スカート), and the キロアップ mark
+the parts (エギ and an optional シンカー instead of ヘッド・ネクタイ・針・スカート), and the キロアップ mark
 (ドラゴンカウンターの「ドラゴン」の仕組みを、1kg以上の印として使う).
 
     python3 tools/tipran_build.py      (run from sites/dragon-counter)
@@ -45,9 +45,9 @@ def ALL(old, new):
     s = s.replace(old, new)
 
 
-# ───────── parts: エギ (rigs) and 増し錘 (skirts slot, optional). ネクタイ・針 are not used.
+# ───────── parts: エギ (rigs) and シンカー (skirts slot, optional). ネクタイ・針 are not used.
 RX(r"\{id:'madai',name:'マダイ',unit:'枚',sizeUnit:'cm',rigLabel:'ヘッド',baitLabel:'ネクタイ',hookLabel:'針',skirtLabel:'スカート',tairaba:true,variants:\[\{id:'madai',name:'マダイ'\}\],rigs:\[\],baits:\[\],hooks:\[\],skirts:\[\]\}",
-   "{id:'tiprun',name:'アオリイカ',unit:'杯',sizeUnit:'g',rigLabel:'エギ',baitLabel:'',skirtLabel:'増し錘',tairaba:true,variants:[{id:'tiprun',name:'アオリイカ'}],rigs:[],baits:[],hooks:[],skirts:[]}")
+   "{id:'tiprun',name:'アオリイカ',unit:'杯',sizeUnit:'g',rigLabel:'エギ',baitLabel:'',skirtLabel:'シンカー',tairaba:true,variants:[{id:'tiprun',name:'アオリイカ'}],rigs:[],baits:[],hooks:[],skirts:[]}")
 R("const SOLO='madai';", "const SOLO='tiprun';")
 R("sp:'madai',g:{}", "sp:'tiprun',g:{}")
 R("const GEDO_DEF=['ホウボウ','カサゴ','イトヨリ','アマダイ','ハマチ','ワラサ','サバ','アジ'];", "const GEDO_DEF=['コウイカ','ヤリイカ','スルメイカ','マダコ','カサゴ','エソ','フグ'];")
@@ -63,17 +63,17 @@ RX(r"function tbPartsHTML\(\)\{.*?\n(?=/\* ---------- species & gear settings)",
     <label class="field"><span>重さ（g）</span><input type="number" id="tbHg" inputmode="numeric" min="1" max="300" placeholder="例：40"></label>
     <label class="field"><span>色</span><input type="text" id="tbHc" list="tbHcL" placeholder="例：赤テープ">${tbDl('tbHcL','hc')}</label></div>
    <button class="btn sm primary" data-act="tbAdd" data-kind="rigs">エギを登録</button></div>
-  <div class="card" id="tbSkirts"><h2>増し錘<small class="muted">（任意）</small></h2><p class="muted">使う重さを登録しておくと、記録のときに選べます。付けないときは「なし」。</p>${tbList('skirts')}
+  <div class="card" id="tbSkirts"><h2>シンカー（増し錘）<small class="muted">（任意）</small></h2><p class="muted">使う重さを登録しておくと、記録のときに選べます。付けないときは「なし」。</p>${tbList('skirts')}
    <div class="tb-form"><label class="field"><span>重さ（g）</span><input type="number" id="tbKg" inputmode="numeric" min="1" max="300" placeholder="例：10"></label></div>
-   <button class="btn sm primary" data-act="tbAdd" data-kind="skirts">増し錘を登録</button></div>`}
+   <button class="btn sm primary" data-act="tbAdd" data-kind="skirts">シンカーを登録</button></div>`}
 """, flags=re.S)
 R("    if(k==='rigs'){x={g:tbVal('tbHg'),shape:tbVal('tbHs'),color:tbVal('tbHc'),maker:tbVal('tbHm')};if(!x.g&&!x.color)return toast('重さか色を入れてください')}",
   "    if(k==='rigs'){x={g:tbVal('tbHg'),shape:tbVal('tbHs').replace(/号$/,''),color:tbVal('tbHc'),maker:tbVal('tbHm')};if(!x.shape&&!x.color)return toast('号数か色を入れてください')}")
 R("    else if(k==='skirts'){x={shape:tbVal('tbKs'),color:tbVal('tbKc')};if(!x.shape&&!x.color)return toast('素材か色を入れてください')}",
   "    else if(k==='skirts'){x={g:tbVal('tbKg')};if(!x.g)return toast('重さを入れてください')}")
 R("`<button class=\"tb-btn\" data-act=\"rigPick\"><span>針</span><b>${esc(listName(sp,'hooks',g.hook)||'未登録')}</b></button>`",
-  "`<button class=\"tb-btn\" data-act=\"rigPick\"><span>増し錘</span><b>${esc(g.skirt?listName(sp,'skirts',g.skirt):'なし')}</b></button>`")
-R("<h2>タイラバを替える</h2>", "<h2>エギ・増し錘を替える</h2>")
+  "`<button class=\"tb-btn\" data-act=\"rigPick\"><span>シンカー</span><b>${esc(g.skirt?listName(sp,'skirts',g.skirt):'なし')}</b></button>`")
+R("<h2>タイラバを替える</h2>", "<h2>エギ・シンカーを替える</h2>")
 R("替えた部品だけ押してください。押した時刻から記録に反映されます。", "替えたものだけ押してください。押した時刻から記録に反映されます。")
 
 # ───────── キロアップ（1kg以上）：ドラゴンの仕組みを使う。タチウオ用の条件を、この釣り物に向ける
@@ -88,8 +88,8 @@ R("placeholder=\"${s.sizeUnit==='cm'?'例：95':'未記入'}\"", "placeholder=\"
 
 # ───────── words: name, addresses, keys, target
 RX(r'<meta name="description" content="[^"]*">',
-   '<meta name="description" content="ティップランのアオリイカの釣果を時間の経過と共に、エギ・増し錘・潮・流れと一緒に記録する無料ツール。全国どこの釣り場でも、潮回りと満潮・干潮、流れの向きと速さが自動で入ります。キロアップ（1kg以上）も記録できます。記録は端末に保存され、釣果データは匿名で集計に使います。">')
-RX(r'<meta property="og:description" content="[^"]*">', '<meta property="og:description" content="ティップランのアオリイカの釣果を、エギ・増し錘・潮・流れと一緒に時系列で記録する無料ツール">')
+   '<meta name="description" content="ティップランのアオリイカの釣果を時間の経過と共に、エギ・シンカー・潮・流れと一緒に記録する無料ツール。全国どこの釣り場でも、潮回りと満潮・干潮、流れの向きと速さが自動で入ります。キロアップ（1kg以上）も記録できます。記録は端末に保存され、釣果データは匿名で集計に使います。">')
+RX(r'<meta property="og:description" content="[^"]*">', '<meta property="og:description" content="ティップランのアオリイカの釣果を、エギ・シンカー・潮・流れと一緒に時系列で記録する無料ツール">')
 ALL('タイラバカウンター', 'ティップランカウンター')
 ALL('TAIRABA COUNTER', 'TIPRUN COUNTER')
 ALL('dragon-counter.cutlassfish.tokyo/tairaba', 'dragon-counter.cutlassfish.tokyo/tipran')
@@ -97,7 +97,7 @@ ALL('/tairaba/', '/tipran/')
 R("const LS='tairaba-log.v1';", "const LS='tipran-log.v1';")
 ALL('tairaba-counter', 'tipran-counter')
 ALL('tairaba-${tr.date}', 'tipran-${tr.date}')
-ALL('スカート', '増し錘')
+ALL('スカート', 'シンカー')
 ALL('よく釣れたヘッド', 'よく釣れたエギ')
 ALL('タイラバ', 'エギ')
 ALL('マダイ', 'アオリイカ')
@@ -105,15 +105,15 @@ ALL("'枚'", "'杯'")
 ALL('枚</b>', '杯</b>')
 ALL('枚数', '杯数')
 ALL('ドラゴン', 'キロアップ')
-ALL('エギ（ヘッド・ネクタイ・針）', 'エギと増し錘・キロアップ')
+ALL('エギ（ヘッド・ネクタイ・針）', 'エギとシンカー・キロアップ')
 ALL('120cm以上', '1kg以上')
 ALL('サイズ（全長・任意）', 'サイズ（重さ・任意）')
 RX(r"  \{k:'ようこそ',t:'釣果を時間の経過と共に記録',d:'[^']*'\},",
-   "  {k:'ようこそ',t:'釣果を時間の経過と共に記録',d:'ティップランカウンターは、ティップランのアオリイカの釣果を時間の経過と共に、使ったエギ・増し錘・潮・流れと一緒に記録するアプリです。全国どこの釣り場でも使えます。釣果データは匿名で集めて傾向の分析に使います。使うことでこれに同意したものとします。'},")
+   "  {k:'ようこそ',t:'釣果を時間の経過と共に記録',d:'ティップランカウンターは、ティップランのアオリイカの釣果を時間の経過と共に、使ったエギ・シンカー・潮・流れと一緒に記録するアプリです。全国どこの釣り場でも使えます。釣果データは匿名で集めて傾向の分析に使います。使うことでこれに同意したものとします。'},")
 RX(r"  \{k:'準備',t:'[^']*',d:'[^']*'\},",
-   "  {k:'準備',t:'エギと増し錘を登録',d:'画面下の右端にある「登録」タブで、持っているエギ（メーカー・号数・重さ・色）と、使う増し錘の重さを登録します。竿・リール・糸も登録できます。'},")
+   "  {k:'準備',t:'エギとシンカー（増し錘）を登録',d:'画面下の右端にある「登録」タブで、持っているエギ（メーカー・号数・重さ・色）と、使うシンカーの重さを登録します。竿・リール・糸も登録できます。'},")
 RX(r"  \{k:'釣れたら',t:'「釣れた」を1タップ',d:'[^']*'\},",
-   "  {k:'釣れたら',t:'「釣れた」を1タップ',d:'「釣れた＋1」で、今使っているエギと増し錘と一緒に1杯記録します。1kg以上なら先に「キロアップ」にチェック。エギや増し錘を替えたら「エギ」のボタンから選び直します（押しても記録はされません）。アタリ・バラシも同じように記録されます。押し間違えたら下の「直前の釣果を取り消し」。アオリイカ以外が掛かったら小さな「外道」ボタンから（杯数には入りません）。サイズ（g）はあとから記録の一覧で入れられます。'},")
+   "  {k:'釣れたら',t:'「釣れた」を1タップ',d:'「釣れた＋1」で、今使っているエギとシンカーと一緒に1杯記録します。1kg以上なら先に「キロアップ」にチェック。エギやシンカーを替えたら「エギ」のボタンから選び直します（押しても記録はされません）。アタリ・バラシも同じように記録されます。押し間違えたら下の「直前の釣果を取り消し」。アオリイカ以外が掛かったら小さな「外道」ボタンから（杯数には入りません）。サイズ（g）はあとから記録の一覧で入れられます。'},")
 R("tx(168,64,'80g オレンジ'", "tx(168,64,'3.5号 赤テープ'")
 R("tx(196,116,'針'", "tx(196,116,'キロアップ'")
 R("tx(196,132,'自作 2本針'", "tx(196,132,'1kg以上'")
@@ -207,7 +207,10 @@ function tbcAddForm(t){if(tbc.add!==t)return '';const inp=(id,l,ph,x)=>`<label c
    <div class="tbc-add-b"><button class="btn sm primary" data-act="tbcAddOk">追加</button><button class="btn sm ghost" data-act="tbcAdd" data-d="">やめる</button></div></div>`}
 function tbcSheet(){const rows=tbcRows(),makers=[...new Set(rows.map(r=>r.m))];if(!tbc.m)tbc.m=makers[0]||'';const rig=tbc.kind==='rigs',dl=tbc.del;
   const ser=rows.map((r,i)=>[r,i]).filter(([r])=>r.m===tbc.m),cur=tbc.i>=0?rows[tbc.i]:null;
-  const n=cur?(rig&&cur.w.length?tbc.w.size:1)*tbc.c.size:0;
+  const sk=tbc.kind==='skirts';
+  /* シンカー：重さで色が違う製品（cw）は、選んだ重さにある色だけ出す。色は選ばなくてもよい */
+  const cols=cur&&sk&&cur.cw&&tbc.w.size?cur.c.filter((c,j)=>[...tbc.w].some(g=>(cur.cw[g]||[]).includes(j))):cur?cur.c:[];
+  const n=cur?(sk?tbc.w.size*Math.max(1,cols.filter(c=>tbc.c.has(c)).length):(rig&&cur.w.length?tbc.w.size:1)*tbc.c.size):0;
   const plus=(t,l)=>rig&&!dl?`<button class="chip add ${tbc.add===t?'on':''}" data-act="tbcAdd" data-d="${t}">＋ ${l}</button>`:'';
   const anyMine=rig&&(rows.some(r=>r.mine||r.no!=null));
   openSheet(`<div class="sheet-h stick"><h2>カタログ（${TBC_JP[tbc.kind]}）</h2><button class="btn sm ghost" data-act="tbcClose">閉じる</button></div>
@@ -215,11 +218,12 @@ function tbcSheet(){const rows=tbcRows(),makers=[...new Set(rows.map(r=>r.m))];i
    <div class="field"><span>メーカー</span><div class="chips wrap">${makers.map(m=>`<button class="chip ${m===tbc.m?'on':''}" data-act="tbcMaker" data-d="${esc(m)}">${esc(m)}</button>`).join('')}${plus('m','メーカー')}</div>${tbcAddForm('m')}</div>
    <div class="field"><span>製品</span><div class="chips wrap">${ser.map(([r,i])=>`<button class="chip ${r.mine?'mine':''} ${dl&&r.mine?'del':''} ${i===tbc.i?'on':''}" data-act="${dl&&r.mine?'tbcDelP':'tbcSeries'}" data-i="${i}">${dl&&r.mine?'✕ ':''}${esc(r.s)}${r.mat==='TG'?'<small>（TG）</small>':''}</button>`).join('')}${plus('p','製品')}</div>${tbcAddForm('p')}</div>
    ${cur?`${cur.note?`<p class="muted" style="margin:0">${esc(cur.note)}</p>`:''}
+    ${sk?`<div class="field"><span>重さ（持っているものを全部）</span><div class="chips wrap">${cur.w.map(g=>`<button class="chip ${tbc.w.has(g)?'on':''}" data-act="tbcW" data-d="${g}">${g}g</button>`).join('')}</div></div>`:''}
     ${rig?`<div class="field"><span>号数・重さ（持っているものを全部）</span><div class="chips wrap">${cur.w.map(g=>{const o=cur.o[g]||{},mi=tbcMineO(cur,g);return `<button class="chip ${mi?'mine':''} ${dl&&mi?'del':''} ${tbc.w.has(g)?'on':''}" data-act="${dl&&mi?'tbcDelW':'tbcW'}" data-d="${g}">${dl&&mi?'✕ ':''}${o.z?esc(o.z)+'号':''}${o.g?' '+o.g+'g':''}</button>`}).join('')}${plus('o','号数・重さ')}</div>${tbcAddForm('o')}</div>`:''}
-    <div class="field"><span>色（持っているものを全部）</span><div class="chips wrap">${cur.c.map((c,j)=>{const im=cur.i&&cur.i[j],mi=rig&&tbcMineC(cur,j);return `<button class="chip ${im?'cimg':''} ${mi?'mine':''} ${dl&&mi?'del':''} ${tbc.c.has(c)?'on':''}" data-act="${dl&&mi?'tbcDelC':'tbcC'}" data-d="${esc(c)}">${eimg(im,'cc')}<span>${dl&&mi?'✕ ':''}${esc(c)}</span></button>`}).join('')}${plus('c','色')}</div>${tbcAddForm('c')}</div>
+    <div class="field" ${sk&&!cur.c.length?'hidden':''}><span>${sk?'色（選ばなくてもよい）':'色（持っているものを全部）'}</span><div class="chips wrap">${cur.c.map((c,j)=>{if(sk&&!cols.includes(c))return '';const im=cur.i&&cur.i[j],mi=rig&&tbcMineC(cur,j);return `<button class="chip ${im?'cimg':''} ${mi?'mine':''} ${dl&&mi?'del':''} ${tbc.c.has(c)?'on':''}" data-act="${dl&&mi?'tbcDelC':'tbcC'}" data-d="${esc(c)}">${eimg(im,'cc')}<span>${dl&&mi?'✕ ':''}${esc(c)}</span></button>`}).join('')}${plus('c','色')}</div>${tbcAddForm('c')}</div>
     ${cur.u?`<a class="golink" href="${esc(cur.u)}" target="_blank" rel="noopener">メーカーのページで見る ↗</a>`:''}`:'<p class="muted">製品を選んでください。</p>'}
    ${anyMine?`<button class="btn sm ghost" data-act="tbcDelMode" style="align-self:flex-start">${dl?'整理を終わる':'自分で足したものを整理（消す）'}</button>`:''}
-   <div class="tb-foot"><button class="btn primary" data-act="tbcSave" ${n&&!dl?'':'disabled'}>${dl?'整理中（✕を押すと消えます）':n?`${n}件を登録`:!cur?'製品を選んでください':rig&&cur.w.length&&!tbc.w.size?'号数・重さを選んでください':'色を選んでください'}</button></div>`,{kind:'tbc'});
+   <div class="tb-foot"><button class="btn primary" data-act="tbcSave" ${n&&!dl?'':'disabled'}>${dl?'整理中（✕を押すと消えます）':n?`${n}件を登録`:!cur?'製品を選んでください':sk?'重さを選んでください':rig&&cur.w.length&&!tbc.w.size?'号数・重さを選んでください':'色を選んでください'}</button></div>`,{kind:'tbc'});
   if(tbc.add){const el=$('#'+({m:'tbcM',p:'tbcP',o:'tbcZ',c:'tbcCn'}[tbc.add]));if(el)setTimeout(()=>el.focus(),30)}}
 """, flags=re.S)
 RX(r"  tbcMaker:b=>\{tbc\.m=b\.dataset\.d;", "  tbcMaker:b=>{tbc.add='';tbc.m=b.dataset.d;")
@@ -246,6 +250,17 @@ R(".tb-form{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin:8px 0
   ".chip.mine{border-style:dashed}.chip.del{border-color:var(--pink);color:var(--pink)}"
   ".tbc-add{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin-top:10px;padding:10px;border:1px dashed var(--line);border-radius:12px}"
   ".tbc-add .field:only-of-type{grid-column:1/-1}.tbc-add-b{grid-column:1/-1;display:flex;gap:8px}")
+
+# ───────── シンカー（増し錘）のカタログ：製品＋重さで登録、色は任意。記録には「エギ王TRシンカー 20g オレンジ」のように出る
+R("if(!r||tbc.del)return;const s=spOf(SOLO),k=tbc.kind;s[k]=s[k]||[];let n=0;",
+  "if(!r||tbc.del)return;const s=spOf(SOLO),k=tbc.kind;s[k]=s[k]||[];let n=0;\n"
+  "    if(k==='skirts'){for(const g of [...tbc.w].sort((a,b)=>a-b)){const cs=r.c.filter((c,j)=>tbc.c.has(c)&&(!r.cw||(r.cw[g]||[]).includes(j)));\n"
+  "        for(const c of (cs.length?cs:[''])){const x={maker:r.m,series:r.s,g:String(g),color:c,cat:true,id:uid()};x.name=tbName(k,x);if(s[k].some(y=>y.name===x.name&&!y.hidden))continue;s[k].push(x);n++}}\n"
+  "      cfgTouch();toast(n?`${n}件を登録しました`:'もう登録されています');return acts.tbcClose()}")
+R("if(k==='skirts')return x.g?x.g+'g':'';", "if(k==='skirts')return [x.series,x.g?x.g+'g':'',x.color].filter(Boolean).join(' ');")
+R("${tbList('skirts')}",
+  "${tbList('skirts')}${TB_CAT.skirts.length?`<button class=\"btn sm\" data-act=\"tbcOpen\" data-kind=\"skirts\" style=\"margin:8px 0\">📖 カタログから選ぶ（${[...new Set(TB_CAT.skirts.map(r=>r.m))].length}社・${TB_CAT.skirts.length}製品）</button><p class=\"muted\" style=\"margin:0\">カタログにないものは、下に重さを入れて登録</p>`:''}")
+R("使う重さを登録しておくと、記録のときに選べます。", "メーカーのカタログから選ぶか、使う重さを登録しておくと、記録のときに選べます。")
 
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')

@@ -1,0 +1,31 @@
+{
+ "maker": "フィッシュリーグ",
+ "sinkers": [
+  {
+   "series": "TRZ アップウエイト",
+   "url": "https://ecogear.jp/fishleague/trz_up-weight/",
+   "weights": [
+    15,
+    20,
+    30
+   ],
+   "colors": [
+    "TU01 ベーシックオレンジ",
+    "TU02 オレンジホロ",
+    "TU03 パープルホロ",
+    "TU04 金アジホロ"
+   ],
+   "material": null,
+   "fits": "自社エギ専用（「ダートマックス TR/TRZ」シリーズ専用設計。ヘッドに被せて付属バンドで固定）",
+   "pack": "2個入（15g/20g/30gとも 2pcs.）",
+   "price": null,
+   "note": "フィッシュリーグはマルキユー系（WELL-F／ECOGEAR公式サイト内）。15gと20gは2026年10月7日告知の新ウエイトで11月中旬発売予定。色ごとの重量設定の有無は公式ページでは未確認。価格・素材の記載なし。告知記事では「TRZアップウエイトシンカー」とも表記。",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://ecogear.jp/fishleague/trz_up-weight/",
+  "https://ecogear.jp/info/20261007-trz_up_weight_sinker_15g-20g/",
+  "https://ecogear.jp/fishleague/"
+ ]
+}

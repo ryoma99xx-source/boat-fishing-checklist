@@ -1,0 +1,27 @@
+{
+ "maker": "第一精工",
+ "sinkers": [
+  {
+   "series": "エギタス",
+   "url": "https://www.daiichiseiko.com/products/4951",
+   "weights": [
+    10,
+    20,
+    30
+   ],
+   "colors": [],
+   "material": null,
+   "fits": "エギ専用シンカー（ボートエギング／ティップランで底取りしにくい時やエギが流されすぎる時用。適合エギの詳細は未確認）",
+   "pack": "2個入り（小売表記）",
+   "price": "税抜: 10g ¥750 / 20g ¥800 / 30g ¥850（公式サイトの検索スニペットによる）",
+   "note": "規格表記は TR-10g / TR-20g / TR-30g、品番 22238 / 22239 / 22240。第一精工公式サイトは自動アクセスに406/503を返すため直接確認できず、検索結果スニペットと小売リスティング（価格.com掲載）で確認。カラー・素材は未確認。",
+   "discontinued": false,
+   "unconfirmed": true
+  }
+ ],
+ "sources": [
+  "https://www.daiichiseiko.com/products/4951",
+  "https://www.daiichiseiko.com/search/index.html?scate=56",
+  "https://search.kakaku.com/エギタス/"
+ ]
+}

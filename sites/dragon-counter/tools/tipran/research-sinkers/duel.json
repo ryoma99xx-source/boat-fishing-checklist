@@ -1,0 +1,59 @@
+{
+ "maker": "デュエル",
+ "sinkers": [
+  {
+   "series": "クイック®TRシンカー",
+   "url": "https://www.duel.co.jp/products/detail.php?pid=1684",
+   "weights": [
+    10,
+    15,
+    20,
+    25,
+    30,
+    40,
+    60,
+    80
+   ],
+   "colors": [
+    "OG オレンジ",
+    "PU パープル"
+   ],
+   "material": null,
+   "fits": "公式対応エギ: DUEL「イージーQ® レンジクルーザー 3.0号/3.5号」、YO-ZURI「Ebi Q® TR 3.0号/3.5号」。イージーQ® フィンプラス™ TR（ラトル含む）3.0/3.5号は非対応。市販のティップランエギにも対応（一部除く）",
+   "pack": null,
+   "price": "オープン価格",
+   "note": "ティップランエギ専用シンカー。注文番号 A1825(10g)/A1826(15g)/A1827(20g)/A1876(25g)/A1828(30g)/A1829(40g)/A1877(60g)/A1878(80g)。25g/60g/80gは追加サイズ。ゴムバンド付（10〜40g：2本、60/80g：1本）、ゴムバンドのズレ防止ミゾ付き（10gを除く）。入数・素材は公式ページに記載なし。全重量に2色とも設定あり。",
+   "discontinued": false
+  },
+  {
+   "series": "パタパタシンカー",
+   "url": "https://www.duel.co.jp/products/detail.php?pid=310",
+   "weights": [
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40,
+    50
+   ],
+   "colors": [
+    "01. BL ブルー夜光",
+    "02. OG オレンジ",
+    "03. PU パープル"
+   ],
+   "material": null,
+   "fits": "自社エギ専用（パタパタ対応シンカー。ショア用のイージーQ®/アオリーQ®系をティップランで使うためのもの）。公式互換リスト: DUEL イージーQ® マグネットTG（マグパタ®）/EQ™/MAG® Q TUNGSTEN/LQ ダーター/イージーQ® キャスト各種/ダートマスター™各種/フィンプラス ランガン 3.5号、YO-ZURI Ebi Q® 3.0/3.5号（3.0号は40g以下のみ）/アオリーQ®各種/スシQ 3.5号/パタパタ®Qシリーズ。イージーQ® フィンプラスTR・フラッシュフィンTR・マグキャスト・アオリーQ® 3D/RS等は非対応",
+   "pack": null,
+   "price": "オープン価格",
+   "note": "注文番号 A1736(10g)/A1737(15g)/A1727(20g)/A1738(25g)/A1728(30g)/A1739(35g)/A1729(40g)/A1730(50g)。全重量に3色とも設定あり。入数・素材は公式ページに記載なし。",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://www.duel.co.jp/products/detail.php?pid=1684",
+  "https://www.duel.co.jp/products/detail.php?pid=310",
+  "https://www.duel.co.jp/products/?category=406"
+ ]
+}

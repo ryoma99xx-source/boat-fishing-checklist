@@ -1,0 +1,33 @@
+{
+ "maker": "ジャッカル",
+ "sinkers": [
+  {
+   "series": "ゲキダキTRシンカー",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/gekidaki-tr-sinker/",
+   "weights": [
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    80,
+    100
+   ],
+   "colors": [
+    "蛍光オレンジ",
+    "レッド",
+    "パープル"
+   ],
+   "material": null,
+   "fits": "公式ページに対応エギの明記なし（ゲキダキTRシリーズ用の後付シンカー。開口部は「スナップの形状を選ばず」広め）",
+   "pack": "10〜50gは2個入、60/80/100gは1個入",
+   "price": "税込: 10g ¥825 / 20g ¥880 / 30g ¥935 / 40g ¥990 / 50g ¥1,045（各2個入）、60g ¥990 / 80g ¥1,045 / 100g ¥1,100（各1個入）",
+   "note": "60g・80g・100gは【2026 NEW】。公式表記 SIZE 8 / COLOR 3。素材記載なし。",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/gekidaki-tr-sinker/"
+ ]
+}

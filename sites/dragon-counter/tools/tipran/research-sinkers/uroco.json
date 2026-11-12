@@ -1,0 +1,34 @@
+{
+ "maker": "ウロコ",
+ "sinkers": [
+  {
+   "series": "ウロコロUTRシンカー",
+   "url": "https://urocolure.com/pickup/post-18087",
+   "weights": [
+    10,
+    15,
+    20,
+    30,
+    40,
+    50,
+    60
+   ],
+   "colors": [
+    "#001 オレンジ",
+    "#002 パープル"
+   ],
+   "material": null,
+   "fits": "自社ティップランエギ「ウロコロUTR」用の追加シンカー（販売店の案内では「他社のエギにもほぼ付きます」）",
+   "pack": null,
+   "price": null,
+   "note": "公式サイトには告知記事のみ（製品スペックページなし）。重量は公式告知で確認、20g・40gから順次発売（2026年春）。カラー名は小売リスティング（価格.com掲載）で確認、全重量に2色あるかは未確認。別売「ウロコロUTR専用シンカーバンド(20個入り)」あり。",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://urocolure.com/pickup/post-18087",
+  "https://urocolure.com/news/post-17633",
+  "https://www.umikiti.jp/apps/note/archives/9331",
+  "https://search.kakaku.com/ウロコロUTR シンカー/"
+ ]
+}

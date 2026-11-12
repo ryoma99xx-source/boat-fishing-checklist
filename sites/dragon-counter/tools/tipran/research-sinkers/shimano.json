@@ -1,0 +1,37 @@
+{
+ "maker": "シマノ",
+ "sinkers": [
+  {
+   "series": "セフィア スルピタシンカー",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/boateging/egi_dropper/a15f900000faqxnia1.html",
+   "weights": [
+    7,
+    10,
+    15,
+    20,
+    30,
+    40,
+    50,
+    60
+   ],
+   "colors": [
+    "001 オレンジ",
+    "002 パープル",
+    "003 グリーン"
+   ],
+   "material": null,
+   "fits": "汎用寄り（アントラージュ3.0号など自社エギ対応＋「幅広いエギに対応」。全てのエギに付くわけではない：レビューではエギゾーTRスマートフィット3.5号・ティップランナー2.5/3.0号は○、ダートマックスTR/TRZは×）",
+   "pack": "2個入",
+   "price": "本体価格(税別): 7g 920円 / 10g 920円 / 15g 980円 / 20g 1,000円 / 30g 1,000円 / 40g 1,090円 / 50g 1,160円 / 60g 1,240円",
+   "note": "品番 ET-507Z/510Z/515Z/520Z/530Z/540Z/550Z/560Z（カラー番号 001/002/003）。2026年9月発売。スナップを外さずに上部スリットからリーダーを通して被せ、バンドで固定するマスクシンカー。釣りメディアは「スルピタシンカー」、小売は「セフィア(Sephia) スルピタシンカー」と表記。シマノ公式サイトは自動アクセスに403を返すため、スペックは公式出典の釣りメディア記事（つりそく・ルアーニュースR）とレビュー記事、小売リスティングで確認。公式ページ上の正式表記・素材は未確認。タイプ表記は「シンキング」。",
+   "discontinued": false,
+   "unconfirmed": true
+  }
+ ],
+ "sources": [
+  "https://www.tsurisoku.com/news/197360",
+  "https://www.lurenewsr.com/447422",
+  "https://tango-offshore-labo.com/sephia-surupita-sinker-review/",
+  "https://search.kakaku.com/スルピタシンカー/"
+ ]
+}

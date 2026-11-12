@@ -1,0 +1,33 @@
+{
+ "maker": "マルシン漁具",
+ "sinkers": [
+  {
+   "series": "シンカー仮面TR",
+   "url": null,
+   "weights": [
+    5,
+    7,
+    10,
+    15,
+    20,
+    40
+   ],
+   "colors": [
+    "ツヤ消ブラック",
+    "ツヤ消レッド",
+    "ツヤ消白夜光"
+   ],
+   "material": null,
+   "fits": "未確認",
+   "pack": "2個入（小売表記）",
+   "price": null,
+   "note": "公式サイト（mr-dragon.jp）の製品一覧・サイト内検索に掲載なし。小売は「在庫限り大特価」表記で、終売と判断。重量・色は小売リスティングで見えた範囲のみ（他の重量が存在した可能性あり）。",
+   "discontinued": true,
+   "unconfirmed": true
+  }
+ ],
+ "sources": [
+  "https://search.kakaku.com/シンカー仮面TR/",
+  "https://www.mr-dragon.jp/product/sea-fishing/ikaegi/"
+ ]
+}

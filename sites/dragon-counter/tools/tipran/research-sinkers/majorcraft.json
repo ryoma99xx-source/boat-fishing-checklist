@@ -1,0 +1,36 @@
+{
+ "maker": "メジャークラフト",
+ "sinkers": [
+  {
+   "series": "餌木蔵 TRシンカー",
+   "url": "https://www.majorcraft.co.jp/lure/ezt-sinker/",
+   "weights": [
+    7,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40
+   ],
+   "colors": [
+    "#1 オレンジ／シルバー",
+    "#2 ピンク／シルバー",
+    "#3 パープル／シルバー",
+    "#4 オレンジ",
+    "#5 パープル"
+   ],
+   "material": null,
+   "fits": "汎用（「餌木を選ばない鉄仮面型」。ショアエギ、ティップランエギ対応）",
+   "pack": "2個入",
+   "price": "税抜: 7/10/15/20g ¥730（税込¥803）、25/30g ¥770（税込¥847）、35/40g ¥810（税込¥891）",
+   "note": "公式コピーは「餌木を選ばない鉄仮面型超便利シンカー」。公式JAN表（PDF）は8重量×5色＝40SKU。素材記載なし。小売では「餌木蔵ティップランシンカー」（型番 EZT-SINKER○○）と表記されることがある。",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://www.majorcraft.co.jp/lure/ezt-sinker/",
+  "https://www.majorcraft.co.jp/wp-content/uploads/2025/09/EZT-SHINKER20240828.pdf"
+ ]
+}

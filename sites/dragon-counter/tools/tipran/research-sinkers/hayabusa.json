@@ -1,0 +1,31 @@
+{
+ "maker": "ハヤブサ",
+ "sinkers": [
+  {
+   "series": "スクイッドジャンキー ピッタリシンカー 1個入",
+   "url": "https://www.hayabusa.co.jp/hayabusa/products/FS511/index.html",
+   "weights": [
+    10,
+    15,
+    20,
+    25,
+    30,
+    40
+   ],
+   "colors": [
+    "無垢"
+   ],
+   "material": null,
+   "fits": "汎用（「各メーカー様々なエギに対応（一部装着できないエギもあります）」。ショア用エギをティップランエギにする用途。公式適合表PDFあり）",
+   "pack": "1個入（シリコンバンド2本付属）",
+   "price": "メーカー希望小売価格(税込): 10g ¥264 / 15g ¥286 / 20g ¥308 / 25g ¥330 / 30g ¥352 / 40g ¥396",
+   "note": "品番 FS511。カラーは「無垢」（無塗装）1種のみ。素材記載なし。",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://www.hayabusa.co.jp/hayabusa/products/FS511/index.html",
+  "https://www.hayabusa.co.jp/wp/wp-content/uploads/9d9f54ef29bda610e004851073841418.pdf",
+  "https://www.lurenewsr.com/451851"
+ ]
+}

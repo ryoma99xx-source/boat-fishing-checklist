@@ -1,0 +1,82 @@
+{
+ "maker": "ナカジマ",
+ "sinkers": [
+  {
+   "series": "ティップランシンカー",
+   "url": "http://www.nakazima.org/products/category06/item02655.html",
+   "weights": [
+    10,
+    15,
+    20,
+    25,
+    30,
+    40,
+    50
+   ],
+   "colors": [
+    "ピンク",
+    "オレンジ",
+    "パープル",
+    "グロー"
+   ],
+   "material": "軟質素材（金属種の記載なし）",
+   "fits": "汎用（軟質素材とスリット入り形状でヘッド形状に合わせて変形させて装着。シリコンバンドをエギ本体のシンカー部に引掛けて固定）",
+   "pack": null,
+   "price": "税込: 10/15/20g ¥605、25/30g ¥660、40g ¥770、50g ¥825",
+   "note": "品番 2655〜2661(ピンク)、2662〜2668(オレンジ)、2669〜2675(パープル)、2976〜2982(グロー)。付属品: スペアーシリコンバンド×3、スナップ×2。入数は公式ページに記載なし（小売では2個入表記あり）。全重量に4色とも設定あり。",
+   "discontinued": false
+  },
+  {
+   "series": "TRダートマスク",
+   "url": "http://www.nakazima.org/products/category06/item03241.html",
+   "weights": [
+    10,
+    15,
+    20,
+    25,
+    30
+   ],
+   "colors": [
+    "オレンジ",
+    "パープル",
+    "ブラック"
+   ],
+   "material": "軟質素材（金属種の記載なし）",
+   "fits": "汎用（ヘッド形状に合わせて幅を変形させて装着。「TRエギ、ショア用エギを問わず、殆どのエギに装着可能」。公式にメーカー別エギ適合リストあり）",
+   "pack": null,
+   "price": "税込: 10/15/20g ¥660、25g ¥715、30g ¥770",
+   "note": "品番 3241〜3255。3カラー×5サイズ。バンド保持スリット加工、シャープノーズ仕様。バンド計8本付属（クリア＋ピンク）。入数は記載なし。",
+   "discontinued": false
+  },
+  {
+   "series": "ヘッドシンカー",
+   "url": "http://www.nakazima.org/products/category06/item02330.html",
+   "weights": [
+    1,
+    1.5,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    10,
+    15,
+    20
+   ],
+   "colors": [],
+   "material": "鉛",
+   "fits": "汎用（スナップ式でエギ・ルアーのアイに装着）",
+   "pack": "1〜5g：5個入、6〜10g：3個入、15・20g：2個入",
+   "price": "税込 ¥462（表の先頭行に記載。全規格共通かは未確認）",
+   "note": "マスク型ではなくスナップで吊るすタイプ。ティップラン専用品ではない（参考掲載）。品番 2330〜2335、2390〜2394。カラー表記なし。",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "http://www.nakazima.org/products/category06/item02655.html",
+  "http://www.nakazima.org/products/category06/item03241.html",
+  "http://www.nakazima.org/products/category06/item02330.html",
+  "http://www.nakazima.org/products/category06/"
+ ]
+}

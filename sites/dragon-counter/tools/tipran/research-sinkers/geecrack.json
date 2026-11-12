@@ -1,0 +1,52 @@
+{
+ "maker": "ジークラック",
+ "sinkers": [
+  {
+   "series": "シャークシンカー",
+   "url": "https://www.geecrack.com/saltwater/product/detail/?id=227",
+   "weights": [
+    10,
+    15,
+    20,
+    25,
+    30,
+    40,
+    50,
+    60
+   ],
+   "colors": [
+    "#001 パープル",
+    "#002 オレンジ",
+    "#003 ピンク"
+   ],
+   "material": null,
+   "fits": "汎用（ティップラン用エギ・キャスティング用エギの両方が装着できる穴を2か所設置。公式ページに適合表画像あり）",
+   "pack": "2個入り",
+   "price": "税別: 10g 780円 / 15g 830円 / 20g 880円 / 25g 930円 / 30g 950円 / 40g 1,050円 / 50g 1,150円 / 60g 1,260円",
+   "note": "旧「ノーズコーンシンカー」のシルエットを継承した後継品（シャークマウスデザイン）。旧ノーズコーンシンカーは公式ラインナップから消えており小売は在庫限り。素材記載なし。",
+   "discontinued": false
+  },
+  {
+   "series": "カチッとシンカー",
+   "url": "https://www.geecrack.com/saltwater/product/detail/?id=236",
+   "weights": [
+    20,
+    25,
+    30,
+    40
+   ],
+   "colors": [],
+   "material": null,
+   "fits": "自社エギ「ローハイド紫煙」専用の交換式シンカー（2.5号用: 20g/25g/30g、3号・3.5号用: 30g/40g）",
+   "pack": "1個入",
+   "price": "税別: 《2.5号》20g 450円 / 25g 470円 / 30g 480円、《3号,3.5号》30g 480円 / 40g 500円",
+   "note": "ヘッドに被せるマスク型ではなく、エギ本体のシンカーをワンタッチで付け替える方式。ローハイド紫煙の製品ページ内にラインナップ記載（単独ページなし）。カラー表記なし。同じ30gでも2.5号用と3号/3.5号用は別物。",
+   "discontinued": false
+  }
+ ],
+ "sources": [
+  "https://www.geecrack.com/saltwater/product/detail/?id=227",
+  "https://www.geecrack.com/saltwater/product/detail/?id=236",
+  "https://www.geecrack.com/saltwater/product/sinker_hook/"
+ ]
+}
