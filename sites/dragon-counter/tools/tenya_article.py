@@ -79,7 +79,7 @@ def build_article():
     makers = [m for m in T.ORDER if any(r['m'] == m for r in plist)]
     ncol = sum(len(r['cols']) for r in plist)
     upd = allc.get('updated', '')
-    toc = ''.join('<a href="#mk-%s" style="display:inline-block;border:1px solid #ccd;border-radius:999px;padding:4px 12px;margin:0 6px 8px 0;text-decoration:none">%s</a>'
+    toc = ''.join('<a href="#mk-%s" style="display:inline-block;border:1px solid #44566e;border-radius:999px;padding:4px 12px;margin:0 6px 8px 0;text-decoration:none">%s</a>'
                   % (SLUG.get(m, 'x'), E(T.JP.get(m, m))) for m in makers)
     body = []
     for m in makers:
@@ -94,15 +94,15 @@ def build_article():
             figs = []
             for ci, c in enumerate(r['cols'].values()):
                 zz = '・'.join(T.zs(z) for z in sorted(set(c['z']))) + '号'
-                bd = ''.join(' <span style="font-size:11px;color:#b5710b;border:1px solid #b5710b;border-radius:4px;padding:0 4px;white-space:nowrap">%s</span>' % E(s) for s in sorted(c['s']))
+                bd = ''.join(' <span style="font-size:11px;color:#e3a43b;border:1px solid #e3a43b;border-radius:4px;padding:0 4px;white-space:nowrap">%s</span>' % E(s) for s in sorted(c['s']))
                 img = ('<img src="%s" alt="%s %s" width="240" height="180" loading="lazy" style="display:block;width:100%%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#fff">'
                        % (photo(c['img'], pv), E(r['p']), E(c['c']))) if c['img'] else ''
                 k = '%s|%s|%s' % (r['m'], r['p'], c['c'])
                 fid = 'c-%d-%d' % (pi, ci)
                 if k in top:
                     anchor[k] = (r, c, fid)
-                figs.append('<figure %s class="%s" style="margin:0;border:1px solid #e3e6ea;border-radius:8px;overflow:hidden;background:#fff;position:relative">%s'
-                            '<figcaption style="padding:6px 8px;font-size:13px;line-height:1.4">%s<br><small style="color:#667">%s</small>%s</figcaption></figure>'
+                figs.append('<figure %s class="%s" style="margin:0;border:1px solid #1f2d42;border-radius:8px;overflow:hidden;background:#101c2e;color:#eef3f8;position:relative">%s'
+                            '<figcaption style="padding:6px 8px;font-size:13px;line-height:1.4;color:#eef3f8">%s<br><small style="color:#9cabbd">%s</small>%s</figcaption></figure>'
                             % (T.fig_attrs(r, c, fid), 'tcat-ts' if k in top else '', img, E(c['c']), zz, bd))
             blk.append('<div %s>\n<h3 id="tp-%d">%s</h3>\n<p>%s・%d色%s</p>\n<p data-tcat-links="1">%s</p>\n<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin:0 0 28px">%s</div>\n</div>'
                        % (T.prod_attrs(r), pi, E(r['p']), zr, len(r['cols']), '・替えヘッド' if r['h'] else ('・今は作られていない前のモデル' if '旧型' in r['p'] else ''), links_html(r), ''.join(figs)))
@@ -118,16 +118,16 @@ def build_article():
             continue
         r, c, fid = anchor[k]
         img = '<img src="%s" alt="%s %s" width="240" height="180" loading="lazy" style="display:block;width:100%%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#fff;border-radius:8px;border:2px solid %s">' % (photo(c['img'], pv), E(r['p']), E(c['c']), AMB) if c['img'] else ''
-        cards.append('<div style="display:grid;grid-template-columns:minmax(110px,160px) 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid #f0d9a8">'
-                     '<a href="#%s" data-go="%s">%s</a><div><b style="font-size:16px">%s</b><br>%s<br><small style="color:#667">%s</small><div style="margin-top:8px">%s</div></div></div>'
+        cards.append('<div style="display:grid;grid-template-columns:minmax(110px,160px) 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid #2a3a52">'
+                     '<a href="#%s" data-go="%s">%s</a><div><b style="font-size:16px">%s</b><br>%s<br><small style="color:#9cabbd">%s</small><div style="margin-top:8px">%s</div></div></div>'
                      % (fid, fid, img, E(c['c']), E(r['p']), E(T.JP.get(r['m'], r['m'])), links_html(r, True)))
-    a.append('<div data-tcat-ts="1" style="border:3px solid %s;border-radius:12px;padding:14px 16px;margin:24px 0;background:#fffaf0;%s"><p style="margin:0 0 4px;font-weight:700;color:#b5710b;font-size:18px">釣れ筋テンヤ</p><div data-tcat-ts-list="1">%s</div></div>'
+    a.append('<div data-tcat-ts="1" style="border:3px solid %s;border-radius:12px;padding:14px 16px;margin:24px 0;background:#0b1422;color:#eef3f8;%s"><p style="margin:0 0 4px;font-weight:700;color:#e3a43b;font-size:18px">釣れ筋テンヤ</p><div data-tcat-ts-list="1">%s</div></div>'
              % (AMB, '' if cards else 'display:none', ''.join(cards)))
-    a.append('<div data-tcat-rank="1" style="display:none;border:1px solid #d6dde6;border-radius:12px;padding:14px 16px;margin:24px 0"><p style="margin:0 0 4px;font-weight:700;font-size:18px">ドラゴンカウンターのランキング</p>'
-             '<p style="margin:0 0 10px;font-size:13px;color:#667">釣果記録アプリ「ドラゴンカウンター」に匿名で集まった記録から。号数はまとめています。</p>'
+    a.append('<div data-tcat-rank="1" style="display:none;border:1px solid #1f2d42;border-radius:12px;padding:14px 16px;margin:24px 0;background:#0b1422;color:#eef3f8"><p style="margin:0 0 4px;font-weight:700;font-size:18px">ドラゴンカウンターのランキング</p>'
+             '<p style="margin:0 0 10px;font-size:13px;color:#9cabbd">釣果記録アプリ「ドラゴンカウンター」に匿名で集まった記録から。号数はまとめています。</p>'
              '<div data-tcat-rank-catch="1" style="display:none;margin:0 0 14px"><p style="margin:0 0 4px;font-weight:700">よく釣れているテンヤ</p><ol></ol></div>'
              '<div data-tcat-rank-use="1" style="display:none"><p style="margin:0 0 4px;font-weight:700">よく使われているテンヤ</p><ol></ol></div></div>')
-    a.append('<div style="display:flex;gap:12px;align-items:center;border:1px solid #d6dde6;border-radius:12px;padding:12px 14px;margin:20px 0">'
+    a.append('<div style="display:flex;gap:12px;align-items:center;border:1px solid #44566e;border-radius:12px;padding:12px 14px;margin:20px 0">'
              '<a href="%s"><img src="%sicon-192.png" alt="ドラゴンカウンター" width="56" height="56" style="width:56px;height:56px;border-radius:12px;display:block"></a>'
              '<div style="font-size:14px;line-height:1.6">このカタログは、タチウオの釣果記録アプリ<a href="%s"><b>ドラゴンカウンター</b></a>のテンヤカタログと同じです。持っているテンヤの管理もでき、どのテンヤで釣れたかをボタン1つで残せます。<a href="#dc-app">くわしくは下で ↓</a></div></div>' % (APP, APP, APP))
     a.append('<h2><span class="en">HOW</span>このカタログの見方</h2>')
@@ -142,7 +142,7 @@ def build_article():
     for z in sizes:
         rs = [r for r in plist if z in r['z']]
         items = ''.join('<li><a href="#tp-%d">%s %s</a>（%d色）</li>' % (plist.index(r), E(T.JP.get(r['m'], r['m'])), E(r['p']), sum(1 for c in r['cols'].values() if z in c['z'])) for r in rs)
-        a.append('<details style="border:1px solid #d6dde6;border-radius:10px;padding:10px 14px;margin:0 0 10px"><summary style="cursor:pointer;font-weight:700;font-size:17px">%s号のテンヤ（%d製品）</summary><ul style="margin:8px 0 0">%s</ul></details>' % (T.zs(z), len(rs), items))
+        a.append('<details style="border:1px solid #44566e;border-radius:10px;padding:10px 14px;margin:0 0 10px"><summary style="cursor:pointer;font-weight:700;font-size:17px">%s号のテンヤ（%d製品）</summary><ul style="margin:8px 0 0">%s</ul></details>' % (T.zs(z), len(rs), items))
     a.append('<h2><span class="en">WORDS</span>色や製品名によく出てくる言葉</h2>')
     a.append('<ul><li><b>グロー・夜光</b>：光をためて、暗いところで光る塗装。</li>'
              '<li><b>ケイムラ</b>：紫外線が当たると青白く光る塗装。</li>'
