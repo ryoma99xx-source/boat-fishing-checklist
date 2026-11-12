@@ -1,0 +1,565 @@
+{
+ "maker": "シマノ",
+ "heads": [
+  {
+   "series": "炎月 バクバク TG",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000cr1fmqa1.html",
+   "material": "TG",
+   "type": "遊動",
+   "weights": [
+    45,
+    60,
+    70,
+    90,
+    120
+   ],
+   "colors": [
+    "STオレンジ",
+    "Sオレキン",
+    "STレッド",
+    "Sアカキン",
+    "Sグリキン",
+    "STブラック",
+    "TG"
+   ],
+   "note": "ヘッドのみ（ネクタイ・スカート・フック別売）。品番 JC-T04W(45g)/JC-T06W(60g)/JC-T07W(70g)/JC-T09W(90g)/JC-T12Z(120g、追加サイズ)。001〜006は全ウェイト共通。カラー『TG』は120gでのみ確認（小売掲載、正式名称が『TG』のみか未確認）。公式ページのURLは旧パス /tairubber_etc/tairubber/ にもあり。2023年発売。"
+  },
+  {
+   "series": "炎月 バクバクTG フィネス 35g",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/tairubber/a155f00000en9fmqat.html",
+   "material": "TG",
+   "type": "",
+   "weights": [
+    35
+   ],
+   "colors": [
+    "ＳＴオレンジ",
+    "Ｓオレキン",
+    "ＳＴレッド",
+    "Ｓアカキン",
+    "Ｓグリキン",
+    "ＳＴブラック",
+    "TG"
+   ],
+   "note": "品番 JC-T03Y。浅場（水深20〜30m）向けのタングステンヘッド。カラーは小売（FTO）の品名から取得。001〜007。遊動/固定の明記は未確認。"
+  },
+  {
+   "series": "炎月 バクバクプラス",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/tairubber/a155f00000cr5gwqad.html",
+   "material": "鉛",
+   "type": "",
+   "weights": [
+    45,
+    60,
+    80,
+    100,
+    120,
+    150
+   ],
+   "colors": [
+    "ＳＴオレンジ",
+    "Ｓオレキン",
+    "ＳＴレッド",
+    "Ｓアカキン",
+    "Ｓグリキン",
+    "ＳＴブラック"
+   ],
+   "note": "完成品（ヘッド＋ネクタイ＋スカート＋フック）。シングルカーリー／ダブルカーリー系ネクタイ3本付属（組み合わせはウェイトで異なる）。品番 JD-V04W/V06W/V08W/V10W/V12W/V15W。6色は全ウェイト共通。素材は取得ソースに明記なし（鉛と推定）。"
+  },
+  {
+   "series": "炎月 タイガーバクバク",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000c5ctcqav_p.html",
+   "material": "鉛",
+   "type": "遊動",
+   "weights": [
+    45,
+    60,
+    80,
+    100,
+    120,
+    150,
+    200
+   ],
+   "colors": [
+    "オレキンＳＴ",
+    "オレラメＳＴ",
+    "ゼブオレＴＷ",
+    "アカキンＳＴ",
+    "ゼブアカＴＷ",
+    "グリキンＳＴ"
+   ],
+   "note": "完成品。2023年に刷新（小売では『23炎月 タイガーバクバク』）。品番 EJ-404Q/406Q/408Q/410Q/412Q/415Q/420Q。現行カラーは013〜018の6色（全ウェイト共通）。ST＝ストロングカーリー、TW＝ツインスクリューロング付き。同品番で旧カラー（02T オレンジゴールド、03T レッドゴールド、61T オレンジカーリーSP、62T レッドカーリーSP、04J グリーンゴールド、05J ディープブラック、07J イワシトルネード、009 オレンジフラッシャー、010 レッドフラッシャー、011 チャートフラッシャー、012 オレカリフラッシャー）が小売に残るが、刷新前のもの（廃番と思われる）。"
+  },
+  {
+   "series": "炎月 ドテラバクバク",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000c5cy1qaf_p.html",
+   "material": "鉛",
+   "type": "",
+   "weights": [
+    80,
+    100,
+    120,
+    150,
+    200,
+    250
+   ],
+   "colors": [
+    "クッテオレンジ",
+    "マーブルチャート",
+    "ケイムラパール",
+    "スターブラック",
+    "レッドゴールド",
+    "リッチゴールド",
+    "オレンジシルバ",
+    "グリンゴールド",
+    "ブラックレッド",
+    "ケイコウオレキン"
+   ],
+   "note": "完成品（ドテラ専用、上針 伊勢尼＋下針 ストレートポイント）。品番 JD-L08T/L10T/L12T/L15T/L20T/L25T。009 ブラックレッド・010 ケイコウオレキンは追加新色（公式ページに『新たに2色追加』の記載あり、80g・200gで確認）。カラー名は小売の品名どおり（『オレンジシルバ』『グリンゴールド』は小売の表記。公式の表記が異なる可能性あり）。素材は明記なし（鉛と推定）。"
+  },
+  {
+   "series": "炎月 ドテラバクバクヘッド",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000c5cy7qaf_p.html",
+   "material": "鉛",
+   "type": "",
+   "weights": [
+    80,
+    100,
+    120,
+    150,
+    200,
+    250
+   ],
+   "colors": [
+    "クッテオレンジ",
+    "マーブルチャート",
+    "ケイムラパール",
+    "スターブラック",
+    "レッドゴールド",
+    "リッチゴールド",
+    "オレンジシルバ",
+    "グリンゴールド",
+    "ブラックレッド",
+    "ケイコウオレキン"
+   ],
+   "note": "ヘッドのみ。品番 JD-Q08T/Q10T/Q12T/Q15T/Q20T/Q25T。同重量のタイガーバクバク比で沈下速度15%アップ（後方重心）。009/010は追加新色（80g・200gで確認）。素材は明記なし（鉛と推定）。"
+  },
+  {
+   "series": "炎月 ラクチェンバクバクR",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000c6dciqa3_m.html",
+   "material": "鉛",
+   "type": "",
+   "weights": [
+    60,
+    80,
+    100,
+    120
+   ],
+   "colors": [
+    "オレンジゴルド",
+    "オレンジシルバー",
+    "レッドゴールド",
+    "グリーンゴルド",
+    "チャートゴールド",
+    "ケイムラシルバー"
+   ],
+   "note": "完成品、ラウンドヘッド。ラインを切らずにヘッド・ネクタイを交換できる構造。品番 JD-Q60U/Q80U/Q10U/Q12U。カラー001〜006（『オレンジゴルド』は公式スペック表の表記）。素材は明記なし（鉛と推定）。小売では多くが在庫なし。"
+  },
+  {
+   "series": "炎月 ラクチェンバクバクS",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000c6dcxqa3_m.html",
+   "material": "鉛",
+   "type": "",
+   "weights": [
+    100,
+    120,
+    150
+   ],
+   "colors": [
+    "オレンジゴルド",
+    "オレンジシルバー",
+    "レッドゴールド",
+    "グリーンゴルド",
+    "チャートゴールド",
+    "ケイムラシルバー"
+   ],
+   "note": "完成品、スクエアヘッド。品番 JD-X10U/X12U/X15U。2021年9月発売。素材は明記なし（鉛と推定）。"
+  },
+  {
+   "series": "炎月 ラクチェンバクバクヘッドR",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000c6qvnqan_m.html",
+   "material": "鉛",
+   "type": "",
+   "weights": [
+    60,
+    80,
+    100,
+    120,
+    150,
+    200
+   ],
+   "colors": [
+    "オレンジゴルド",
+    "オレンジシルバー",
+    "レッドゴールド",
+    "グリーンゴルド",
+    "チャートゴールド",
+    "ケイムラシルバー"
+   ],
+   "note": "ヘッドのみ（ラウンド）。品番 JC-Q60U/Q80U/Q10U/Q12U、150g/200gは追加の JC-Q15V/Q20V。素材は明記なし（鉛と推定）。"
+  },
+  {
+   "series": "炎月 ラクチェンバクバクヘッドS",
+   "url": "",
+   "material": "鉛",
+   "type": "",
+   "weights": [
+    60,
+    80,
+    100,
+    120,
+    150,
+    200
+   ],
+   "colors": [
+    "オレンジゴルド",
+    "オレンジシルバー",
+    "レッドゴールド",
+    "グリーンゴルド",
+    "チャートゴールド",
+    "ケイムラシルバー"
+   ],
+   "note": "ヘッドのみ（スクエア）。品番 JC-X60V/X80V/X10U/X12U/X15U/X20V。公式製品ページは見つからず、データは小売（FTO Yahoo店）のみ。全品在庫なしで、現行品かどうかは不明。",
+   "discontinued": true
+  },
+  {
+   "series": "炎月 タイガーバクバク ヘッド",
+   "url": "",
+   "material": "鉛",
+   "type": "遊動",
+   "weights": [
+    30,
+    45,
+    60,
+    80,
+    100,
+    120,
+    150,
+    200
+   ],
+   "colors": [
+    "オレンジゴールド",
+    "レッドゴールド",
+    "ドチャート",
+    "フラッシュオレンジ",
+    "フラッシュレッド",
+    "フラッシャーSP"
+   ],
+   "note": "旧製品の可能性が高い（公式の現行ページは見つからず、小売は在庫なしか処分扱い）。品番 EJ-5xxQ。データは小売（つり吉）から。",
+   "discontinued": true
+  },
+  {
+   "series": "炎月 フラットバクバク ヘッド",
+   "url": "",
+   "material": "鉛",
+   "type": "",
+   "weights": [
+    60,
+    80,
+    100,
+    120,
+    150,
+    180
+   ],
+   "colors": [
+    "オレンジゴールド",
+    "ドチャート",
+    "フラッシュオレンジ",
+    "フラッシュレッド",
+    "ゼブラフォール",
+    "アカキンゼブラフォール"
+   ],
+   "note": "旧製品の可能性が高い（公式の現行ページは見つからず）。品番 EJ-8xxR。フォールタイラバ専用。完成品の『炎月 フラットバクバク』（EJ-7xxR）は最終処分セール中で、全カラーは取得できず。データは小売（つり吉）から。",
+   "discontinued": true
+  }
+ ],
+ "ties": [
+  {
+   "series": "炎月 シングルカーリー",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000dpqj9qal.html",
+   "shape": "カーリー（シングル、先割れ）",
+   "colors": [
+    "アカキン",
+    "オレキン",
+    "グリーンラメ",
+    "レッドラメ",
+    "オレンジドット",
+    "ブラックラメ",
+    "ホロオレンジ",
+    "レッドゼブラ",
+    "グリーンゴールド",
+    "オレンジレッドラメ",
+    "ゼブラオレンジ"
+   ],
+   "note": "S(ED-R03W)/M(ED-R04W)/L(ED-R07Y、2025年追加)。3本入。11色はS/M/L共通（001〜011）。"
+  },
+  {
+   "series": "炎月 ダブルカーリー",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/parts/a155f00000dpqj7qal.html",
+   "shape": "カーリー（ダブル）",
+   "colors": [
+    "アカキン",
+    "オレキン",
+    "グリーンラメ",
+    "レッドラメ",
+    "オレンジドット",
+    "ブラックラメ",
+    "ホロオレンジ",
+    "レッドゼブラ",
+    "グリーンゴールド",
+    "オレンジレッドラメ",
+    "ゼブラオレンジ"
+   ],
+   "note": "S(ED-R05W)/M(ED-R06W)。11色はS/M共通。"
+  },
+  {
+   "series": "炎月 バタバタカーリー",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/parts/a155f00000en9fiqat.html",
+   "shape": "カーリー",
+   "colors": [
+    "アカキン",
+    "オレキン",
+    "グリーンラメ",
+    "レッドラメ",
+    "オレンジドット",
+    "ブラックラメ",
+    "ホロオレンジ",
+    "レッドゼブラ",
+    "グリーンゴールド",
+    "オレンジアカラメ",
+    "ゼブラオレンジ"
+   ],
+   "note": "ED-R08Y。新製品（バクバクTG フィネスと同時期）。リアクション狙い。010は小売では『オレンジアカラメ』（他シリーズの『オレンジレッドラメ』と同じ色の可能性あり、未確認）。"
+  },
+  {
+   "series": "炎月 ゲキアツカーリー",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/parts/a155f00000dpqadqa1.html",
+   "shape": "カーリー（肉厚1.0mm）",
+   "colors": [
+    "オレンジラメ",
+    "アカキン",
+    "チャートグロー",
+    "ゼブラオレンジ",
+    "アピールピンク",
+    "メイメツクロキン",
+    "レッドラメ",
+    "オレンジドット",
+    "ブラックラメ",
+    "ホロオレンジ",
+    "レッドゼブラ",
+    "グリーンゴールド",
+    "オレンジレッドラメ"
+   ],
+   "note": "ED-V01W。1本入。公式スペック表ではLサイズ表記、画像キャプションではS/M表記とあり、サイズは未確定。カラーは小売13品の和集合（001 オレンジラメ、002 アカキン、003 チャートグロー は公式で確認）。"
+  },
+  {
+   "series": "炎月 ストロングカーリー",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/parts/a155f00000c6da5qan.html",
+   "shape": "カーリー（幅広、135mm）",
+   "colors": [
+    "オレンジラメ",
+    "オレンジゴールド",
+    "レッドゴールド",
+    "グリーンゴールド",
+    "ブラックゴールド",
+    "チャートグロー",
+    "アピールレッド",
+    "アピールピンク",
+    "ゼブラレッド",
+    "ゼブラオレンジ",
+    "ゼブラグリパン"
+   ],
+   "note": "ED-X01U。135mm、5本入。001〜011。"
+  },
+  {
+   "series": "炎月 ミックスストレート",
+   "url": "",
+   "shape": "ストレート＋ゆるいカーリー（225mm）",
+   "colors": [
+    "オレンジラメ",
+    "オレンジゴールド",
+    "レッドゴールド",
+    "グリーンゴールド",
+    "ブラックゴールド",
+    "チャートグロー",
+    "アピールレッド",
+    "アピールピンク",
+    "ゼブラレッド",
+    "ゼブラオレンジ",
+    "ゼブラグリパン"
+   ],
+   "note": "ED-X02U。225mm。公式製品ページは見つからず（22AW新製品ページには掲載）。カラーは小売（FTO）から。小売の『ゼブラグリパ』は文字切れとみなし、ゼブラグリパンとした。"
+  },
+  {
+   "series": "炎月 ツインスクリューロング",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/parts/a155f00000c6da7qan.html",
+   "shape": "ツインカーリー（124mm）",
+   "colors": [
+    "オレンジラメ",
+    "オレンジゴールド",
+    "レッドゴールド",
+    "グリーンゴールド",
+    "ブラックゴールド",
+    "チャートグロー",
+    "アピールレッド",
+    "アピールピンク",
+    "ゼブラレッド",
+    "ゼブラオレンジ",
+    "ゼブラグリパン"
+   ],
+   "note": "ED-X03U。124mm。小売の品名には『オレンジゴルド』『グリンゴールド』『ブラックゴルド』とあるが、同じ色群の他シリーズの表記にそろえた。"
+  },
+  {
+   "series": "炎月 レスポンスカーリー",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/parts/a155f00000c6da8qan.html",
+   "shape": "カーリー（110mm）",
+   "colors": [
+    "オレンジラメ",
+    "オレンジゴールド",
+    "レッドゴールド",
+    "グリーンゴールド",
+    "ブラックゴールド",
+    "チャートグロー",
+    "アピールレッド",
+    "アピールピンク",
+    "ゼブラレッド",
+    "ゼブラオレンジ",
+    "ゼブラグリパン"
+   ],
+   "note": "ED-X04U。110mm。低活性・潮無し向け。"
+  },
+  {
+   "series": "炎月 イカタコ4",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/parts/a155f00000c6da3qan.html",
+   "shape": "イカタコ（触手系カーリー、130mm）",
+   "colors": [
+    "アピールオレンジ",
+    "オレンジゴールド",
+    "レッドゴールド",
+    "ブラックラメ",
+    "ピンクグローラメ",
+    "オレンジグローラメ",
+    "グリーンラメ",
+    "ケイムラレッドラメ",
+    "イソメグリパン",
+    "イソメパンプキン",
+    "アピールチャート",
+    "レッド/グロー",
+    "レッド/オレンジ",
+    "レッド/BLK"
+   ],
+   "note": "ED-V01U。130mm。001〜014（012〜014は追加色）。"
+  },
+  {
+   "series": "炎月 集魚ネクタイ イカタコカーリー",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/parts/a155f00000c5craqav.html",
+   "shape": "カーリー（触手系、71mm）",
+   "colors": [
+    "ケイムラレッドラメ",
+    "ケイムラオレンジゴールドラメ",
+    "グリーンラメ",
+    "アピールオレンジ",
+    "イソメグリパン",
+    "イソメパンプキン",
+    "アピールチャート",
+    "レッド/グロー",
+    "レッド/オレンジ",
+    "レッド/ＢＬＫ",
+    "オレンジゴールドラメ",
+    "レッド",
+    "ピンクグロー",
+    "オレンジグロー",
+    "ブラックレッド"
+   ],
+   "note": "EW-004N。71mm、3本入。001 ケイムラレッドラメ・019 レッド/ＢＬＫは公式スペック表で確認。ほかの色は小売（つり吉／FTO）から。小売には旧T/Jカラー（オレンジ、チャートグロー、ウォーターメロンペッパー、オレンジエビ、金イカナゴ、大羽イワシ、カタクチ、コーラ、ケイムラ、各アソート）もあるが、大半が在庫なし。どれが現行カラーかは未確定。"
+  },
+  {
+   "series": "炎月 集魚ネクタイ ビビットカーリー",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/parts/a155f00000c5crzqaf.html",
+   "shape": "カーリー（55mm）",
+   "colors": [
+    "ケイムラレッドラメ",
+    "ケイムラオレGラメ",
+    "グリーンラメ",
+    "アピールオレンジ",
+    "イソメグリパン",
+    "イソメパンプキン",
+    "アピールチャート",
+    "オレンジゴールドラメ",
+    "ピンクグロー",
+    "ブラックレッド"
+   ],
+   "note": "EW-006P。55mm。小売（FTO）から取得。現行の番号付きカラー（001,006,007,008,010,011,012）と在庫ありの旧Tカラー（02T,11T,16T）の和集合。在庫なしの旧カラー（オレンジ、レッド、チャートグロー、金イカナゴ、コーラ、オレンジグロー、ケイムラ、各Jアソート）は除外。未確定。"
+  },
+  {
+   "series": "炎月 集魚ネクタイ イイダコベイビー",
+   "url": "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/parts/a155f00000c5cttqav.html",
+   "shape": "イイダコ型",
+   "colors": [
+    "オレンジゴールドラメ",
+    "レッド",
+    "チャートグロー",
+    "ピンクグロー",
+    "カタクチ",
+    "オレンジグロー",
+    "イカグロー",
+    "グリーンラメ"
+   ],
+   "note": "EW-008Q。小売（FTO）から取得（02T,03T,04T,11T,13T,15T,19T,20T）。旧製品の可能性あり（つり吉では在庫処分扱い、FTOでも5色が在庫なし）。",
+   "discontinued": true
+  }
+ ],
+ "skirts": [
+  {
+   "series": "炎月 バクバクスカート",
+   "url": "",
+   "colors": [
+    "ウロコオレンジ",
+    "ウロコレッド",
+    "ゴールドラメ",
+    "グローシャイナ－",
+    "イカクリア",
+    "ベイト",
+    "ウロコグリーン",
+    "チャート",
+    "ハイオレンジ",
+    "ハイグリーン"
+   ],
+   "note": "旧製品（つり吉で『最終処分セール』）。公式の現行ページは見つからず。現行の別売スカートは確認できず（スカートは完成品に付属）。",
+   "discontinued": true
+  }
+ ],
+ "sources": [
+  "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000cr1fmqa1.html (403で取得不可。タイトルとスペック表の断片は検索インデックスから)",
+  "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/tairubber/a155f00000en9fmqat.html",
+  "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/tairubber/a155f00000cr5gwqad.html",
+  "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000c5ctcqav_p.html",
+  "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000c5cy1qaf_p.html",
+  "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000c5cy7qaf_p.html",
+  "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000c6dciqa3_m.html",
+  "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000c6dcxqa3_m.html",
+  "https://fish.shimano.com/ja-JP/product/lure/offshorelure/tairubber_inchiku/a155f00000c6qvnqan_m.html",
+  "https://fish.shimano.com/ja-JP/product/lure/tairubber_etc/parts/ (dpqj9qal, dpqj7qal, en9fiqat, dpqadqa1, c6da5qan, c6da7qan, c6da8qan, c6da3qan, c5craqav, c5crzqaf, c5cttqav)",
+  "https://store.shopping.yahoo.co.jp/yfto2/search.html?p=<品番> (釣具のFTO Yahoo店。品名にメーカーのカラー番号とカラー名を記載)",
+  "https://www.tsurikichi-shop.com/product/18247 (バクバクTG)",
+  "https://www.tsurikichi-shop.com/product/18248 (バクバクプラス)",
+  "https://www.tsurikichi-shop.com/product/18018 (23タイガーバクバク)",
+  "https://www.tsurikichi-shop.com/product/16446 (ドテラバクバク)",
+  "https://www.tsurikichi-shop.com/product/16459 (ドテラバクバクヘッド)",
+  "https://www.tsurikichi-shop.com/product/13510 (タイガーバクバク ヘッド)",
+  "https://www.tsurikichi-shop.com/product/13445 (フラットバクバク ヘッド)",
+  "https://www.tsurikichi-shop.com/product/18252 (イカタコカーリー)",
+  "https://www.tsurikichi-shop.com/product/18251 (イカタコ4)",
+  "https://www.tsurikichi-shop.com/product/13512 (バクバクスカート)"
+ ]
+}

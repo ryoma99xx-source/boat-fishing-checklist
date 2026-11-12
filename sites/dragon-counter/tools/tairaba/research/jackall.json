@@ -1,0 +1,784 @@
+{
+ "maker": "ジャッカル",
+ "heads": [
+  {
+   "series": "鉛式ビンビン玉スライドヘッドNEO",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/namarishiki-binbindama-slide-head-neo/",
+   "material": "鉛",
+   "type": "遊動(スライド)",
+   "weights": [
+    156,
+    195,
+    240,
+    300,
+    355,
+    410
+   ],
+   "colors": [
+    "グリーンゴールド",
+    "蛍光オレンジ",
+    "オレンジゴールド",
+    "レッドゴールド",
+    "ホットチャート",
+    "シマシマグローパール",
+    "蛍光レッドブルーグロー",
+    "ディープブラックUV"
+   ],
+   "note": "ヘッド単体(ネクタイ&フックセット別売)。PTFEタフネスパイプ・パイプストッパー搭載。2026年9月発売の新製品(2026 NEW)。"
+  },
+  {
+   "series": "鉛式ビンビン玉スライドヘッド",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/namarishiki-binbindama-slidehead/",
+   "material": "鉛",
+   "type": "遊動(スライド)",
+   "weights": [
+    45,
+    60,
+    80,
+    100,
+    120
+   ],
+   "colors": [
+    "グリーンゴールド",
+    "蛍光オレンジ",
+    "オレンジゴールド",
+    "レッドゴールド",
+    "プレーン（無塗装）",
+    "シマシマブラックレッド",
+    "蛍光レッド",
+    "蛍光グリーンゴールド"
+   ],
+   "note": "ヘッド単体(ネクタイ&フックセット別売)。PTFEタフネスパイプ搭載。"
+  },
+  {
+   "series": "鉛式ビンビン玉スライド",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/pb-binbindama-slide/",
+   "material": "鉛",
+   "type": "遊動(スライド)",
+   "weights": [
+    45,
+    60,
+    80,
+    100,
+    120
+   ],
+   "colors": [
+    "ｵﾚﾝｼﾞｺﾞｰﾙﾄﾞ/ｼﾏｵﾚｶｰﾘｰT+",
+    "ｵﾚﾝｼﾞｺﾞｰﾙﾄﾞ/ｲｶﾅｺﾞｶｰﾘｰT+",
+    "ﾚｯﾄﾞｺﾞｰﾙﾄﾞ/ｴﾋﾞｵﾚｶｰﾘｰT+",
+    "ﾚｯﾄﾞﾚｯﾄﾞ/ｼﾏﾚｯﾄﾞT+",
+    "ﾋﾟﾝｸｺﾞｰﾙﾄﾞ/ﾚｯﾄﾞｺﾞｰﾙﾄﾞT+",
+    "ﾚｯﾄﾞｵﾚﾝｼﾞ/ｵﾚﾝｼﾞｺﾞｰﾙﾄﾞT+",
+    "ｵﾚﾝｼﾞｵﾚﾝｼﾞ/真っ黒ﾚｯﾄﾞT+",
+    "ｸﾞﾘｰﾝｺﾞｰﾙﾄﾞ/蛍光ｸﾞﾘｰﾝT+"
+   ],
+   "note": "完成品(T+ラバーネクタイ&スカート標準装備)。カラー名は「ヘッド/ネクタイT+」表記。上3色はフィネスカーリー着用、下5色はフィネスストレート着用。"
+  },
+  {
+   "series": "爆流 鉛式ビンビン玉スライド",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/bakuryu-pb-binbindama-slide/",
+   "material": "鉛",
+   "type": "遊動(スライド)",
+   "weights": [
+    45,
+    60,
+    80,
+    100,
+    130,
+    160,
+    200,
+    250
+   ],
+   "colors": [
+    "レッドゴールド／エビオレＴ＋",
+    "オレンジゴールド／蛍光オレンジＴ＋",
+    "レッドオレンジ／シマオレＴ＋",
+    "スパークレッド／レッドゴールドＴ＋",
+    "ホットオレンジ／シマレッドＴ＋",
+    "ラメグリキン／蛍光グリーンＴ＋",
+    "チャートグローゴールド／超ケイムラＴ＋",
+    "エビオレンジ／エビオレＴ＋",
+    "メッキゴールド／イカナゴＴ＋",
+    "ラメオレキン／エビオレＴ＋",
+    "ホットチャート／イカグローＴ＋",
+    "ブラックレッド／真っ黒レッドＴ＋",
+    "メタルレッド／レッドゴールドＴ＋",
+    "メタルグリーン／蛍光グリーンＴ＋",
+    "ディープブラック／真っ黒レッドＴ＋",
+    "シロアマグロー／イカグローＴ＋"
+   ],
+   "note": "完成品(T+ラバーネクタイ&スカート、バックファイヤーキャップ、PTFEチューブ標準装備)。爆流ヘッド(流線形)。カラー名は「ヘッド/ネクタイＴ＋」表記。カラー別設定(公式カラーチャート注記): スパークレッド/レッドゴールドＴ＋・メッキゴールド/イカナゴＴ＋・ラメオレキン/エビオレＴ＋・ホットチャート/イカグローＴ＋・ブラックレッド/真っ黒レッドＴ＋は45・60gには無し; チャートグローゴールド/超ケイムラＴ＋・エビオレンジ/エビオレＴ＋は45・60gのみ; メタルレッド/レッドゴールドＴ＋・メタルグリーン/蛍光グリーンＴ＋・ディープブラック/真っ黒レッドＴ＋・シロアマグロー/イカグローＴ＋は160・200・250gのみ。"
+  },
+  {
+   "series": "鉛式ビンビン玉スライド 無双カスタム",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/namarishiki-binbindama-slide-muso-custom/",
+   "material": "鉛",
+   "type": "遊動(スライド)",
+   "weights": [
+    45,
+    60,
+    80,
+    100,
+    120
+   ],
+   "colors": [
+    "F351 蛍光ｵﾚﾝｼﾞ/ｵﾚﾝｼﾞｾﾞﾌﾞﾗﾏｽﾀｰT+",
+    "F352 ﾌﾞﾗｯｸﾚｯﾄﾞ/ｼﾏﾚｯﾄﾞﾏｽﾀｰT+"
+   ],
+   "note": "完成品(ビンビンフック無双+マスターカーリー(T+ラバー)標準装備、PTFEタフネスパイプ)。カラー名は「ヘッド/ネクタイT+」表記(半角カナ)。"
+  },
+  {
+   "series": "TGビンビン玉スライドヘッド NEO",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/tg_binbin_sl_neo/",
+   "material": "TG",
+   "type": "遊動(スライド)",
+   "weights": [
+    30,
+    45,
+    60,
+    80,
+    100,
+    120,
+    156,
+    195,
+    234
+   ],
+   "colors": [
+    "F101蛍光オレンジ",
+    "F288 グリーンゴールドNEO",
+    "F289 オレンジゴールドNEO",
+    "F290 レッドゴールドNEO",
+    "F291 ホットチャート",
+    "F292 シマシマグローパール",
+    "F293 シマシマブラックレッド",
+    "F-0267 ﾌﾟﾚｰﾝ（無塗装）"
+   ],
+   "note": "ヘッド単体(ネクタイ&フックセット別売)。タングステン。PTFEタフネスパイプ搭載。 カラーにより設定ウエイトが異なる(公式JAN表より): F291 ホットチャート: 30,45,60,80,100,120,156g; F292 シマシマグローパール: 30,45,60,80,100,120,156g; F293 シマシマブラックレッド: 30,45,60,80,100,120,156g。"
+  },
+  {
+   "series": "TGビンビン玉スライド雷流ヘッド NEO",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/tg_binbin_sl_rairyu_neo/",
+   "material": "TG",
+   "type": "遊動(スライド)",
+   "weights": [
+    30,
+    45,
+    60,
+    80,
+    100,
+    120,
+    156
+   ],
+   "colors": [
+    "F101蛍光オレンジ",
+    "F267 プレーン（無塗装）",
+    "F288 グリーンゴールドNEO",
+    "F289 オレンジゴールドNEO",
+    "F290 レッドゴールドNEO",
+    "F291 ホットチャート",
+    "F292 シマシマグローパール",
+    "F293 シマシマブラックレッド"
+   ],
+   "note": "ヘッド単体(ネクタイ&フックセット別売)。タングステン。雷流ヘッド形状。 カラーにより設定ウエイトが異なる(公式JAN表より): F267 プレーン（無塗装）: 45,60,80,100,120,156g。"
+  },
+  {
+   "series": "TGビンビンスイッチ",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/tg_binbin_switch/",
+   "material": "TG",
+   "type": "遊動(スイッチシステム/スライドパーツ)",
+   "weights": [
+    35,
+    45,
+    60,
+    80,
+    100,
+    120,
+    150
+   ],
+   "colors": [
+    "F-0353 スイッチオレンジ",
+    "F-0354 ディープルビー",
+    "F-0155 グリーンゴールド",
+    "F-0068 オレンジゴールド",
+    "F-0069 レッドゴールド",
+    "F-0267 プレーン（無塗装）",
+    "F-0280 ブライトオレンジ",
+    "F-0281 ブライトイエロー",
+    "F-0282 ケイムラサファイア",
+    "F-0283 グローパール"
+   ],
+   "note": "完成品(ネクタイ+フック付き。専用カーリーネクタイ(ワイドタイプ)標準装備)。ヘッドとネクタイ+フックが並列するビンビンスイッチ構造。"
+  },
+  {
+   "series": "TGビンビンスイッチ ヘッド",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/tg_binbin_switch_head/",
+   "material": "TG",
+   "type": "遊動(スイッチシステム/スライドパーツ)",
+   "weights": [
+    35,
+    45,
+    60,
+    80,
+    100,
+    120,
+    150
+   ],
+   "colors": [
+    "F-0353 スイッチオレンジ",
+    "F-0354 ディープルビー",
+    "F-0155 グリーンゴールド",
+    "F-0068 オレンジゴールド",
+    "F-0069 レッドゴールド",
+    "F-0267 プレーン（無塗装）",
+    "F-0280 ブライトオレンジ",
+    "F-0281 ブライトイエロー",
+    "F-0282 ケイムラサファイア",
+    "F-0283 グローパール"
+   ],
+   "note": "ヘッド単体(セット内容: TG製ヘッド&スプリットリング&スライドパーツ。フックセット・ネクタイ別売)。"
+  },
+  {
+   "series": "鉛式ビンビンスイッチ",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/namarishiki_binbin_switch/",
+   "material": "鉛",
+   "type": "遊動(スイッチシステム/スライドパーツ)",
+   "weights": [
+    45,
+    60,
+    80,
+    100,
+    120
+   ],
+   "colors": [
+    "F-0353 スイッチオレンジ",
+    "F-0354 ディープルビー",
+    "F-0155 グリーンゴールド",
+    "F-0068 オレンジゴールド",
+    "F-0069 レッドゴールド",
+    "F-0280 ブライトオレンジ",
+    "F-0281 ブライトイエロー",
+    "F-0283 グローパール"
+   ],
+   "note": "完成品(デュアルカーリーネクタイ標準装備、スライドパーツLサイズ)。"
+  },
+  {
+   "series": "TGビンビンスイッチ キャンディ",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/tg-binbin-switch-candy/",
+   "material": "TG",
+   "type": "遊動(スイッチシステム/スライドパーツ)",
+   "weights": [
+    35,
+    45,
+    60,
+    80,
+    100,
+    120,
+    150,
+    200,
+    250
+   ],
+   "colors": [
+    "F-0155 ｸﾞﾘｰﾝｺﾞｰﾙﾄﾞ",
+    "F-0068 ｵﾚﾝｼﾞｺﾞｰﾙﾄﾞ",
+    "F-0069 ﾚｯﾄﾞｺﾞｰﾙﾄﾞ",
+    "F-0280 ﾌﾞﾗｲﾄｵﾚﾝｼﾞ",
+    "F-0281 ﾌﾞﾗｲﾄｲｴﾛｰ",
+    "F-0282 ｹｲﾑﾗｻﾌｧｲｱ",
+    "F-0283 ｸﾞﾛｰﾊﾟｰﾙ",
+    "F-0314 ｵﾚﾝｼﾞﾀｲｶﾞｰ"
+   ],
+   "note": "完成品。35g/45gはマイクロカーリーワイド、60g~250gはマスターカーリーを標準装備。カラー名は半角カナ・品番付き表記。"
+  },
+  {
+   "series": "TGビンビンスイッチ アマダイSpecial",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/tg-binbin-switch-amadai-special/",
+   "material": "TG",
+   "type": "遊動(スイッチシステム/スライドパーツ)",
+   "weights": [
+    60,
+    80,
+    100,
+    120,
+    150
+   ],
+   "colors": [
+    "アマダイチャート",
+    "グローハイアピール",
+    "ウルトラケイムラ"
+   ],
+   "note": "完成品。アマダイ向け特化モデル(ケイムラティンセル標準装備)。"
+  }
+ ],
+ "ties": [
+  {
+   "series": "ビンビン玉 T+ネクタイ / カーリー",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/2019-01-30-17361/",
+   "shape": "カーリー",
+   "colors": [
+    "蛍光オレンジ",
+    "蛍光グリーン",
+    "レッドゴールドフレーク",
+    "オレンジゴールド",
+    "イカナゴールド",
+    "イカグロー",
+    "アミアミレッドフレーク",
+    "シマシマレッド",
+    "シマシマオレンジ",
+    "シマシマエビオレンジ",
+    "真っ黒レッドフレーク",
+    "シラスクリアー",
+    "シマシマグリパンゴールド",
+    "シマシマ超ケイムラ偏光パール"
+   ],
+   "note": "T+ラバー。3本入。"
+  },
+  {
+   "series": "ビンビン玉 T+ネクタイ / フィネスカーリー",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/2019-01-30-17393/",
+   "shape": "フィネスカーリー",
+   "colors": [
+    "蛍光オレンジ",
+    "蛍光グリーン",
+    "レッドゴールドフレーク",
+    "オレンジゴールドフレーク",
+    "イカナゴールド",
+    "イカグロー",
+    "シマシマオレンジ",
+    "シマシマエビオレンジ",
+    "真っ黒レッドフレーク",
+    "シラスクリアー",
+    "シマシマレッド",
+    "シマシマグリパンゴールド",
+    "シマシマ超ケイムラ偏光パール",
+    "カブラグリーン"
+   ],
+   "note": "T+ラバー。"
+  },
+  {
+   "series": "ビンビン玉Ｔ＋ネクタイ セミカーリー",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/2019-01-30-17395/",
+   "shape": "セミカーリー",
+   "colors": [
+    "蛍光オレンジ",
+    "蛍光グリーン",
+    "レッドゴールドフレーク",
+    "オレンジゴールドフレーク",
+    "イカナゴールド",
+    "イカグロー",
+    "エビオレンジ",
+    "シマシマオレンジ",
+    "シマシマエビオレンジ",
+    "真っ黒レッドフレーク",
+    "シマシマレッド",
+    "シマシマグリパンゴールド",
+    "シマシマ超ケイムラ偏光パール",
+    "アミアミレッドフレーク"
+   ],
+   "note": "T+ラバー。"
+  },
+  {
+   "series": "ビンビン玉 T+ネクタイ / フィネスストレート",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/2019-01-30-17373/",
+   "shape": "フィネスストレート(ストレート)",
+   "colors": [
+    "蛍光オレンジ",
+    "蛍光グリーン",
+    "レッドゴールドフレーク",
+    "イカナゴールド",
+    "イカグロー",
+    "オレンジゴールドフレーク",
+    "シマシマオレンジ",
+    "シマシマエビオレンジ",
+    "真っ黒レッドフレーク",
+    "シマシマレッド",
+    "シマシマグリパンゴールド",
+    "シマシマ超ケイムラ偏光パール"
+   ],
+   "note": "T+ラバー。"
+  },
+  {
+   "series": "ビンビン玉 T+ネクタイ フレアフィネス",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/tpn_ff/",
+   "shape": "フレアフィネス",
+   "colors": [
+    "蛍光オレンジ（F-0101）",
+    "蛍光グリーン（F-0102 ）",
+    "レッドゴールドフレーク\b（F-0005 ）",
+    "オレンジゴールドフレーク（F-0006 ）",
+    "イカナゴールド（F-0107）",
+    "シマシマオレンジ（F-0118 ）",
+    "コーラオレンジフレーク（F-0114 ）",
+    "シマシマレッド（F-0187 ）",
+    "シークレットオレンジブラックフレーク（F-0228 ）",
+    "真っ黒ゴールドフレーク（F-0287 ）",
+    "ケイムラシマシマオレンジ（F-0286 ）",
+    "ケイムラシマシマレッドオレンジ（F-0285 ）",
+    "シマシマエビオレマジック（F-0284 ）"
+   ],
+   "note": "T+ラバー。3本入。カラー名に品番(F-xxxx)併記。"
+  },
+  {
+   "series": "ビンビン玉 T+ネクタイ マスターカーリーSTRONG",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binibin-mastercurly-strong/",
+   "shape": "マスターカーリー(STRONG)",
+   "colors": [
+    "オレンジゴールド",
+    "エビチリ",
+    "スケスケオレンジ",
+    "シマシマレッド",
+    "エビオレゴールド",
+    "シマシマオレンジゴールドラメ",
+    "シマシマブラウンラメ",
+    "ブライトオレンジゼブラ",
+    "リバーシブルクロキン",
+    "バロットチャート"
+   ],
+   "note": "2本入。ページ上部の表記はSIZE 8/COLOR 8だがカラーチャートは10色。「バロットチャート」は公式表記のまま(他製品では「パロットチャート」)。"
+  },
+  {
+   "series": "ビンビン玉カスタムネクタイ カーリー",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbindama-custom-necktie-curly/",
+   "shape": "カーリー",
+   "colors": [
+    "オレンジゴールド",
+    "エビオレゴールド",
+    "シマシマレッド",
+    "シマシマグロー",
+    "シマシマオレンジゴールドラメ",
+    "ブライトオレンジゼブラ",
+    "ブライトオレンジドット",
+    "リバーシブルクロキン",
+    "パロットチャート",
+    "エビチリ"
+   ],
+   "note": "3本入。"
+  },
+  {
+   "series": "ビンビン玉カスタムネクタイ ファインフィネス",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbindama-custom-necktie-fine-finesse/",
+   "shape": "ファインフィネス",
+   "colors": [
+    "オレンジゴールド",
+    "エビオレゴールド",
+    "シマシマレッド",
+    "シマシマグロー",
+    "ブライトオレンジ",
+    "シマシマオレンジゴールドラメ",
+    "ブライトオレンジゼブラ",
+    "リバーシブルクロキン",
+    "パロットチャート",
+    "H&Hブライトオレンジ/クリアレッド"
+   ],
+   "note": "3本入。"
+  },
+  {
+   "series": "ビンビン玉カスタムネクタイ マスターカーリーミディアム",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbindama-custom-necktie-master-curly-medium/",
+   "shape": "マスターカーリー(ミディアム)",
+   "colors": [
+    "F-0379 アミオレ",
+    "F-0380 ギミックオレンジ",
+    "F-0381 レッドグローオレンジ",
+    "F-0382 マスターオレンジ",
+    "F-0383 リバーシブルオレクロ",
+    "F-0384 オレッジエッジブラック",
+    "オレンジゴールド",
+    "エビオレゴールド",
+    "シマシマレッド",
+    "シマシマオレンジゴールドラメ",
+    "ブライトオレンジゼブラ",
+    "ブライトオレンジドット",
+    "リバーシブルクロキン",
+    "リバーシブルアカオレ",
+    "パロットチャート",
+    "エビチリ"
+   ],
+   "note": "2本入。「オレッジエッジブラック」は公式表記のまま(同シリーズ他製品では「オレンジエッジブラック」)。"
+  },
+  {
+   "series": "ビンビン玉カスタムネクタイ キングカーリー",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbin-dama-custom-necktie-king-curly/",
+   "shape": "キングカーリー",
+   "colors": [
+    "オレンジゴールド",
+    "エビオレゴールド",
+    "シマシマレッド",
+    "シマシマオレンジゴールドラメ",
+    "ブライトオレンジゼブラ",
+    "ブライトオレンジドット",
+    "リバーシブルクロキン",
+    "リバーシブルアカオレ",
+    "パロットチャート",
+    "エビチリ"
+   ],
+   "note": "2本入。ページ上部の表記はCOLOR 14だがカラーチャートは10色。"
+  },
+  {
+   "series": "ビンビンスイッチT+ネクタイ マスターカーリー",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbin-switch-mastercurly/",
+   "shape": "マスターカーリー",
+   "colors": [
+    "F-0379 アミオレ",
+    "F-0380 ギミックオレンジ",
+    "F-0381 レッドグローオレンジ",
+    "F-0382 マスターオレンジ",
+    "F-0383 リバーシブルオレクロ",
+    "F-0384 オレンジエッジブラック",
+    "F0068 オレンジゴールド",
+    "F0113 エビオレゴールド",
+    "F0187 シマシマレッド",
+    "F0216 シマシマグロー",
+    "F0280 ブライトオレンジ",
+    "F0324 シマシマオレンジゴールドラメ",
+    "F0325 ブライトオレンジゼブラ",
+    "F0326 ブライトオレンジドット",
+    "F0327 シマシマ蛍光グリーン",
+    "F0328 リバーシブルクロキン",
+    "F0329 リバーシブルアカオレ",
+    "F0341 ゴージャスオレンジ"
+   ],
+   "note": "ビンビンスイッチ用。3本入。ページ上部の表記はCOLOR 10だがカラーチャートは18色。"
+  },
+  {
+   "series": "ビンビンスイッチT+ネクタイ デュアルカーリー",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/dualcurly_1/",
+   "shape": "デュアルカーリー",
+   "colors": [
+    "H&H ｼﾏｼﾏｵﾚﾝｼﾞ/ｺｰﾗ",
+    "H&H ｼﾏｼﾏﾌﾞﾗｲﾄｵﾚﾝｼﾞ/ｼﾏｼﾏ蛍光ｸﾞﾘｰﾝ",
+    "H&H ﾌﾞﾗｲﾄｵﾚﾝｼﾞ/ｼﾏｼﾏﾚｯﾄﾞ",
+    "ｶﾌﾞｷﾌﾞﾗｲﾄｵﾚﾝｼﾞ",
+    "ｶﾌﾞｷｸﾞﾘｰﾝ",
+    "ｶﾌﾞｷｼﾙﾊﾞｰ",
+    "蛍光グリーン",
+    "オレンジゴールド",
+    "シマシマオレンジ",
+    "シマシマレッド",
+    "ブライトオレンジ",
+    "ブラックゴールド",
+    "エビオレ",
+    "クリアレッド"
+   ],
+   "note": "ビンビンスイッチ用。3本入。通常・H&Hシリーズ・カブキシリーズの3種(価格差あり)。"
+  },
+  {
+   "series": "ビンビンスイッチT+ネクタイ マイクロカーリー ワイド/スリム",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbinswitch_mcc/",
+   "shape": "マイクロカーリー(ワイド/スリム)",
+   "colors": [
+    "MEIMETSU BLACK GOLD/リバーシブルクロキン（ワイド）",
+    "MEIMETSU BRIGHT ORANGE/リバーシブルアカオレ（ワイド）",
+    "R-SHIMASHIMA BRIGHT ORANGE/シマシマブライトオレンジ（ワイド）",
+    "FLUORESCENCE GREEN(WIDE)/蛍光グリーン(ワイド)",
+    "ORANGE GOLD(WIDE)/オレンジゴールド(ワイド)",
+    "COLA(WIDE)/コーラ(ワイド)",
+    "STRIPE ORANGE(WIDE)/シマシマオレンジ(ワイド)",
+    "STRIPE RED(WIDE)/シマシマレッド(ワイド)",
+    "STRIPE GLOW(WIDE)/シマシマグロー(ワイド)",
+    "BRIGHT ORANGE(WIDE)/ブライトオレンジ(ワイド)",
+    "CLEAR RED(WIDE)/クリアレッド(ワイド)",
+    "BLACK GOLD(WIDE)/ブラックゴールド(ワイド)",
+    "EBI ORANGE(WIDE)/エビオレ(ワイド)",
+    "UV KEIMURA CLEAR(WIDE)/ケイムラクリアー(ワイド)",
+    "FLUORESCENCE GREEN(SLIM)/蛍光グリーン(スリム)",
+    "ORANGE GOLD(SLIM)/オレンジゴールド(スリム)",
+    "COLA(SLIM)/コーラ(スリム)",
+    "STRIPE ORANGE(SLIM)/シマシマオレンジ(スリム)",
+    "STRIPE RED(SLIM)/シマシマレッド(スリム)",
+    "STRIPE GLOW(SLIM)/シマシマグロー(スリム)",
+    "BRIGHT ORANGE(SLIM)/ブライトオレンジ(スリム)",
+    "CLEAR RED(SLIM)/クリアレッド(スリム)",
+    "BLACK GOLD(SLIM)/ブラックゴールド(スリム)",
+    "EBI ORANGE(SLIM)/エビオレ(スリム)",
+    "UV KEIMURA CLEAR(SLIM)/ケイムラクリアー(スリム)"
+   ],
+   "note": "ビンビンスイッチ用。4本入。ワイド14色・スリム11色(カラー名に(ワイド)/(スリム)を含む公式表記)。"
+  },
+  {
+   "series": "ビンビンワームネクタイ カールフィネス",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbinworm_tie_curlfinesse/",
+   "shape": "カールフィネス(ワーム素材)",
+   "colors": [
+    "GLOW ORANGE / グローオレンジ",
+    "RED GOLD FLAKE/ レッドゴールドフレーク",
+    "ORANGE GOLD FLAKE / オレンジゴールドフレーク",
+    "SHRIMP ORANGE / エビオレンジ",
+    "BLACK RED FLAKE / 真っ黒レッドフレーク",
+    "SECRET ORANGE BLACK FLAKE / シークレットオレンジブラックフレーク",
+    "UV IKA PEARL / 超ケイムラ イカパール",
+    "DARK GREEN / ダークグリーン"
+   ],
+   "note": "ワームネクタイ。"
+  },
+  {
+   "series": "ビンビンワームネクタイ ツインテール",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbinworm_tie_twintail/",
+   "shape": "ツインテール(ワーム素材)",
+   "colors": [
+    "GLOW ORANGE / グローオレンジ",
+    "RED GOLD FLAKE/ レッドゴールドフレーク",
+    "ORANGE GOLD FLAKE / オレンジゴールドフレーク",
+    "SHRIMP ORANGE / エビオレンジ",
+    "BLACK RED FLAKE / 真っ黒レッドフレーク",
+    "SECRET ORANGE BLACK FLAKE / シークレットオレンジブラックフレーク",
+    "UV IKA PEARL / 超ケイムラ イカパール",
+    "DARK GREEN / ダークグリーン"
+   ],
+   "note": "ワームネクタイ。"
+  },
+  {
+   "series": "ビンビンフック 無双 ネクタイフックセット",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbin-hook-muso-necktie-hook-set/",
+   "shape": "マスターカーリー(ネクタイ+フック替えユニット)",
+   "colors": [
+    "ｼﾏｼﾏﾚｯﾄﾞ（2本鈎）",
+    "ｼﾏｼﾏｵﾚﾝｼﾞｺﾞｰﾙﾄﾞﾗﾒ（2本鈎）",
+    "ﾌﾞﾗｲﾄｵﾚﾝｼﾞｾﾞﾌﾞﾗ（2本鈎）",
+    "ｽｹｽｹｵﾚﾝｼﾞ（2本鈎）",
+    "ｼﾏｼﾏﾌﾞﾗｳﾝﾗﾒ（2本鈎）",
+    "ﾊﾟﾛｯﾄﾁｬｰﾄ（2本鈎）",
+    "ｼﾏｼﾏﾚｯﾄﾞ（3本鈎）",
+    "ｼﾏｼﾏｵﾚﾝｼﾞｺﾞｰﾙﾄﾞﾗﾒ（3本鈎）",
+    "ﾌﾞﾗｲﾄｵﾚﾝｼﾞｾﾞﾌﾞﾗ（3本鈎）",
+    "ｽｹｽｹｵﾚﾝｼﾞ（3本鈎）",
+    "ｼﾏｼﾏﾌﾞﾗｳﾝﾗﾒ（3本鈎）",
+    "ﾊﾟﾛｯﾄﾁｬｰﾄ（3本鈎）"
+   ],
+   "note": "ビンビンスイッチT+ネクタイ マスターカーリー+ビンビンフック無双(#8)。2本鈎/3本鈎。カラー名に(2本鈎)/(3本鈎)を含む公式表記。2024年4月発売。"
+  },
+  {
+   "series": "乱舞ビンビンスイッチ スペアラバーフックセット",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbinswitch_hook_assy/",
+   "shape": "ネクタイ(形状記載なし)+フック替えユニット",
+   "colors": [
+    "オレンジ&レッド/シマシマセット",
+    "オレンジ&レッドセット",
+    "オレンジ&ブラック/ゴールドセット",
+    "ケイムラ&グローセット",
+    "エビオレ&コーラセット"
+   ],
+   "note": "乱舞ビンビンスイッチ スペアラバーフックセット。T+ラバー、2色アソート。#9/#9・#10/#10・段差#10/#9。"
+  },
+  {
+   "series": "ビンビンスイッチ キャンディ スペアラバーフックセット",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbin-switch-candy-spare-rubber-hook-set/",
+   "shape": "マスターカーリー(ネクタイ+フック替えユニット)",
+   "colors": [
+    "ｵﾚﾝｼﾞｺﾞｰﾙﾄﾞ(SHORT）",
+    "ｴﾋﾞｵﾚｺﾞｰﾙﾄﾞ(SHORT）",
+    "ｼﾏｼﾏﾚｯﾄﾞ(SHORT）",
+    "ﾌﾞﾗｲﾄｵﾚﾝｼﾞ(SHORT）",
+    "ｼﾏｼﾏｵﾚﾝｼﾞｺﾞｰﾙﾄﾞﾗﾒ(SHORT）",
+    "ｼﾏｼﾏ蛍光ｸﾞﾘｰﾝ(SHORT）",
+    "ｵﾚﾝｼﾞｺﾞｰﾙﾄﾞ（LONG）",
+    "ｴﾋﾞｵﾚｺﾞｰﾙﾄﾞ（LONG）",
+    "ｼﾏｼﾏﾚｯﾄﾞ（LONG）",
+    "ﾌﾞﾗｲﾄｵﾚﾝｼﾞ（LONG）",
+    "ｼﾏｼﾏｵﾚﾝｼﾞｺﾞｰﾙﾄﾞﾗﾒ（LONG）",
+    "ｼﾏｼﾏ蛍光ｸﾞﾘｰﾝ（LONG）"
+   ],
+   "note": "TGビンビンスイッチ キャンディ専用。ビンビンフック乱舞#10/9。SHORT/LONG(カラー名に含む公式表記)。"
+  },
+  {
+   "series": "鉛式ビンビンスイッチ スペアラバーフックセット",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/namarishiki-binbin-switch-spare-rubber-hook-setrubber-hook-set/",
+   "shape": "デュアルカーリー(ネクタイ+フック替えユニット)",
+   "colors": [
+    "蛍光ｸﾞﾘｰﾝ",
+    "ｵﾚﾝｼﾞｺﾞｰﾙﾄﾞ",
+    "ﾌﾞﾗｲﾄｵﾚﾝｼﾞ",
+    "ｸﾘｱﾚｯﾄﾞ",
+    "ﾌﾞﾗｯｸｺﾞｰﾙﾄﾞ",
+    "ｴﾋﾞｵﾚ"
+   ],
+   "note": "鉛式ビンビンスイッチ専用。ビンビンフック乱舞#11/10。2024年4月発売。"
+  }
+ ],
+ "skirts": [
+  {
+   "series": "ビンビン玉Ｔ＋スカート",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbindama-tskirt/",
+   "colors": [
+    "レッドゴールドフレーク",
+    "超ケイムラ　偏光パール",
+    "シマシマオレンジ",
+    "シマシマグリーン",
+    "真っ黒レッドフレーク",
+    "シマシマイカナゴールド",
+    "シマシマレッドオレンジ",
+    "シマシマグロー"
+   ],
+   "note": "T+ラバー。3本入。"
+  },
+  {
+   "series": "ビンビン玉カスタムスカート",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbindama-custom-skirt/",
+   "colors": [
+    "ブライトオレンジ",
+    "ブライトオレンジゼブラ",
+    "ケイムラオレンジゼブラゴールドラメ",
+    "ケイムラレッドゼブラ",
+    "ゴールドゼブラ",
+    "ケイムラパール",
+    "シマシマケイムラ",
+    "グローゼブラ"
+   ],
+   "note": "3本入。"
+  },
+  {
+   "series": "ビンビンスイッチ マスク",
+   "url": "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbin-switch-mask/",
+   "colors": [
+    "レッドゴールドフレーク",
+    "オレンジゴールドグロー",
+    "グリーンシルバーフレーク",
+    "怒イカゴールドフレーク",
+    "アオリイカグロー",
+    "怒ケンサキイカ",
+    "蛍光オレンジペッパー",
+    "UVパールホワイト"
+   ],
+   "note": "スカートではなくビンビンスイッチのヘッドに被せるエラストマー製カスタムパーツ(10本腕、うち2本カーリー)。SS/S/M/Lの4サイズ。参考掲載。",
+   "discontinued": true
+  }
+ ],
+ "sources": [
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/category/tairaba-tairaba%ef%bc%86taijig/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/category/binbinswitch/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/2019-01-30-17361/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/2019-01-30-17373/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/2019-01-30-17393/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/2019-01-30-17395/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/bakuryu-pb-binbindama-slide/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbin-dama-custom-necktie-king-curly/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbin-hook-muso-necktie-hook-set/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbin-switch-candy-spare-rubber-hook-set/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbin-switch-mask/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbin-switch-mastercurly/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbindama-custom-necktie-curly/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbindama-custom-necktie-fine-finesse/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbindama-custom-necktie-master-curly-medium/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbindama-custom-skirt/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbindama-tskirt/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbinswitch_hook_assy/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbinswitch_mcc/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbinworm_tie_curlfinesse/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binbinworm_tie_twintail/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/binibin-mastercurly-strong/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/dualcurly_1/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/namarishiki-binbin-switch-spare-rubber-hook-setrubber-hook-set/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/namarishiki-binbindama-slide-head-neo/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/namarishiki-binbindama-slide-muso-custom/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/namarishiki-binbindama-slidehead/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/namarishiki_binbin_switch/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/pb-binbindama-slide/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/tg-binbin-switch-amadai-special/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/tg-binbin-switch-candy/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/tg_binbin_sl_neo/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/tg_binbin_sl_rairyu_neo/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/tg_binbin_switch/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/tg_binbin_switch_head/",
+  "https://www.jackall.co.jp/saltwater/offshore-casting/products/tpn_ff/"
+ ],
+ "notes": "全データは2026-11-11にjackall.co.jp公式製品ページ(SALT WATER > OFFSHORE CASTING)から取得。カラー名は公式表記のまま(半角カナ・品番併記を含む)。どのページにも生産終了/廃番の表記はなし。旧TGビンビン玉スライド(非NEO)単独ページはカテゴリ一覧に無し。フック単体製品・バックファイヤーキャップ・スライドパーツ・ワームトレーラー(鯛コームピン/鯛ワームビビ)は除外。"
+}

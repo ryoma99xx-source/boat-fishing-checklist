@@ -1,0 +1,219 @@
+{
+ "maker": "デュエル",
+ "maker_en": "DUEL (YO-ZURI)",
+ "heads": [
+  {
+   "series": "ソルティー・ラバー® スライド",
+   "url": "https://www.duel.co.jp/products/detail.php?pid=233",
+   "material": "",
+   "type": "遊動",
+   "weights": [
+    60,
+    80,
+    100
+   ],
+   "colors": [
+    "オレンジレッド",
+    "ホロゴールドグリーン",
+    "ホロゴールドオレンジ",
+    "ホロボイルシュリンプ",
+    "ホロケイムラ"
+   ],
+   "color_codes": {
+    "OGR": "オレンジレッド",
+    "SHGM": "ホロゴールドグリーン",
+    "SHGO": "ホロゴールドオレンジ",
+    "WHBS": "ホロボイルシュリンプ",
+    "WHKV": "ホロケイムラ"
+   },
+   "colors_by_weight": {
+    "60": [
+     "OGR",
+     "SHGM",
+     "SHGO",
+     "WHBS",
+     "WHKV"
+    ],
+    "80": [
+     "OGR",
+     "SHGM",
+     "SHGO",
+     "WHBS",
+     "WHKV"
+    ],
+    "100": [
+     "SHGO",
+     "WHBS",
+     "WHKV"
+    ]
+   },
+   "note": "完成品（スライドヘッド+スライドラバー）。公式「遊動式タイラバの最終型」。素材の明記なし。OGR・SHGMは60g/80gのみ。注文番号 F1083(60g)/F1084(80g)/F1118(100g)。オープン価格。"
+  },
+  {
+   "series": "ソルティー・ラバー® スライドヘッド",
+   "url": "https://www.duel.co.jp/products/detail.php?pid=234",
+   "material": "",
+   "type": "遊動",
+   "weights": [
+    60,
+    80,
+    100
+   ],
+   "colors": [
+    "ゴールド",
+    "マットブルー夜光",
+    "マットチャート",
+    "ケイオレンジ",
+    "ケイレッド",
+    "レモンライム",
+    "ピンク"
+   ],
+   "color_codes": {
+    "G": "ゴールド",
+    "MBLS": "マットブルー夜光",
+    "MCL": "マットチャート",
+    "KO": "ケイオレンジ",
+    "KR": "ケイレッド",
+    "LL": "レモンライム",
+    "P": "ピンク"
+   },
+   "colors_by_weight": {
+    "60": [
+     "MBLS",
+     "MCL",
+     "KR",
+     "P"
+    ],
+    "80": [
+     "MCL",
+     "KR",
+     "LL",
+     "P"
+    ],
+    "100": [
+     "G",
+     "MCL",
+     "KO",
+     "KR",
+     "LL",
+     "P"
+    ]
+   },
+   "note": "ヘッド単体。素材の明記なし。カラー毎の重量限定あり（G・KOは100gのみ、MBLSは60gのみ、LLは80g/100gのみ）。注文番号 F1097/F1098/F1099。"
+  },
+  {
+   "series": "ソルティー・ベイト™ ウェーブ",
+   "url": "https://www.duel.co.jp/products/detail.php?pid=1652",
+   "material": "",
+   "type": "",
+   "weights": [
+    60,
+    80,
+    100
+   ],
+   "colors": [
+    "アオリ",
+    "ゴールド",
+    "グリーン",
+    "オレンジ",
+    "レッド",
+    "シルバー"
+   ],
+   "color_codes": {
+    "01. AORI": "アオリ",
+    "02. G": "ゴールド",
+    "03. GR": "グリーン",
+    "04. O": "オレンジ",
+    "05. R": "レッド",
+    "06. S": "シルバー"
+   },
+   "note": "タイラバとインチクの融合型（ストリームスリムヘッド+テイルパーツ、フック13号×13号段差針）。遊動/固定の記載なし。全色全重量共通。純粋なタイラバではないため、アプリでの扱いは要判断。注文番号 F1292/F1293/F1294。"
+  }
+ ],
+ "ties": [
+  {
+   "series": "スライドラバー カーリー™",
+   "url": "https://www.duel.co.jp/products/detail.php?pid=228",
+   "shape": "カーリー（バイブカーリーテール）+ラバー、フック13×13号付き",
+   "colors": [
+    "ブルールミナスブラックスポット",
+    "チャートリュースレッドスポット",
+    "ピンク"
+   ],
+   "color_codes": {
+    "BLSB": "ブルールミナスブラックスポット",
+    "CLRS": "チャートリュースレッドスポット",
+    "P": "ピンク"
+   },
+   "note": "ソルティー・ラバー スライド専用交換パーツ（ボールベアリング搭載、遊動式）。注文番号 F1175。JAN欄はUPCコード（7567...）。"
+  },
+  {
+   "series": "バイブワイドテール™",
+   "url": "https://www.duel.co.jp/products/detail.php?pid=306",
+   "shape": "ワイドテール（幅広・左右非対称）",
+   "colors": [
+    "若草",
+    "オレンジ",
+    "赤"
+   ],
+   "color_codes": {
+    "L": "若草",
+    "O": "オレンジ",
+    "R": "赤"
+   },
+   "note": "ソルティーラバー専用パーツ、グローチューブ付5本セット。注文番号 F911。"
+  }
+ ],
+ "skirts": [
+  {
+   "series": "スライドラバー™",
+   "url": "https://www.duel.co.jp/products/detail.php?pid=229",
+   "colors": [
+    "ブルールミナスブラックスポット",
+    "ブルーパールレッドスポット",
+    "オレンジブラックスポット",
+    "チャートリュースレッドスポット",
+    "ゴールド",
+    "ピンク"
+   ],
+   "color_codes": {
+    "BLSB": "ブルールミナスブラックスポット",
+    "BPR": "ブルーパールレッドスポット",
+    "ORBL": "オレンジブラックスポット",
+    "CLRS": "チャートリュースレッドスポット",
+    "G": "ゴールド",
+    "P": "ピンク"
+   },
+   "note": "ソルティー・ラバー スライド専用交換パーツ（ラバー+フック13×13号、ボールベアリング搭載）。ネクタイ単体ではなくラバーユニット。注文番号 F1093。"
+  },
+  {
+   "series": "ファインラバー™",
+   "url": "https://www.duel.co.jp/products/detail.php?pid=323",
+   "colors": [
+    "ブルールミナスブラックスポット",
+    "チャートリュースレッドスポット",
+    "ブルーパールレッドスポット",
+    "オレンジブラックスポット"
+   ],
+   "color_codes": {
+    "BLSB": "ブルールミナスブラックスポット",
+    "CLRS": "チャートリュースレッドスポット",
+    "BPR": "ブルーパールレッドスポット",
+    "ORBL": "オレンジブラックスポット"
+   },
+   "note": "ソルティーラバー専用パーツ、グローチューブ付2束セット。注文番号 F854。"
+  }
+ ],
+ "note": "公式サイトの「タイラバ／インチク」カテゴリー（7件）はすべてDUELブランド（ソルティーシリーズ）。YO-ZURIブランドのタイラバは公式サイト上に見当たらず。生産終了表記のある製品はなし。",
+ "sources": [
+  "https://www.duel.co.jp/products/?category=370",
+  "https://www.duel.co.jp/products/detail.php?pid=233",
+  "https://www.duel.co.jp/products/detail.php?pid=234",
+  "https://www.duel.co.jp/products/detail.php?pid=1652",
+  "https://www.duel.co.jp/products/detail.php?pid=228",
+  "https://www.duel.co.jp/products/detail.php?pid=306",
+  "https://www.duel.co.jp/products/detail.php?pid=229",
+  "https://www.duel.co.jp/products/detail.php?pid=323"
+ ],
+ "retrieved": "2026-11-11"
+}

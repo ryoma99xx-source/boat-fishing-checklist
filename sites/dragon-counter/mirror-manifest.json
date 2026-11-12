@@ -89,8 +89,8 @@
    "path": "/sw.js",
    "file": "sw.js",
    "content_type": "application/javascript; charset=utf-8",
-   "bytes": 2622,
-   "sha256": "f1cceeafe9d4f66c3e9a62ae0caa37301eb9125a90b18162c30de59843985ade",
+   "bytes": 2659,
+   "sha256": "a3a52852ca1c7ccc7dc19929486725ebaa82776056f5e3d06aa50b88a08b9757",
    "found_by": "release zip",
    "modifications": []
   },

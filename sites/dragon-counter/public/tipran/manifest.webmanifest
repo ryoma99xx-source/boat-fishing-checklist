@@ -1,0 +1,16 @@
+{
+ "name": "ティップランカウンター",
+ "short_name": "ティップラン",
+ "description": "ティップランのアオリイカの釣果を、エギ・増し錘・潮・流れと一緒に記録する",
+ "lang": "ja",
+ "id": "/tipran/",
+ "start_url": "/tipran/",
+ "scope": "/tipran/",
+ "display": "standalone",
+ "background_color": "#060a11",
+ "theme_color": "#060a11",
+ "icons": [
+  {"src": "/tipran/icon-192.png", "sizes": "192x192", "type": "image/png"},
+  {"src": "/tipran/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+ ]
+}
