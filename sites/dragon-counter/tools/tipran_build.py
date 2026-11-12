@@ -338,6 +338,11 @@ R(".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}", ".timg.cur{grid-
 
 R("<div class=\"card\"><h2>仕掛けと餌</h2>", "<div class=\"card\"><h2>エギとシンカー</h2>")
 
+# ───────── 竿・リールのカタログ：下に「所有タックルを保存して戻る」を出す（上の「閉じる」は一覧を下へ進むと見えなくなるため）
+R("押すと所有に追加／もう一度押すと外れます。${TCAT.v?`カタログ：${esc(TCAT.v)}時点。`:''}</p>`,{kind:'tkcat'})}",
+  "押すと所有に追加／もう一度押すと外れます。${TCAT.v?`カタログ：${esc(TCAT.v)}時点。`:''}</p>\n   <div class=\"tb-foot\"><button class=\"btn primary\" data-act=\"tkCatDone\">所有タックルを保存して戻る</button></div>`,{kind:'tkcat'})}")
+R("  closeSheet:()=>closeSheet(),", "  closeSheet:()=>closeSheet(),\n  tkCatDone:()=>{const t=TK();closeSheet();cfgTouch();render();toast(`保存しました（ロッド${t.rods.mine.length}・リール${t.reels.mine.length}）`)},")
+
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
 

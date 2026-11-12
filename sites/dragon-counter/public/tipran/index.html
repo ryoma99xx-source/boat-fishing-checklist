@@ -2295,7 +2295,8 @@ function tkCatSheet(k){tkQ={k,q:'',m:'',kind:''};const ms=TK_MAKERS[k];
    <div class="chips wrap tk-mk">${['',...ms].map(m=>`<button class="chip ${tkQ.m===m?'on':''}" data-act="tkCatMk" data-m="${esc(m)}">${m?esc(TK_MK[m]||m):'すべて'}</button>`).join('')}</div>
    ${1?`<div class="seg tk-kind">${(k==='rod'?[['','すべて'],['spinning','スピニング'],['bait','ベイト']]:[['','すべて'],['spinning','スピニング'],['bait','ベイト'],['counter','カウンター']]).map(([v,l])=>`<button class="${tkQ.kind===v?'on':''}" data-act="tkCatKind" data-v="${v}">${l}</button>`).join('')}</div>`:''}
    <div id="tkCatList" class="tk-cat">${tkCatList()}</div>
-   <p class="muted">押すと所有に追加／もう一度押すと外れます。${TCAT.v?`カタログ：${esc(TCAT.v)}時点。`:''}</p>`,{kind:'tkcat'})}
+   <p class="muted">押すと所有に追加／もう一度押すと外れます。${TCAT.v?`カタログ：${esc(TCAT.v)}時点。`:''}</p>
+   <div class="tb-foot"><button class="btn primary" data-act="tkCatDone">所有タックルを保存して戻る</button></div>`,{kind:'tkcat'})}
 function tkCustomSheet(k){const ms=TK_MAKERS[k];
   openSheet(`<div class="sheet-h"><h2>${k==='rod'?'ロッド':'リール'}を自分で登録</h2><button class="btn sm ghost" data-act="closeSheet">やめる</button></div>
    <label class="field"><span>メーカー</span><select id="tkcM">${ms.map(m=>`<option value="${esc(m)}">${esc(TK_MK[m]||m)}</option>`).join('')}<option value="__other">そのほか（下に入力）</option></select></label>
@@ -2529,6 +2530,7 @@ const acts={
     const nb=$('#add-boat');if(nb&&nb.value.trim()&&!S.cfg.boats.some(x=>x.name===nb.value.trim()))acts.boatAdd(); // a boat typed but not yet registered
     S.ui.tab='rec';saveLocal();render();const y=recScroll;requestAnimationFrame(()=>scrollTo(0,y))},
   closeSheet:()=>closeSheet(),
+  tkCatDone:()=>{const t=TK();closeSheet();cfgTouch();render();toast(`保存しました（ロッド${t.rods.mine.length}・リール${t.reels.mine.length}）`)},
   goGear:()=>{const tr=active();S.ui.gearSp=tr?tr.cur.sp:(startDraft?startDraft.sp:S.ui.gearSp);S.ui.tab='gear';if(!$('#sheet').hidden)$('#sheet').hidden=true;render();scrollTo(0,0)},
   seats:b=>{const f=curForm;f.people=clampP(f.people+(+b.dataset.d));fixPeople(f);refreshSeat()},
   pickLay:b=>{const f=curForm;if(!f)return;f.lay=b.dataset.d;f.seat=null;fixPeople(f);refreshSeat();const g=$('#laySeg'),h=$('#sideSeg');if(h)h.remove();if(g)g.outerHTML=layHTML(f)},
