@@ -308,6 +308,36 @@ R("""${[0,1,2,3,4,5,6].map(j=>`<circle cx="${226-j*28}" cy="130" r="${j===2?7:4}
 # ───────── 登録タブのエギの欄の見出し
 R('<div class="card" id="tbHeads"><h2>エギ</h2>', '<div class="card" id="tbHeads"><h2>所有エギを登録する</h2>')
 
+# ───────── エギを号数で絞る：カタログ（号数を選ぶと、その号数がある製品・その号数の重さだけ出る）と、記録で使うエギを選ぶところ
+R("function tbcSheet(){const rows=tbcRows(),makers=[...new Set(rows.map(r=>r.m))];if(!tbc.m)tbc.m=makers[0]||'';",
+  "function tbcSheet(){const rows=tbcRows(),zOk=r=>!tbc.z||tbc.kind!=='rigs'||(r.o||[]).some(o=>String(o.z)===tbc.z)||(r.mine&&!(r.o||[]).length),"
+  "zs=tbc.kind==='rigs'?[...new Set(rows.flatMap(r=>(r.o||[]).map(o=>String(o.z||''))))].filter(Boolean).sort((a,b)=>a-b):[],"
+  "makers=[...new Set(rows.filter(zOk).map(r=>r.m))];if(!tbc.m||!makers.includes(tbc.m))tbc.m=makers[0]||'';")
+R("const ser=rows.map((r,i)=>[r,i]).filter(([r])=>r.m===tbc.m),", "const ser=rows.map((r,i)=>[r,i]).filter(([r])=>r.m===tbc.m&&zOk(r)),")
+R("${cur.w.map(g=>{const o=cur.o[g]||{},mi=tbcMineO(cur,g);return", "${cur.w.filter(g=>!tbc.z||String((cur.o[g]||{}).z)===tbc.z).map(g=>{const o=cur.o[g]||{},mi=tbcMineO(cur,g);return")
+R('<div class="field"><span>メーカー</span><div class="chips wrap">${makers.map',
+  '${zs.length>1?`<div class="field"><span>号数で絞る</span><div class="chips wrap">${[\'\',...zs].map(z=>`<button class="chip ${(tbc.z||\'\')===z?\'on\':\'\'}" data-act="tbcZ" data-d="${z}">${z?z+\'号\':\'すべて\'}</button>`).join(\'\')}</div></div>`:\'\'}\n'
+  '   <div class="field"><span>メーカー</span><div class="chips wrap">${makers.map')
+R("const r=tbcRows()[tbc.i];if(r&&r.w&&r.w.length===1)tbc.w.add(r.w[0]);tbcSheet()},",
+  "const r=tbcRows()[tbc.i];if(r&&r.w&&r.w.length===1)tbc.w.add(r.w[0]);if(r&&tbc.z){const m=r.w.filter(g=>String((r.o[g]||{}).z)===tbc.z);if(m.length===1)tbc.w.add(m[0])}tbcSheet()},")
+R("  tbcAdd:b=>{", "  tbcZ:b=>{tbc.z=b.dataset.d;tbcLastZ=tbc.z;tbc.i=-1;tbc.w=new Set();tbc.c=new Set();tbc.add='';tbcSheet()},\n"
+  "  rigZ:b=>{const gp=b.closest('.gearpick');gp.querySelectorAll('[data-act=\"rigZ\"]').forEach(x=>x.classList.toggle('on',x===b));const z=b.dataset.d;gp.querySelectorAll('.chips [data-z]').forEach(c=>c.hidden=!!z&&c.dataset.z!==z)},\n"
+  "  tbcAdd:b=>{")
+R("let tbc=null;", "let tbc=null,tbcLastZ='';   // 号数の絞り込みは、次にカタログを開いたときも残す")
+RX(r"tbcOpen:b=>\{tbc=\{kind:b\.dataset\.kind,", "tbcOpen:b=>{tbc={z:b.dataset.kind==='rigs'?tbcLastZ:'',kind:b.dataset.kind,")
+# 記録で使うエギを選ぶところ：持っているエギの号数が2つ以上なら、号数のボタンで絞れる
+R('<div class="gp-lbl">${esc(label)}</div><div class="chips wrap">${(s[k]||[]).filter(g=>!g.hidden).map(g=>',
+  '<div class="gp-lbl">${esc(label)}</div>${k===\'rigs\'?rigZRow(s[k]):\'\'}<div class="chips wrap">${(s[k]||[]).filter(g=>!g.hidden).map(g=>')
+R("data-act=\"${act}\" data-id=\"${g.id}\" aria-pressed=\"${g.id===sel}\">${k==='rigs'?eimg(egiIm(g),'ch'):''}",
+  "data-act=\"${act}\" data-id=\"${g.id}\"${k==='rigs'?` data-z=\"${esc(g.shape||'')}\"`:''} aria-pressed=\"${g.id===sel}\">${k==='rigs'?eimg(egiIm(g),'ch'):''}")
+R("function chipsHTML(sp,k,sel,act){",
+  "function rigZRow(l){const zs=[...new Set((l||[]).filter(g=>!g.hidden&&g.shape).map(g=>String(g.shape)))].sort((a,b)=>a-b);if(zs.length<2)return '';\n"
+  "  return `<div class=\"chips rigz\">${['',...zs].map(z=>`<button class=\"chip ${z?'':'on'}\" data-act=\"rigZ\" data-d=\"${esc(z)}\">${z?esc(z)+'号':'全号数'}</button>`).join('')}</div>`}\n"
+  "function chipsHTML(sp,k,sel,act){")
+R(".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}", ".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}\n.chips.rigz{margin:2px 0 6px}.chips.rigz .chip{min-height:34px;padding:4px 12px;font-size:14px}")
+
+R("<div class=\"card\"><h2>仕掛けと餌</h2>", "<div class=\"card\"><h2>エギとシンカー</h2>")
+
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
 
