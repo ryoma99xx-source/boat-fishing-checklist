@@ -59,6 +59,11 @@ python3 wordpress/article-pack/cfpack.py upload pack.zip --type tachiuo_post
 7. **公開はオーナーが「公開して」とはっきり指示したときだけ** `publish <ID> --slug … --topics …` を実行する。
    間違えて公開したら `unpublish <ID>` ですぐ下書きに戻す。
 
+### HTTP 403（SiteGuard の「閲覧できません」）が出たとき
+- 圧縮したZIPのバイト列が、たまたまサーバーのファイアウォールに引っかかることがある（内容の問題ではない）。
+- `article.html` の**先頭**に空白を1つ足して `build` し直すと、圧縮後のバイト列が変わって通る（末尾に足しても前半は同じなので通らない）。
+- 送り直しても公開状態は変わらない。
+
 ### `{{media:N}}` について
 - N は WordPress のメディアID（数字）。`get` の `images` に一覧が出る。
 - 新規の `upload` では使えない（エラーになる）。既存記事の `update` 専用。
