@@ -50,7 +50,7 @@ RX(r"\{id:'madai',name:'マダイ',unit:'枚',sizeUnit:'cm',rigLabel:'ヘッド'
    "{id:'tiprun',name:'アオリイカ',unit:'杯',sizeUnit:'g',rigLabel:'エギ',baitLabel:'',skirtLabel:'シンカー',tairaba:true,variants:[{id:'tiprun',name:'アオリイカ'}],rigs:[],baits:[],hooks:[],skirts:[]}")
 R("const SOLO='madai';", "const SOLO='tiprun';")
 R("sp:'madai',g:{}", "sp:'tiprun',g:{}")
-R("const GEDO_DEF=['ホウボウ','カサゴ','イトヨリ','アマダイ','ハマチ','ワラサ','サバ','アジ'];", "const GEDO_DEF=['コウイカ','ヤリイカ','スルメイカ','マダコ','カサゴ','エソ','フグ'];")
+R("const GEDO_DEF=['ホウボウ','カサゴ','イトヨリ','アマダイ','ハマチ','ワラサ','サバ','アジ'];", "const GEDO_DEF=['モンゴウイカ','ヤリイカ','スルメイカ','アカイカ','マダコ','カサゴ','アコウ','エソ','フグ'];")
 RX(r"const TB_DL=\{.*?\};",
    "const TB_DL={mk:['ダイワ','ヤマシタ','ヤマリア','シマノ','デュエル','ハリミツ','林釣漁具','自作'],sz:['3.0','3.5','4.0'],hc:['赤テープ','金テープ','マーブル','ケイムラ','夜光','虹テープ','紫','オレンジ','ピンク','ブラウン'],tc:[],hs:[],ts:[],ks:[]};", flags=re.S)
 RX(r"function tbName\(k,x\)\{.*?\n  return x\.type==='diy'[^\n]*\n",

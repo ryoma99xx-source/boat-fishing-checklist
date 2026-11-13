@@ -1063,7 +1063,7 @@ const OPP=d=>DIRS[(DIRS.indexOf(d)+4)%8];
 const flowName=d=>(!d||d==='C')?'潮止まり':PART[OPP(d)]+'→'+PART[d];
 const SPEED_JP={slow:'緩い',normal:'普通',fast:'速い'};
 const KIND_JP={catch:'釣れた',bite:'アタリ',lost:'バラシ',gedo:'外道'};
-const GEDO_DEF=['コウイカ','ヤリイカ','スルメイカ','マダコ','カサゴ','エソ','フグ'];const gedoNames=()=>[...new Set(GEDO_DEF.concat((S.cfg.gedo||[])))];
+const GEDO_DEF=['モンゴウイカ','ヤリイカ','スルメイカ','アカイカ','マダコ','カサゴ','アコウ','エソ','フグ'];const gedoNames=()=>[...new Set(GEDO_DEF.concat((S.cfg.gedo||[])))];
 const vec=d=>{const a=DIRS.indexOf(d)*Math.PI/4;return [Math.sin(a),-Math.cos(a)]};
 function absFlow(st){if(!st||!st.flow||st.flow==='C'||!st.heading||st.heading==='C')return '';return HEAD_JP[DIRS[(DIRS.indexOf(st.heading)+DIRS.indexOf(st.flow))%8]]+'へ'}
 
