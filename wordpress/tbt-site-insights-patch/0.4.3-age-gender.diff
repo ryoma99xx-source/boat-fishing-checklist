@@ -1,0 +1,104 @@
+diff -ru orig/tbt-site-insights/assets/dashboard.js new/tbt-site-insights/assets/dashboard.js
+--- orig/tbt-site-insights/assets/dashboard.js	2026-11-13 04:34:47.276275737 +0000
++++ new/tbt-site-insights/assets/dashboard.js	2026-11-13 04:35:20.514102125 +0000
+@@ -551,7 +551,7 @@
+   }
+ 
+   /* ---------- アクセスのタブ：滞在時間・ページ・時間帯・端末（GA4から選んだ期間の分を取る） ---------- */
+-  var ACCESS_TABS = [['overview', '概要'], ['engage', '滞在時間'], ['pages', 'ページ'], ['hours', '時間帯'], ['devices', '端末']];
++  var ACCESS_TABS = [['overview', '概要'], ['engage', '滞在時間'], ['pages', 'ページ'], ['hours', '時間帯'], ['devices', '端末'], ['demo', '年齢・性別']];
+   var accessTab = (function () { try { var v = localStorage.getItem('tbtsi_acctab'); return ACCESS_TABS.some(function (t) { return t[0] === v; }) ? v : 'overview'; } catch (e) { return 'overview'; } })();
+   var EXTRA = {};
+   function dur(sec) {
+@@ -644,6 +644,26 @@
+       h += seg('端末', X.devices) + seg('新規とリピーター', X.newret);
+       if (!h) h = '<p class="tbtsi-empty">この期間のデータはまだありません。</p>';
+       else h += '<p class="tbtsi-small">「滞在」は1人あたりの平均エンゲージメント時間。リピーター＝以前にも来たことがある人です。</p>';
++    } else if (accessTab === 'demo') {
++      var seg2 = function (title, rows) {
++        if (!(rows || []).length) return '';
++        var tot = rows.reduce(function (s3, r) { return s3 + r.sessions; }, 0) || 1;
++        var known = rows.filter(function (r) { return r.name !== '不明'; }).reduce(function (s3, r) { return s3 + r.sessions; }, 0) || 1;
++        var mx = Math.max.apply(null, rows.map(function (r) { return r.sessions; }).concat([1]));
++        var o = '<h3>' + title + '</h3><div class="tbtsi-scroll"><table class="tbtsi-t"><thead><tr><th></th><th class="n">訪問</th><th class="n">割合<br><small>不明を除く</small></th><th></th><th class="n">滞在</th><th class="n">エンゲージ<br>メント率</th></tr></thead><tbody>';
++        rows.forEach(function (r) {
++          var un = r.name === '不明';
++          o += '<tr' + (un ? ' style="color:#8c8f94"' : '') + '><td>' + esc(r.name) + '</td><td class="n">' + num(r.sessions) + '</td><td class="n">' + (un ? '―' : pct(r.sessions / known * 100)) + '</td><td style="min-width:90px"><span style="display:block;height:8px;border-radius:4px;background:' + (un ? '#c3c4c7' : '#2271b1') + ';width:' + Math.max(2, Math.round(r.sessions / mx * 100)) + '%"></span></td><td class="n">' + dur(r.engage) + '</td><td class="n">' + pct(r.rate) + '</td></tr>';
++        });
++        return o + '</tbody></table></div>';
++      };
++      var unk = function (rows) { var t = 0, u = 0; (rows || []).forEach(function (r) { t += r.sessions; if (r.name === '不明') u += r.sessions; }); return t ? u / t : 1; };
++      h += seg2('年齢', X.ages) + seg2('性別', X.genders);
++      if (!h) h = '<p class="tbtsi-empty">この期間の年齢・性別のデータはありません。GA4の管理画面で「Google シグナルのデータ収集」をオンにすると、その日から集まり始めます。</p>';
++      else {
++        if (unk(X.ages) > 0.8) h += '<p class="tbtsi-small" style="color:#b32d2e">ほとんどが「不明」です。Googleシグナルがオフか、オンにしてからの日数・人数がまだ足りません（GA4は人数が少ないと年齢・性別を出しません）。</p>';
++        h += '<p class="tbtsi-small">GA4の推定（Googleにログインしていて、広告のカスタマイズをオンにしている人の分）です。全員の実際の年齢・性別ではありません。サイト・ドラゴンカウンター・ティップランカウンターを合わせた数です。</p>';
++      }
+     }
+     h += '<p class="tbtsi-small">GA4・' + esc(X.at || '') + '時点</p>';
+     el.innerHTML = h;
+diff -ru orig/tbt-site-insights/inc/extra.php new/tbt-site-insights/inc/extra.php
+--- orig/tbt-site-insights/inc/extra.php	2026-11-13 04:34:47.275208471 +0000
++++ new/tbt-site-insights/inc/extra.php	2026-11-13 04:35:28.057750013 +0000
+@@ -58,7 +58,7 @@
+ }
+ 
+ function tbtsi_ga4_extra( $from, $to, $prev_from, $prev_to ) {
+-	$key = 'tbtsi_extra_' . md5( $from . $to );
++	$key = 'tbtsi_extra2_' . md5( $from . $to );
+ 	$c   = get_transient( $key );
+ 	if ( $c ) {
+ 		return $c;
+@@ -158,6 +158,10 @@
+ 	};
+ 	$devices = $seg( 'deviceCategory', array( 'mobile' => 'スマホ', 'desktop' => 'PC', 'tablet' => 'タブレット' ) );
+ 	$newret  = $seg( 'newVsReturning', array( 'new' => '新規', 'returning' => 'リピーター' ) );
++	// 年齢・性別（GA4の推定。Googleシグナルが有効なときだけ集まる。人数が少ないと「不明」に入る）
++	$ages    = $seg( 'userAgeBracket', array( 'unknown' => '不明' ) );
++	usort( $ages, function ( $a, $b ) { return ( '不明' === $a['name'] ) <=> ( '不明' === $b['name'] ) ?: strcmp( $a['name'], $b['name'] ); } );
++	$genders = $seg( 'userGender', array( 'male' => '男性', 'female' => '女性', 'unknown' => '不明' ) );
+ 
+ 	$out = array(
+ 		'totals'  => $tot,
+@@ -168,6 +172,8 @@
+ 		'dows'    => $dows,
+ 		'devices' => $devices,
+ 		'newret'  => $newret,
++		'ages'    => $ages,
++		'genders' => $genders,
+ 		'tz'      => (string) get_option( 'tbtsi_ga4_tz', '' ),
+ 		'at'      => current_time( 'H:i' ),
+ 	);
+diff -ru orig/tbt-site-insights/inc/rest.php new/tbt-site-insights/inc/rest.php
+--- orig/tbt-site-insights/inc/rest.php	2026-11-13 04:34:47.275938644 +0000
++++ new/tbt-site-insights/inc/rest.php	2026-11-13 04:35:28.058053060 +0000
+@@ -192,7 +192,7 @@
+ 				$prev_to   = tbtsi_date_add( $from, -1 );
+ 				$prev_from = tbtsi_date_add( $prev_to, - ( $days - 1 ) );
+ 				if ( $req->get_param( 'refresh' ) ) {
+-					delete_transient( 'tbtsi_extra_' . md5( $from . $to ) );
++					delete_transient( 'tbtsi_extra2_' . md5( $from . $to ) );
+ 				}
+ 				$r = tbtsi_ga4_extra( $from, $to, $prev_from, $prev_to );
+ 				return is_wp_error( $r ) ? array( 'error' => $r->get_error_message() ) : $r;
+diff -ru orig/tbt-site-insights/tbt-site-insights.php new/tbt-site-insights/tbt-site-insights.php
+--- orig/tbt-site-insights/tbt-site-insights.php	2026-11-13 04:34:47.274667610 +0000
++++ new/tbt-site-insights/tbt-site-insights.php	2026-11-13 04:35:20.514464961 +0000
+@@ -2,7 +2,7 @@
+ /**
+  * Plugin Name: TBT Site Insights（サイト分析）
+  * Description: 楽天アフィリエイト・Yahoo!ショッピングアフィリエイト・バリューコマース・GA4・サーチコンソールの数字を、管理画面の1ページにまとめて表示します。GA4・サーチコンソール・バリューコマースは毎日自動取得、楽天とYahoo!直営は専用のChrome拡張かCSVで取り込みます。
+- * Version: 0.4.2
++ * Version: 0.4.3
+  * Author: 3rd Penguin
+  * Requires PHP: 7.4
+  * Text Domain: tbt-site-insights
+@@ -12,7 +12,7 @@
+ 	exit;
+ }
+ 
+-define( 'TBTSI_VERSION', '0.4.2' );
++define( 'TBTSI_VERSION', '0.4.3' );
+ define( 'TBTSI_DB_VERSION', '2' );
+ define( 'TBTSI_FILE', __FILE__ );
+ define( 'TBTSI_DIR', plugin_dir_path( __FILE__ ) );
