@@ -1,0 +1,108 @@
+diff -ru new/tbt-site-insights/assets/dashboard.js v044/tbt-site-insights/assets/dashboard.js
+--- new/tbt-site-insights/assets/dashboard.js	2026-11-13 04:35:20.514102125 +0000
++++ v044/tbt-site-insights/assets/dashboard.js	2026-11-13 08:15:37.828900166 +0000
+@@ -585,7 +585,11 @@
+     if (!el || !DATA) return;
+     var X = EXTRA[DATA.range.from + '|' + DATA.range.to];
+     if (!X) { el.innerHTML = '<p class="tbtsi-empty">読み込み中…</p>'; return; }
+-    if (X.error) { el.innerHTML = '<p class="tbtsi-empty">読み込めませんでした：' + esc(X.error) + '</p>'; return; }
++    if (X.error) {
++      el.innerHTML = '<p class="tbtsi-empty">読み込めませんでした：' + esc(X.error) + '</p><p><button type="button" class="button" id="tbtsi-extra-retry">もう一度読み込む</button></p>';
++      document.getElementById('tbtsi-extra-retry').addEventListener('click', function () { delete EXTRA[DATA.range.from + '|' + DATA.range.to]; paintExtra(); loadExtra(true); });
++      return;
++    }
+     var t = X.totals, p = X.prev || {}, h = '';
+     if (accessTab === 'engage') {
+       h += '<div class="tbtsi-tiles small">';
+@@ -665,7 +669,7 @@
+         h += '<p class="tbtsi-small">GA4の推定（Googleにログインしていて、広告のカスタマイズをオンにしている人の分）です。全員の実際の年齢・性別ではありません。サイト・ドラゴンカウンター・ティップランカウンターを合わせた数です。</p>';
+       }
+     }
+-    h += '<p class="tbtsi-small">GA4・' + esc(X.at || '') + '時点</p>';
++    h += '<p class="tbtsi-small">GA4・' + esc(X.at || '') + '時点' + (X.stale ? '（いまGA4につながらないため、前に取れた分を出しています）' : '') + '</p>';
+     el.innerHTML = h;
+     if (accessTab === 'engage' && LINES.eng) wireLine('eng');
+   }
+diff -ru new/tbt-site-insights/inc/extra.php v044/tbt-site-insights/inc/extra.php
+--- new/tbt-site-insights/inc/extra.php	2026-11-13 04:35:28.057750013 +0000
++++ v044/tbt-site-insights/inc/extra.php	2026-11-13 08:15:27.624930977 +0000
+@@ -65,6 +65,12 @@
+ 	}
+ 	$tot = tbtsi_ga4_totals( $from, $to );
+ 	if ( is_wp_error( $tot ) ) {
++		// 取れなかったときは、前に取れた分があればそれを出す
++		$old = get_transient( 'tbtsi_extra_bk_' . md5( $from . $to ) );
++		if ( $old ) {
++			$old['stale'] = $tot->get_error_message();
++			return $old;
++		}
+ 		return $tot;
+ 	}
+ 	$prev = tbtsi_ga4_totals( $prev_from, $prev_to );
+@@ -179,6 +185,7 @@
+ 	);
+ 	$recent = $to >= tbtsi_date_add( tbtsi_today(), -1 );
+ 	set_transient( $key, $out, $recent ? 30 * MINUTE_IN_SECONDS : 12 * HOUR_IN_SECONDS );
++	set_transient( 'tbtsi_extra_bk_' . md5( $from . $to ), $out, 7 * DAY_IN_SECONDS );
+ 	return $out;
+ }
+ 
+diff -ru new/tbt-site-insights/inc/google.php v044/tbt-site-insights/inc/google.php
+--- new/tbt-site-insights/inc/google.php	2026-11-13 04:35:20.501586680 +0000
++++ v044/tbt-site-insights/inc/google.php	2026-11-13 08:15:27.624623647 +0000
+@@ -67,17 +67,23 @@
+ 	if ( is_wp_error( $token ) ) {
+ 		return $token;
+ 	}
+-	$res = wp_remote_post(
+-		$url,
+-		array(
+-			'timeout' => 40,
+-			'headers' => array(
+-				'Authorization' => 'Bearer ' . $token,
+-				'Content-Type'  => 'application/json',
+-			),
+-			'body'    => wp_json_encode( $body ),
+-		)
+-	);
++	// Googleが応答しないことがたまにあるので、通信エラー・タイムアウト・5xx のときは1回だけやり直す
++	for ( $try = 0; $try < 2; $try++ ) {
++		$res = wp_remote_post(
++			$url,
++			array(
++				'timeout' => $try ? 30 : 20,
++				'headers' => array(
++					'Authorization' => 'Bearer ' . $token,
++					'Content-Type'  => 'application/json',
++				),
++				'body'    => wp_json_encode( $body ),
++			)
++		);
++		if ( ! is_wp_error( $res ) && wp_remote_retrieve_response_code( $res ) < 500 ) {
++			break;
++		}
++	}
+ 	if ( is_wp_error( $res ) || 200 !== wp_remote_retrieve_response_code( $res ) ) {
+ 		return new WP_Error( 'tbtsi_google', tbtsi_http_error( $res ) );
+ 	}
+diff -ru new/tbt-site-insights/tbt-site-insights.php v044/tbt-site-insights/tbt-site-insights.php
+--- new/tbt-site-insights/tbt-site-insights.php	2026-11-13 04:35:20.514464961 +0000
++++ v044/tbt-site-insights/tbt-site-insights.php	2026-11-13 08:15:27.624495791 +0000
+@@ -2,7 +2,7 @@
+ /**
+  * Plugin Name: TBT Site Insights（サイト分析）
+  * Description: 楽天アフィリエイト・Yahoo!ショッピングアフィリエイト・バリューコマース・GA4・サーチコンソールの数字を、管理画面の1ページにまとめて表示します。GA4・サーチコンソール・バリューコマースは毎日自動取得、楽天とYahoo!直営は専用のChrome拡張かCSVで取り込みます。
+- * Version: 0.4.3
++ * Version: 0.4.4
+  * Author: 3rd Penguin
+  * Requires PHP: 7.4
+  * Text Domain: tbt-site-insights
+@@ -12,7 +12,7 @@
+ 	exit;
+ }
+ 
+-define( 'TBTSI_VERSION', '0.4.3' );
++define( 'TBTSI_VERSION', '0.4.4' );
+ define( 'TBTSI_DB_VERSION', '2' );
+ define( 'TBTSI_FILE', __FILE__ );
+ define( 'TBTSI_DIR', plugin_dir_path( __FILE__ ) );
