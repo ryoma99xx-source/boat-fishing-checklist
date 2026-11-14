@@ -2733,16 +2733,33 @@ function listSVG(tr){const W=600,X0=28,RH=40,ev=sortEv(tr),o=[];const nCatch=ev.
 function brandSVG(svg){const m=svg.match(/width="(\d+)" height="(\d+)"/);if(!m)return svg;const W=+m[1],H=+m[2],k=W/600,F=Math.round(56*k),z=n=>r1(n*k);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H+F}" viewBox="0 0 ${W} ${H+F}" font-family="${CF}"><rect width="${W}" height="${H+F}" fill="#0b1422"/><rect width="${W}" height="${H}" fill="${P.card}"/>${svg.replace('<svg ','<svg x="0" y="0" ')}<text x="${z(24)}" y="${H+z(25)}" font-size="${z(17)}" font-weight="700" fill="#ffffff" letter-spacing="${z(1.5)}">DRAGON COUNTER</text><text x="${z(24)}" y="${H+z(43)}" font-size="${z(11)}" fill="#9fb4c6">東京湾の魚・釣り / 3rd-Penguin Fishing Lab.</text><text x="${W-z(24)}" y="${H+z(34)}" font-size="${z(13)}" font-weight="700" fill="#3fc8c4" text-anchor="end">dragon-counter.cutlassfish.tokyo</text></svg>`}
 /* インスタ用の画像：ストーリーズ（1080×1920）と投稿（1080×1350）。大見出し・基本情報・1時間ごとの本数だけを大きな文字で */
-function instaSVG(tr,sp,fmt){const story=fmt==='story',W=540,H=story?960:675,s=spOf(sp),c=catchesOf(tr,sp),N=c.length,dg=c.filter(e=>e.dragon).length;
+/* いちばん釣れたテンヤ（写真は data URL にして SVG に埋め込む） */
+async function instaTop(tr,sp){const m={};catchesOf(tr,sp).forEach(e=>{if(e.rig)m[e.rig]=(m[e.rig]||0)+1});const id=Object.keys(m).sort((a,b)=>m[b]-m[a])[0];if(!id)return null;
+  const t=tenyaOf(id),top={n:m[id],sub:t?tenyaSub(t):'',main:t?tenyaMain(t):listName(sp,'rigs',id),img:''};
+  if(t&&TIMG.has(id)){try{const im=new Image();await new Promise((ok,ng)=>{im.onload=ok;im.onerror=ng;im.src=`/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}`});
+    const k=Math.min(1,480/Math.max(im.naturalWidth,im.naturalHeight)),cv=document.createElement('canvas');cv.width=Math.round(im.naturalWidth*k);cv.height=Math.round(im.naturalHeight*k);
+    cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);top.img=cv.toDataURL('image/png');top.w=cv.width;top.h=cv.height}catch(e){}}
+  return top}
+function instaSVG(tr,sp,fmt,tt){const story=fmt==='story',W=540,H=story?960:675,s=spOf(sp),c=catchesOf(tr,sp),N=c.length,dg=c.filter(e=>e.dragon).length;
   const T=(x,y,t,o={})=>`<text x="${r1(x)}" y="${r1(y)}" font-size="${o.size||16}" fill="${o.fill||'#eef3f8'}"${o.anchor?` text-anchor="${o.anchor}"`:''}${o.bold?' font-weight="800"':''}${o.ls?` letter-spacing="${o.ls}"`:''}>${esc(t)}</text>`;
   const fit=(t,px,w)=>clip(t,w,px);const o=[];
   const top=story?118:34,bot=story?H-118:H-26;   // ストーリーズは上下をインスタの表示に隠れない位置まで空ける
   let y=top;
   o.push(T(32,y+14,'DRAGON COUNTER',{size:15,bold:1,fill:'#3fc8c4',ls:2}));o.push(T(W-32,y+14,jdate(tr.date),{size:15,fill:'#9fb4c6',anchor:'end'}));y+=story?78:58;
-  o.push(T(32,y,s.name,{size:story?30:26,bold:1}));
+  const yName=y;o.push(`<text x="32" y="${r1(y)}" font-weight="800"><tspan font-size="${story?30:26}" fill="#eef3f8">${esc(s.name)}</tspan>${dg?`<tspan dx="14" font-size="${story?22:19}" fill="#f2c063">ドラゴン ${dg}${esc(s.unit)}</tspan>`:''}</text>`);
   const big=String(N),bs=story?120:96;o.push(`<text x="32" y="${r1(y+bs*.95)}" font-weight="800"><tspan font-size="${bs}" fill="#ffb04a">${esc(big)}</tspan><tspan dx="10" font-size="${story?40:34}" fill="#eef3f8">${esc(s.unit)}</tspan></text>`);
-  if(dg)o.push(`<g transform="translate(${W-32},${y+bs*.55})"><rect x="-150" y="-30" width="150" height="44" rx="22" fill="#3a2a0e" stroke="#e3a43b" stroke-width="2"/>${T(-75,0,'ドラゴン '+dg+s.unit,{size:20,bold:1,fill:'#f2c063',anchor:'middle'})}</g>`);
-  y+=bs*.95+(story?54:40);
+  y+=bs*.95;
+  if(tt){const cw=story?222:212,cx=W-32-cw,cy=yName+(story?16:12),ph=story?84:70,lw=cw-24,fz=story?15:14;
+    const mn=Math.floor(lw/fz),ml=tt.main.length>mn?[tt.main.slice(0,mn),tt.main.slice(mn)]:[tt.main],lines=[[tt.sub,13,'#9fb4c6',0],...ml.slice(0,2).map(t=>[t,fz,'#eef3f8',1])].filter(l=>l[0]);
+    const ch=28+ph+8+lines.reduce((a,l)=>a+l[1]+6,0)+8;
+    o.push(`<rect x="${cx}" y="${cy}" width="${cw}" height="${ch}" rx="16" fill="#132236" stroke="#2c3e55"/>`+T(cx+12,cy+19,'いちばん釣れたテンヤ',{size:13,bold:1,fill:'#9fb4c6'}));
+    o.push(`<text x="${cx+cw-12}" y="${cy+21}" text-anchor="end" font-weight="800"><tspan font-size="${story?20:18}" fill="#ffb04a">${tt.n}</tspan><tspan dx="2" font-size="13" fill="#eef3f8">${esc(s.unit)}</tspan></text>`);
+    o.push(`<rect x="${cx+12}" y="${cy+28}" width="${cw-24}" height="${ph}" rx="10" fill="#ffffff"/>`);
+    if(tt.img)o.push(`<image href="${tt.img}" x="${cx+18}" y="${cy+31}" width="${cw-36}" height="${ph-6}" preserveAspectRatio="xMidYMid meet"/>`);
+    else o.push(T(cx+cw/2,cy+28+ph/2+5,'写真なし',{size:13,fill:'#9aa6b2',anchor:'middle'}));
+    let ly=cy+28+ph+8;lines.forEach(([t,z,c,b])=>{ly+=z+2;o.push(T(cx+12,ly,clip(t,lw,z),{size:z,fill:c,bold:b}));ly+=4});
+    y=Math.max(y,cy+ch-(story?14:10))}
+  y+=story?54:40;
   const head=tlTitle(tr,sp).replace(new RegExp('^'+s.name+'は'),'').replace(/、?計\d+.*$/,'');
   if(N&&head&&!/^計|釣果なし/.test(head)){o.push(T(32,y,fit('ピークは'+head,story?26:22,W-64),{size:story?26:22,bold:1,fill:'#3fc8c4'}));y+=story?46:36}
   const b=nKind(tr,sp,'bite'),l=nKind(tr,sp,'lost');
@@ -2770,7 +2787,7 @@ acts.shareAsk=b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset
   openSheet(`<div class="sheet-h"><h2>画像で保存・共有</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">LINE・メール・メッセージなどで送れます。</p><div class="shr-pick"><button class="btn primary" data-act="shareMake" data-which="${w}" data-id="${tr.id}">${SHR_NM[w]}だけ</button><button class="btn" data-act="shareMake" data-which="all" data-id="${tr.id}">3つまとめて<small style="display:block;font-weight:500">記録一覧・時系列の図・座席の図</small></button></div><h3 class="shr-ig-h">インスタ用（文字を大きく・インスタのサイズで）</h3><div class="shr-ig"><button class="btn" data-act="shareMake" data-which="ig-story" data-id="${tr.id}">ストーリーズ用<small>縦長 1080×1920</small></button><button class="btn" data-act="shareMake" data-which="ig-post" data-id="${tr.id}">投稿用<small>1080×1350</small></button></div>`,{kind:'shr'})};
 acts.shareMake=async b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which,ws=w==='all'?['list','tl','seat']:[w],sp=shrSp(tr);
   b.disabled=true;b.textContent='画像を作っています…';
-  try{const out=[];for(const k of ws){const ig=k.startsWith('ig-'),svg=ig?instaSVG(tr,sp,k.slice(3)):k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(ig?svg:brandSVG(svg));
+  try{const out=[];for(const k of ws){const ig=k.startsWith('ig-'),svg=ig?instaSVG(tr,sp,k.slice(3),await instaTop(tr,sp)):k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(ig?svg:brandSVG(svg));
       out.push({blob,url,name:`dragon-${tr.date}-${ig?'insta-'+k.slice(3):k==='list'?'list':k==='tl'?'timeline':'seat'}.png`,type:'image/png'})}
     pendingFile={files:out};
     openSheet(`<div class="sheet-h"><h2>画像${out.length>1?`（${out.length}枚）`:''}</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${SITE?`<button class="btn primary big" data-act="shareFile">写真に保存・共有する</button>`:''}<p class="muted" style="margin:0">画像を長押しして「写真に保存」を選んでも保存できます。</p><div class="shr-imgs">${out.map(f=>`<img class="imgout" src="${f.url}" alt="${esc(f.name)}">`).join('')}</div>`,{kind:'img'})
