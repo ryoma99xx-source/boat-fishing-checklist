@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Dragon Counter Data
  * Description: ドラゴンカウンター（TOOL 05）とティップランカウンターから匿名で届いた釣果データを、管理画面（ツール → ドラゴンカウンターのデータ）でダッシュボード・一覧・ダウンロード・削除します。上のタブでアプリを切り替えます。データはサーバーの .data/trips/（ティップランは tipran/.data/trips/）にあるものを読むだけで、外には出しません。
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -110,7 +110,7 @@ final class DCD_Admin {
         $T = self::load($dir, $per); $tz = new DateTimeZone('Asia/Tokyo');
         $n = count($T); $catch = 0; $dragon = 0; $bite = 0; $lost = 0; $hrs = 0;
         $byDay = []; $byHour = array_fill(0, 24, 0); $spot = []; $boat = []; $tide = []; $rig = []; $skirt = []; $U = self::A('unit'); $sa = []; $ka = []; $rod = []; $reel = []; $sst = []; $mode = ['simple' => 0, 'detail' => 0];
-        $SA = ['maki-move' => '巻き・誘い中', 'maki-stay' => '巻き・ステイ中', 'tata-move' => '叩き・誘い中', 'tata-stay' => '叩き・ステイ中', 'fall' => 'フォール中']; $KA = ['soku' => '即掛け', 'fuka' => '深追い'];
+        $SA = ['maki-move' => '巻き・誘い中', 'maki-stay' => '巻き・ステイ中', 'tata-move' => '叩き・誘い中', 'tata-stay' => '叩き・ステイ中', 'fall' => 'フォール中', 'oki' => '置き竿']; $KA = ['soku' => '即掛け', 'fuka' => '深追い'];
         $avgAdd = function (&$arr, $k, $v) { if ($k === '' || $k === null) return; if (!isset($arr[$k])) $arr[$k] = [0, 0]; $arr[$k][0] += $v; $arr[$k][1]++; };
         foreach ($T as $t) {
             $c = 0;

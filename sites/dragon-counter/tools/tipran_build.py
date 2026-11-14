@@ -350,6 +350,17 @@ R('<input type="number" id="add-boat-seats" inputmode="numeric" value="16" min="
 # ───────── メモの例（出船前の見込み）をティップラン向けに
 ALL('placeholder="例：北風が予報より強く、午後は釣りにくくなりそう／前回は朝の上げ潮で反応が集中"', 'placeholder="例：予報より風が強く、船が流されて底が取りにくそう／前回は朝マズメに反応が集中"')
 
+# 置き竿（ドラゴンカウンターだけの誘い）はティップランには入れない
+R("'fall':'フォール中','oki':'置き竿'};", "'fall':'フォール中'};")
+R("""<button class="sa-b sa-fall ${last==='oki'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="oki">置き竿${kind==='bite'?'':'<small>そのまま記録</small>'}</button></div>""", "")
+R('<div class="sa-fo"><button class="sa-b sa-fall', '<button class="sa-b sa-fall')
+R("if(k!=='bite'&&sa==='oki')return acts.kaRec({dataset:{k,sa,ka:''}});", "")
+R("e.sa==='fall'?'フ':e.sa==='oki'?'置':'叩'", "e.sa==='fall'?'フ':'叩'")
+R("フ＝フォール　置＝置き竿　即＝即掛け", "フ＝フォール　即＝即掛け")
+R("（巻き／叩き × 誘い中／ステイ中、フォール中、置き竿）", "（巻き／叩き × 誘い中／ステイ中、またはフォール中）")
+R(".sa-grid .sa-fo .sa-fall{grid-column:auto}", "")
+R("即掛けとして記録します。置き竿は掛け方なしで記録します。", "即掛けとして記録します。")
+
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
 
