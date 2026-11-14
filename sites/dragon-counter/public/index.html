@@ -1084,9 +1084,9 @@ const methodOf=(sp,g)=>spOf(sp).catalog?((g&&g.method)||spOf(sp).method||'tenya'
 const isTenya=(sp,g)=>methodOf(sp,g)==='tenya';
 const needBait=(sp,g)=>!!spOf(sp).baitLabel&&methodOf(sp,g)!=='tenbin'; // 天秤のときは餌を記録しない
 const METHOD_JP={tenya:'テンヤ',tenbin:'天秤'};
-/* タチウオの餌: 種類（イワシ・ハイブリッドクロス・カマス・その他）。イワシはサイズ・頭・内臓も持つ。
+/* タチウオの餌: 種類（イワシ・ハイブリッドクロス・カマス・身餌・その他）。イワシはサイズ・頭・内臓も持つ。
    id は "bz:iw:中:h0:g0" の形（h1=頭つき, g1=内臓あり）。その他は登録した餌の id。 */
-const BZ_TYPES=[['iw','イワシ'],['hc','ハイブリッドクロス'],['km','カマス']],BZ_DEF='bz:iw:中:h0:g0',bzX={};
+const BZ_TYPES=[['iw','イワシ'],['hc','ハイブリッドクロス'],['km','カマス'],['mi','身餌']],BZ_DEF='bz:iw:中:h0:g0',bzX={};
 const isBzSp=sp=>spOf(sp).id==='tachiuo';
 const bzLegacy=b=>/^イワシ\s*(大|中|小)$/.exec(b&&b.name||'');
 function bzParse(sp,id){if(id&&id.startsWith('bz:')){const [,t,z,h,g]=id.split(':');return {t,z:z||'中',h:h||'h0',g:g||'g0'}}
