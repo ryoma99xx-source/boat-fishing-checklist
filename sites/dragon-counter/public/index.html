@@ -416,7 +416,7 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 body.kbd .tabs,body.kbd .dock{display:none}
 .tab{font-size:13px}
 .tab.on{color:var(--teal);background:transparent}
-.sheet-panel{background:var(--surface)}
+.sheet-panel{background:var(--surface)}.sheet-panel{overflow-x:hidden;overscroll-behavior-x:none;touch-action:pan-y pinch-zoom}.sheet-panel select,.sheet-panel input{min-width:0;max-width:100%}.sheet-panel select{text-overflow:ellipsis}.sheet-panel .grid2>*{min-width:0}.evmap{touch-action:manipulation}
 .toast{background:#e9f3f6;color:#06121b;touch-action:pan-x;transition:transform .15s ease-out}
 .top{background:var(--bg)}
 .sample-note{background:var(--surface);border-color:rgba(227,164,59,.4);color:var(--amber)}
@@ -2397,7 +2397,7 @@ function evRerender(){const p=$('#sheetPanel'),y=p?p.scrollTop:0;renderEvSheet()
 function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.some(v=>v.id===f.v))f.v=mainV(f.sp);
   const sel=k=>{if(k==='rigs'&&gs.catalog){const tr=S.trips[f.tid];const ids=[...new Set([f.rig,...(tr.cur&&tr.cur.g&&tr.cur.g[f.gsp]?dayTenya(tr,f.gsp):[]),...tr.events.map(e=>e.rig),...myTenya()].filter(Boolean))].filter(id=>tenyaOf(id));
       return `<option value="" ${!f.rig?'selected':''}>未選択</option><optgroup label="テンヤ">`+ids.map(id=>`<option value="${id}" ${id===f.rig?'selected':''}>${esc(tenyaFull(id))}</option>`).join('')+`</optgroup><optgroup label="天秤">`+(gs.rigs||[]).map(g=>`<option value="${g.id}" ${g.id===f.rig?'selected':''}>${esc(g.name)}</option>`).join('')+'</optgroup>'}
-    return (k==='baits'&&f.bait&&f.bait.startsWith('bz:')?`<option value="${esc(f.bait)}" selected>${esc(bzLabel(f.bait))}</option>`:'')+(isBzSp(f.gsp)&&k==='baits'?[BZ_DEF,'bz:hc','bz:km'].filter(x=>x!==f.bait).map(x=>`<option value="${x}">${esc(bzLabel(x))}</option>`).join(''):'')+(gs[k]||[]).filter(g=>!(k==='baits'&&isBzSp(f.gsp)&&bzLegacy(g)&&g.id!==f.bait)).map(g=>`<option value="${g.id}" ${g.id===f[k==='rigs'?'rig':'bait']?'selected':''}>${esc(g.name)}${g.hidden?'（隠し中）':''}</option>`).join('')};
+    return (k==='baits'&&f.bait&&f.bait.startsWith('bz:')?`<option value="${esc(f.bait)}" selected>${esc(bzLabel(f.bait))}</option>`:'')+(isBzSp(f.gsp)&&k==='baits'?['大','中','小'].flatMap(z=>['h0','h1'].flatMap(h=>['g0','g1'].map(g=>`bz:iw:${z}:${h}:${g}`))).concat(BZ_TYPES.filter(t=>t[0]!=='iw').map(t=>'bz:'+t[0])).filter(x=>x!==f.bait).map(x=>`<option value="${x}">${esc(bzLabel(x))}</option>`).join(''):'')+(gs[k]||[]).filter(g=>!(k==='baits'&&isBzSp(f.gsp)&&bzLegacy(g)&&g.id!==f.bait)).map(g=>`<option value="${g.id}" ${g.id===f[k==='rigs'?'rig':'bait']?'selected':''}>${esc(g.name)}${g.hidden?'（隠し中）':''}</option>`).join('')};
   const sizeUI=!s.sizeUnit?'':s.sizeUnit==='指'?`<div class="chips">${['','2','2.5','3','3.5','4','4.5','5','5.5','6'].map(x=>`<button class="chip ${f.size===x?'on':''}" data-act="evSize" data-d="${x}">${x?'指'+x:'未記入'}</button>`).join('')}</div>`
     :`<div class="grow"><input type="number" inputmode="decimal" id="evSize" data-ef="size" value="${esc(f.size)}" placeholder="${s.sizeUnit==='cm'?'例：95':'未記入'}" min="0" max="200" step="0.5"><span class="muted">${esc(s.sizeUnit)}</span></div>`;
   $('#sheetPanel').innerHTML=`<div class="sheet-h"><h2>記録を直す</h2>${f.back?'<button class="btn sm ghost" data-act="evClose">← 一覧に戻る</button>':'<button class="btn sm ghost" data-act="closeSheet">閉じる</button>'}</div>
