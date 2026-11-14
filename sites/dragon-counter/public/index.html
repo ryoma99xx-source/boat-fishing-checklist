@@ -172,7 +172,7 @@ input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width
 /* iPhone: keep sheet children at full height so the panel itself scrolls; stop the page behind from scrolling */
 .sheet-panel>*{flex-shrink:0}
 body:has(#sheet:not([hidden])){overflow:hidden}
-.shr-pick{display:flex;flex-direction:column;gap:10px}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
+.shr-pick{display:flex;flex-direction:column;gap:10px}.shr-ig-h{margin:16px 0 8px;font-size:14px;color:var(--muted)}.shr-ig{display:grid;grid-template-columns:1fr 1fr;gap:10px}.shr-ig .btn small{display:block;font-weight:500;font-size:12px}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
 /* the tenya catalog is long: keep the title + 完了 pinned at the top and a 完了 bar pinned at the bottom of the sheet */
 .sheet-h.stick{position:sticky;top:-18px;z-index:3;margin:-18px calc(-1 * max(16px,env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:14px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-bottom:1px solid var(--line)}
 .tb-foot{position:sticky;bottom:calc(-24px - env(safe-area-inset-bottom,0px));z-index:3;margin:0 calc(-1 * max(16px,env(safe-area-inset-right,0px))) calc(-24px - env(safe-area-inset-bottom,0px)) calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-top:1px solid var(--line)}
@@ -2732,14 +2732,46 @@ function listSVG(tr){const W=600,X0=28,RH=40,ev=sortEv(tr),o=[];const nCatch=ev.
 /* shared images carry the tool name and its address in a footer band */
 function brandSVG(svg){const m=svg.match(/width="(\d+)" height="(\d+)"/);if(!m)return svg;const W=+m[1],H=+m[2],k=W/600,F=Math.round(56*k),z=n=>r1(n*k);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H+F}" viewBox="0 0 ${W} ${H+F}" font-family="${CF}"><rect width="${W}" height="${H+F}" fill="#0b1422"/><rect width="${W}" height="${H}" fill="${P.card}"/>${svg.replace('<svg ','<svg x="0" y="0" ')}<text x="${z(24)}" y="${H+z(25)}" font-size="${z(17)}" font-weight="700" fill="#ffffff" letter-spacing="${z(1.5)}">DRAGON COUNTER</text><text x="${z(24)}" y="${H+z(43)}" font-size="${z(11)}" fill="#9fb4c6">東京湾の魚・釣り / 3rd-Penguin Fishing Lab.</text><text x="${W-z(24)}" y="${H+z(34)}" font-size="${z(13)}" font-weight="700" fill="#3fc8c4" text-anchor="end">dragon-counter.cutlassfish.tokyo</text></svg>`}
+/* インスタ用の画像：ストーリーズ（1080×1920）と投稿（1080×1350）。大見出し・基本情報・1時間ごとの本数だけを大きな文字で */
+function instaSVG(tr,sp,fmt){const story=fmt==='story',W=540,H=story?960:675,s=spOf(sp),c=catchesOf(tr,sp),N=c.length,dg=c.filter(e=>e.dragon).length;
+  const T=(x,y,t,o={})=>`<text x="${r1(x)}" y="${r1(y)}" font-size="${o.size||16}" fill="${o.fill||'#eef3f8'}"${o.anchor?` text-anchor="${o.anchor}"`:''}${o.bold?' font-weight="800"':''}${o.ls?` letter-spacing="${o.ls}"`:''}>${esc(t)}</text>`;
+  const fit=(t,px,w)=>clip(t,w,px);const o=[];
+  const top=story?118:34,bot=story?H-118:H-26;   // ストーリーズは上下をインスタの表示に隠れない位置まで空ける
+  let y=top;
+  o.push(T(32,y+14,'DRAGON COUNTER',{size:15,bold:1,fill:'#3fc8c4',ls:2}));o.push(T(W-32,y+14,jdate(tr.date),{size:15,fill:'#9fb4c6',anchor:'end'}));y+=story?78:58;
+  o.push(T(32,y,s.name,{size:story?30:26,bold:1}));
+  const big=String(N),bs=story?120:96;o.push(T(32,y+bs*.95,big,{size:bs,bold:1,fill:'#ffb04a'}));o.push(T(32+big.length*bs*.6+8,y+bs*.95,s.unit,{size:story?40:34,bold:1}));
+  if(dg)o.push(`<g transform="translate(${W-32},${y+bs*.55})"><rect x="-150" y="-30" width="150" height="44" rx="22" fill="#3a2a0e" stroke="#e3a43b" stroke-width="2"/>${T(-75,0,'ドラゴン '+dg+s.unit,{size:20,bold:1,fill:'#f2c063',anchor:'middle'})}</g>`);
+  y+=bs*.95+(story?54:40);
+  const head=tlTitle(tr,sp).replace(new RegExp('^'+s.name+'は'),'').replace(/、?計\d+.*$/,'');
+  if(N&&head&&!/^計|釣果なし/.test(head)){o.push(T(32,y,fit('ピークは'+head,story?26:22,W-64),{size:story?26:22,bold:1,fill:'#3fc8c4'}));y+=story?46:36}
+  const b=nKind(tr,sp,'bite'),l=nKind(tr,sp,'lost');
+  const info=[[tr.port,tr.boat].filter(Boolean).join('・'),'席：'+seatLabel(tr),[tideNameOf(tr),tr.start?hm(tr.start)+(tr.end?'〜'+hm(tr.end):''):''].filter(Boolean).join('・'),(b||l)?`アタリ ${b}・バラシ ${l}`:''].filter(Boolean);
+  const fs=story?21:18;info.forEach(t=>{o.push(T(32,y,fit(t,fs,W-64),{size:fs,fill:'#c5d3e2'}));y+=fs*1.6});
+  // 1時間ごとの本数
+  const [t0,t1]=range(tr),h0=new Date(t0).getHours(),h1=Math.max(h0,new Date(t1-1).getHours());const hs=[];for(let h=h0;h<=h1;h++)hs.push(h);
+  const cnt=h=>c.filter(e=>new Date(e.t).getHours()===h),mx=Math.max(1,...hs.map(h=>cnt(h).length));
+  const gy0=y+(story?36:22),gy1=bot-(story?82:72),cx0=32,cw=W-64,bw=cw/hs.length;
+  o.push(`<rect x="${cx0-14}" y="${gy0-16}" width="${cw+28}" height="${gy1-gy0+70}" rx="18" fill="#132236"/>`);
+  o.push(T(cx0,gy0+10,'1時間ごとの'+s.name,{size:story?20:17,bold:1,fill:'#9fb4c6'}));
+  const by0=gy0+(story?62:46),bh=gy1-by0;
+  o.push(`<line x1="${cx0}" y1="${gy1}" x2="${cx0+cw}" y2="${gy1}" stroke="#2c3e55" stroke-width="2"/>`);
+  hs.forEach((h,i)=>{const e=cnt(h),n=e.length,d=e.filter(x=>x.dragon).length,x=cx0+i*bw,w=Math.min(bw*.68,56),xm=x+bw/2;
+    if(n){const hh=Math.max(6,n/mx*bh),hd=d/n*hh;o.push(`<rect x="${r1(xm-w/2)}" y="${r1(gy1-hh)}" width="${r1(w)}" height="${r1(hh)}" rx="6" fill="#e47b25"/>`);
+      if(d)o.push(`<rect x="${r1(xm-w/2)}" y="${r1(gy1-hd)}" width="${r1(w)}" height="${r1(hd)}" rx="6" fill="#f2c063"/>`);
+      o.push(T(xm,gy1-hh-10,String(n),{size:story?26:22,bold:1,anchor:'middle'}))}
+    o.push(T(xm,gy1+(story?30:26),h+'時',{size:hs.length>9?14:story?18:16,fill:'#9fb4c6',anchor:'middle'}))});
+  if(dg)o.push(`<rect x="${cx0+cw-80}" y="${gy0-2}" width="14" height="14" rx="3" fill="#f2c063"/>`+T(cx0+cw,gy0+10,'ドラゴン',{size:14,fill:'#9fb4c6',anchor:'end'}));
+  o.push(T(W/2,bot,'dragon-counter.cutlassfish.tokyo',{size:story?18:16,bold:1,fill:'#3fc8c4',anchor:'middle'}));
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}"><defs><linearGradient id="igbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d1a2b"/><stop offset="1" stop-color="#060a11"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#igbg)"/>${o.join('')}</svg>`}
 const SHR_NM={list:'記録一覧',tl:'時系列の図',seat:'座席の図'};
 function shrSp(tr){return S.ui.figTrip===tr.id?figSp(tr):mainSp(tr)}
 acts.shareAsk=b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which;
-  openSheet(`<div class="sheet-h"><h2>画像で保存・共有</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">LINE・メール・メッセージなどで送れます。</p><div class="shr-pick"><button class="btn primary" data-act="shareMake" data-which="${w}" data-id="${tr.id}">${SHR_NM[w]}だけ</button><button class="btn" data-act="shareMake" data-which="all" data-id="${tr.id}">3つまとめて<small style="display:block;font-weight:500">記録一覧・時系列の図・座席の図</small></button></div>`,{kind:'shr'})};
+  openSheet(`<div class="sheet-h"><h2>画像で保存・共有</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">LINE・メール・メッセージなどで送れます。</p><div class="shr-pick"><button class="btn primary" data-act="shareMake" data-which="${w}" data-id="${tr.id}">${SHR_NM[w]}だけ</button><button class="btn" data-act="shareMake" data-which="all" data-id="${tr.id}">3つまとめて<small style="display:block;font-weight:500">記録一覧・時系列の図・座席の図</small></button></div><h3 class="shr-ig-h">インスタ用（文字を大きく・インスタのサイズで）</h3><div class="shr-ig"><button class="btn" data-act="shareMake" data-which="ig-story" data-id="${tr.id}">ストーリーズ用<small>縦長 1080×1920</small></button><button class="btn" data-act="shareMake" data-which="ig-post" data-id="${tr.id}">投稿用<small>1080×1350</small></button></div>`,{kind:'shr'})};
 acts.shareMake=async b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which,ws=w==='all'?['list','tl','seat']:[w],sp=shrSp(tr);
   b.disabled=true;b.textContent='画像を作っています…';
-  try{const out=[];for(const k of ws){const svg=k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(brandSVG(svg));
-      out.push({blob,url,name:`dragon-${tr.date}-${k==='list'?'list':k==='tl'?'timeline':'seat'}.png`,type:'image/png'})}
+  try{const out=[];for(const k of ws){const ig=k.startsWith('ig-'),svg=ig?instaSVG(tr,sp,k.slice(3)):k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(ig?svg:brandSVG(svg));
+      out.push({blob,url,name:`dragon-${tr.date}-${ig?'insta-'+k.slice(3):k==='list'?'list':k==='tl'?'timeline':'seat'}.png`,type:'image/png'})}
     pendingFile={files:out};
     openSheet(`<div class="sheet-h"><h2>画像${out.length>1?`（${out.length}枚）`:''}</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${SITE?`<button class="btn primary big" data-act="shareFile">写真に保存・共有する</button>`:''}<p class="muted" style="margin:0">画像を長押しして「写真に保存」を選んでも保存できます。</p><div class="shr-imgs">${out.map(f=>`<img class="imgout" src="${f.url}" alt="${esc(f.name)}">`).join('')}</div>`,{kind:'img'})
   }catch(e){toast('画像を作れませんでした。もう一度お試しください');closeSheet()}};
