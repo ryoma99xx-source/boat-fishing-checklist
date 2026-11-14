@@ -2028,7 +2028,7 @@ async function wxMeteo(tr){let ll=tr.spot&&tr.spot.lat!=null?[tr.spot.lat,tr.spo
 const wxBusy=new Set(),wxTried={};
 function wxEnsure(tr){if(!tr||tr.sample||!tr.date||!tr.start||tr.start>Date.now()||wxBusy.has(tr.id))return;const w=tr.wx;
   const full=w&&w.weather&&w.temp!=null&&w.wind!=null;   // 天気・気温・風が欠けた記録は、確定値でも取り直す（10分おき）
-  if(w&&!w.prov&&full)return;if(w&&Date.now()-(w.at||0)<(full?2*3600e3:10*60e3))return;if(Date.now()-(wxTried[tr.id]||0)<10*60e3)return;
+  if(w&&!w.prov&&full)return;if(w&&full&&Date.now()-(w.at||0)<2*3600e3)return;if(Date.now()-(wxTried[tr.id]||0)<10*60e3)return;
   wxTried[tr.id]=Date.now();wxBusy.add(tr.id);
   (async()=>{let r=null;try{if(tr.station==='QN')r=await wxCatch(tr)}catch(e){}
     // 釣果サイトの記録に天気・気温・風が無いときは、Open-Meteo で埋める
