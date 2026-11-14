@@ -2774,10 +2774,10 @@ document.addEventListener('keydown',e=>{if(!active()||S.ui.tab!=='rec'||!$('#she
   if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();addEvent('catch',null,'remote')}else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();addEvent('lost',null,'remote')}});
 
 /* ---------- export ---------- */
-async function svgToPng(svg){const m=svg.match(/width="(\d+)" height="(\d+)"/);const w=+m[1],h=+m[2];const img=new Image();
+async function svgToPng(svg,jpg){const m=svg.match(/width="(\d+)" height="(\d+)"/);const w=+m[1],h=+m[2];const img=new Image();
   await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)});
   const sc=2,cv=document.createElement('canvas');cv.width=w*sc;cv.height=h*sc;const ctx=cv.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);
-  return {blob:await new Promise(r=>cv.toBlob(r,'image/png')),url:cv.toDataURL('image/png')}}
+  const ty=jpg?'image/jpeg':'image/png';return {blob:await new Promise(r=>cv.toBlob(r,ty,.92)),url:cv.toDataURL(ty,.92),type:ty}}
 async function savePng(which){const tr=figTrip();if(!tr)return;const sp=figSp(tr);toast('画像を作っています…');
   try{const svg=which==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(brandSVG(svg));const name=`dragon-${tr.date}-${sp}-${which==='tl'?'timeline':'seat'}.png`;
     if(!SITE){let dl=null;try{dl=await window.claude?.use?.('downloads')}catch(e){}
@@ -2864,8 +2864,8 @@ acts.shareAsk=b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset
   openSheet(`<div class="sheet-h"><h2>画像で保存・共有</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">LINE・メール・メッセージなどで送れます。</p><div class="shr-pick"><button class="btn primary" data-act="shareMake" data-which="${w}" data-id="${tr.id}">${nm(w)}だけ</button><button class="btn" data-act="shareMake" data-which="all" data-id="${tr.id}">${all.length}つまとめて<small style="display:block;font-weight:500">${all.map(nm).join('・')}</small></button></div>${maps.length?`<h3 class="shr-ig-h">地図（国土地理院の地図。電波のある所で）</h3><div class="shr-ig">${maps.map(k=>`<button class="btn" data-act="shareMake" data-which="${k}" data-id="${tr.id}">${k==='map-catch'?'釣れた・アタリ・<br>バラシの場所':'📍で記録した<br>場所'}</button>`).join('')}</div>`:''}<h3 class="shr-ig-h">インスタ用（文字を大きく・インスタのサイズで）</h3><div class="shr-ig"><button class="btn" data-act="shareMake" data-which="ig-story" data-id="${tr.id}">ストーリーズ用<small>縦長 1080×1920</small></button><button class="btn" data-act="shareMake" data-which="ig-post" data-id="${tr.id}">投稿用<small>1080×1350</small></button></div>`,{kind:'shr'})};
 acts.shareMake=async b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which,sp=shrSp(tr),ws=w==='all'?['list','tl','seat',...(catchLocList(tr,sp).length?['map-catch']:[]),...(pointSegs(tr).length?['map-pts']:[])]:[w];
   b.disabled=true;b.textContent='画像を作っています…';
-  try{const out=[];for(const k of ws){const ig=k.startsWith('ig-'),svg=ig?instaSVG(tr,sp,k.slice(3),await instaTop(tr,sp)):k.startsWith('map-')?await inlineTiles(mapExportSVG(tr,sp,k)):k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(ig?svg:brandSVG(svg));
-      out.push({blob,url,name:`dragon-${tr.date}-${ig?'insta-'+k.slice(3):k.startsWith('map-')?k:k==='list'?'list':k==='tl'?'timeline':'seat'}.png`,type:'image/png'})}
+  try{const out=[];for(const k of ws){const ig=k.startsWith('ig-'),svg=ig?instaSVG(tr,sp,k.slice(3),await instaTop(tr,sp)):k.startsWith('map-')?await inlineTiles(mapExportSVG(tr,sp,k)):k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url,type}=await svgToPng(ig?svg:brandSVG(svg),ig);
+      out.push({blob,url,name:`dragon-${tr.date}-${ig?'insta-'+k.slice(3):k.startsWith('map-')?k:k==='list'?'list':k==='tl'?'timeline':'seat'}.${type==='image/jpeg'?'jpg':'png'}`,type})}
     pendingFile={files:out};
     openSheet(`<div class="sheet-h"><h2>画像${out.length>1?`（${out.length}枚）`:''}</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${SITE?`<button class="btn primary big" data-act="shareFile">写真に保存・共有する</button>`:''}<p class="muted" style="margin:0">画像を長押しして「写真に保存」を選んでも保存できます。</p><div class="shr-imgs">${out.map(f=>`<img class="imgout" src="${f.url}" alt="${esc(f.name)}">`).join('')}</div>`,{kind:'img'})
   }catch(e){toast('画像を作れませんでした。もう一度お試しください');closeSheet()}};
