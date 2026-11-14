@@ -2740,7 +2740,7 @@ function instaSVG(tr,sp,fmt){const story=fmt==='story',W=540,H=story?960:675,s=s
   let y=top;
   o.push(T(32,y+14,'DRAGON COUNTER',{size:15,bold:1,fill:'#3fc8c4',ls:2}));o.push(T(W-32,y+14,jdate(tr.date),{size:15,fill:'#9fb4c6',anchor:'end'}));y+=story?78:58;
   o.push(T(32,y,s.name,{size:story?30:26,bold:1}));
-  const big=String(N),bs=story?120:96;o.push(T(32,y+bs*.95,big,{size:bs,bold:1,fill:'#ffb04a'}));o.push(T(32+big.length*bs*.6+8,y+bs*.95,s.unit,{size:story?40:34,bold:1}));
+  const big=String(N),bs=story?120:96;o.push(`<text x="32" y="${r1(y+bs*.95)}" font-weight="800"><tspan font-size="${bs}" fill="#ffb04a">${esc(big)}</tspan><tspan dx="10" font-size="${story?40:34}" fill="#eef3f8">${esc(s.unit)}</tspan></text>`);
   if(dg)o.push(`<g transform="translate(${W-32},${y+bs*.55})"><rect x="-150" y="-30" width="150" height="44" rx="22" fill="#3a2a0e" stroke="#e3a43b" stroke-width="2"/>${T(-75,0,'ドラゴン '+dg+s.unit,{size:20,bold:1,fill:'#f2c063',anchor:'middle'})}</g>`);
   y+=bs*.95+(story?54:40);
   const head=tlTitle(tr,sp).replace(new RegExp('^'+s.name+'は'),'').replace(/、?計\d+.*$/,'');
