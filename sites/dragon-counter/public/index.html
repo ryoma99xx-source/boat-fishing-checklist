@@ -1819,7 +1819,7 @@ function timelineSVG(tr,sp){
     [Math.round(mx),Math.round(mn)].forEach(cm=>o.push(TX(L-8,Y(cm)+4,cm,{size:12,fill:'#a8bdd2',anchor:'end'})));
     tidePts(tr,t0,t1).filter(p=>p.t>=t0&&p.t<=t1).forEach(p=>{const x=X(p.t),yy=Y(p.cm),up=p.type==='high';const bw=76,bx=Math.min(Math.max(x-bw/2,L),W-R-bw),by=up?yy-44:yy+12;
       o.push(`<rect x="${r1(bx)}" y="${r1(by)}" width="${bw}" height="34" rx="6" fill="#f2e55a"/>`);o.push(TX(bx+bw/2,by+15,`${up?'満潮':'干潮'} ${hm(p.t)}`,{size:13,bold:1,fill:'#1a1a1a',anchor:'middle'}));o.push(TX(bx+bw/2,by+29,`${Math.round(p.cm)}cm`,{size:12,bold:1,fill:'#1a1a1a',anchor:'middle'}))});
-    catchesOf(tr,sp).forEach(e=>{if(e.t<t0||e.t>t1)return;const x=X(e.t),yy=Y(fn(e.t));o.push(e.dragon?`<circle cx="${r1(x)}" cy="${r1(yy)}" r="8.5" fill="#e3a43b" stroke="#2a1600" stroke-width="2"/><circle cx="${r1(x)}" cy="${r1(yy)}" r="3.4" fill="#fff3d6"/>`:`<circle cx="${r1(x)}" cy="${r1(yy)}" r="6.5" fill="${P.catch}" stroke="#2a1300" stroke-width="2"/>`)});
+    catchesOf(tr,sp).forEach(e=>{if(e.t<t0||e.t>t1)return;const x=X(e.t),yy=Y(fn(e.t));o.push(e.dragon?`<circle cx="${r1(x)}" cy="${r1(yy)}" r="12.5" fill="#e3a43b"/>`+DGI(x,yy,22):`<circle cx="${r1(x)}" cy="${r1(yy)}" r="6.5" fill="${P.catch}" stroke="#2a1300" stroke-width="2"/>`)});
     y+=H+10}
   else{const top=y;band(top,48,P.bTide);label(top-4,'潮位');o.push(TX(L,top+29,'潮位の地点を選ぶか、満潮・干潮を入れると、ここに潮位の曲線が出ます。',{size:13,fill:P.muted}));y+=58}
   {const H=96,top=y;band(top,H,P.bFlow);label(top,'船首・潮','潮は船から見た向き');const hs=headSegs(tr,t1),fs=stateSegs(tr,t1);
@@ -1852,7 +1852,7 @@ function timelineSVG(tr,sp){
       const rest=es.filter(e=>!s.variants.some(v=>v.id===e.v)).length;if(rest){const h=rest/mx*(bb-bt);yy-=h;o.push(`<rect x="${r1(x)}" y="${r1(yy)}" width="${r1(w)}" height="${r1(h)}" fill="${P.catch}" fill-opacity=".88"/>`)}
       o.push(TX((xa+xb)/2,yy-6,n,{size:13,bold:1,anchor:'middle',fill:P.catch}))});
     o.push(`<line x1="${L}" y1="${bb}" x2="${W-R}" y2="${bb}" stroke="${P.grid}"/>`);
-    const lv=[-99,-99,-99];c.forEach(e=>{const x=X(e.t);let l=lv.findIndex(v=>x-v>=9);if(l<0)l=2;lv[l]=x;o.push(`<circle cx="${r1(x)}" cy="${top+150+l*10}" r="4.2" fill="${vColor(sp,e.v)}"/>`)});
+    const lv=[-99,-99,-99];c.forEach(e=>{const x=X(e.t);let l=lv.findIndex(v=>x-v>=9);if(l<0)l=2;lv[l]=x;o.push(e.dragon?`<circle cx="${r1(x)}" cy="${top+150+l*10}" r="7.5" fill="#e3a43b"/>`+DGI(x,top+150+l*10,13):`<circle cx="${r1(x)}" cy="${top+150+l*10}" r="4.2" fill="${vColor(sp,e.v)}"/>`)});
     ev.filter(e=>e.kind!=='catch').forEach(e=>{const x=X(e.t),yy=top+186;
       o.push(e.kind==='bite'?`<polygon points="${r1(x-5.5)},${yy-5} ${r1(x+5.5)},${yy-5} ${r1(x)},${yy+5}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`:`<polygon points="${r1(x-5.5)},${yy+5} ${r1(x+5.5)},${yy+5} ${r1(x)},${yy-5}" fill="none" stroke="${P.lost}" stroke-width="1.8"/>`)});
     y+=H}
@@ -1879,14 +1879,14 @@ function timelineSVG(tr,sp){
   y+=66;let lx=24;const leg=(sw,txt)=>{o.push(sw(lx)+TX(lx+14,y,txt,{size:12,fill:P.muted}));lx+=14+txt.length*12.5+18};
   const usedV=s.variants.filter(v=>c.some(e=>e.v===v.id));
   if(usedV.length>1)usedV.forEach(v=>leg(x=>`<circle cx="${x+5}" cy="${y-4}" r="4.5" fill="${vColor(sp,v.id)}"/>`,v.short||v.name));else leg(x=>`<circle cx="${x+5}" cy="${y-4}" r="4.5" fill="${P.catch}"/>`,'釣れた');
-  leg(x=>`<polygon points="${x},${y-9} ${x+11},${y-9} ${x+5.5},${y+1}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`,'アタリ');
+  if(c.some(e=>e.dragon))leg(x=>DGI(x+6,y-4,15),'ドラゴン');leg(x=>`<polygon points="${x},${y-9} ${x+11},${y-9} ${x+5.5},${y+1}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`,'アタリ');
   leg(x=>`<polygon points="${x},${y+1} ${x+11},${y+1} ${x+5.5},${y-9}" fill="none" stroke="${P.lost}" stroke-width="1.8"/>`,'バラシ');
   o.push(`<rect x="${lx}" y="${y-9}" width="20" height="8" rx="4" fill="${P.slow}"/><rect x="${lx+22}" y="${y-9}" width="20" height="8" rx="4" fill="${P.normal}"/><rect x="${lx+44}" y="${y-9}" width="20" height="8" rx="4" fill="${P.fast}"/>`+TX(lx+72,y,'潮の速さ（緩い・普通・速い）',{size:12,fill:P.muted}));
   if(dv.length){y+=22;o.push(`<rect x="24" y="${y-12}" width="16" height="16" rx="3" fill="${P.catch}"/>`+TX(32,y+1,'巻',{size:10,bold:1,fill:'#fff',anchor:'middle'})+TX(46,y,'誘い中（塗り）',{size:12,fill:P.muted})+`<rect x="140" y="${y-12}" width="16" height="16" rx="3" fill="#fff" stroke="${P.catch}" stroke-width="1.6"/>`+TX(148,y+1,'叩',{size:10,bold:1,fill:P.catch,anchor:'middle'})+TX(162,y,'ステイ中（白抜き）　巻＝巻き　叩＝叩き　フ＝フォール　置＝置き竿　即＝即掛け　深＝深追い　枠の色＝釣れた／アタリ／バラシ',{size:12,fill:P.muted}))}
   y+=22;o.push(TX(24,y,tr.station?`※潮位は気象庁の潮位表（${stName(tr.station)}）をもとに計算した推算値です。潮の向きは船首を上にしたときの、潮が流れていく向きです。`:'※潮位は満潮・干潮の時刻と潮位から補間した概形です。潮の向きは船首を上にしたときの、潮が流れていく向きです。',{size:11,fill:P.muted}));
   if(tr.station&&offBay(tr)){y+=20;o.push(TX(24,y,'※東京湾の外では、潮の向きと速さを Open-Meteo の海流データ（約8km四方の推算値）から出しています。',{size:11,fill:P.muted}))}
   y+=18;o.push(TX(24,y,'※本数は自分の席で釣れた分だけです。',{size:11,fill:P.muted}));const Ht=y+20;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}" font-family="${CF}" role="img" aria-label="${esc(tlTitle(tr,sp))}"><rect width="${W}" height="${Ht}" rx="16" fill="${P.card}"/>${under.join('')}${o.join('')}</svg>`}
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}" font-family="${CF}" role="img" aria-label="${esc(tlTitle(tr,sp))}"><rect width="${W}" height="${Ht}" rx="16" fill="${P.card}"/>${under.join('')}${dgDefs(o)}${o.join('')}</svg>`}
 function sizeBins(sp,vals){const u=spOf(sp).sizeUnit,m={},ord=[];const add=k=>{if(!(k in m)){m[k]=0;ord.push(k)}m[k]++};
   const nums=vals.map(Number).filter(v=>isFinite(v)).sort((a,b)=>a-b);
   if(u==='指')nums.forEach(v=>add(v<=3?'指3以下':v>=5?'120cm以上':'指'+v));
@@ -1918,7 +1918,8 @@ function seatSVG(tr,sp){
     if(st.length>maxRows){ly+=19;o.push(TX(lx,ly,`ほか${st.length-maxRows}件は下の一覧`,{size:11.5,fill:P.muted}))}}
   for(const side of ['L','R'])for(let i=1;i<=n;i++){const x=side==='L'?xl:xr,y=ys(i),me=tr.side===side&&tr.seat===i;
     o.push(me?`<circle cx="${x}" cy="${r1(y)}" r="13" fill="${P.catch}" stroke="#fff" stroke-width="3"/>`:`<circle cx="${x}" cy="${r1(y)}" r="6.5" fill="${P.seatOff}"/>`)}
-  {const y=ys(tr.seat),R=tr.side==='R',x=R?xr+28:xl-28,an=R?'start':'end';o.push(TX(x,y-12,seatShort(tr),{size:17,bold:1,anchor:an}));o.push(TX(x,y+32,`${N}${s.unit}`,{size:42,bold:1,fill:P.catch,anchor:an}))}
+  {const y=ys(tr.seat),R=tr.side==='R',x=R?xr+28:xl-28,an=R?'start':'end';o.push(TX(x,y-12,seatShort(tr),{size:17,bold:1,anchor:an}));o.push(TX(x,y+32,`${N}${s.unit}`,{size:42,bold:1,fill:P.catch,anchor:an}));
+    const nd=c.filter(e=>e.dragon).length;if(nd){const t=`ドラゴン ${nd}${s.unit}`;o.push(R?DGI(x+11,y+58,22)+TX(x+26,y+64,t,{size:15,bold:1,fill:'#b7791f'}):DGI(x-11,y+58,22)+TX(x-26,y+64,t,{size:15,bold:1,fill:'#b7791f',anchor:'end'}))}}
   let y=746;const X0=32,X1=310;const span=tripEndT(tr,ev.length?ev[ev.length-1].t:tr.start)-tr.start;
   o.push(TX(X0,y,`${s.name}の合計`,{size:15,fill:P.muted}));o.push(TX(X0,y+62,`${N}${s.unit}`,{size:62,bold:1,fill:P.catch}));
   o.push(TX(X1,y,`1時間あたり ${span>0?r1(N/(span/3600e3)):0}${s.unit}`,{size:17}));o.push(TX(X1,y+30,`アタリ ${nKind(tr,sp,'bite')}回・バラシ ${nKind(tr,sp,'lost')}回`,{size:17}));
@@ -1936,7 +1937,7 @@ function seatSVG(tr,sp){
     const gaps=[];let cur=tr.start;hs.forEach(q=>{if(q.t-cur>5*60e3)gaps.push([cur,q.t]);cur=Math.max(cur,q.te)});if(tE-cur>5*60e3)gaps.push([cur,tE]);
     gaps.forEach(([a,b])=>{y+=30;o.push(TX(X0,y,`${hm(a)}〜${hm(b)}`,{size:15,fill:P.muted}));o.push(TX(X0+120,y,'船首の向きなし（潮の向きなし）',{size:15,fill:P.muted}))})}
   const H=y+56;o.push(TX(W/2,H-20,'※本数は自分の席で釣れた分だけです。ほかの席の点は位置だけを示します。',{size:13,fill:P.muted,anchor:'middle'}));
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="${esc(title)}"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${o.join('')}</svg>`}
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="${esc(title)}"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${dgDefs(o)}${o.join('')}</svg>`}
 function figCalSheet(){const all=trips(),cur=figTrip();const now=new Date();
   const ym=S.ui.figCalYM||(cur?cur.date.slice(0,7):`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`);const [Y,M]=ym.split('-').map(Number);
   const by={};all.forEach(t=>{(by[t.date]=by[t.date]||[]).push(t)});const sel=S.ui.figCalDay&&S.ui.figCalDay.startsWith(ym)?S.ui.figCalDay:'';
@@ -2736,6 +2737,11 @@ async function savePng(which){const tr=figTrip();if(!tr)return;const sp=figSp(tr
     $('#toast').hidden=true;openSheet(`<div class="sheet-h"><h2>画像</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${SITE?'<button class="btn primary big" data-act="shareFile">写真に保存・共有する</button>':''}<p class="muted">画像を長押しして「写真に保存」を選んでも保存できます。</p><img class="imgout" src="${url}" alt="${esc(name)}">`,{kind:'img'})
   }catch(e){toast('画像を作れませんでした。もう一度お試しください')}}
 /* record list as an image (oldest first), for sharing */
+/* 画像の中のドラゴンのアイコン（アプリのアイコンと同じ絵。SVG の中に1回だけ埋め込んで <use> で使う） */
+let DG_URI=null;
+const dgUri=()=>{if(DG_URI===null){const m=[...document.querySelectorAll('style')].map(x=>x.textContent).join('').match(/\.ic-dragon\{background-image:url\((data:image\/[a-z]+;base64,[^)]+)\)/);DG_URI=m?m[1]:''}return DG_URI};
+const DGI=(cx,cy,d)=>`<use href="#dgI" x="${r1(cx-d/2)}" y="${r1(cy-d/2)}" width="${r1(d)}" height="${r1(d)}"/>`;
+const dgDefs=o=>o.some(x=>x.includes('#dgI'))&&dgUri()?`<defs><clipPath id="dgC"><circle cx="32" cy="32" r="32"/></clipPath><symbol id="dgI" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="#2a1600"/><image href="${dgUri()}" width="64" height="64" clip-path="url(#dgC)"/></symbol></defs>`:'';
 function listSVG(tr){const W=600,X0=28,RH=40,ev=sortEv(tr),o=[];const nCatch=ev.filter(e=>e.kind==='catch').length;
   o.push(TX(X0,50,'記録一覧',{size:26,bold:1}));o.push(TX(W-X0,50,nCatch?`釣果 ${nCatch}`:'',{size:17,bold:1,fill:P.catch,anchor:'end'}));
   o.push(TX(X0,78,`${jdate(tr.date)}｜${tr.boat||''}${tr.port?'（'+tr.port+'）':''}`,{size:15,fill:P.muted}));
@@ -2744,11 +2750,11 @@ function listSVG(tr){const W=600,X0=28,RH=40,ev=sortEv(tr),o=[];const nCatch=ev.
     if(e.kind==='catch'){cnt[e.sp]=(cnt[e.sp]||0)+1;kind=`${s.variants.length>1?vShort(e.sp,e.v):s.name} ${cnt[e.sp]}${s.unit}目`;col=P.catch}
     else if(e.kind==='gedo'){kind='外道 '+(e.name||'');col=P.muted}else{kind=KIND_JP[e.kind]||'';col=P[e.kind]||P.ink}
     if(i%2===0)o.push(`<rect x="16" y="${y}" width="${W-32}" height="${RH}" rx="8" fill="#eef4f6"/>`);
-    o.push(TX(X0,y+27,hm(e.t),{size:19,bold:1}));o.push(TX(X0+70,y+27,clip(kind,150,15),{size:15,bold:1,fill:col}));
+    o.push(TX(X0,y+27,hm(e.t),{size:19,bold:1}));const dgn=e.kind==='catch'&&e.dragon;if(dgn)o.push(DGI(X0+81,y+RH/2,24));o.push(TX(X0+(dgn?98:70),y+27,clip(kind,dgn?122:150,15),{size:15,bold:1,fill:col}));
     o.push(TX(X0+232,y+27,clip(evGearText(e),W-X0-232-X0,14),{size:14,fill:P.muted}));y+=RH});
   if(!ev.length){o.push(TX(X0,y+30,'記録がありません',{size:15,fill:P.muted}));y+=50}
   const H=y+24;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="記録一覧"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${o.join('')}</svg>`}
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="記録一覧"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${dgDefs(o)}${o.join('')}</svg>`}
 /* shared images carry the tool name and its address in a footer band */
 function brandSVG(svg){const m=svg.match(/width="(\d+)" height="(\d+)"/);if(!m)return svg;const W=+m[1],H=+m[2],k=W/600,F=Math.round(56*k),z=n=>r1(n*k);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H+F}" viewBox="0 0 ${W} ${H+F}" font-family="${CF}"><rect width="${W}" height="${H+F}" fill="#0b1422"/><rect width="${W}" height="${H}" fill="${P.card}"/>${svg.replace('<svg ','<svg x="0" y="0" ')}<text x="${z(24)}" y="${H+z(25)}" font-size="${z(17)}" font-weight="700" fill="#ffffff" letter-spacing="${z(1.5)}">DRAGON COUNTER</text><text x="${z(24)}" y="${H+z(43)}" font-size="${z(11)}" fill="#9fb4c6">東京湾の魚・釣り / 3rd-Penguin Fishing Lab.</text><text x="${W-z(24)}" y="${H+z(34)}" font-size="${z(13)}" font-weight="700" fill="#3fc8c4" text-anchor="end">dragon-counter.cutlassfish.tokyo</text></svg>`}
@@ -2766,7 +2772,8 @@ function instaSVG(tr,sp,fmt,tt){const story=fmt==='story',W=540,H=story?960:675,
   const top=story?118:34,bot=story?H-118:H-26;   // ストーリーズは上下をインスタの表示に隠れない位置まで空ける
   let y=top;
   o.push(T(32,y+14,'DRAGON COUNTER',{size:15,bold:1,fill:'#3fc8c4',ls:2}));o.push(T(W-32,y+14,jdate(tr.date),{size:15,fill:'#9fb4c6',anchor:'end'}));y+=story?78:58;
-  const yName=y;o.push(`<text x="32" y="${r1(y)}" font-weight="800"><tspan font-size="${story?30:26}" fill="#eef3f8">${esc(s.name)}</tspan>${dg?`<tspan dx="14" font-size="${story?22:19}" fill="#f2c063">ドラゴン ${dg}${esc(s.unit)}</tspan>`:''}</text>`);
+  const yName=y;o.push(`<text x="32" y="${r1(y)}" font-weight="800"><tspan font-size="${story?30:26}" fill="#eef3f8">${esc(s.name)}</tspan></text>`);
+  if(dg){const nz=story?30:26,dz=story?22:19,dx=32+s.name.length*nz+18;o.push(DGI(dx+dz*.6,y-dz*.35,dz*1.3)+T(dx+dz*1.4,y,`ドラゴン ${dg}${s.unit}`,{size:dz,bold:1,fill:'#f2c063'}))}
   const big=String(N),bs=story?120:96;o.push(`<text x="32" y="${r1(y+bs*.95)}" font-weight="800"><tspan font-size="${bs}" fill="#ffb04a">${esc(big)}</tspan><tspan dx="10" font-size="${story?40:34}" fill="#eef3f8">${esc(s.unit)}</tspan></text>`);
   y+=bs*.95;
   if(tt){const cw=story?222:212,cx=W-32-cw,cy=yName+(story?16:12),ph=story?84:70,lw=cw-24,fz=story?15:14;
@@ -2800,7 +2807,7 @@ function instaSVG(tr,sp,fmt,tt){const story=fmt==='story',W=540,H=story?960:675,
     o.push(T(xm,gy1+(story?30:26),h+'時',{size:hs.length>9?14:story?18:16,fill:'#9fb4c6',anchor:'middle'}))});
   if(dg)o.push(`<rect x="${cx0+cw-80}" y="${gy0-2}" width="14" height="14" rx="3" fill="#f2c063"/>`+T(cx0+cw,gy0+10,'ドラゴン',{size:14,fill:'#9fb4c6',anchor:'end'}));
   o.push(T(W/2,bot,'dragon-counter.cutlassfish.tokyo',{size:story?18:16,bold:1,fill:'#3fc8c4',anchor:'middle'}));
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}"><defs><linearGradient id="igbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d1a2b"/><stop offset="1" stop-color="#060a11"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#igbg)"/>${o.join('')}</svg>`}
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}"><defs><linearGradient id="igbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d1a2b"/><stop offset="1" stop-color="#060a11"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#igbg)"/>${dgDefs(o)}${o.join('')}</svg>`}
 const SHR_NM={list:'記録一覧',tl:'時系列の図',seat:'座席の図'};
 function shrSp(tr){return S.ui.figTrip===tr.id?figSp(tr):mainSp(tr)}
 acts.shareAsk=b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which;
