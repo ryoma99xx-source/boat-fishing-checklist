@@ -2027,10 +2027,16 @@ async function wxMeteo(tr){let ll=tr.spot&&tr.spot.lat!=null?[tr.spot.lat,tr.spo
   return wxTxt(w)?w:null}
 const wxBusy=new Set(),wxTried={};
 function wxEnsure(tr){if(!tr||tr.sample||!tr.date||!tr.start||tr.start>Date.now()||wxBusy.has(tr.id))return;const w=tr.wx;
-  if(w&&!w.prov)return;if(w&&Date.now()-(w.at||0)<2*3600e3)return;if(Date.now()-(wxTried[tr.id]||0)<10*60e3)return;
+  const full=w&&w.weather&&w.temp!=null&&w.wind!=null;   // 天気・気温・風が欠けた記録は、確定値でも取り直す（10分おき）
+  if(w&&!w.prov&&full)return;if(w&&Date.now()-(w.at||0)<(full?2*3600e3:10*60e3))return;if(Date.now()-(wxTried[tr.id]||0)<10*60e3)return;
   wxTried[tr.id]=Date.now();wxBusy.add(tr.id);
-  (async()=>{let r=null;try{if(tr.station==='QN')r=await wxCatch(tr)}catch(e){}if(!r){try{r=await wxMeteo(tr)}catch(e){}}
-    wxBusy.delete(tr.id);const t=S.trips[tr.id];if(!r||!t)return;r.at=Date.now();t.wx=r;touch(t);if(['fig','hist'].includes(S.ui.tab)&&$('#sheet').hidden)render()})()}
+  (async()=>{let r=null;try{if(tr.station==='QN')r=await wxCatch(tr)}catch(e){}
+    // 釣果サイトの記録に天気・気温・風が無いときは、Open-Meteo で埋める
+    if(!r||!r.weather||r.temp==null||r.wind==null){let m=null;try{m=await wxMeteo(tr)}catch(e){}
+      if(!r)r=m;else if(m){for(const k of ['weather','temp','wind','dir'])if(r[k]==null||r[k]==='')r[k]=m[k];if(m.prov&&(r.temp===m.temp||r.wind===m.wind))r.prov=true}}
+    wxBusy.delete(tr.id);const t=S.trips[tr.id];if(!r||!t)return;
+    const old=t.wx||{};for(const k of ['weather','temp','wind','dir','wave','sst'])if((r[k]==null||r[k]==='')&&old[k]!=null&&old[k]!=='')r[k]=old[k];   // 取り直しで値が消えないように、前の値を残す
+    r.at=Date.now();t.wx=r;touch(t);if(['fig','hist'].includes(S.ui.tab)&&$('#sheet').hidden)render()})()}
 const tripHours=t=>Math.max(0,(tripEndT(t)-t.start)/3600e3);
 function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYear());
   const all=trips().filter(t=>!t.sample);const L=per==='year'?all.filter(t=>t.date.startsWith(y0)):per==='90'?all.filter(t=>Date.now()-dayStart(t.date)<=90*864e5):all;
