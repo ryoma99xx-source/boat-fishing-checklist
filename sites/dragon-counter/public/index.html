@@ -1757,6 +1757,15 @@ function locMapSVG(P,col,W=360,H=250){const pad=26,wx=lon=>(lon+180)/360,wy=lat=
   const mpp=156543.03*Math.cos(lat*Math.PI/180)/2**z,nice=[50,100,200,500,1000,2000,5000,10000,20000,50000].filter(m=>m/mpp<=W/4).pop()||50,bw=nice/mpp;
   o.push(`<rect x="8" y="${H-26}" width="${r1(bw+16)}" height="20" rx="4" fill="#fff" fill-opacity=".85"/><path d="M16 ${H-12}v4h${r1(bw)}v-4" fill="none" stroke="#1d2b36" stroke-width="1.6"/><text x="${r1(16+bw/2)}" y="${H-14}" font-size="10" fill="#1d2b36" text-anchor="middle">${nice>=1000?nice/1000+'km':nice+'m'}</text>`);
   o.push(`<rect x="${W-74}" y="${H-16}" width="74" height="16" fill="#fff" fill-opacity=".8"/><text x="${W-4}" y="${H-5}" font-size="9" fill="#444" text-anchor="end">地理院タイル</text>`);
+  // 広域の小さな地図（どのあたりかが分かるように）。点に重ならない角に置く
+  {const zi=Math.max(8,Math.min(10,z-4)),Si=256*2**zi,IW=Math.round(W*.34),IH=Math.round(H*.4),m=8,icx=(x0+x1)/2*Si,icy=(y0+y1)/2*Si,iox=icx-IW/2,ioy=icy-IH/2,q=[];
+    for(let tx=Math.floor(iox/256);tx<=Math.floor((iox+IW)/256);tx++)for(let ty=Math.floor(ioy/256);ty<=Math.floor((ioy+IH)/256);ty++)
+      q.push(`<image href="https://cyberjapandata.gsi.go.jp/xyz/pale/${zi}/${tx}/${ty}.png" x="${r1(tx*256-iox)}" y="${r1(ty*256-ioy)}" width="256" height="256"/>`);
+    const k=2**(zi-z),rw=Math.max(8,W*k),rh=Math.max(8,H*k);
+    q.push(`<rect x="${r1(IW/2-rw/2)}" y="${r1(IH/2-rh/2)}" width="${r1(rw)}" height="${r1(rh)}" fill="#e53935" fill-opacity=".15" stroke="#e53935" stroke-width="2"/>`);
+    const corners=[[W-IW-m,m],[m,m],[W-IW-m,H-IH-22],[m,H-IH-32]],hit=([cx,cy])=>pt.some(p=>p.x>cx-R&&p.x<cx+IW+R&&p.y>cy-R&&p.y<cy+IH+R);
+    const [ix,iy]=corners.find(c=>!hit(c))||corners[0];
+    o.push(`<rect x="${ix-2}" y="${iy-2}" width="${IW+4}" height="${IH+4}" rx="6" fill="#fff"/><svg x="${ix}" y="${iy}" width="${IW}" height="${IH}" viewBox="0 0 ${IW} ${IH}"><rect width="${IW}" height="${IH}" fill="#e6eef2"/>${q.join('')}</svg><rect x="${ix}" y="${iy}" width="${IW}" height="${IH}" rx="4" fill="none" stroke="#1d2b36" stroke-opacity=".5"/><text x="${ix+4}" y="${iy+IH-4}" font-size="9" fill="#1d2b36" stroke="#fff" stroke-width="2.5" paint-order="stroke">広域（赤枠＝この地図）</text>`)}
   return `<svg class="locmap" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="記録した場所の地図"><defs><marker id="mArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1d2b36"/></marker></defs><rect width="${W}" height="${H}" fill="#e6eef2"/>${o.join('')}</svg>`}
 function locMaps(L,col){const sg=mapSegs(L);return sg.map((P,k)=>`<div class="locmap-w">${sg.length>1?`<p class="locmap-h">${k+1}枚目（${P.length>1?`${hm(P[0].t)}〜${hm(P[P.length-1].t)}・${P[0].no}〜${P[P.length-1].no}`:`${hm(P[0].t)}・${P[0].no}`}）</p>`:''}${locMapSVG(P,col)}</div>`).join('')+(sg.length>1?`<p class="muted" style="font-size:12px;margin:4px 0 0">続けて記録した場所が${MAP_SPLIT_KM}km以上離れたところで、地図を分けています。</p>`:'')}
 /* 釣れたときに、その時の位置（GPS）も自動で残す。取れなければ何もしない（記録はそのまま） */
