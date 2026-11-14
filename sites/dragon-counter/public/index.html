@@ -172,7 +172,7 @@ input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width
 /* iPhone: keep sheet children at full height so the panel itself scrolls; stop the page behind from scrolling */
 .sheet-panel>*{flex-shrink:0}
 body:has(#sheet:not([hidden])){overflow:hidden}
-.shr-pick{display:flex;flex-direction:column;gap:10px}.locmap-w{margin:10px 0 0}.locmap{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#e6eef2}.locmap-h{margin:0 0 4px;font-size:13px;font-weight:700}.locmap-lg{margin:6px 0 8px;font-size:12px;color:var(--muted)}.locmap-lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 8px;vertical-align:-1px}.locmap-lg i:first-child{margin-left:0}.evmap{cursor:crosshair}.evmap-act{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.evmap-act .btn{min-height:34px}.locmap-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.btn.gmap{font-size:12px;min-height:32px;padding:4px 12px}.shr-ig-h{margin:16px 0 8px;font-size:14px;color:var(--muted)}.shr-ig{display:grid;grid-template-columns:1fr 1fr;gap:10px}.shr-ig .btn small{display:block;font-weight:500;font-size:12px}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
+.shr-pick{display:flex;flex-direction:column;gap:10px}.locmap-w{margin:10px 0 0}.locmap{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#e6eef2}.locmap-h{margin:0 0 4px;font-size:13px;font-weight:700}.locmap-lg{margin:6px 0 8px;font-size:12px;color:var(--muted)}.locmap-lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 8px;vertical-align:-1px}.locmap-lg i:first-child{margin-left:0}.evmap{cursor:crosshair}.evmap-act{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.evmap-act .btn{min-height:34px}.linkbtn{background:none;border:0;padding:0 2px;color:var(--teal);text-decoration:underline;font:inherit;font-size:12px;cursor:pointer}.locmap-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.btn.gmap{font-size:12px;min-height:32px;padding:4px 12px}.shr-ig-h{margin:16px 0 8px;font-size:14px;color:var(--muted)}.shr-ig{display:grid;grid-template-columns:1fr 1fr;gap:10px}.shr-ig .btn small{display:block;font-weight:500;font-size:12px}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
 /* the tenya catalog is long: keep the title + 完了 pinned at the top and a 完了 bar pinned at the bottom of the sheet */
 .sheet-h.stick{position:sticky;top:-18px;z-index:3;margin:-18px calc(-1 * max(16px,env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:14px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-bottom:1px solid var(--line)}
 .tb-foot{position:sticky;bottom:calc(-24px - env(safe-area-inset-bottom,0px));z-index:3;margin:0 calc(-1 * max(16px,env(safe-area-inset-right,0px))) calc(-24px - env(safe-area-inset-bottom,0px)) calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-top:1px solid var(--line)}
@@ -1996,7 +1996,7 @@ function memoSheet(id){const tr=S.trips[id];if(!tr)return;
 const memoHTML=t=>(t.memo||'').trim()?`<div class="memo-box">📝 ${esc(t.memo.trim()).replace(/\n/g,'<br>')}</div>`:'';
 function tripCardHTML(t){wxEnsure(t);return `<div class="trip"><div class="trip-h"><div style="min-width:0"><b>${jdate(t.date)}</b>${isTairyo(t.date)?tairyoTag():''}<div class="muted">${esc(t.boat)}・${esc(seatLabel(t))}${t.port?'・'+esc(t.port):''}</div></div></div>
     <div class="trip-sum">${esc(tripSummary(t))||'記録なし'}${nDragon(t,'tachiuo')?`<span class="dn-s"><i class="ic ic-dragon"></i>ドラゴン ${nDragon(t,'tachiuo')}</span>`:''}</div>
-    <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>${t.tk&&t.tk.sets&&t.tk.sets.length?`<div class="muted tk-used">🎣 ${t.tk.sets.map(id=>esc(tkLabelOf(t,id))).join('<br>🎣 ')}</div>`:''}${memoHTML(t)}${t.wx&&wxTxt(t.wx)?`<div class="muted wx-line">${wxTxt(t.wx).split('・').map(x=>`<span>${esc(x)}</span>`).join('・')}</div>`:''}
+    <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>${t.tk&&t.tk.sets&&t.tk.sets.length?`<div class="muted tk-used">🎣 ${t.tk.sets.map(id=>esc(tkLabelOf(t,id))).join('<br>🎣 ')}</div>`:''}${memoHTML(t)}${t.wx&&wxTxt(t.wx)?`<div class="muted wx-line">${wxTxt(t.wx).split('・').map(x=>`<span>${esc(x)}</span>`).join('・')} <button class="linkbtn" data-act="wxRefresh" data-id="${t.id}">天気を取り直す</button></div>`:''}
     <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm two" data-act="tripEdit" data-id="${t.id}">釣行の情報を直す<small>日付・船・席・時間</small></button><button class="btn sm two" data-act="evList" data-id="${t.id}">記録を見る・修正する<small>釣れた・アタリ・バラシ・外道を1件ずつ</small></button>
     ${t.status==='done'&&!t.sample&&!active()?`<button class="btn sm" data-act="reopen" data-id="${t.id}">記録を再開</button>`:''}
     <button class="btn sm danger" data-act="delTrip" data-id="${t.id}">${t.sample?'サンプルを消す':'消す'}</button></div></div>`}
@@ -2026,17 +2026,17 @@ async function wxMeteo(tr){let ll=tr.spot&&tr.spot.lat!=null?[tr.spot.lat,tr.spo
   const w={src:'open-meteo',weather:mode!=null?wmoLabel(mode):'',temp:r1n(avg(pick(f,'temperature_2m'))),wind:r1n(avg(ws)),dir,wave:bay?r1n(avg(pick(m,'wave_height'))):null,noWave:!bay,sst:r1n(avg(pick(m,'sea_surface_temperature'))),prov:tr.date>=ymd(Date.now())||tr.status==='active',win:hm(a)+'-'+hm(b)};
   return wxTxt(w)?w:null}
 const wxBusy=new Set(),wxTried={};
-function wxEnsure(tr){if(!tr||tr.sample||!tr.date||!tr.start||tr.start>Date.now()||wxBusy.has(tr.id))return;const w=tr.wx;
+function wxEnsure(tr,force){if(!tr||tr.sample||!tr.date||!tr.start||tr.start>Date.now()||wxBusy.has(tr.id))return;const w=tr.wx;if(!force){
   const full=w&&w.weather&&w.temp!=null&&w.wind!=null;   // 天気・気温・風が欠けた記録は、確定値でも取り直す（10分おき）
-  if(w&&!w.prov&&full)return;if(w&&full&&Date.now()-(w.at||0)<2*3600e3)return;if(Date.now()-(wxTried[tr.id]||0)<10*60e3)return;
+  if(w&&!w.prov&&full)return;if(w&&full&&Date.now()-(w.at||0)<2*3600e3)return;if(Date.now()-(wxTried[tr.id]||0)<10*60e3)return}
   wxTried[tr.id]=Date.now();wxBusy.add(tr.id);
   (async()=>{let r=null;try{if(tr.station==='QN')r=await wxCatch(tr)}catch(e){}
     // 釣果サイトの記録に天気・気温・風が無いときは、Open-Meteo で埋める
     if(!r||!r.weather||r.temp==null||r.wind==null){let m=null;try{m=await wxMeteo(tr)}catch(e){}
       if(!r)r=m;else if(m){for(const k of ['weather','temp','wind','dir'])if(r[k]==null||r[k]==='')r[k]=m[k];if(m.prov&&(r.temp===m.temp||r.wind===m.wind))r.prov=true}}
-    wxBusy.delete(tr.id);const t=S.trips[tr.id];if(!r||!t)return;
+    wxBusy.delete(tr.id);const t=S.trips[tr.id];if(!r||!t){if(force)toast('天気を取れませんでした。電波のある所でもう一度押してください');return}
     const old=t.wx||{};for(const k of ['weather','temp','wind','dir','wave','sst'])if((r[k]==null||r[k]==='')&&old[k]!=null&&old[k]!=='')r[k]=old[k];   // 取り直しで値が消えないように、前の値を残す
-    r.at=Date.now();t.wx=r;touch(t);if(['fig','hist'].includes(S.ui.tab)&&$('#sheet').hidden)render()})()}
+    r.at=Date.now();t.wx=r;if(force)toast('天気：'+wxTxt(r));touch(t);if(['fig','hist'].includes(S.ui.tab)&&$('#sheet').hidden)render()})()}
 const tripHours=t=>Math.max(0,(tripEndT(t)-t.start)/3600e3);
 function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYear());
   const all=trips().filter(t=>!t.sample);const L=per==='year'?all.filter(t=>t.date.startsWith(y0)):per==='90'?all.filter(t=>Date.now()-dayStart(t.date)<=90*864e5):all;
@@ -2698,6 +2698,7 @@ const acts={
   evLocPrev:()=>{const f=evF,tr=S.trips[f.tid],ft=tAt(tr,f.t),p=tr.events.filter(x=>x.id!==f.id&&isFinite(x.lat)&&x.t<ft).sort((a,b)=>a.t-b.t).pop();if(!p)return;f.lat=p.lat;f.lon=p.lon;f.acc=p.acc||0;f.locEd=true;evRerender()},
   evLocDel:()=>{evF.lat=null;evF.lon=null;evF.locEd=true;evRerender()},
   evLocReset:()=>{const f=evF,e=S.trips[f.tid].events.find(x=>x.id===f.id);f.lat=isFinite(e.lat)?e.lat:null;f.lon=isFinite(e.lon)?e.lon:null;f.acc=e.acc||0;f.locEd=false;evRerender()},
+  wxRefresh:b=>{const t=S.trips[b.dataset.id];if(!t)return;toast('天気を取り直しています…');wxEnsure(t,true)},
   evDel:()=>{if(!evF.armed){evF.armed=true;return renderEvSheet()}const tr=S.trips[evF.tid];tr.events=tr.events.filter(x=>x.id!==evF.id);touch(tr);toast('消しました');evBack()},
   png:b=>savePng(b.dataset.which),
   figSp:b=>{S.ui.figSp=b.dataset.id;saveLocal();render()},
