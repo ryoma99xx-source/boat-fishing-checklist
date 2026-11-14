@@ -172,7 +172,7 @@ input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width
 /* iPhone: keep sheet children at full height so the panel itself scrolls; stop the page behind from scrolling */
 .sheet-panel>*{flex-shrink:0}
 body:has(#sheet:not([hidden])){overflow:hidden}
-.shr-pick{display:flex;flex-direction:column;gap:10px}.locmap-w{margin:10px 0 0}.locmap{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#e6eef2}.locmap-h{margin:0 0 4px;font-size:13px;font-weight:700}.locmap-lg{margin:6px 0 8px;font-size:12px;color:var(--muted)}.locmap-lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 8px;vertical-align:-1px}.locmap-lg i:first-child{margin-left:0}.btn.gmap{font-size:12px;min-height:32px;padding:4px 12px}.shr-ig-h{margin:16px 0 8px;font-size:14px;color:var(--muted)}.shr-ig{display:grid;grid-template-columns:1fr 1fr;gap:10px}.shr-ig .btn small{display:block;font-weight:500;font-size:12px}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
+.shr-pick{display:flex;flex-direction:column;gap:10px}.locmap-w{margin:10px 0 0}.locmap{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#e6eef2}.locmap-h{margin:0 0 4px;font-size:13px;font-weight:700}.locmap-lg{margin:6px 0 8px;font-size:12px;color:var(--muted)}.locmap-lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 8px;vertical-align:-1px}.locmap-lg i:first-child{margin-left:0}.locmap-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.btn.gmap{font-size:12px;min-height:32px;padding:4px 12px}.shr-ig-h{margin:16px 0 8px;font-size:14px;color:var(--muted)}.shr-ig{display:grid;grid-template-columns:1fr 1fr;gap:10px}.shr-ig .btn small{display:block;font-weight:500;font-size:12px}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
 /* the tenya catalog is long: keep the title + 完了 pinned at the top and a 完了 bar pinned at the bottom of the sheet */
 .sheet-h.stick{position:sticky;top:-18px;z-index:3;margin:-18px calc(-1 * max(16px,env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:14px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-bottom:1px solid var(--line)}
 .tb-foot{position:sticky;bottom:calc(-24px - env(safe-area-inset-bottom,0px));z-index:3;margin:0 calc(-1 * max(16px,env(safe-area-inset-right,0px))) calc(-24px - env(safe-area-inset-bottom,0px)) calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-top:1px solid var(--line)}
@@ -1738,12 +1738,12 @@ function pointsCard(tr){const sg=pointSegs(tr);if(!sg.length)return '';const s=s
   const route=sg.length>1?`https://www.google.com/maps/dir/${sg.map(p=>p.lat.toFixed(5)+','+p.lon.toFixed(5)).join('/')}`:mapUrl(sg[0]);
   return `<div class="card"><h2>📍で記録した場所（${sg.length}か所）</h2><p class="muted">「📍場所」を押した時刻から、次に押すまでの記録です。</p>
    <div class="pts">${sg.map(p=>`<div class="pt"><b>${p.i+1}</b><span><em>${hm(p.t)}〜${p.te?hm(p.te):''}${p.i?`・前から約${kmTxt(p.km)}`:''}</em><small>${esc(s.name)} ${p.catch}${esc(s.unit)}・アタリ ${p.bite}・バラシ ${p.lost}</small></span><a class="btn sm" href="${mapUrl(p)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
-   ${locMaps(sg,()=>'#13939b')}<a class="btn sm gmap" href="${route}" target="_blank" rel="noopener">Googleマップで開く</a></div>`}
+   ${locMaps(sg,()=>'#13939b')}<div class="locmap-act"><button class="btn sm" data-act="shareMake" data-which="map-pts" data-id="${tr.id}">地図を画像で保存・共有</button><a class="btn sm gmap" href="${route}" target="_blank" rel="noopener">Googleマップで開く</a></div></div>`}
 /* 場所の地図：国土地理院の淡色地図の上に、記録した順の点と矢印線を描く。
    縮尺：全部の点が入るいちばん細かい縮尺（ただし1枚の幅が約1km未満にはしない）。続けて記録した2点が5km以上離れたら、そこで地図を分ける */
 const MAP_SPLIT_KM=5,MAP_MIN_KM=1;
 function mapSegs(L){const out=[];L.forEach((p,i)=>{if(!i||ptKm(L[i-1],p)>=MAP_SPLIT_KM)out.push([]);out[out.length-1].push({...p,no:i+1})});return out}
-function locMapSVG(P,col){const W=360,H=250,pad=26,wx=lon=>(lon+180)/360,wy=lat=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2};
+function locMapSVG(P,col,W=360,H=250){const pad=26,wx=lon=>(lon+180)/360,wy=lat=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2};
   const xs=P.map(p=>wx(p.lon)),ys=P.map(p=>wy(p.lat)),x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys),lat=(Math.min(...P.map(p=>p.lat))+Math.max(...P.map(p=>p.lat)))/2;
   const zMin=Math.floor(Math.log2(W*156543.03*Math.cos(lat*Math.PI/180)/(MAP_MIN_KM*1000)));   // 幅が約1km未満にならない一番細かい縮尺
   let z=Math.min(16,zMin);while(z>5&&((x1-x0)*256*2**z>W-2*pad||(y1-y0)*256*2**z>H-2*pad))z--;
@@ -1764,12 +1764,29 @@ function catchLoc(tid,eid){if(!navigator.geolocation||S.prefs.catchLoc===false)r
   navigator.geolocation.getCurrentPosition(pos=>{const t=S.trips[tid];const e=t&&t.events.find(x=>x.id===eid);if(!e)return;
     e.lat=+pos.coords.latitude.toFixed(6);e.lon=+pos.coords.longitude.toFixed(6);e.acc=Math.round(pos.coords.accuracy||0);touch(t);if(S.ui.tab==='fig'&&$('#sheet').hidden)render()},
     ()=>{},{enableHighAccuracy:true,timeout:15000,maximumAge:5000})}
-function catchLocCard(tr,sp){const s=spOf(sp);let n=0;const L=evOf(tr,sp).filter(e=>['catch','bite','lost'].includes(e.kind)).map(e=>({...e,n:e.kind==='catch'?++n:0})).filter(e=>isFinite(e.lat)&&isFinite(e.lon));if(!L.length)return '';
+const LOC_COL={catch:'#e47b25',bite:'#6a58b3',lost:'#c2412d'};
+function catchLocList(tr,sp){let n=0;return evOf(tr,sp).filter(e=>['catch','bite','lost'].includes(e.kind)).map(e=>({...e,n:e.kind==='catch'?++n:0})).filter(e=>isFinite(e.lat)&&isFinite(e.lon))}
+/* 地図を画像にする：ほかの図と同じ幅（600）。地図の絵は国土地理院のタイルを読み込んで埋め込む */
+function mapExportSVG(tr,sp,kind){const W=600,MW=552,MH=400,o=[],ct=kind==='map-catch',L=ct?catchLocList(tr,sp):pointSegs(tr),col=ct?(p=>LOC_COL[p.kind]):(()=>'#13939b');
+  o.push(TX(24,48,ct?'釣れた・アタリ・バラシの場所':'📍で記録した場所',{size:24,bold:1}));o.push(TX(W-24,48,`${L.length}${ct?'件':'か所'}`,{size:17,bold:1,fill:P.catch,anchor:'end'}));
+  o.push(TX(24,76,`${jdate(tr.date)}｜${tr.boat||''}${tr.port?'（'+tr.port+'）':''}`,{size:15,fill:P.muted}));
+  let y=96;const sg=mapSegs(L);
+  sg.forEach((Q,k)=>{if(sg.length>1){o.push(TX(24,y+18,`${k+1}枚目（${Q.length>1?`${hm(Q[0].t)}〜${hm(Q[Q.length-1].t)}・${Q[0].no}〜${Q[Q.length-1].no}`:`${hm(Q[0].t)}・${Q[0].no}`}）`,{size:15,bold:1}));y+=28}
+    o.push(locMapSVG(Q,col,MW,MH).replace(/^<svg class="locmap" /,`<svg x="24" y="${y}" width="${MW}" height="${MH}" `));o.push(`<rect x="24" y="${y}" width="${MW}" height="${MH}" rx="12" fill="none" stroke="${P.grid}" stroke-width="2"/>`);y+=MH+14});
+  if(ct){const lg=[['catch','釣れた'],['bite','アタリ'],['lost','バラシ']];let x=24;lg.forEach(([k,t])=>{o.push(`<circle cx="${x+6}" cy="${y+8}" r="6" fill="${LOC_COL[k]}"/>`+TX(x+16,y+13,t,{size:13,fill:P.muted}));x+=16+t.length*13+16});o.push(TX(x,y+13,'番号は記録した順',{size:13,fill:P.muted}))}
+  else o.push(TX(24,y+13,'番号は「📍場所」を押した順',{size:13,fill:P.muted}));y+=24;
+  if(sg.length>1){o.push(TX(24,y+13,`続けて記録した場所が${MAP_SPLIT_KM}km以上離れたところで、地図を分けています。`,{size:12,fill:P.muted}));y+=22}
+  o.push(TX(24,y+13,'地図：国土地理院（地理院タイル・淡色地図）',{size:12,fill:P.muted}));y+=30;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${y}" viewBox="0 0 ${W} ${y}" font-family="${CF}" role="img" aria-label="場所の地図"><rect width="${W}" height="${y}" rx="16" fill="${P.card}"/>${o.join('')}</svg>`}
+async function inlineTiles(svg){const urls=[...new Set([...svg.matchAll(/href="(https:\/\/cyberjapandata\.gsi\.go\.jp\/[^"]+)"/g)].map(m=>m[1]))];
+  const map={};await Promise.all(urls.map(async u=>{try{const r=await fetch(u,{mode:'cors'});if(!r.ok)return;const b=await r.blob();map[u]=await new Promise(ok=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.readAsDataURL(b)})}catch(e){}}));
+  return svg.replace(/href="(https:\/\/cyberjapandata\.gsi\.go\.jp\/[^"]+)"/g,(m,u)=>map[u]?`href="${map[u]}"`:'href=""')}
+function catchLocCard(tr,sp){const s=spOf(sp);const L=catchLocList(tr,sp);if(!L.length)return '';
   const KL={catch:'釣れた',bite:'アタリ',lost:'バラシ'},KC={catch:'var(--teal)',bite:'var(--amber,#e3a43b)',lost:'#e0587a'};
   const route=L.length>1?`https://www.google.com/maps/dir/${L.slice(-25).map(p=>p.lat.toFixed(5)+','+p.lon.toFixed(5)).join('/')}`:mapUrl(L[0]);
   return `<div class="card"><h2>釣れた・アタリ・バラシの場所（${L.length}件）</h2><p class="muted">「釣れた」「アタリ」「バラシ」を押した時の位置を自動で残しています。押した時の位置なので、実際の場所とは少しずれます。</p>
    <div class="pts">${L.map((e,i)=>`<div class="pt"><b style="color:${KC[e.kind]}">${e.kind==='catch'?e.n:e.kind==='bite'?'ア':'バ'}</b><span><em>${hm(e.t)}・${KL[e.kind]}${e.kind==='catch'&&e.dragon?'（ドラゴン）':''}${i?`・前から約${kmTxt(ptKm(L[i-1],e))}`:''}</em><small>${e.acc?'誤差 約'+e.acc+'m':''}</small></span><a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
-   ${locMaps(L,p=>({catch:'#e47b25',bite:'#6a58b3',lost:'#c2412d'})[p.kind])}<p class="locmap-lg"><i style="background:#e47b25"></i>釣れた<i style="background:#6a58b3"></i>アタリ<i style="background:#c2412d"></i>バラシ　番号は記録した順</p><a class="btn sm gmap" href="${route}" target="_blank" rel="noopener">Googleマップで開く</a></div>`}
+   ${locMaps(L,p=>LOC_COL[p.kind])}<p class="locmap-lg"><i style="background:#e47b25"></i>釣れた<i style="background:#6a58b3"></i>アタリ<i style="background:#c2412d"></i>バラシ　番号は記録した順</p><div class="locmap-act"><button class="btn sm" data-act="shareMake" data-which="map-catch" data-id="${tr.id}">地図を画像で保存・共有</button><a class="btn sm gmap" href="${route}" target="_blank" rel="noopener">Googleマップで開く</a></div></div>`}
 function addEvent(kind,v,src,osp,rig){const tr=active();if(!tr)return;const now=Date.now();if(now-lastTap<450)return;lastTap=now;
   const tsp=tr.cur.sp,g=curGear(tr),sp=osp||tsp;if(rig&&rig!==g.rig){g.rig=rig;logGear(tr)}const e={id:uid(),t:now,kind,sp,gsp:tsp,rig:g.rig,bait:needBait(tsp,g)?g.bait:'',size:'',...(tr.tk&&tr.tk.cur?{tk:tr.tk.cur}:{})};if(kind==='catch')e.v=v||mainV(sp);if(kind==='catch'&&sp==='tachiuo'&&dragonNext){e.dragon=true;dragonNext=false}if(src)e.src=src;if(nextSa){e.sa=nextSa;nextSa=null}if(nextKa){e.ka=nextKa;nextKa=null}
   tr.events.push(e);touch(tr);buzz();keepAwake();if(kind==='catch'||kind==='bite'||kind==='lost')catchLoc(tr.id,e.id);
@@ -2814,8 +2831,8 @@ acts.shareAsk=b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset
   openSheet(`<div class="sheet-h"><h2>画像で保存・共有</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">LINE・メール・メッセージなどで送れます。</p><div class="shr-pick"><button class="btn primary" data-act="shareMake" data-which="${w}" data-id="${tr.id}">${SHR_NM[w]}だけ</button><button class="btn" data-act="shareMake" data-which="all" data-id="${tr.id}">3つまとめて<small style="display:block;font-weight:500">記録一覧・時系列の図・座席の図</small></button></div><h3 class="shr-ig-h">インスタ用（文字を大きく・インスタのサイズで）</h3><div class="shr-ig"><button class="btn" data-act="shareMake" data-which="ig-story" data-id="${tr.id}">ストーリーズ用<small>縦長 1080×1920</small></button><button class="btn" data-act="shareMake" data-which="ig-post" data-id="${tr.id}">投稿用<small>1080×1350</small></button></div>`,{kind:'shr'})};
 acts.shareMake=async b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which,ws=w==='all'?['list','tl','seat']:[w],sp=shrSp(tr);
   b.disabled=true;b.textContent='画像を作っています…';
-  try{const out=[];for(const k of ws){const ig=k.startsWith('ig-'),svg=ig?instaSVG(tr,sp,k.slice(3),await instaTop(tr,sp)):k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(ig?svg:brandSVG(svg));
-      out.push({blob,url,name:`dragon-${tr.date}-${ig?'insta-'+k.slice(3):k==='list'?'list':k==='tl'?'timeline':'seat'}.png`,type:'image/png'})}
+  try{const out=[];for(const k of ws){const ig=k.startsWith('ig-'),svg=ig?instaSVG(tr,sp,k.slice(3),await instaTop(tr,sp)):k.startsWith('map-')?await inlineTiles(mapExportSVG(tr,sp,k)):k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(ig?svg:brandSVG(svg));
+      out.push({blob,url,name:`dragon-${tr.date}-${ig?'insta-'+k.slice(3):k.startsWith('map-')?k:k==='list'?'list':k==='tl'?'timeline':'seat'}.png`,type:'image/png'})}
     pendingFile={files:out};
     openSheet(`<div class="sheet-h"><h2>画像${out.length>1?`（${out.length}枚）`:''}</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${SITE?`<button class="btn primary big" data-act="shareFile">写真に保存・共有する</button>`:''}<p class="muted" style="margin:0">画像を長押しして「写真に保存」を選んでも保存できます。</p><div class="shr-imgs">${out.map(f=>`<img class="imgout" src="${f.url}" alt="${esc(f.name)}">`).join('')}</div>`,{kind:'img'})
   }catch(e){toast('画像を作れませんでした。もう一度お試しください');closeSheet()}};
