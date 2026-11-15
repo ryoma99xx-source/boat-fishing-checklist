@@ -360,6 +360,7 @@ R("フ＝フォール　置＝置き竿　即＝即掛け", "フ＝フォール�
 R("（巻き／叩き × 誘い中／ステイ中、フォール中、置き竿）", "（巻き／叩き × 誘い中／ステイ中、またはフォール中）")
 R(".sa-grid .sa-fo .sa-fall{grid-column:auto}", "")
 R("即掛けとして記録します。置き竿は掛け方なしで記録します。", "即掛けとして記録します。")
+R("・一つ前の記録から約${kmTxt", "・前から約${kmTxt", 2)
 
 icon = base64.b64encode(open(os.path.join(OUT, 'icon-192.png'), 'rb').read()).decode()
 RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src=")data:image/png;base64,[A-Za-z0-9+/=]+(")', r'\g<1>data:image/png;base64,' + icon + r'\g<2>')
