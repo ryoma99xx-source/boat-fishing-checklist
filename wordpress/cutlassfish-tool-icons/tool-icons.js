@@ -2,7 +2,7 @@
  const icons = (globalThis.CutlassfishToolIcons || {}).icons || {};
  const decorate = card => {
   if (card.querySelector('.cf-tool-icon')) return;
-  const btn = card.querySelector('a.tool-cta-btn'), text = card.querySelector('.tool-cta-text'), h3 = text && text.querySelector('h3');
+  const btn = card.querySelector('a.tool-cta-btn'), text = card.querySelector('.tool-cta-text, .tu-tool-text'), h3 = text && text.querySelector('h3');
   if (!btn || !h3) return;
   let u; try { u = new URL(btn.href, location.href); } catch (e) { return; }
   const at = u.host + u.pathname, key = Object.keys(icons).sort((a, b) => b.length - a.length).find(k => at.startsWith(k));   // パス付き（/tipran）を先に見る
@@ -16,8 +16,8 @@
  };
  const run = () => {
   const stack = document.querySelector('.tools-stack'); if (!stack) return;
-  stack.querySelectorAll('.tool-cta').forEach(decorate);
-  if (!stack.dataset.cfIconWatch) { stack.dataset.cfIconWatch = '1'; new MutationObserver(() => stack.querySelectorAll('.tool-cta').forEach(decorate)).observe(stack, {childList: true, subtree: true}); }
+  stack.querySelectorAll('.tool-cta, .tool-unit').forEach(decorate);
+  if (!stack.dataset.cfIconWatch) { stack.dataset.cfIconWatch = '1'; new MutationObserver(() => stack.querySelectorAll('.tool-cta, .tool-unit').forEach(decorate)).observe(stack, {childList: true, subtree: true}); }
  };
  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, {once: true}); else run();
 })();
