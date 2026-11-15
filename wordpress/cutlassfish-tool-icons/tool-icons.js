@@ -4,8 +4,9 @@
   if (card.querySelector('.cf-tool-icon')) return;
   const btn = card.querySelector('a.tool-cta-btn'), text = card.querySelector('.tool-cta-text'), h3 = text && text.querySelector('h3');
   if (!btn || !h3) return;
-  let host = ''; try { host = new URL(btn.href, location.href).host; } catch (e) { return; }
-  const src = icons[host]; if (!src) return;
+  let u; try { u = new URL(btn.href, location.href); } catch (e) { return; }
+  const at = u.host + u.pathname, key = Object.keys(icons).sort((a, b) => b.length - a.length).find(k => at.startsWith(k));   // パス付き（/tipran）を先に見る
+  const src = key && icons[key]; if (!src) return;
   const head = document.createElement('div'); head.className = 'cf-tool-head';
   const img = document.createElement('img'); img.className = 'cf-tool-icon'; img.src = src; img.alt = ''; img.width = 64; img.height = 64; img.loading = 'lazy'; img.decoding = 'async';
   const names = document.createElement('div'); names.className = 'cf-tool-names';
