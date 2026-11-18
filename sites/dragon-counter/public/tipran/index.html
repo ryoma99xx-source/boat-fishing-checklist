@@ -172,7 +172,7 @@ input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width
 /* iPhone: keep sheet children at full height so the panel itself scrolls; stop the page behind from scrolling */
 .sheet-panel>*{flex-shrink:0}
 body:has(#sheet:not([hidden])){overflow:hidden}
-.shr-pick{display:flex;flex-direction:column;gap:10px}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
+.shr-pick{display:flex;flex-direction:column;gap:10px}.ph-strip{display:flex;gap:6px;overflow-x:auto;margin:8px 0}.ph-it{flex:none;padding:0;border:0;background:var(--surface2);border-radius:10px;overflow:hidden;width:72px;height:72px;cursor:pointer}.ph-it img{width:100%;height:100%;object-fit:cover;display:block}.ph-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}.ph-cell{display:flex;flex-direction:column;gap:4px;min-width:0}.ph-cell .ph-it{width:100%;height:auto;aspect-ratio:1/1}.ph-big{display:block;width:100%;height:auto;max-height:75vh;object-fit:contain;border-radius:12px;margin-top:8px}.ph-miss{display:none!important}.ph-add{display:block;text-align:center;cursor:pointer;margin-top:8px}.safe-box{display:flex;flex-direction:column;gap:8px;margin:10px 0 14px}.safe-box .sb-row{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid rgba(227,164,59,.55);border-radius:12px;background:rgba(227,164,59,.1);font-size:13px;line-height:1.6}.safe-box .sb-row span{flex:1;min-width:0}.safe-box .btn{flex:none}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
 /* the tenya catalog is long: keep the title + 完了 pinned at the top and a 完了 bar pinned at the bottom of the sheet */
 .sheet-h.stick{position:sticky;top:-18px;z-index:3;margin:-18px calc(-1 * max(16px,env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:14px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-bottom:1px solid var(--line)}
 .tb-foot{position:sticky;bottom:calc(-24px - env(safe-area-inset-bottom,0px));z-index:3;margin:0 calc(-1 * max(16px,env(safe-area-inset-right,0px))) calc(-24px - env(safe-area-inset-bottom,0px)) calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-top:1px solid var(--line)}
@@ -1183,7 +1183,39 @@ const firstVis=(sp,k)=>{const l=spOf(sp)[k]||[];const v=l.find(x=>!x.hidden)||l[
 const LS='tipran-log.v1';
 let S=null,localOK=true;
 function loadLocal(){try{const r=localStorage.getItem(LS);return r?JSON.parse(r):null}catch(e){localOK=false;return null}}
-function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(S));localOK=true}catch(e){localOK=false}renderSync()}
+function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(S));localOK=true}catch(e){localOK=false}idbMirror();renderSync()}
+/* ---------- 記録の控え（IndexedDB）と写真 ----------
+   localStorage が消えたときのために、同じ内容を IndexedDB にも控えておき、起動時に記録が空なら控えから戻す。
+   写真は IndexedDB にだけ保存する（この端末の中だけ。送信・バックアップには含めない） */
+let idbP=null,mirrorT=0;const PH_URL={};
+function idb(){if(!idbP)idbP=new Promise((ok,ng)=>{try{const r=indexedDB.open(LS+'.idb',1);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv');if(!d.objectStoreNames.contains('photos'))d.createObjectStore('photos',{keyPath:'id'})};r.onsuccess=()=>ok(r.result);r.onerror=()=>ng(r.error)}catch(e){ng(e)}});return idbP}
+function idbReq(store,mode,fn){return idb().then(d=>new Promise((ok,ng)=>{const tx=d.transaction(store,mode);const q=fn(tx.objectStore(store));tx.oncomplete=()=>ok(q&&q.result);tx.onerror=()=>ng(tx.error);tx.onabort=()=>ng(tx.error)}))}
+function idbMirror(){clearTimeout(mirrorT);mirrorT=setTimeout(()=>{try{idbReq('kv','readwrite',st=>st.put({at:Date.now(),s:JSON.stringify(S)},'state')).catch(()=>{})}catch(e){}},800)}
+async function idbRestore(){try{if(trips().some(t=>!t.sample))return;const v=await idbReq('kv','readonly',st=>st.get('state'));if(!v||!v.s)return;const o=JSON.parse(v.s);
+  if(!o||!o.trips||!Object.values(o.trips).some(t=>t&&!t.sample&&!t.deleted))return;S=migrateState(o);saveLocal();render();toast('この端末に残っていた控えから、記録を戻しました')}catch(e){}}
+function askPersist(){try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted().then(p=>p||navigator.storage.persist()).catch(()=>{})}catch(e){}}
+function isStandaloneApp(){try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}}
+function isIOSdev(){return /iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)}
+function unBacked(){return trips().filter(t=>!t.sample&&!t.deleted&&t.status==='done'&&(t.end||t.updatedAt||0)>(S.ui.lastBackup||0)).length}
+function safeHTML(){const n=unBacked(),a2=isIOSdev()&&!isStandaloneApp()&&!S.ui.a2hsHide;if(!n&&!a2)return '';
+  return `<div class="safe-box">${n?`<div class="sb-row"><span>💾 まだバックアップしていない釣行が<b>${n}件</b>あります。スマホの中の記録は消えてしまうことがあるので、こまめに保存してください。</span><button class="btn sm primary" data-act="exportJson">今すぐバックアップ</button></div>`:''}${a2?`<div class="sb-row"><span>📱 ホーム画面に追加したアイコンから使うと、記録が消えにくくなります（Safariの共有ボタン →「ホーム画面に追加」）。</span><button class="btn sm ghost" data-act="a2hsHide">閉じる</button></div>`:''}</div>`}
+function bkAsk(){if(!unBacked())return;openSheet(`<div class="sheet-h"><h2>おつかれさまでした</h2><button class="btn sm ghost" data-act="closeSheet">あとで</button></div><p>スマホの中の記録は、ブラウザの都合で消えてしまうことがあります。今日の記録を守るために、バックアップを保存しておきましょう。</p><button class="btn primary big" data-act="exportJson">バックアップを保存する</button>`,{kind:'bk'})}
+function photoIds(tr){return (tr&&tr.photos)||[]}
+async function photoURL(id){if(PH_URL[id])return PH_URL[id];const p=await idbReq('photos','readonly',st=>st.get(id)).catch(()=>null);if(!p||!p.blob)return '';return PH_URL[id]=URL.createObjectURL(p.blob)}
+function hydratePhotos(){document.querySelectorAll('img[data-ph]:not([src]):not([data-busy])').forEach(async im=>{im.dataset.busy='1';const u=await photoURL(im.dataset.ph);if(u)im.src=u;else{const w=im.closest('.ph-it');(w||im).classList.add('ph-miss')}})}
+function photoStrip(tr){const ids=photoIds(tr);return ids.length?`<div class="ph-strip">${ids.map(id=>`<button class="ph-it" data-act="phView" data-id="${tr.id}" data-p="${id}" aria-label="写真を大きく見る"><img data-ph="${id}" alt=""></button>`).join('')}</div>`:''}
+function photoSheet(tid){const tr=S.trips[tid];if(!tr)return;const ids=photoIds(tr);
+  openSheet(`<div class="sheet-h"><h2>📷 この日の写真（${ids.length}/5）</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
+   <p class="muted">アルバムから5枚まで選べます。写真はこのスマホの中だけに保存され、送信やバックアップには含まれません（アルバムの写真はそのまま残ります）。</p>
+   ${ids.length?`<div class="ph-grid">${ids.map(id=>`<div class="ph-cell"><button class="ph-it" data-act="phView" data-id="${tid}" data-p="${id}" aria-label="写真を大きく見る"><img data-ph="${id}" alt=""></button><button class="btn sm ghost" data-act="phDel" data-id="${tid}" data-p="${id}">外す</button></div>`).join('')}</div>`:''}
+   ${ids.length<5?`<label class="btn primary big ph-add">＋ アルバムから選ぶ<input type="file" accept="image/*" multiple hidden data-phadd="${tid}"></label>`:'<p class="muted">5枚まで付けられます。入れ替えるときは、先に「外す」を押してください。</p>'}`,{kind:'photo',tid})}
+async function phAdd(tid,files){const tr=S.trips[tid];if(!tr||!files||!files.length)return;tr.photos=photoIds(tr).slice();const room=5-tr.photos.length;
+  const fs=[...files].slice(0,Math.max(0,room));if(files.length>room)toast(`5枚までなので、${room}枚だけ付けます`);
+  for(const f of fs){const id=uid();try{await idbReq('photos','readwrite',st=>st.put({id,tid,blob:f,type:f.type||'',at:Date.now()}));tr.photos.push(id)}catch(e){toast('写真を保存できませんでした（スマホの空き容量を確かめてください）');break}}
+  touch(tr);photoSheet(tid);askPersist()}
+async function photoCleanup(){try{const all=await idbReq('photos','readonly',st=>st.getAllKeys());const keep=new Set(trips().flatMap(t=>photoIds(t)));
+  const del=(all||[]).filter(k=>!keep.has(k));if(del.length)await idbReq('photos','readwrite',st=>{del.forEach(k=>st.delete(k))})}catch(e){}}
+document.addEventListener('change',e=>{const el=e.target;if(el&&el.dataset&&el.dataset.phadd){phAdd(el.dataset.phadd,el.files);el.value=''}});
 function migrateTrip(t){
   if(t&&!t.deleted&&t.v===2&&!t.cmV){(t.events||[]).forEach(e=>{if(e.sp==='tachiuo'&&e.size!==''&&e.size!=null&&+e.size<=10)e.size=''});t.cmV=1} // 指 → cm に変えたので、指の値は消す
   if(!t||t.deleted||t.v===2)return t;
@@ -1251,6 +1283,7 @@ function makeSampleFugu(){
   return tr}
 function defaults(){return {v:2,trips:{},activeId:null,prefs:{port:'',boat:'',seats:8,side:'R',seat:null,sp:'tiprun',g:{}},dirty:{trips:[],cfg:false},ui:{tab:'rec'}}}
 S=migrateState(loadLocal()||defaults());
+setTimeout(()=>{askPersist();idbRestore();photoCleanup();try{new MutationObserver(hydratePhotos).observe(document.body,{childList:true,subtree:true});hydratePhotos()}catch(e){}},60);
 setTimeout(()=>{if(snapOwned())cfgTouch()},0); // after every top-level declaration has run
 
 const active=()=>S.activeId&&S.trips[S.activeId]&&!S.trips[S.activeId].deleted?S.trips[S.activeId]:null;
@@ -1532,7 +1565,7 @@ function registerBoat(tr){const b=S.cfg.boats.find(x=>x.name===tr.boat);const v=
   if(b){let ch=Object.keys(v).some(k=>b[k]!==v[k]);Object.assign(b,v);if(tr.spotId&&S.cfg.spots.some(x=>x.id===tr.spotId)&&!(b.spots||[]).includes(tr.spotId)){b.spots=(b.spots||[]).concat([tr.spotId]);ch=true}if(ch)cfgTouch()}
   else{S.cfg.boats.push({id:uid(),name:tr.boat,...v,...(t0?{start:t0}:{}),...(t1?{end:t1}:{}),spots:tr.spotId?[tr.spotId]:[]});cfgTouch()}}
 function viewStart(){if(!startDraft)startDraft=newForm();curForm=startDraft;
-  return `<header class="hero"><p class="eyebrow">TOOL / TIPRUN COUNTER</p><div class="hero-h"><h1>ティップランカウンター</h1><span class="pill" style="margin-left:0">試験公開</span></div><p class="hero-sub">アオリイカの釣果を時間の経過と共に、エギ・潮・流れと一緒に記録する。<button class="btnlink-s" data-act="tutOpen">使い方を見る</button></p></header>
+  return safeHTML()+`<header class="hero"><p class="eyebrow">TOOL / TIPRUN COUNTER</p><div class="hero-h"><h1>ティップランカウンター</h1><span class="pill" style="margin-left:0">試験公開</span></div><p class="hero-sub">アオリイカの釣果を時間の経過と共に、エギ・潮・流れと一緒に記録する。<button class="btnlink-s" data-act="tutOpen">使い方を見る</button></p></header>
    <div class="field" style="gap:4px"><h2>出船の準備</h2><p class="muted">釣り場、船と自分の席、エギを選んで出船します。</p>${SITE&&!standalone()?`<p class="sample-note">Safariの「共有 → ホーム画面に追加」でアプリのように使え、電波のない船の上でも開けます。</p>`:''}</div>
    ${formHTML(startDraft)}${fModeHTML(startDraft)}<button class="btn primary big" data-act="depart">出船して記録を始める</button>`}
 
@@ -1697,7 +1730,7 @@ function viewActive(tr){ocurEnsure(tr);const sp=tr.cur.sp,s=spOf(sp),g=curGear(t
   const span=Date.now()-tr.start;const items=feedItems(tr);const nd=nDragon(tr,sp);
   const status=Date.now()<tr.start?'まだ始まっていません':tr.planEnd&&Date.now()>tr.planEnd?'終了時刻を過ぎました':dur(Math.max(0,span))+'経過';
   return `<header class="rhead"><div class="rh-l"><h1>${jdate(tr.date).replace(/^\d+年/,'')}</h1><span>${hm(tr.start)}〜${tr.planEnd?hm(tr.planEnd):''}・${status}</span></div><button class="pill sm" data-act="tripEdit" data-id="${tr.id}">直す</button></header>
-   <div class="rmeta"><div class="rm-txt">${[tr.boat,seatShort(tr),tr.spot?tr.spot.name:(tr.station?stName(tr.station):''),tideNameOf(tr)].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')}</div><button class="pill sm rm-loc" data-act="locRec" aria-label="今いる場所を記録">📍場所${(tr.points||[]).length?`<small>${tr.points.length}</small>`:''}</button><button class="pill sm rm-loc rm-memo" data-act="memoOpen" data-id="${tr.id}" aria-label="この釣行のメモ">📝メモ${(tr.memo||'').trim()?'<small>●</small>':''}</button><button class="pill sm rm-edit" data-act="tripEdit" data-id="${tr.id}">出船条件を直す</button></div>
+   <div class="rmeta"><div class="rm-txt">${[tr.boat,seatShort(tr),tr.spot?tr.spot.name:(tr.station?stName(tr.station):''),tideNameOf(tr)].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')}</div><button class="pill sm rm-loc" data-act="locRec" aria-label="今いる場所を記録">📍場所${(tr.points||[]).length?`<small>${tr.points.length}</small>`:''}</button><button class="pill sm rm-loc rm-memo" data-act="memoOpen" data-id="${tr.id}" aria-label="この釣行のメモ">📝メモ${(tr.memo||'').trim()?'<small>●</small>':''}</button><button class="pill sm rm-loc" data-act="phOpen" data-id="${tr.id}" aria-label="この釣行の写真">📷写真${photoIds(tr).length?`<small>${photoIds(tr).length}</small>`:''}</button><button class="pill sm rm-edit" data-act="tripEdit" data-id="${tr.id}">出船条件を直す</button></div>
    <section class="today" aria-label="本日の釣果">
     <div class="td-top"><span class="td-h">${isTairyo(tr.date)?tairyoTag():''}</span><span class="td-n"><b id="cnum">${c.length}</b>${esc(s.unit)}${SOLO?'':`<small>${esc(s.name)}</small>`}${sp===SOLO?`<small class="td-dn"><i class="ic ic-dragon"></i>キロアップ <b>${nd}</b></small>`:''}</span></div>
     <div class="td-row"><button class="td-catch" data-act="catchCur"${modeOf(tr)==='detail'?' data-lp="catch"':''}><b>釣れた</b><small>＋1</small>${modeOf(tr)==='detail'?'<i class="lp-hint">誘い・掛け方を選ぶ<br>長押しですぐ記録</i>':''}</button>
@@ -1949,6 +1982,7 @@ function viewFig(){const tr=figTrip();wxEnsure(tr);ocurEnsure(tr);if(!tr)return 
   const opts=trips().map(t=>`<option value="${t.id}" ${t.id===tr.id?'selected':''}>${t.date.slice(5).replace('-','/')} ${esc(t.boat)}・${esc(tripSummary(t))}${t.sample?'（サンプル）':''}${t.status==='active'?'（記録中）':''}</option>`).join('');
   return `<div class="figsel"><select id="figPick" aria-label="釣行を選ぶ">${opts}</select><button class="btn sm figcal" data-act="figCal" aria-label="カレンダーから釣行を選ぶ">カレンダー</button>${tr.status==='active'?'<span class="badge live">記録中</span>':''}</div>
    ${isTairyo(tr.date)||nDragon(tr,SOLO)?`<div class="fig-badges">${isTairyo(tr.date)?tairyoTag():''}${nDragon(tr,SOLO)?`<span class="dn-s"><i class="ic ic-dragon"></i>キロアップ ${nDragon(tr,SOLO)}本</span>`:''}</div>`:''}
+   ${photoIds(tr).length?`<div class="card"><h2>この日の写真</h2>${photoStrip(tr)}<button class="btn sm" data-act="phOpen" data-id="${tr.id}">写真を追加・外す</button></div>`:''}
    ${ss.length>1?`<div class="chips">${ss.map(x=>`<button class="chip ${x===sp?'on':''}" data-act="figSp" data-id="${x}">${esc(spOf(x).name)}</button>`).join('')}</div>`:''}
    ${tr.sample?`<p class="sample-note">これは見本のサンプル釣行です。実際に出船して記録すると、自分の図が作られます。<button class="btn sm" data-act="delSample" data-id="${tr.id}">サンプルを消す</button></p>`:''}
    <div class="card"><h2>時系列：潮と流れと釣果</h2><p class="swipe">← 図の中を左右にスワイプできます →</p><div class="scrollx">${timelineSVG(tr,sp)}</div>
@@ -1975,8 +2009,8 @@ function memoSheet(id){const tr=S.trips[id];if(!tr)return;
 const memoHTML=t=>(t.memo||'').trim()?`<div class="memo-box">📝 ${esc(t.memo.trim()).replace(/\n/g,'<br>')}</div>`:'';
 function tripCardHTML(t){wxEnsure(t);return `<div class="trip"><div class="trip-h"><div style="min-width:0"><b>${jdate(t.date)}</b>${isTairyo(t.date)?tairyoTag():''}<div class="muted">${esc(t.boat)}・${esc(seatLabel(t))}${t.port?'・'+esc(t.port):''}</div></div></div>
     <div class="trip-sum">${esc(tripSummary(t))||'記録なし'}${nDragon(t,SOLO)?`<span class="dn-s"><i class="ic ic-dragon"></i>キロアップ ${nDragon(t,SOLO)}</span>`:''}</div>
-    <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>${t.tk&&t.tk.sets&&t.tk.sets.length?`<div class="muted tk-used">🎣 ${t.tk.sets.map(id=>esc(tkLabelOf(t,id))).join('<br>🎣 ')}</div>`:''}${memoHTML(t)}${t.wx&&wxTxt(t.wx)?`<div class="muted wx-line">${wxTxt(t.wx).split('・').map(x=>`<span>${esc(x)}</span>`).join('・')}</div>`:''}
-    <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm two" data-act="tripEdit" data-id="${t.id}">釣行の情報を直す<small>日付・船・席・時間</small></button><button class="btn sm two" data-act="evList" data-id="${t.id}">記録を見る・修正する<small>釣れた・アタリ・バラシ・外道を1件ずつ</small></button>
+    <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>${t.tk&&t.tk.sets&&t.tk.sets.length?`<div class="muted tk-used">🎣 ${t.tk.sets.map(id=>esc(tkLabelOf(t,id))).join('<br>🎣 ')}</div>`:''}${memoHTML(t)}${photoStrip(t)}${t.wx&&wxTxt(t.wx)?`<div class="muted wx-line">${wxTxt(t.wx).split('・').map(x=>`<span>${esc(x)}</span>`).join('・')}</div>`:''}
+    <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm" data-act="phOpen" data-id="${t.id}">📷 写真${photoIds(t).length?`（${photoIds(t).length}）`:''}</button><button class="btn sm two" data-act="tripEdit" data-id="${t.id}">釣行の情報を直す<small>日付・船・席・時間</small></button><button class="btn sm two" data-act="evList" data-id="${t.id}">記録を見る・修正する<small>釣れた・アタリ・バラシ・外道を1件ずつ</small></button>
     ${t.status==='done'&&!t.sample&&!active()?`<button class="btn sm" data-act="reopen" data-id="${t.id}">記録を再開</button>`:''}
     <button class="btn sm danger" data-act="delTrip" data-id="${t.id}">${t.sample?'サンプルを消す':'消す'}</button></div></div>`}
 // 釣りの時間：終了時刻、なければ沖上がり予定まで（予定を過ぎても延ばさない）
@@ -2052,7 +2086,7 @@ function calHTML(){const all0=trips(),real=all0.filter(t=>!t.sample),all=real.le
    <div class="cal-w">${['日','月','火','水','木','金','土'].map(x=>`<span>${x}</span>`).join('')}</div><div class="cal-g">${cells}</div></div>
    ${list.length?`<h2 class="sec-h">${sel?`${jdate(sel)}の釣行`:`${M}月の釣行`}${sel?'<button class="golink" data-act="calDay" data-d="">月全体に戻す</button>':''}</h2><div class="card">${list.map(tripCardHTML).join('')}</div>`:''}`}
 function viewHist(){const statSp=spOf(S.ui.statSp).id!=='?'?S.ui.statSp:(spVisible()[0]||{}).id;
-  return `<h1>履歴</h1>${dashHTML()}${calHTML()}
+  return `<h1>履歴</h1>${safeHTML()}${dashHTML()}${calHTML()}
    <div class="card"><h2>席の場所ごとの平均（自分の記録）</h2>${seatStatsHTML(statSp)}</div>
    ${backupCardHTML()}`}
 
@@ -2671,7 +2705,7 @@ const acts={
   evClose:()=>evBack(),
   evList:b=>{const tr=S.trips[b.dataset.id],ev=sortEv(tr);openSheet(`<div class="sheet-h"><h2>記録を見る・修正する</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${ev.length?`<button class="btn sm" data-act="shareAsk" data-which="list" data-id="${tr.id}">この一覧を画像で保存・共有</button>`:''}<p class="muted" style="margin:0">直したい行を押すと、時刻・エギ・種類（釣れた／アタリ／バラシ）などを直したり、消したりできます。</p><ol class="log">${ev.slice().reverse().map(e=>logRow(e,e.kind==='catch'?catchesOf(tr,e.sp).indexOf(e)+1:0,tr.id)).join('')||'<li class="empty">記録がありません</li>'}</ol>`,{kind:'evlist',tid:b.dataset.id})},
   end:b=>{if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='もう一度押すと記録を終えます';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent='沖上がり（記録を終える）'}},3500);return}
-    const tr=active();const now=Date.now();tr.end=(tr.planEnd&&now>tr.planEnd)?tr.planEnd:now;tr.status='done';S.activeId=null;releaseAwake();S.ui.tab='fig';S.ui.figTrip=tr.id;S.ui.figSp=mainSp(tr);touch(tr);render();scrollTo(0,0);toast(`おつかれさまでした。${tripSummary(tr)}の記録を図にしました`)},
+    const tr=active();const now=Date.now();tr.end=(tr.planEnd&&now>tr.planEnd)?tr.planEnd:now;tr.status='done';S.activeId=null;releaseAwake();S.ui.tab='fig';S.ui.figTrip=tr.id;S.ui.figSp=mainSp(tr);touch(tr);render();if(!tr.sample)setTimeout(bkAsk,700);scrollTo(0,0);toast(`おつかれさまでした。${tripSummary(tr)}の記録を図にしました`)},
   btnImport:()=>{imp={text:'',rows:null,sel:new Set(),armed:false};openImportSheet()},
   impReset:()=>{imp.rows=null;imp.sel=new Set();imp.armed=false;openImportSheet()},
   impCheck:()=>{imp.text=$('#impText').value;const tr=active();imp.rows=reviewLines(tr,parseLines(tr,imp.text));imp.sel=new Set(imp.rows.filter(x=>x.ok&&!x.near).map(x=>x.i));imp.armed=false;if(!imp.rows.length)toast('時刻の入った行が見つかりませんでした');openImportSheet()},
@@ -2721,6 +2755,10 @@ const acts={
     const id=b.dataset.id,tr=S.trips[id];if(tr.sample){delete S.trips[id];saveLocal()}else{S.trips[id]={id,deleted:true,updatedAt:Date.now()};markDirty(id);saveLocal();scheduleFlush()}
     if(S.activeId===id){S.activeId=null;releaseAwake()}render();toast('消しました')},
   exportJson:()=>exportJson(),
+  phOpen:b=>photoSheet(b.dataset.id),
+  phView:b=>{const id=b.dataset.p,tid=b.dataset.id;openSheet(`<div class="sheet-h"><h2>写真</h2><button class="btn sm ghost" data-act="phOpen" data-id="${tid}">← 写真の一覧</button></div><img class="ph-big" data-ph="${id}" alt="">`,{kind:'photo'})},
+  phDel:b=>{if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='もう一度で外す';return}const tr=S.trips[b.dataset.id],id=b.dataset.p;if(!tr)return;tr.photos=photoIds(tr).filter(x=>x!==id);touch(tr);idbReq('photos','readwrite',st=>st.delete(id)).catch(()=>{});if(PH_URL[id]){URL.revokeObjectURL(PH_URL[id]);delete PH_URL[id]}photoSheet(tr.id)},
+  a2hsHide:()=>{S.ui.a2hsHide=1;saveLocal();render()},
   dashPer:b=>{S.ui.dashPer=b.dataset.d;saveLocal();render()},
   calMove:b=>{const all=trips();const cur=S.ui.calYM||((all.find(t=>!t.sample)||all[0]||{date:ymd(Date.now())}).date.slice(0,7));let [y,m]=cur.split('-').map(Number);m+=+b.dataset.d;if(m<1){m=12;y--}if(m>12){m=1;y++}S.ui.calYM=`${y}-${String(m).padStart(2,'0')}`;S.ui.calDay='';saveLocal();render()},
   figCal:()=>{S.ui.figCalYM='';S.ui.figCalDay='';figCalSheet()},
