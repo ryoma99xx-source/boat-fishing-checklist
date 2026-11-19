@@ -16,6 +16,9 @@
   # テンヤカタログ（/tenya-catalog/）：アプリではなく、読むページ
   RewriteRule ^tenya-catalog$ /tenya-catalog/ [R=301,L]
   RewriteRule ^tenya-catalog/$ tenya-catalog/index.html [L]
+  # ティップラン用エギカタログ（/egi-catalog/）：読むページ
+  RewriteRule ^egi-catalog$ /egi-catalog/ [R=301,L]
+  RewriteRule ^egi-catalog/$ egi-catalog/index.html [L]
   RewriteRule (^|/)\. - [R=404,L]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^.+$ - [R=404,L]

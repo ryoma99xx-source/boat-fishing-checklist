@@ -8,6 +8,7 @@
    メーカーのまとまり [data-tcat-mkb]、釣れ筋 [data-tcat-ts]、ランキング [data-tcat-rank]。 */
 (()=>{
 const root=document.querySelector('[data-tcat]');if(!root)return;
+const NOUN=root.dataset.tcatNoun||'テンヤ',PH=root.dataset.tcatPh||'検索（例：ケイムラ 40、ダイワ グロー）',NONEW=!!root.dataset.tcatNonew,NORANK=!!root.dataset.tcatNorank;   // エギのカタログなど、ほかのページでも使えるように
 const RANK=/(^|\.)cutlassfish\.tokyo$/.test(location.hostname)&&location.hostname!=='dragon-counter.cutlassfish.tokyo'?'https://dragon-counter.cutlassfish.tokyo/tenya-rank.php':'/tenya-rank.php';   // 記事（cutlassfish.tokyo）からはアプリのサーバーへ
 const $$=(s,el)=>[...(el||document).querySelectorAll(s)];
 const normQ=x=>String(x||'').normalize('NFKC').toLowerCase().replace(/[ぁ-ゖ]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
@@ -63,16 +64,16 @@ const bar=root.querySelector('[data-tcat-bar]');
 if(bar){bar.className='tcat-bar';bar.innerHTML=`
  <div class="tcat-row" style="margin:0 0 8px"><select aria-label="メーカー"><option value="">すべてのメーカー</option>${makers.map(([m,j])=>`<option value="${esc(m)}">${esc(j===m?m:m+'（'+j+'）')}</option>`).join('')}</select></div>
  <div class="tcat-seg" data-k="z">${[['','全号数'],...sizes.map(z=>[z,z+'号'])].map(([v,l])=>`<button type="button" data-v="${v}" class="${v===''?'on':''}">${l}</button>`).join('')}</div>
- <div class="tcat-seg" data-k="only"><button type="button" data-v="" class="on">すべて</button><button type="button" data-v="new">新商品だけ</button></div>
+ ${NONEW?'':`<div class="tcat-seg" data-k="only"><button type="button" data-v="" class="on">すべて</button><button type="button" data-v="new">新商品だけ</button></div>`}
  ${prods.some(p=>p.dataset.tg)?`<div class="tcat-seg" data-k="tg"><button type="button" data-v="" class="on">すべての素材</button><button type="button" data-v="1">タングステン（TG）だけ</button></div>`:''}
- <div class="tcat-row"><div class="tcat-q"><input type="search" placeholder="検索（例：ケイムラ 40、ダイワ グロー）" autocomplete="off" enterkeyhint="search" aria-label="テンヤを検索"><button type="button" aria-label="検索を消す" hidden>×</button></div></div>
- <p class="tcat-help" hidden>「新商品だけ」：NEW の印が付いたテンヤ（ここ3か月以内にカタログへ追加）と、発売予定のものです。</p>
+ <div class="tcat-row"><div class="tcat-q"><input type="search" placeholder="${esc(PH)}" autocomplete="off" enterkeyhint="search" aria-label="${NOUN}を検索"><button type="button" aria-label="検索を消す" hidden>×</button></div></div>
+ <p class="tcat-help" hidden>「新商品だけ」：NEW の印が付いた${NOUN}（ここ3か月以内にカタログへ追加）と、発売予定のものです。</p>
  <p class="tcat-cnt"></p>`;
  bar.addEventListener('click',e=>{const b=e.target.closest('.tcat-seg button');if(b){const k=b.parentNode.dataset.k;st[k]=b.dataset.v;$$('button',b.parentNode).forEach(x=>x.classList.toggle('on',x===b));apply();return}
    if(e.target.closest('.tcat-q button')){st.q='';bar.querySelector('.tcat-q input').value='';apply()}});
  bar.querySelector('select').addEventListener('change',e=>{st.m=e.target.value;apply()});
  bar.querySelector('.tcat-q input').addEventListener('input',e=>{st.q=e.target.value;apply()})}
-const none=document.createElement('p');none.className='tcat-none tcat-hide';none.textContent='当てはまるテンヤがありません。';
+const none=document.createElement('p');none.className='tcat-none tcat-hide';none.textContent=`当てはまる${NOUN}がありません。`;
 const mini=document.createElement('div');mini.className='tcat-mini';mini.innerHTML='<button type="button"></button>';
 /* サイトの固定ヘッダーの高さ（その下に小さなボタンを出し、飛び先が隠れないようにする） */
 function topOff(){let y=0;for(const el of document.elementsFromPoint(innerWidth/2,1)){if(root.contains(el))continue;
@@ -111,7 +112,7 @@ const card=(k,small)=>{const f=byKey[k];if(!f)return '';const p=f.closest('[data
   const ln=p?$$('[data-tcat-links] a[rel~="sponsored"]',p).map(a=>{const c=a.cloneNode(true);c.textContent=c.textContent.replace('で探す','');return c.outerHTML}).join(' '):'';
   return small?`<li><a href="#${f.id}" data-go="${f.id}">${img?`<img src="${esc(img.currentSrc||img.src)}" alt="" loading="lazy">`:''}<span>${esc(p?p.dataset.name:'')} ${esc(f.dataset.cn||'')}<small>${esc(p?p.dataset.mj:'')}</small></span></a></li>`
    :`<div class="tcat-tsc"><a href="#${f.id}" data-go="${f.id}">${img?`<img src="${esc(img.currentSrc||img.src)}" alt="" loading="lazy">`:''}</a><div><b>${esc(f.dataset.cn||'')}</b><br>${esc(p?p.dataset.name:'')}<br><small>${esc(p?p.dataset.mj:'')}</small><div class="tcat-tsl">${ln}</div></div></div>`};
-fetch(RANK+'?h='+Math.floor(Date.now()/36e5),{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(d=>{if(!d)return;
+if(!NORANK)fetch(RANK+'?h='+Math.floor(Date.now()/36e5),{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(d=>{if(!d)return;
   const top=(d.top||[]).filter(k=>byKey[k]).slice(0,3);
   if(top.length){$$('.tcat-ts').forEach(x=>x.classList.remove('tcat-ts'));top.forEach(k=>byKey[k].classList.add('tcat-ts'));
     $$('[data-tcat-ts]').forEach(box=>{const l=box.querySelector('[data-tcat-ts-list]');if(l)l.innerHTML=top.map(k=>card(k)).join('');show(box,true)})}
