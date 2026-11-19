@@ -29,6 +29,14 @@ E = T.E
 BTN = 'display:inline-block;font-size:14px;font-weight:700;padding:8px 14px;border-radius:8px;text-decoration:none;margin:0 6px 6px 0'
 
 
+# ページ・記事に出すメーカー名（オーナー指示 2026-11-20）。アプリのカタログの表記（持っているエギの覚え方）は変えない
+DISP = {'マルキユー': 'マルキュー'}
+
+
+def dm(m):
+    return DISP.get(m, m)
+
+
 def zs(z):
     return '%g' % float(z)
 
@@ -38,7 +46,8 @@ def load():
     mp = json.load(open(os.path.join(HERE, 'tipran', 'egi-images.json'), encoding='utf-8'))
     plist, makers = [], []
     for r in cat['heads']:
-        m, p = r['m'], r['s']
+        mk, p = r['m'], r['s']
+        m = dm(mk)
         if m not in makers:
             makers.append(m)
         o = r.get('o') or []
@@ -47,10 +56,10 @@ def load():
         wt = '・'.join('%s号%s' % (zs(x['z']), ' %sg' % zs(x['g']) if x.get('g') else '') for x in o)
         cols = []
         for c in r['c']:
-            im = mp.get('%s|%s|%s' % (m, p, c))
-            q = T.norm_q(' '.join([m, p, c, wt] + ['%s号' % zs(x) for x in z]))
+            im = mp.get('%s|%s|%s' % (mk, p, c))
+            q = T.norm_q(' '.join([m, mk, p, c, wt] + ['%s号' % zs(x) for x in z]))
             cols.append({'c': c, 'img': im['id'] if im else '', 'q': q, 'z': sizes})
-        plist.append({'m': m, 'p': p, 'u': r.get('u', ''), 'note': r.get('note', ''), 'z': z, 'wt': wt, 'cols': cols})
+        plist.append({'m': m, 'mk': mk, 'p': p, 'u': r.get('u', ''), 'note': r.get('note', ''), 'z': z, 'wt': wt, 'cols': cols})
     plist.sort(key=lambda r: (makers.index(r['m']), bool(r['note']), r['p']))
     global SINKERS
     SINKERS = [r for r in cat.get('skirts', []) if (r['m'], r['s']) not in PAGE_HIDE_SINKERS]
@@ -67,68 +76,82 @@ def wtxt(w):
     return '・'.join(zs(x) for x in w) + 'g'
 
 
-def sinker_photos(r, article):
-    """色ごとの写真（無い色は名前だけ）。色ごとの写真が無い色があれば、製品全体の写真を先に1枚"""
+SK_ROOT = 'data-tcat="1" data-tcat-noun="シンカー" data-tcat-unit="g" data-tcat-ph="検索（例：ダイワ 30g、グロー）" data-tcat-nonew="1" data-tcat-norank="1"'
+
+
+def sinker_items(r):
+    """色ごとの (色, 写真id, その色の重さ)。色ごとの写真が無い色があれば、製品全体の写真を別に返す（絞り込みでは消えない1枚）"""
     p = os.path.join(HERE, 'tipran', 'sinker-images.json')
     mp = json.load(open(p, encoding='utf-8')) if os.path.exists(p) else {}
     get = lambda c: (mp.get('%s|%s|%s' % (r['m'], r['s'], c)) or {}).get('id', '')
-    cols = r.get('c') or []
-    items = [(c, get(c)) for c in cols]
+    cols, cw = r.get('c') or [], r.get('cw') or {}
+    allw = sorted((float(x) for x in r['w']))
     whole = get('')
-    if whole and (not cols or any(not i for _, i in items)):
-        items = [('（製品の写真）' if cols else '', whole)] + [(c, i) for c, i in items if i] + [(c, '') for c, i in items if not i]
-    if not any(i for _, i in items):
-        return ''
-    src = (lambda i: '%s/tipran/sinker/%s.webp' % (HOST, i)) if article else (lambda i: '/tipran/sinker/%s.webp' % i)
-    if article:
-        figs = ''.join('<figure style="margin:0;border:1px solid #1f2d42;border-radius:8px;overflow:hidden;background:#101c2e">%s<figcaption style="padding:6px 8px;font-size:13px;line-height:1.4;color:#eef3f8">%s</figcaption></figure>'
-                       % ('<img src="%s" alt="%s %s" width="240" height="180" loading="lazy" style="display:block;width:100%%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#fff">' % (src(i), E(r['s']), E(c)) if i else '<div style="aspect-ratio:4/3;background:#fff;color:#889;display:flex;align-items:center;justify-content:center;font-size:12px">写真なし</div>', E(c or r['s']))
-                       for c, i in items)
-        return '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:10px 0 0">%s</div>' % figs
-    figs = ''.join('<figure class="cl">%s<figcaption><b>%s</b></figcaption></figure>'
-                   % ('<img src="%s" alt="%s %s" loading="lazy" decoding="async" width="240" height="180">' % (src(i), E(r['s']), E(c)) if i else '<div class="noimg">写真なし</div>', E(c or r['s']))
-                   for c, i in items)
-    return '<div class="grid">%s</div>' % figs
+    if not cols:
+        return '', [('', whole, allw)]
+    items = []
+    for ci, c in enumerate(cols):
+        ws = sorted((float(w) for w, idx in cw.items() if ci in idx)) if cw else allw
+        items.append((c, get(c), ws or allw))
+    return (whole if whole and any(not i for _, i, _ in items) else ''), items
 
 
 def sinker_html(article=False):
-    """シンカー（増し錘）の一覧。写真はないので、製品ごとに重さ・色・メーカーのページと探すボタンを並べる（絞り込みの外）"""
+    """シンカー（増し錘）の一覧。エギと同じ絞り込み・検索（重さ・メーカー・名前）が付く。色ごとに写真（無い色は名前だけ）"""
     makers = []
     for r in SINKERS:
-        if r['m'] not in makers:
-            makers.append(r['m'])
+        if dm(r['m']) not in makers:
+            makers.append(dm(r['m']))
+    src = (lambda i: '%s/tipran/sinker/%s.webp' % (HOST, i)) if article else (lambda i: '/tipran/sinker/%s.webp' % i)
     out = []
-    for m in makers:
-        rs = [r for r in SINKERS if r['m'] == m]
-        out.append('<h3 style="margin:22px 0 6px">%s</h3>' % E(m) if article else '<h3 class="sk-mk">%s</h3>' % E(m))
+    for mi, m in enumerate(makers):
+        rs = [r for r in SINKERS if dm(r['m']) == m]
+        blk = ['<div data-tcat-mkb="%s">' % E(m), '<h3 style="margin:22px 0 6px">%s</h3>' % E(m) if article else '<h3 class="sk-mk">%s</h3>' % E(m)]
         for r in rs:
-            rr = {'m': r['m'], 'p': r['s'], 'u': r.get('u', '')}
-            k = re.sub(r'\s+', ' ', '%s %s' % (r['m'], r['s'])).strip()
-            cw = r.get('cw') or {}
-            cols = r.get('c') or []
-            if cw and cols:
-                lim = []
-                for ci, c in enumerate(cols):
-                    ws = [w for w, idx in cw.items() if ci in idx]
-                    if len(ws) < len(cw):
-                        lim.append('%s（%s）' % (c, wtxt(sorted(ws, key=float))))
-                    else:
-                        lim.append(c)
-                ctext = '・'.join(lim)
-            else:
-                ctext = '・'.join(cols)
+            pi = SINKERS.index(r)
+            rr = {'m': m, 'p': r['s'], 'u': r.get('u', '')}
+            k = re.sub(r'\s+', ' ', '%s %s' % (m, r['s'])).strip()
+            allw = sorted(float(x) for x in r['w'])
+            whole, items = sinker_items(r)
+            figs = []
+            if whole:
+                figs.append((None, '（製品の写真）', whole, allw))
+            for ci, (c, i, ws) in enumerate(items):
+                figs.append((ci, c, i or (whole if not c else ''), ws))
+            fh = []
+            for ci, c, i, ws in figs:
+                cap = E(c or r['s'])
+                if ci is not None and c and len(ws) < len(allw):
+                    cap += '<br><small>%s</small>' % E(wtxt(ws))
+                if ci is None:
+                    at = ''
+                else:
+                    z = ' '.join(zs(w) for w in ws)
+                    q = T.norm_q(' '.join([m, r['m'], r['s'], c, r.get('note', '')] + ['%sg' % zs(w) for w in ws]))
+                    at = 'id="s-%d-%d" data-tcat-c="1" data-k="%s" data-cn="%s" data-z="%s" data-q="%s"' % (pi, ci, E('%s|%s|%s' % (r['m'], r['s'], c)), E(c), E(z), E(q))
+                if article:
+                    img = ('<img src="%s" alt="%s %s" width="240" height="180" loading="lazy" style="display:block;width:100%%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#fff">' % (src(i), E(r['s']), E(c))) if i else '<div style="aspect-ratio:4/3;background:#fff;color:#889;display:flex;align-items:center;justify-content:center;font-size:12px">写真なし</div>'
+                    fh.append('<figure %s style="margin:0;border:1px solid #1f2d42;border-radius:8px;overflow:hidden;background:#101c2e;color:#eef3f8">%s<figcaption style="padding:6px 8px;font-size:13px;line-height:1.4;color:#eef3f8">%s</figcaption></figure>' % (at, img, cap))
+                else:
+                    img = ('<img src="%s" alt="%s %s" loading="lazy" decoding="async" width="240" height="180">' % (src(i), E(r['s']), E(c))) if i else '<div class="noimg">写真なし</div>'
+                    fh.append('<figure class="cl" %s>%s<figcaption><b>%s</b></figcaption></figure>' % (at, img, cap))
             note = r.get('note', '')
+            pa = 'data-tcat-p="1" data-m="%s" data-mj="%s" data-name="%s"' % (E(m), E(m), E(r['s']))
+            ncol = len(r.get('c') or [])
+            meta = '重さ：%s%s' % (wtxt(r['w']), '・%d色' % ncol if ncol else '')
             if article:
-                out.append('<div style="border:1px solid #1f2d42;border-radius:10px;padding:12px 14px;margin:0 0 12px;background:#0b1422;color:#eef3f8">'
-                           '<p style="margin:0 0 4px;font-weight:700;font-size:16px">%s</p><p style="margin:0 0 4px;font-size:14px">重さ：%s</p>%s%s<p style="margin:8px 0 0">%s</p>%s</div>'
-                           % (E(r['s']), E(wtxt(r['w'])), '<p style="margin:0 0 4px;font-size:14px">色：%s</p>' % E(ctext) if ctext else '',
-                              '<p style="margin:0;font-size:13px;color:#9cabbd">%s</p>' % E(note) if note else '', links_html(rr, small=False, kwd=k), sinker_photos(r, True)))
+                blk.append('<div %s style="border:1px solid #1f2d42;border-radius:10px;padding:12px 14px;margin:0 0 12px;background:#0b1422;color:#eef3f8">'
+                           '<p style="margin:0 0 4px;font-weight:700;font-size:16px">%s</p><p style="margin:0 0 4px;font-size:14px">%s</p>%s<p data-tcat-links="1" style="margin:8px 0 0">%s</p>'
+                           '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:10px 0 0">%s</div></div>'
+                           % (pa, E(r['s']), E(meta), '<p style="margin:0;font-size:13px;color:#9cabbd">%s</p>' % E(note) if note else '', links_html(rr, small=False, kwd=k), ''.join(fh)))
             else:
-                out.append('<section class="pd sk"><h2><small>%s</small>%s</h2><p class="meta">重さ：%s</p>%s%s<p class="links">%s<a class="buy az" href="%s" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a><a class="buy rk" href="%s" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a><a class="buy yh" href="%s" target="_blank" rel="nofollow sponsored noopener">Yahoo!で探す</a></p>%s</section>'
-                           % (E(r['m']), E(r['s']), E(wtxt(r['w'])), '<p class="meta">色：%s</p>' % E(ctext) if ctext else '', '<p class="meta" style="font-size:13px">%s</p>' % E(note) if note else '',
+                blk.append('<section class="pd sk" %s><h2><small>%s</small>%s</h2><p class="meta">%s</p>%s<p class="links" data-tcat-links="1">%s<a class="buy az" href="%s" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a><a class="buy rk" href="%s" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a><a class="buy yh" href="%s" target="_blank" rel="nofollow sponsored noopener">Yahoo!で探す</a></p><div class="grid">%s</div></section>'
+                           % (pa, E(m), E(r['s']), E(meta), '<p class="meta" style="font-size:13px">%s</p>' % E(note) if note else '',
                               '<a class="off" href="%s" target="_blank" rel="noopener">メーカーのページ ↗</a>' % E(rr['u']) if rr['u'] else '',
-                              E(T.amazon(k)), E(T.rakuten(k)), E(T.yahoo(k)), sinker_photos(r, False)))
-    return makers, '\n'.join(out)
+                              E(T.amazon(k)), E(T.rakuten(k)), E(T.yahoo(k)), ''.join(fh)))
+        blk.append('</div>')
+        out.append('\n'.join(blk))
+    return makers, '<div %s>\n<div data-tcat-bar="1"></div>\n%s\n</div>' % (SK_ROOT, '\n'.join(out))
 
 
 def photo(i):
@@ -141,7 +164,7 @@ def kw(r):
 
 def fig_attrs(r, c, fid):
     return 'id="%s" data-tcat-c="1" data-k="%s" data-cn="%s" data-z="%s" data-q="%s"' % (
-        fid, E('%s|%s|%s' % (r['m'], r['p'], c['c'])), E(c['c']), E(c['z']), E(c['q']))
+        fid, E('%s|%s|%s' % (r.get('mk', r['m']), r['p'], c['c'])), E(c['c']), E(c['z']), E(c['q']))
 
 
 def prod_attrs(r):
@@ -182,7 +205,7 @@ def page(v, plist, makers):
     for a, b in [('{title}', 'ティップラン用エギ・シンカー カタログ｜エギ%dメーカー・%d色を写真で比較' % (len(makers), ncol)), ('{desc}', E(desc)), ('{url}', URL),
                  ('{lead}', '主要%dメーカーのティップラン用エギ %d製品・%d色を写真で一覧にしました。号数・メーカーで絞り込めて、色や製品の名前で検索できます。ページの下には、シンカー（増し錘）%d製品も載せています。' % (len(makers), len(plist), ncol, len(SINKERS))),
                  ('{upd}', E(v)), ('{zlist}', '・'.join(zs(z) + '号' for z in sizes)), ('{cards}', '\n'.join(cards)), ('{root}', ROOT),
-                 ('{sklead}', 'エギの下に付けて重さを足すシンカーです。%dメーカー・%d製品。色によって出ている重さが違うものは、色の後ろに重さを書いています。' % (len(sinker_html()[0]), len(SINKERS))),
+                 ('{sklead}', 'エギの下に付けて重さを足すシンカーです。%dメーカー・%d製品。エギと同じように、重さ・メーカーで絞り込み、色や製品の名前で検索できます。色によって出ている重さが違うものは、色の下に重さを書いています。' % (len(sinker_html()[0]), len(SINKERS))),
                  ('{sinkers}', sinker_html()[1]),
                  ('{js}', hashlib.sha256(open(os.path.join(PUB, 'tenya-catalog', 'catalog.js'), 'rb').read()).hexdigest()[:10])]:
         s = s.replace(a, b)
@@ -342,7 +365,7 @@ def article(v, plist, makers):
     a.append('<div %s>\n<div data-tcat-bar="1"></div>\n%s\n</div>' % (ROOT, '\n'.join(body)))
     smk, shtml = sinker_html(article=True)
     a.append('<h2 id="sinkers"><span class="en">SINKER</span>シンカー（増し錘）の一覧</h2>')
-    a.append('<p>エギの下に付けて重さを足すシンカーです。%dメーカー・%d製品。色によって出ている重さが違うものは、色の後ろに重さを書いています。</p>' % (len(smk), len(SINKERS)))
+    a.append('<p>エギの下に付けて重さを足すシンカーです。%dメーカー・%d製品。エギと同じように、重さ・メーカーで絞り込み、色や製品の名前で検索できます。色によって出ている重さが違うものは、色の下に重さを書いています。</p>' % (len(smk), len(SINKERS)))
     a.append(shtml)
     a.append('<p><small>%s 時点の内容です。価格や在庫は各ショップで確かめてください。Amazonのアソシエイトとして、このサイトは適格販売により収入を得ています。</small></p>' % E(v))
     art = {'version': 1,

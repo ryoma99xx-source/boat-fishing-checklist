@@ -7,8 +7,9 @@
    ページ側の印：[data-tcat] の中に [data-tcat-bar]（ここに操作部品を作る）・[data-tcat-cnt]、製品 [data-tcat-p]、色 [data-tcat-c]、
    メーカーのまとまり [data-tcat-mkb]、釣れ筋 [data-tcat-ts]、ランキング [data-tcat-rank]。 */
 (()=>{
-const root=document.querySelector('[data-tcat]');if(!root)return;
-const NOUN=root.dataset.tcatNoun||'テンヤ',PH=root.dataset.tcatPh||'検索（例：ケイムラ 40、ダイワ グロー）',NONEW=!!root.dataset.tcatNonew,NORANK=!!root.dataset.tcatNorank;   // エギのカタログなど、ほかのページでも使えるように
+let cssDone=false;
+function init(root){   // ページに [data-tcat] がいくつあっても、それぞれに絞り込み・検索を付ける（エギとシンカーなど）
+const NOUN=root.dataset.tcatNoun||'テンヤ',PH=root.dataset.tcatPh||'検索（例：ケイムラ 40、ダイワ グロー）',NONEW=!!root.dataset.tcatNonew,NORANK=!!root.dataset.tcatNorank,UNIT=root.dataset.tcatUnit||'号',ZALL=UNIT==='号'?'全号数':'すべての重さ';   // エギのカタログなど、ほかのページでも使えるように
 const RANK=/(^|\.)cutlassfish\.tokyo$/.test(location.hostname)&&location.hostname!=='dragon-counter.cutlassfish.tokyo'?'https://dragon-counter.cutlassfish.tokyo/tenya-rank.php':'/tenya-rank.php';   // 記事（cutlassfish.tokyo）からはアプリのサーバーへ
 const $$=(s,el)=>[...(el||document).querySelectorAll(s)];
 const normQ=x=>String(x||'').normalize('NFKC').toLowerCase().replace(/[ぁ-ゖ]/g,c=>String.fromCharCode(c.charCodeAt(0)+0x60));
@@ -54,7 +55,7 @@ p.tcat-none{padding:16px;text-align:center;color:var(--tcat-muted,${C.muted})!im
 [data-tcat-rank] li a::before{content:counter(r);font-size:22px;font-weight:700;color:#e3a43b;text-align:center}
 [data-tcat-rank] li img{width:64px;height:48px;object-fit:contain;background:#fff;border-radius:6px}[data-tcat-rank] li small{display:block;color:var(--tcat-muted,${C.muted});font-size:12px}
 .tcat-hide{display:none!important}`;
-document.head.appendChild(css);
+if(!cssDone){document.head.appendChild(css);cssDone=true}
 
 /* 操作部品 */
 const figs=$$('[data-tcat-c]',root),prods=$$('[data-tcat-p]',root);
@@ -63,7 +64,7 @@ const makers=[];prods.forEach(p=>{if(!makers.some(x=>x[0]===p.dataset.m))makers.
 const bar=root.querySelector('[data-tcat-bar]');
 if(bar){bar.className='tcat-bar';bar.innerHTML=`
  <div class="tcat-row" style="margin:0 0 8px"><select aria-label="メーカー"><option value="">すべてのメーカー</option>${makers.map(([m,j])=>`<option value="${esc(m)}">${esc(j===m?m:m+'（'+j+'）')}</option>`).join('')}</select></div>
- <div class="tcat-seg" data-k="z">${[['','全号数'],...sizes.map(z=>[z,z+'号'])].map(([v,l])=>`<button type="button" data-v="${v}" class="${v===''?'on':''}">${l}</button>`).join('')}</div>
+ <div class="tcat-seg" data-k="z">${[['',ZALL],...sizes.map(z=>[z,z+UNIT])].map(([v,l])=>`<button type="button" data-v="${v}" class="${v===''?'on':''}">${l}</button>`).join('')}</div>
  ${NONEW?'':`<div class="tcat-seg" data-k="only"><button type="button" data-v="" class="on">すべて</button><button type="button" data-v="new">新商品だけ</button></div>`}
  ${prods.some(p=>p.dataset.tg)?`<div class="tcat-seg" data-k="tg"><button type="button" data-v="" class="on">すべての素材</button><button type="button" data-v="1">タングステン（TG）だけ</button></div>`:''}
  <div class="tcat-row"><div class="tcat-q"><input type="search" placeholder="${esc(PH)}" autocomplete="off" enterkeyhint="search" aria-label="${NOUN}を検索"><button type="button" aria-label="検索を消す" hidden>×</button></div></div>
@@ -91,7 +92,7 @@ function apply(){const terms=normQ(st.q).split(/\s+/).filter(Boolean);let np=0,n
   prods.forEach(p=>{let k=0;const okP=(!st.m||p.dataset.m===st.m)&&(!st.tg||p.dataset.tg==='1');
     $$('[data-tcat-c]',p).forEach(f=>{const zs=(f.dataset.z||'').split(' ');let ok=okP&&(!st.z||zs.includes(st.z))&&(st.only!=='new'||isNew(f));
       if(ok&&terms.length){const h=f.dataset.q||'',h2=h.replace(/[\s・･\-]/g,'');
-        ok=terms.every(q=>{const n=q.replace(/号$/,'');if(/^\d+$/.test(n))return zs.includes(n);return h.includes(q)||h2.includes(q.replace(/[・･\-]/g,''))})}
+        ok=terms.every(q=>{const n=q.replace(UNIT==='号'?/号$/:/g$/i,'');if(/^\d+(\.\d+)?$/.test(n))return zs.includes(String(+n));return h.includes(q)||h2.includes(q.replace(/[・･\-]/g,''))})}
       f.classList.toggle('tcat-hide',!ok);if(ok)k++});
     p.classList.toggle('tcat-hide',!k);if(k){np++;nc+=k}});
   $$('[data-tcat-mkb]',root).forEach(b=>b.classList.toggle('tcat-hide',!b.querySelector('[data-tcat-p]:not(.tcat-hide)')));
@@ -102,7 +103,7 @@ function apply(){const terms=normQ(st.q).split(/\s+/).filter(Boolean);let np=0,n
 apply();
 
 /* 一覧の中のその色へ飛ぶ（絞り込みを外してから） */
-document.addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(!a)return;const t=document.getElementById(a.dataset.go);if(!t)return;e.preventDefault();
+document.addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(!a)return;const t=document.getElementById(a.dataset.go);if(!t||!root.contains(t))return;e.preventDefault();
   Object.assign(st,{z:'',only:'',tg:'',m:'',q:''});if(bar){$$('.tcat-seg',bar).forEach(s=>$$('button',s).forEach((x,i)=>x.classList.toggle('on',i===0)));bar.querySelector('select').value='';bar.querySelector('.tcat-q input').value=''}
   apply();$$('.tcat-hit').forEach(x=>x.classList.remove('tcat-hit'));t.classList.add('tcat-hit');t.scrollIntoView({behavior:'smooth',block:'center'})});
 
@@ -120,4 +121,6 @@ if(!NORANK)fetch(RANK+'?h='+Math.floor(Date.now()/36e5),{cache:'no-cache'}).then
   $$('[data-tcat-rank]').forEach(box=>{for(const k of ['catch','use']){const el=box.querySelector(`[data-tcat-rank-${k}]`);if(!el)continue;const l=(d[k]||[]).filter(x=>byKey[x]);
       if(l.length>=10){el.querySelector('ol').innerHTML=l.slice(0,10).map(x=>card(x,true)).join('');show(el,true);any=true}else show(el,false)}
     show(box,any)})}).catch(()=>{});
+}
+document.querySelectorAll('[data-tcat]').forEach(init);
 })();
