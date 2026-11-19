@@ -65,6 +65,30 @@ def wtxt(w):
     return '・'.join(zs(x) for x in w) + 'g'
 
 
+def sinker_photos(r, article):
+    """色ごとの写真（無い色は名前だけ）。色ごとの写真が無い色があれば、製品全体の写真を先に1枚"""
+    p = os.path.join(HERE, 'tipran', 'sinker-images.json')
+    mp = json.load(open(p, encoding='utf-8')) if os.path.exists(p) else {}
+    get = lambda c: (mp.get('%s|%s|%s' % (r['m'], r['s'], c)) or {}).get('id', '')
+    cols = r.get('c') or []
+    items = [(c, get(c)) for c in cols]
+    whole = get('')
+    if whole and (not cols or any(not i for _, i in items)):
+        items = [('（製品の写真）' if cols else '', whole)] + [(c, i) for c, i in items if i] + [(c, '') for c, i in items if not i]
+    if not any(i for _, i in items):
+        return ''
+    src = (lambda i: '%s/tipran/sinker/%s.webp' % (HOST, i)) if article else (lambda i: '/tipran/sinker/%s.webp' % i)
+    if article:
+        figs = ''.join('<figure style="margin:0;border:1px solid #1f2d42;border-radius:8px;overflow:hidden;background:#101c2e">%s<figcaption style="padding:6px 8px;font-size:13px;line-height:1.4;color:#eef3f8">%s</figcaption></figure>'
+                       % ('<img src="%s" alt="%s %s" width="240" height="180" loading="lazy" style="display:block;width:100%%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#fff">' % (src(i), E(r['s']), E(c)) if i else '<div style="aspect-ratio:4/3;background:#fff;color:#889;display:flex;align-items:center;justify-content:center;font-size:12px">写真なし</div>', E(c or r['s']))
+                       for c, i in items)
+        return '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:10px 0 0">%s</div>' % figs
+    figs = ''.join('<figure class="cl">%s<figcaption><b>%s</b></figcaption></figure>'
+                   % ('<img src="%s" alt="%s %s" loading="lazy" decoding="async" width="240" height="180">' % (src(i), E(r['s']), E(c)) if i else '<div class="noimg">写真なし</div>', E(c or r['s']))
+                   for c, i in items)
+    return '<div class="grid">%s</div>' % figs
+
+
 def sinker_html(article=False):
     """シンカー（増し錘）の一覧。写真はないので、製品ごとに重さ・色・メーカーのページと探すボタンを並べる（絞り込みの外）"""
     makers = []
@@ -94,14 +118,14 @@ def sinker_html(article=False):
             note = r.get('note', '')
             if article:
                 out.append('<div style="border:1px solid #1f2d42;border-radius:10px;padding:12px 14px;margin:0 0 12px;background:#0b1422;color:#eef3f8">'
-                           '<p style="margin:0 0 4px;font-weight:700;font-size:16px">%s</p><p style="margin:0 0 4px;font-size:14px">重さ：%s</p>%s%s<p style="margin:8px 0 0">%s</p></div>'
+                           '<p style="margin:0 0 4px;font-weight:700;font-size:16px">%s</p><p style="margin:0 0 4px;font-size:14px">重さ：%s</p>%s%s<p style="margin:8px 0 0">%s</p>%s</div>'
                            % (E(r['s']), E(wtxt(r['w'])), '<p style="margin:0 0 4px;font-size:14px">色：%s</p>' % E(ctext) if ctext else '',
-                              '<p style="margin:0;font-size:13px;color:#9cabbd">%s</p>' % E(note) if note else '', links_html(rr, small=False, kwd=k)))
+                              '<p style="margin:0;font-size:13px;color:#9cabbd">%s</p>' % E(note) if note else '', links_html(rr, small=False, kwd=k), sinker_photos(r, True)))
             else:
-                out.append('<section class="pd sk"><h2><small>%s</small>%s</h2><p class="meta">重さ：%s</p>%s%s<p class="links">%s<a class="buy az" href="%s" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a><a class="buy rk" href="%s" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a><a class="buy yh" href="%s" target="_blank" rel="nofollow sponsored noopener">Yahoo!で探す</a></p></section>'
+                out.append('<section class="pd sk"><h2><small>%s</small>%s</h2><p class="meta">重さ：%s</p>%s%s<p class="links">%s<a class="buy az" href="%s" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a><a class="buy rk" href="%s" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a><a class="buy yh" href="%s" target="_blank" rel="nofollow sponsored noopener">Yahoo!で探す</a></p>%s</section>'
                            % (E(r['m']), E(r['s']), E(wtxt(r['w'])), '<p class="meta">色：%s</p>' % E(ctext) if ctext else '', '<p class="meta" style="font-size:13px">%s</p>' % E(note) if note else '',
                               '<a class="off" href="%s" target="_blank" rel="noopener">メーカーのページ ↗</a>' % E(rr['u']) if rr['u'] else '',
-                              E(T.amazon(k)), E(T.rakuten(k)), E(T.yahoo(k))))
+                              E(T.amazon(k)), E(T.rakuten(k)), E(T.yahoo(k)), sinker_photos(r, False)))
     return makers, '\n'.join(out)
 
 

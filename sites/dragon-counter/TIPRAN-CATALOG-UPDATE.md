@@ -26,7 +26,7 @@
 5. `python3 tools/tipran_check_addonly.py /tmp/catalog-before.json` で確認。「消えた・名前が変わった」が出たら、調査ファイルを直して 4 からやり直す。足すものが無ければ（追加 0 件）9 へ
 6. **写真**（新しく足した色の分。写真は「切り抜くだけ」。下の鉄則を必ず守る）
    - エギ：公式の色別写真（無ければ釣具店の色別商品写真）を `work/egi/raw/` に置き、`work/egi/manifest-<メーカー>.json` = `[{"series","color","image_url","file":"raw/…","source"}]` を書いて `python3 tools/tipran_images.py work/egi`（既にある写真は残る。足した分だけ `public/tipran/egi/` と `tools/tipran/egi-images.json` に入る）
-   - シンカー：`work/sinker/` に同じ形で置いて `python3 tools/sinker_images.py work/sinker`（`public/tipran/sinker/` と `tools/tipran/sinker-images.json`。シンカーの写真はカタログのページと記事だけに出す。アプリには出さない）
+   - シンカー：`work/sinker/raw/` に置き、`work/sinker/manifest.json` = `[{"m","s","color","image_url","file":"raw/…","source"}]`（color "" は製品全体の写真）を書いて `python3 tools/sinker_images.py work/sinker`（`public/tipran/sinker/` と `tools/tipran/sinker-images.json`。シンカーの写真はカタログのページと記事だけに出す。アプリには出さない）
    - **必ず確認シートを作って目で見る**（そのエギ・シンカーだけが写っているか・色の取り違えが無いか・文字や別の写真が混ざっていないか）。写真が見つからない色は報告に「写真なし：…」と書く（カタログには足したままでよい）
    - `work/` は git に入れない
 7. アプリを作り直す（順番が大事）：`python3 tools/tairaba_build.py` → `python3 tools/tipran_build.py` → `git checkout public/tairaba/index.html`（タイラバは変えない）
