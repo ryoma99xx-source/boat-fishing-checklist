@@ -342,5 +342,51 @@ def main():
     article(v, plist, makers)
 
 
+POST_ID = 1420   # エギ・シンカーカタログの記事（https://cutlassfish.tokyo/article/tipran-egi-catalog/）
+FEAT = os.path.join(AOUT, 'featured.json')   # いま記事に付いているアイキャッチ {sha256, media_id}
+
+
+def push():
+    """記事の本文とアイキャッチを、いまのカタログで差し替える（公開中ならそのまま公開中）。テンヤの tenya_article.push と同じ。
+    環境変数 WP_USER / WP_APP_PASSWORD が要る（値は表示しない）。SiteGuard に断られたら先頭に空白を足して送り直す"""
+    import re as _re, shutil, subprocess, tempfile
+    if not os.environ.get('WP_USER') or not os.environ.get('WP_APP_PASSWORD'):
+        print('記事の更新はできませんでした：環境変数 WP_USER / WP_APP_PASSWORD がありません（カタログのページは更新済み）'); return 1
+    cf = os.path.join(REPO, 'wordpress', 'article-pack', 'cfpack.py')
+    art = json.load(open(os.path.join(AOUT, 'article.json'), encoding='utf-8'))
+    body = open(os.path.join(AOUT, 'article.html'), encoding='utf-8').read()
+    img = os.path.join(AOUT, 'images', 'egi-collage.jpg')
+    sha = hashlib.sha256(open(img, 'rb').read()).hexdigest()
+    feat = json.load(open(FEAT, encoding='utf-8')) if os.path.exists(FEAT) else {}
+    same = feat.get('sha256') == sha and feat.get('media_id')
+    for n in range(6):
+        with tempfile.TemporaryDirectory() as d:
+            os.makedirs(os.path.join(d, 'images'))
+            a2 = dict(art)
+            if same:
+                a2['images'] = []; a2['featured_image'] = 'media:%d' % feat['media_id']
+            else:
+                shutil.copyfile(img, os.path.join(d, 'images', 'egi-collage.jpg'))
+            json.dump(a2, open(os.path.join(d, 'article.json'), 'w', encoding='utf-8'), ensure_ascii=False)
+            open(os.path.join(d, 'article.html'), 'w', encoding='utf-8').write(' ' * n + body)
+            z = os.path.join(d, 'pack.zip')
+            b = subprocess.run([sys.executable, cf, 'build', d, '-o', z], capture_output=True, text=True)
+            if b.returncode:
+                print('記事パックを作れませんでした:', (b.stdout + b.stderr)[-300:]); return 1
+            r = subprocess.run([sys.executable, cf, 'update', str(POST_ID), z, '--allow-published'], capture_output=True, text=True)
+        out = r.stdout + r.stderr
+        if r.returncode == 0:
+            if not same:
+                m = _re.search(r'"egi-collage":\s*(\d+)', r.stdout)
+                if m:
+                    json.dump({'sha256': sha, 'media_id': int(m.group(1))}, open(FEAT, 'w', encoding='utf-8'))
+            print('記事を更新しました: post %d' % POST_ID); return 0
+        if 'HTTP 403' not in out:
+            print('記事の更新に失敗しました:', out[-300:]); return 1
+    print('記事の更新に失敗しました：ファイアウォール（SiteGuard）に6回断られました'); return 1
+
+
 if __name__ == '__main__':
     main()
+    if '--push' in sys.argv:
+        sys.exit(push())
