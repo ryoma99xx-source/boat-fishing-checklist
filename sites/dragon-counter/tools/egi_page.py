@@ -53,11 +53,13 @@ def load():
         plist.append({'m': m, 'p': p, 'u': r.get('u', ''), 'note': r.get('note', ''), 'z': z, 'wt': wt, 'cols': cols})
     plist.sort(key=lambda r: (makers.index(r['m']), bool(r['note']), r['p']))
     global SINKERS
-    SINKERS = cat.get('skirts', [])
+    SINKERS = [r for r in cat.get('skirts', []) if (r['m'], r['s']) not in PAGE_HIDE_SINKERS]
     return cat.get('v', ''), plist, makers
 
 
 SINKERS = []
+# カタログのページ・記事には載せないシンカー（オーナー指示 2026-11-20。アプリのカタログには残る）
+PAGE_HIDE_SINKERS = {('ダイワ', 'アゴリグシンカー3'), ('第一精工', 'エギタス')}
 
 
 def wtxt(w):
