@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Dragon Counter Data
  * Description: ドラゴンカウンター（TOOL 05）とティップランカウンターから匿名で届いた釣果データを、管理画面（ツール → ドラゴンカウンターのデータ）でダッシュボード・一覧・ダウンロード・削除します。上のタブでアプリを切り替えます。データはサーバーの .data/trips/（ティップランは tipran/.data/trips/）にあるものを読むだけで、外には出しません。
- * Version: 1.2.1
+ * Version: 1.3.0
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -132,7 +132,7 @@ final class DCD_Admin {
             $mode[($t['mode'] ?? '') === 'detail' ? 'detail' : 'simple']++;
         }
         $pct = function ($a, $b) { return $b ? round($a / $b * 100, 1) . '%' : '―'; };
-        echo '<style>.dcd-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;max-width:1100px}.dcd-kpi{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:10px 12px}.dcd-kpi span{display:block;color:#646970;font-size:12px}.dcd-kpi b{font-size:24px}.dcd-kpi small{display:block;color:#646970}.dcd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;max-width:1100px;margin-top:12px}.dcd-card{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:10px 14px}.dcd-card h3{margin:4px 0 10px;font-size:14px}.dcd-bar{display:grid;grid-template-columns:minmax(0,9em) 1fr auto;gap:8px;align-items:center;font-size:13px;margin:4px 0}.dcd-bar small{grid-column:2/4;color:#646970;margin-top:-4px}.dcd-k{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dcd-t{background:#f0f0f1;border-radius:4px;height:10px;overflow:hidden}.dcd-t i{display:block;height:100%;background:#2271b1}.dcd-hours{display:flex;align-items:flex-end;gap:2px;height:120px}.dcd-hours div{flex:1;background:#2271b1;min-height:1px;position:relative}.dcd-hl{display:flex;gap:2px;font-size:10px;color:#646970}.dcd-hl span{flex:1;text-align:center}.dcd-tb{border-collapse:collapse;width:100%;font-size:13px}.dcd-tb td,.dcd-tb th{padding:4px 6px;border-bottom:1px solid #f0f0f1;text-align:right}.dcd-tb td:first-child,.dcd-tb th:first-child{text-align:left}</style>';
+        self::css();
         echo '<div class="dcd-kpis">';
         foreach ([['釣行', $n . '件', '詳細モード ' . $mode['detail'] . '件'], ['釣れた合計', $catch . $U, ''], ['1釣行あたり', $n ? round($catch / $n, 1) . $U : '―', ''], ['1時間あたり', $hrs ? round($catch / $hrs, 1) . $U : '―', '釣行時間 計' . round($hrs) . '時間'], [self::A('big'), $dragon . $U, '釣れたうち ' . $pct($dragon, $catch)], ['アタリ', $bite . '回', ''], ['バラシ', $lost . '回', '取り込み率 ' . $pct($catch, $catch + $lost)]] as $k)
             echo '<div class="dcd-kpi"><span>' . esc_html($k[0]) . '</span><b>' . esc_html($k[1]) . '</b><small>' . esc_html($k[2]) . '</small></div>';
@@ -169,8 +169,11 @@ final class DCD_Admin {
         $dir = self::dir();
         $notice = get_transient('dcd_notice_' . get_current_user_id()); if ($notice) delete_transient('dcd_notice_' . get_current_user_id());
         echo '<div class="wrap"><h1>釣果アプリのデータ</h1><h2 class="nav-tab-wrapper" style="margin-bottom:10px">';
-        foreach (self::APPS as $k => $a) echo '<a class="nav-tab' . (self::$app === $k ? ' nav-tab-active' : '') . '" href="' . esc_url(admin_url('tools.php?page=' . self::SLUG . '&app=' . $k)) . '">' . esc_html($a['name']) . '</a>';
+        $isDl = sanitize_key($_GET['app'] ?? '') === 'dl';
+        foreach (self::APPS as $k => $a) echo '<a class="nav-tab' . (!$isDl && self::$app === $k ? ' nav-tab-active' : '') . '" href="' . esc_url(admin_url('tools.php?page=' . self::SLUG . '&app=' . $k)) . '">' . esc_html($a['name']) . '</a>';
+        echo '<a class="nav-tab' . ($isDl ? ' nav-tab-active' : '') . '" href="' . esc_url(admin_url('tools.php?page=' . self::SLUG . '&app=dl')) . '">型紙ダウンロード</a>';
         echo '</h2>';
+        if ($isDl) { self::downloads($dir); echo '</div>'; return; }
         if ($notice) echo '<div class="notice notice-info is-dismissible"><p>' . esc_html($notice) . '</p></div>';
         echo '<p class="description">' . esc_html(self::A('name')) . 'で「沖上がり」まで記録された釣行が、匿名（名前・メモなし）で届いたものです。アプリで釣行を消しても、ここには残ります。テストの釣行などは「消す」で取り除けます。</p>';
         if (!$dir && self::$app !== 'dc') { echo '<p>まだ届いていません（データの置き場所 <code>tipran/.data/trips</code> がまだできていません）。</p></div>'; return; }
@@ -207,6 +210,43 @@ final class DCD_Admin {
         echo '<p class="description">置き場所：<code>' . esc_html($dir) . '</code></p>';
         if (self::$app === 'dc') self::dir_form($dir);
         echo '</div>';
+    }
+    /** タチウオのぬいぐるみの型紙PDFのダウンロード記録（dragon-counter の .data/downloads/pattern.jsonl） */
+    private static function css() {
+        echo '<style>.dcd-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;max-width:1100px}.dcd-kpi{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:10px 12px}.dcd-kpi span{display:block;color:#646970;font-size:12px}.dcd-kpi b{font-size:24px}.dcd-kpi small{display:block;color:#646970}.dcd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;max-width:1100px;margin-top:12px}.dcd-card{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:10px 14px}.dcd-card h3{margin:4px 0 10px;font-size:14px}.dcd-bar{display:grid;grid-template-columns:minmax(0,9em) 1fr auto;gap:8px;align-items:center;font-size:13px;margin:4px 0}.dcd-bar small{grid-column:2/4;color:#646970;margin-top:-4px}.dcd-k{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dcd-t{background:#f0f0f1;border-radius:4px;height:10px;overflow:hidden}.dcd-t i{display:block;height:100%;background:#2271b1}.dcd-hours{display:flex;align-items:flex-end;gap:2px;height:120px}.dcd-hours div{flex:1;background:#2271b1;min-height:1px;position:relative}.dcd-hl{display:flex;gap:2px;font-size:10px;color:#646970}.dcd-hl span{flex:1;text-align:center}.dcd-tb{border-collapse:collapse;width:100%;font-size:13px}.dcd-tb td,.dcd-tb th{padding:4px 6px;border-bottom:1px solid #f0f0f1;text-align:right}.dcd-tb td:first-child,.dcd-tb th:first-child{text-align:left}</style>';
+    }
+    private static function downloads($dir) {
+        self::css();
+        echo '<p class="description">記事「タチウオのぬいぐるみ」の型紙PDFが押された記録です。人は特定できません（IPアドレスなどは保存していません）。同じ端末・ブラウザで2回目以降に押したものは「くり返し」として数えます。ボットは数えません。</p>';
+        $file = $dir ? dirname($dir) . '/downloads/pattern.jsonl' : '';
+        if (!$file || !is_readable($file)) { echo '<p>まだダウンロードされていません。</p>'; return; }
+        $rows = [];
+        foreach ((array)@file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $l) { $j = json_decode($l, true); if (is_array($j) && !empty($j['t'])) $rows[] = $j; }
+        if (!$rows) { echo '<p>まだダウンロードされていません。</p>'; return; }
+        $tz = wp_timezone(); $name = ['paper' => '紙の仮組み用', 'fabric' => '布用（縫い代3mm）'];
+        $day = function ($t) use ($tz) { $d = new DateTime($t); $d->setTimezone($tz); return $d; };
+        $tot = ['paper' => 0, 'fabric' => 0]; $uniq = ['paper' => 0, 'fabric' => 0]; $byDay = []; $dev = []; $os = []; $ref = [];
+        foreach ($rows as $r) {
+            $f = $r['f'] ?? ''; if (!isset($tot[$f])) continue;
+            $tot[$f]++; if (empty($r['rep'])) $uniq[$f]++;
+            $k = $day($r['t'])->format('Y-m-d'); $byDay[$k] = ($byDay[$k] ?? 0) + 1;
+            $dev[$r['dev'] ?? '不明'] = ($dev[$r['dev'] ?? '不明'] ?? 0) + 1;
+            $os[$r['os'] ?? '不明'] = ($os[$r['os'] ?? '不明'] ?? 0) + 1;
+            $h = $r['ref'] ?? ''; $h = $h === '' ? '（不明・直接）' : $h; $ref[$h] = ($ref[$h] ?? 0) + 1;
+        }
+        echo '<table class="widefat striped" style="max-width:560px;margin:12px 0"><thead><tr><th>型紙</th><th>ダウンロード</th><th>うち初めて</th></tr></thead><tbody>';
+        foreach ($tot as $k => $n) echo '<tr><td>' . esc_html($name[$k]) . '</td><td><b>' . (int)$n . '</b></td><td>' . (int)$uniq[$k] . '</td></tr>';
+        echo '<tr><td><b>合計</b></td><td><b>' . (int)array_sum($tot) . '</b></td><td>' . (int)array_sum($uniq) . '</td></tr></tbody></table>';
+        krsort($byDay); arsort($dev); arsort($os); arsort($ref);
+        echo '<div class="dcd-grid">';
+        self::bars('日ごと（新しい順）', array_slice($byDay, 0, 30, true), '回', '', 30);
+        self::bars('端末', $dev, '回');
+        self::bars('OS', $os, '回');
+        self::bars('どこから来たか', $ref, '回');
+        echo '</div>';
+        echo '<h3>最近の50件</h3><table class="widefat striped" style="max-width:720px"><thead><tr><th>日時</th><th>型紙</th><th>端末</th><th>どこから</th><th></th></tr></thead><tbody>';
+        foreach (array_slice(array_reverse($rows), 0, 50) as $r) echo '<tr><td>' . esc_html($day($r['t'])->format('Y-m-d H:i')) . '</td><td>' . esc_html($name[$r['f'] ?? ''] ?? '') . '</td><td>' . esc_html(($r['dev'] ?? '') . '・' . ($r['os'] ?? '')) . '</td><td>' . esc_html($r['ref'] ?: '―') . '</td><td>' . (!empty($r['rep']) ? 'くり返し' : '') . '</td></tr>';
+        echo '</tbody></table>';
     }
     private static function dir_form($dir) {
         echo '<form method="post" action="' . esc_url(admin_url('admin-post.php')) . '" style="margin-top:8px">';
