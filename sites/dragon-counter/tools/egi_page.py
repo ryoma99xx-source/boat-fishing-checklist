@@ -52,7 +52,57 @@ def load():
             cols.append({'c': c, 'img': im['id'] if im else '', 'q': q, 'z': sizes})
         plist.append({'m': m, 'p': p, 'u': r.get('u', ''), 'note': r.get('note', ''), 'z': z, 'wt': wt, 'cols': cols})
     plist.sort(key=lambda r: (makers.index(r['m']), bool(r['note']), r['p']))
+    global SINKERS
+    SINKERS = cat.get('skirts', [])
     return cat.get('v', ''), plist, makers
+
+
+SINKERS = []
+
+
+def wtxt(w):
+    w = [float(x) for x in w]
+    return '・'.join(zs(x) for x in w) + 'g'
+
+
+def sinker_html(article=False):
+    """シンカー（増し錘）の一覧。写真はないので、製品ごとに重さ・色・メーカーのページと探すボタンを並べる（絞り込みの外）"""
+    makers = []
+    for r in SINKERS:
+        if r['m'] not in makers:
+            makers.append(r['m'])
+    out = []
+    for m in makers:
+        rs = [r for r in SINKERS if r['m'] == m]
+        out.append('<h3 style="margin:22px 0 6px">%s</h3>' % E(m) if article else '<h3 class="sk-mk">%s</h3>' % E(m))
+        for r in rs:
+            rr = {'m': r['m'], 'p': r['s'], 'u': r.get('u', '')}
+            k = re.sub(r'\s+', ' ', '%s %s' % (r['m'], r['s'])).strip()
+            cw = r.get('cw') or {}
+            cols = r.get('c') or []
+            if cw and cols:
+                lim = []
+                for ci, c in enumerate(cols):
+                    ws = [w for w, idx in cw.items() if ci in idx]
+                    if len(ws) < len(cw):
+                        lim.append('%s（%s）' % (c, wtxt(sorted(ws, key=float))))
+                    else:
+                        lim.append(c)
+                ctext = '・'.join(lim)
+            else:
+                ctext = '・'.join(cols)
+            note = r.get('note', '')
+            if article:
+                out.append('<div style="border:1px solid #1f2d42;border-radius:10px;padding:12px 14px;margin:0 0 12px;background:#0b1422;color:#eef3f8">'
+                           '<p style="margin:0 0 4px;font-weight:700;font-size:16px">%s</p><p style="margin:0 0 4px;font-size:14px">重さ：%s</p>%s%s<p style="margin:8px 0 0">%s</p></div>'
+                           % (E(r['s']), E(wtxt(r['w'])), '<p style="margin:0 0 4px;font-size:14px">色：%s</p>' % E(ctext) if ctext else '',
+                              '<p style="margin:0;font-size:13px;color:#9cabbd">%s</p>' % E(note) if note else '', links_html(rr, small=False, kwd=k)))
+            else:
+                out.append('<section class="pd sk"><h2><small>%s</small>%s</h2><p class="meta">重さ：%s</p>%s%s<p class="links">%s<a class="buy az" href="%s" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a><a class="buy rk" href="%s" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a><a class="buy yh" href="%s" target="_blank" rel="nofollow sponsored noopener">Yahoo!で探す</a></p></section>'
+                           % (E(r['m']), E(r['s']), E(wtxt(r['w'])), '<p class="meta">色：%s</p>' % E(ctext) if ctext else '', '<p class="meta" style="font-size:13px">%s</p>' % E(note) if note else '',
+                              '<a class="off" href="%s" target="_blank" rel="noopener">メーカーのページ ↗</a>' % E(rr['u']) if rr['u'] else '',
+                              E(T.amazon(k)), E(T.rakuten(k)), E(T.yahoo(k))))
+    return makers, '\n'.join(out)
 
 
 def photo(i):
@@ -103,9 +153,11 @@ def page(v, plist, makers):
                  E(T.amazon(k)), E(T.rakuten(k)), E(T.yahoo(k)), ''.join(cols)))
     desc = 'ティップラン用エギの全カラーを写真で一覧。ダイワ・シマノ・ヤマシタなど%dメーカー%d製品・%d色を、号数・メーカーで絞り込み、色の名前で検索できます。釣果記録アプリ「ティップランカウンター」のエギカタログと同じデータです。' % (len(makers), len(plist), ncol)
     s = TPL
-    for a, b in [('{title}', 'ティップラン用エギ カタログ｜%dメーカー・%d色を写真で比較' % (len(makers), ncol)), ('{desc}', E(desc)), ('{url}', URL),
-                 ('{lead}', '主要%dメーカーのティップラン用エギ %d製品・%d色を写真で一覧にしました。号数・メーカーで絞り込めて、色や製品の名前で検索できます。' % (len(makers), len(plist), ncol)),
+    for a, b in [('{title}', 'ティップラン用エギ・シンカー カタログ｜エギ%dメーカー・%d色を写真で比較' % (len(makers), ncol)), ('{desc}', E(desc)), ('{url}', URL),
+                 ('{lead}', '主要%dメーカーのティップラン用エギ %d製品・%d色を写真で一覧にしました。号数・メーカーで絞り込めて、色や製品の名前で検索できます。ページの下には、シンカー（増し錘）%d製品も載せています。' % (len(makers), len(plist), ncol, len(SINKERS))),
                  ('{upd}', E(v)), ('{zlist}', '・'.join(zs(z) + '号' for z in sizes)), ('{cards}', '\n'.join(cards)), ('{root}', ROOT),
+                 ('{sklead}', 'エギの下に付けて重さを足すシンカーです。%dメーカー・%d製品。色によって出ている重さが違うものは、色の後ろに重さを書いています。' % (len(sinker_html()[0]), len(SINKERS))),
+                 ('{sinkers}', sinker_html()[1]),
                  ('{js}', hashlib.sha256(open(os.path.join(PUB, 'tenya-catalog', 'catalog.js'), 'rb').read()).hexdigest()[:10])]:
         s = s.replace(a, b)
     return s
@@ -122,16 +174,21 @@ def tpl():
 <div class="wrap">
 <header class="top"><a href="https://cutlassfish.tokyo/">東京湾の魚・釣り</a><a class="app" href="/tipran/">ティップランカウンター</a></header>
 <p class="eyebrow">EGI CATALOG</p>
-<h1>ティップラン用エギ カタログ</h1>
+<h1>ティップラン用エギ・シンカー カタログ</h1>
 <p class="lead">{lead}</p>
 <p class="note"><b style="color:var(--ink)">号数は {zlist}</b>のエギを載せています。色の名前・号数・重さはメーカーの表記です。{upd} 時点。最新の情報はメーカーのページで確かめてください。エギは種類がとても多いので、まだ載っていない製品・色もあります。</p>
 <span class="pr">PR：このページはアフィリエイト広告（Amazon・楽天・Yahoo!ショッピング）を利用しています</span>
 
+<p class="note" style="margin-top:12px"><a href="#sinkers">シンカー（増し錘）の一覧へ ↓</a></p>
 <div {root}>
 <div data-tcat-bar="1"></div>
 
 {cards}
 </div>
+
+<h2 id="sinkers" style="font-size:22px;margin:32px 0 4px">シンカー（増し錘）</h2>
+<p class="note">{sklead}</p>
+{sinkers}
 
 <section class="box app-box">
  <div class="app-head"><img src="/tipran/icon-192.png" alt="" width="64" height="64"><div><b>ティップランカウンター</b><small>アオリイカの釣果記録アプリ（無料・登録なし）</small></div></div>
@@ -156,8 +213,8 @@ def tpl():
 TPL = None
 
 
-def links_html(r, small=False):
-    k = kw(r)
+def links_html(r, small=False, kwd=None):
+    k = kwd or kw(r)
     b = BTN + (';font-size:13px;padding:6px 10px' if small else '')
     x = ''
     if r['u'] and not small:
@@ -232,7 +289,7 @@ def article(v, plist, makers):
         blk.append('</div>')
         body.append('\n'.join(blk))
     a = []
-    a.append('<p class="lead">「このエギ、ほかにどんな色があったっけ？」と思っても、メーカーのページを行ったり来たりして探すのは面倒です。そこで、ティップラン用のエギを<strong>メーカー・製品ごとに、全部の色を写真で一覧</strong>にしました。%dメーカー・%d製品・%d色です。釣果記録アプリ「ティップランカウンター」のエギカタログと同じデータです。</p>' % (len(makers), len(plist), ncol))
+    a.append('<p class="lead">「このエギ、ほかにどんな色があったっけ？」と思っても、メーカーのページを行ったり来たりして探すのは面倒です。そこで、ティップラン用のエギを<strong>メーカー・製品ごとに、全部の色を写真で一覧</strong>にしました。%dメーカー・%d製品・%d色です。記事の後半には、シンカー（増し錘）%d製品の一覧もあります。釣果記録アプリ「ティップランカウンター」のカタログと同じデータです。</p>' % (len(makers), len(plist), ncol, len(SINKERS)))
     a.append('<p><small>※この記事には、Amazon・楽天市場・Yahoo!ショッピングへのアフィリエイトリンク（広告）が含まれます。</small></p>')
     a.append('<div style="display:flex;gap:12px;align-items:center;border:1px solid #44566e;border-radius:12px;padding:12px 14px;margin:20px 0">'
              '<a href="%s" style="flex:0 0 56px;width:56px;display:block"><img src="%sicon-192.png" alt="ティップランカウンター" width="56" height="56" style="width:56px;min-width:56px;max-width:none;height:56px;border-radius:12px;display:block;object-fit:cover"></a>'
@@ -254,12 +311,17 @@ def article(v, plist, makers):
     a.append('<ul><li>このページと同じリストから、持っているエギを写真で登録</li><li>シンカー・竿・リール（ベイトも）もカタログから登録</li><li>釣り場を選ぶと、潮回りと満潮・干潮が自動で入る</li><li>アタリ・バラシ・釣れた時刻を、ボタン1つで記録</li><li>記録はスマホの中に保存。ホーム画面に置けばアプリのように使える</li></ul>')
     a.append('<p style="text-align:center;margin:20px 0"><a href="%s" style="display:inline-block;background:#41c9c6;color:#03161c !important;font-size:17px;font-weight:700;padding:14px 28px;border-radius:8px;text-decoration:none;margin:6px">ティップランカウンターを開く →</a>'
              '<a href="https://cutlassfish.tokyo/article/tipran-counter/" style="display:inline-block;border:2px solid #41c9c6;color:inherit;font-size:16px;font-weight:700;padding:12px 22px;border-radius:8px;text-decoration:none;margin:6px">使い方の記事を読む</a></p>' % APP)
+    a.append('<p><a href="#sinkers">シンカー（増し錘）の一覧へ ↓</a></p>')
     a.append('<h2><span class="en">CATALOG</span>エギの一覧</h2>')
     a.append('<div %s>\n<div data-tcat-bar="1"></div>\n%s\n</div>' % (ROOT, '\n'.join(body)))
+    smk, shtml = sinker_html(article=True)
+    a.append('<h2 id="sinkers"><span class="en">SINKER</span>シンカー（増し錘）の一覧</h2>')
+    a.append('<p>エギの下に付けて重さを足すシンカーです。%dメーカー・%d製品。色によって出ている重さが違うものは、色の後ろに重さを書いています。</p>' % (len(smk), len(SINKERS)))
+    a.append(shtml)
     a.append('<p><small>%s 時点の内容です。価格や在庫は各ショップで確かめてください。Amazonのアソシエイトとして、このサイトは適格販売により収入を得ています。</small></p>' % E(v))
     art = {'version': 1,
-           'title': 'ティップラン用エギ カタログ｜%dメーカー・%d色を写真で一覧' % (len(makers), ncol),
-           'excerpt': 'ダイワ・シマノ・ヤマシタなど%dメーカーのティップラン用エギ%d製品・%d色を、写真で一覧にしました。号数・メーカーで絞り込めて、色や製品の名前で検索できます。釣果記録アプリ「ティップランカウンター」と同じデータです。' % (len(makers), len(plist), ncol),
+           'title': 'ティップラン用エギ・シンカー カタログ｜エギ%dメーカー・%d色を写真で一覧' % (len(makers), ncol),
+           'excerpt': 'ダイワ・シマノ・ヤマシタなど%dメーカーのティップラン用エギ%d製品・%d色を、写真で一覧にしました。号数・メーカーで絞り込めて、色や製品の名前で検索できます。シンカー（増し錘）%d製品も載せています。釣果記録アプリ「ティップランカウンター」と同じデータです。' % (len(makers), len(plist), ncol, len(SINKERS)),
            'images': [{'id': 'egi-collage', 'file': 'images/egi-collage.jpg', 'alt': 'ティップラン用エギの写真を並べたもの'}],
            'featured_image': 'egi-collage'}
     os.makedirs(os.path.join(AOUT, 'images'), exist_ok=True)
