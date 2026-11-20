@@ -338,7 +338,7 @@ def article(v, plist, makers):
         blk.append('</div>')
         body.append('\n'.join(blk))
     a = []
-    a.append('<p class="lead">「このエギ、ほかにどんな色があったっけ？」と思っても、メーカーのページを行ったり来たりして探すのは面倒です。そこで、ティップラン用のエギを<strong>メーカー・製品ごとに、全部の色を写真で一覧</strong>にしました。%dメーカー・%d製品・%d色です。記事の後半には、シンカー（増し錘）%d製品の一覧もあります。釣果記録アプリ「ティップランカウンター」のカタログと同じデータです。</p>' % (len(makers), len(plist), ncol, len(SINKERS)))
+    a.append('<p class="lead">「ティップランのエギ、多すぎてよくわからん」「このエギで、こんなカラーなかったっけ？」と思っても、メーカーのページを行ったり来たりして探すのは面倒です。そこで、ティップラン用のエギを<strong>メーカー・製品ごとに、全部の色を写真で一覧</strong>にしました。%dメーカー・%d製品・%d色です。記事の後半には、シンカー（増し錘）%d製品の一覧もあります。釣果記録アプリ「ティップランカウンター」のカタログと同じデータです。</p>' % (len(makers), len(plist), ncol, len(SINKERS)))
     a.append('<p><small>※この記事には、Amazon・楽天市場・Yahoo!ショッピングへのアフィリエイトリンク（広告）が含まれます。</small></p>')
     a.append('<div style="display:flex;gap:12px;align-items:center;border:1px solid #44566e;border-radius:12px;padding:12px 14px;margin:20px 0">'
              '<a href="%s" style="flex:0 0 56px;width:56px;display:block"><img src="%sicon-192.png" alt="ティップランカウンター" width="56" height="56" style="width:56px;min-width:56px;max-width:none;height:56px;border-radius:12px;display:block;object-fit:cover"></a>'
