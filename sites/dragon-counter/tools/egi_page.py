@@ -29,8 +29,8 @@ E = T.E
 BTN = 'display:inline-block;font-size:14px;font-weight:700;padding:8px 14px;border-radius:8px;text-decoration:none;margin:0 6px 6px 0'
 
 
-# ページ・記事に出すメーカー名（オーナー指示 2026-11-20）。アプリのカタログの表記（持っているエギの覚え方）は変えない
-DISP = {'マルキユー': 'マルキュー'}
+# ページ・記事だけメーカー名の表示を変えたいときの対応表（アプリの表記は変えない）。メーカー名は正式名称のまま出す（オーナー指示 2026-11-20）
+DISP = {}
 
 
 def dm(m):
