@@ -1,0 +1,198 @@
+{
+ "maker": "テイルウォーク",
+ "rods": [
+  {
+   "series": "タイゲーム TZ",
+   "model": "C60XUL/FSL",
+   "type": "bait",
+   "length_m": 1.83,
+   "lure_g": "MAX120",
+   "pe": "MAX0.8",
+   "price_jpy": 52000,
+   "url": "https://www.tailwalk.jp/product/taigame-tz-22/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム TZ",
+   "model": "C71XUL/FSL",
+   "type": "bait",
+   "length_m": 2.16,
+   "lure_g": "MAX120",
+   "pe": "MAX0.8",
+   "price_jpy": 54000,
+   "url": "https://www.tailwalk.jp/product/taigame-tz-22/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム TZ",
+   "model": "C65UL/FSL",
+   "type": "bait",
+   "length_m": 1.96,
+   "lure_g": "MAX150",
+   "pe": "MAX0.8",
+   "price_jpy": 53000,
+   "url": "https://www.tailwalk.jp/product/taigame-tz-22/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム TZ",
+   "model": "C70UL/FSL",
+   "type": "bait",
+   "length_m": 2.13,
+   "lure_g": "MAX150",
+   "pe": "MAX1.0",
+   "price_jpy": 54000,
+   "url": "https://www.tailwalk.jp/product/taigame-tz-22/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム TZ",
+   "model": "S65L/FSL",
+   "type": "spinning",
+   "length_m": 1.96,
+   "lure_g": "MAX180",
+   "pe": "MAX1.0",
+   "price_jpy": 53000,
+   "url": "https://www.tailwalk.jp/product/taigame-tz-22/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム TZ",
+   "model": "S66ML/FSL",
+   "type": "spinning",
+   "length_m": 1.98,
+   "lure_g": "MAX200",
+   "pe": "MAX1.0",
+   "price_jpy": 53000,
+   "url": "https://www.tailwalk.jp/product/taigame-tz-22/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム TZ 20th アニバーサリー リミテッド",
+   "model": "C65UL/FSL",
+   "type": "bait",
+   "length_m": 1.96,
+   "lure_g": "MAX150",
+   "pe": "MAX0.8",
+   "price_jpy": 55000,
+   "url": "https://www.tailwalk.jp/product/tai-game-tz-20th-anniversary-limited/",
+   "status": "20周年限定モデル",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム SD",
+   "model": "C510XUL/LSL",
+   "type": "bait",
+   "length_m": 1.78,
+   "lure_g": "MAX180",
+   "pe": "MAX0.8",
+   "price_jpy": 22000,
+   "url": "https://www.tailwalk.jp/product/tai-game-sd/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム SD",
+   "model": "C510UL/LSL",
+   "type": "bait",
+   "length_m": 1.78,
+   "lure_g": "MAX200",
+   "pe": "MAX1.0",
+   "price_jpy": 22000,
+   "url": "https://www.tailwalk.jp/product/tai-game-sd/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム SD",
+   "model": "C67UL/LSL",
+   "type": "bait",
+   "length_m": 2.01,
+   "lure_g": "MAX200",
+   "pe": "MAX1.0",
+   "price_jpy": 22000,
+   "url": "https://www.tailwalk.jp/product/tai-game-sd/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム SD",
+   "model": "C67L/LSL",
+   "type": "bait",
+   "length_m": 2.01,
+   "lure_g": "MAX220",
+   "pe": "MAX1.0",
+   "price_jpy": 22000,
+   "url": "https://www.tailwalk.jp/product/tai-game-sd/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム SD",
+   "model": "C67ML/LSL",
+   "type": "bait",
+   "length_m": 2.01,
+   "lure_g": "MAX230",
+   "pe": "MAX1.2",
+   "price_jpy": 22000,
+   "url": "https://www.tailwalk.jp/product/tai-game-sd/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム SD",
+   "model": "C67M/LSL",
+   "type": "bait",
+   "length_m": 2.01,
+   "lure_g": "MAX250",
+   "pe": "MAX1.2",
+   "price_jpy": 22000,
+   "url": "https://www.tailwalk.jp/product/tai-game-sd/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム BM",
+   "model": "C65UL",
+   "type": "bait",
+   "length_m": 1.96,
+   "lure_g": "MAX180",
+   "pe": "MAX1.0",
+   "price_jpy": 16000,
+   "url": "https://www.tailwalk.jp/product/tai-game-bm/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "タイゲーム BM",
+   "model": "C65L",
+   "type": "bait",
+   "length_m": 1.96,
+   "lure_g": "MAX200",
+   "pe": "MAX1.0",
+   "price_jpy": 16500,
+   "url": "https://www.tailwalk.jp/product/tai-game-bm/",
+   "status": "",
+   "source": "official"
+  }
+ ],
+ "sources": [
+  "https://www.tailwalk.jp/rod/ (#taigame)",
+  "https://www.tailwalk.jp/product/taigame-tz-22/",
+  "https://www.tailwalk.jp/product/tai-game-tz-20th-anniversary-limited/",
+  "https://www.tailwalk.jp/product/tai-game-sd/",
+  "https://www.tailwalk.jp/product/tai-game-bm/"
+ ],
+ "notes": [
+  "公式ロッド一覧の TAI GAME セクション掲載の4製品を収録。series はページ見出しのカタカナ表記（Tai Game TZ [New Gen] = タイゲーム TZ）。",
+  "length_m は公式表がft.in表記のみのため ft→m 換算値。",
+  "type は品番の C(ベイト)/S(スピニング)。S65L/FSL・S66ML/FSL はページ内で「スピニングタイラバ」専用モデルと説明。lure_g の MAX値はバーチカル/キャストの区別なし。",
+  "price_jpy は RETAIL PRICE(JPY)（税の区分は表に明記なし）。"
+ ]
+}

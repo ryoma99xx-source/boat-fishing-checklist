@@ -1,0 +1,64 @@
+{
+ "maker": "宇崎日新",
+ "rods": [
+  {
+   "series": "ARES BLUE PORTER TAR",
+   "model": "L606",
+   "type": "bait",
+   "length_m": 1.98,
+   "lure_g": "30-80",
+   "pe": "0.5-1.0",
+   "price_jpy": 28500,
+   "url": "https://ares-rod.com/item/1926",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "ARES BLUE PORTER TAR",
+   "model": "L609",
+   "type": "bait",
+   "length_m": 2.05,
+   "lure_g": "30-80",
+   "pe": "0.5-1.0",
+   "price_jpy": 28800,
+   "url": "https://ares-rod.com/item/1926",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "ARES BLUE PORTER TAR",
+   "model": "ML606",
+   "type": "bait",
+   "length_m": 1.98,
+   "lure_g": "60-150",
+   "pe": "0.6-1.5",
+   "price_jpy": 29000,
+   "url": "https://ares-rod.com/item/1926",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "ARES BLUE PORTER TAR",
+   "model": "ML609",
+   "type": "bait",
+   "length_m": 2.05,
+   "lure_g": "60-150",
+   "pe": "0.6-1.5",
+   "price_jpy": 29300,
+   "url": "https://ares-rod.com/item/1926",
+   "status": "",
+   "source": "official"
+  }
+ ],
+ "sources": [
+  "https://www.u-nissin.co.jp/",
+  "https://ares-rod.com/item_cat/offshore",
+  "https://ares-rod.com/item/1926"
+ ],
+ "notes": [
+  "宇崎日新のルアーロッドはブランド『アレス(ARES)』の別サイト ares-rod.com に掲載。オフショアカテゴリでタイラバ専用と明記されているのは BLUE PORTER TAR のみ。",
+  "品番は規格表で 'L 606' のように表記（パワー＋品番）。ここでは空白を詰めて記載。",
+  "price_jpy は希望本体価格（税抜）。",
+  "type=bait はスパイラルガイドセッティングの記載からの推定（公式に『ベイト』明記なし）。要確認。"
+ ]
+}

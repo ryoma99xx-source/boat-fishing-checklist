@@ -1,0 +1,139 @@
+{
+ "maker": "アブガルシア",
+ "rods": [
+  {
+   "series": "ソルティーステージ プロトタイプ タイラバ",
+   "model": "XTRS-682LS80",
+   "type": "spinning",
+   "length_m": 2.03,
+   "lure_g": "30-120 / キャスト MAX 60 / ベスト 80",
+   "pe": "MAX1.2",
+   "price_jpy": 35000,
+   "url": "https://abugarcia.jp/products/saltystage-kr-x-prototype-tairubber",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "ソルティーステージ プロトタイプ タイラバ",
+   "model": "XTRS-702MLT100",
+   "type": "spinning",
+   "length_m": 2.13,
+   "lure_g": "40-140 / キャスト MAX 80 / ベスト 100",
+   "pe": "MAX1.2",
+   "price_jpy": 35000,
+   "url": "https://abugarcia.jp/products/saltystage-kr-x-prototype-tairubber",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "ソルティーステージ プロトタイプ タイラバ",
+   "model": "XTRC-642ULS60-ST",
+   "type": "bait",
+   "length_m": 1.93,
+   "lure_g": "20-100 / ベスト 80",
+   "pe": "MAX1",
+   "price_jpy": 31500,
+   "url": "https://abugarcia.jp/products/saltystage-kr-x-prototype-tairubber",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "ソルティーステージ プロトタイプ タイラバ",
+   "model": "XTRC-692LS80",
+   "type": "bait",
+   "length_m": 2.06,
+   "lure_g": "40-160 / ベスト 80",
+   "pe": "MAX1.2",
+   "price_jpy": 31500,
+   "url": "https://abugarcia.jp/products/saltystage-kr-x-prototype-tairubber",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "ソルティーステージ プロトタイプ タイラバ",
+   "model": "XTRC-702LT100",
+   "type": "bait",
+   "length_m": 2.13,
+   "lure_g": "60-180 / ベスト 100",
+   "pe": "MAX1.2",
+   "price_jpy": 32000,
+   "url": "https://abugarcia.jp/products/saltystage-kr-x-prototype-tairubber",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "ソルティーステージ プロトタイプ タイラバ",
+   "model": "XTRC-762ULT80-ST",
+   "type": "bait",
+   "length_m": 2.29,
+   "lure_g": "30-120 / ベスト 80",
+   "pe": "MAX1",
+   "price_jpy": 32000,
+   "url": "https://abugarcia.jp/products/saltystage-kr-x-prototype-tairubber",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "オーシャンフィールド タイラバ",
+   "model": "OTRS-6112LS-60",
+   "type": "spinning",
+   "length_m": 2.11,
+   "lure_g": "バーチカル 20-80 / キャスト Max60 / ベスト 60",
+   "pe": "0.6-1.2",
+   "price_jpy": 18500,
+   "url": "https://abugarcia.jp/products/oceanfield-tairubber-1",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "オーシャンフィールド タイラバ",
+   "model": "OTRC-6102LS-80",
+   "type": "bait",
+   "length_m": 2.08,
+   "lure_g": "バーチカル 40-120 / ベスト 80",
+   "pe": "0.6-1.2",
+   "price_jpy": 18500,
+   "url": "https://abugarcia.jp/products/oceanfield-tairubber-1",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "オーシャンフィールド タイラバ",
+   "model": "OTRC-6102MLS-100",
+   "type": "bait",
+   "length_m": 2.08,
+   "lure_g": "バーチカル 40-140 / ベスト 100",
+   "pe": "0.6-1.5",
+   "price_jpy": 18500,
+   "url": "https://abugarcia.jp/products/oceanfield-tairubber-1",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "オーシャンフィールド タイラバ",
+   "model": "OTRC-6102MS-140",
+   "type": "bait",
+   "length_m": 2.08,
+   "lure_g": "バーチカル 45-200 / ベスト 140",
+   "pe": "0.8-2.0",
+   "price_jpy": 18500,
+   "url": "https://abugarcia.jp/products/oceanfield-tairubber-1",
+   "status": "",
+   "source": "official"
+  }
+ ],
+ "sources": [
+  "https://www.purefishing.jp/product/abugarcia/sw-rod/",
+  "https://abugarcia.jp/collections/rods/products.json?limit=250",
+  "https://abugarcia.jp/products/saltystage-kr-x-prototype-tairubber",
+  "https://abugarcia.jp/products/oceanfield-tairubber-1"
+ ],
+ "notes": [
+  "purefishing.jp のアブガルシア製品ページは abugarcia.jp（公式サイト）へリダイレクト。公式ロッド一覧(84製品)のうち製品名がタイラバの2シリーズを収録。",
+  "旧「Salty Stage KR-X TaiRubber MobileⅢ」「SALTY STAGE KR-X Tai-Rubber」のURLはコレクションページへリダイレクトし製品ページが無いため現行外と判断し除外。",
+  "Paddle Game(PGC-622MML/PGS-652MML) は本文でタイラバ対応を謳うがライトオフショア汎用ロッドのため除外。",
+  "オーシャンフィールド タイラバ: スペック表の「タイプ」欄は4機種とも\"SP\"だが、OTRC品番は本文で「BCモデル」(PLSリールシート)と説明されているため OTRC=bait、OTRS=spinning とした。自重は空欄。",
+  "type は品番 XTRS/OTRS=スピニング、XTRC/OTRC=ベイト。length_m はレングス(cm)/100。lure_g は「ルアー(g)」または「タイラバ Vertical」に、ドテラ/キャスト/ベスト欄を併記。price_jpy はメーカー希望本体価格(税抜)。",
+  "KR-X プロトタイプ タイラバのベイト4機種の継数は表で「※1」(注記)。"
+ ]
+}

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cutlassfish Archive（記事一覧・釣行記の年表・検索）
  * Description: 過去記事を見つけやすくします。全記事一覧（/articles/：魚・テーマ・年月で絞り込み、文字で検索）、釣行記の年表（/fishing-log/）、メニューの検索欄、記事の下の「前後の記事」と「同じ魚の記事」。釣果速報は一覧に入れません。
- * Version: 1.0.5
+ * Version: 1.0.6
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPLv2 or later
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class CF_Archive {
-	const V     = '1.0.5';
+	const V     = '1.0.6';
 	const TYPES = array( 'tachiuo_post' );   // 釣り記事だけ。釣果速報（tbt_catch）・動画・初期の投稿（Hello world!）は入れない
 	const CACHE = 'cf_archive_items_v1';
 	// 目立たせるカタログ（メニューと記事の下）。slug は記事のURL。sp：この魚種の記事に出す／kw：タイトル・抜粋にこの言葉がある記事に出す（両方あれば両方を満たすとき）
@@ -124,6 +124,7 @@ final class CF_Archive {
 	/* ---------- データ（12時間キャッシュ。記事を保存すると作り直す） ---------- */
 	public static function clear() {
 		delete_transient( self::CACHE );
+		delete_transient( 'cfa_popular' );
 	}
 	public static function items() {
 		$c = get_transient( self::CACHE );
@@ -195,6 +196,57 @@ els.forEach(function(el){nav.insertBefore(el,ref)});})();
 		<?php
 	}
 
+	/* ---------- 人気記事：Independent Analytics の閲覧数（過去30日）。表が無い・読めないときは出さない。3時間キャッシュ ---------- */
+	public static function popular( $n = 5 ) {
+		$c = get_transient( 'cfa_popular' );
+		if ( is_array( $c ) ) {
+			return $c;
+		}
+		global $wpdb;
+		$v   = $wpdb->prefix . 'independent_analytics_views';
+		$r   = $wpdb->prefix . 'independent_analytics_resources';
+		$out = array();
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $v ) ) === $v && $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $r ) ) === $r ) {
+			$vc = (array) $wpdb->get_col( "SHOW COLUMNS FROM `$v`" );
+			$rc = (array) $wpdb->get_col( "SHOW COLUMNS FROM `$r`" );
+			if ( in_array( 'resource_id', $vc, true ) && in_array( 'viewed_at', $vc, true ) && in_array( 'singular_id', $rc, true ) ) {
+				$since = gmdate( 'Y-m-d H:i:s', time() - 30 * DAY_IN_SECONDS );
+				$rows  = $wpdb->get_results( $wpdb->prepare( "SELECT r.singular_id AS id, COUNT(*) AS n FROM `$v` v JOIN `$r` r ON r.id = v.resource_id WHERE v.viewed_at >= %s AND r.singular_id IS NOT NULL GROUP BY r.singular_id ORDER BY n DESC LIMIT 60", $since ) );
+				$by    = array();
+				foreach ( self::items() as $it ) {
+					$by[ (int) $it['id'] ] = $it;
+				}
+				foreach ( (array) $rows as $row ) {
+					$id = (int) $row->id;
+					if ( isset( $by[ $id ] ) ) {
+						$out[] = $by[ $id ];
+						if ( count( $out ) >= $n ) {
+							break;
+						}
+					}
+				}
+			}
+		}
+		set_transient( 'cfa_popular', $out, 3 * HOUR_IN_SECONDS );
+		return $out;
+	}
+
+	private static function popular_html() {
+		$L = self::popular();
+		if ( count( $L ) < 3 ) {
+			return '';
+		}
+		$h = '<section class="section about cfa-pop"><div class="wrap"><div class="section-head"><span class="label en">RANKING</span><h2 class="en">POPULAR</h2><p class="ja">人気記事（過去30日）</p></div><ol class="news cfa-pop-list">';
+		foreach ( $L as $i => $it ) {
+			$cats = '';
+			foreach ( $it['sp'] as $slug => $name ) {
+				$cats .= '<span class="cat sp">' . esc_html( $name ) . '</span>';
+			}
+			$h .= '<li class="news-row"><span class="cfa-rk cfa-rk' . ( $i + 1 ) . '">' . ( $i + 1 ) . '</span><span class="date en">' . esc_html( str_replace( '-', '.', $it['date'] ) ) . '</span>' . $cats . '<a class="t" href="' . esc_url( $it['url'] ) . '">' . esc_html( $it['title'] ) . '</a></li>';
+		}
+		return $h . '</ol></div></section>';
+	}
+
 	/* ---------- トップページ：一番下にある NEWS（最新記事）を、釣果速報のすぐ下へ動かす（テーマは変えない） ---------- */
 	public static function front_news_js() {
 		if ( ! is_front_page() ) {
@@ -202,7 +254,9 @@ els.forEach(function(el){nav.insertBefore(el,ref)});})();
 		}
 		$all = esc_url( home_url( '/articles/' ) );
 		?>
-<style>.cfa-news-more{margin:18px 0 0;text-align:right}.cfa-news-more a{display:inline-block;padding:10px 16px;border:2px solid #41c9c6;border-radius:10px;color:#fff !important;text-decoration:none;font-weight:700;font-size:14px}</style>
+<div id="cfa-pop-src" hidden><?php echo self::popular_html(); // phpcs:ignore -- 中身は上でエスケープ済み ?></div>
+<style>.cfa-pop-list{list-style:none;margin:0;padding:0}.cfa-pop-list .news-row{position:relative;padding-left:44px}.cfa-rk{position:absolute;left:0;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#0b1220;background:#9fb4c6}.cfa-rk1{background:#f5c83c}.cfa-rk2{background:#cfd8e0}.cfa-rk3{background:#d9a06b}
+.cfa-news-more{margin:18px 0 0;text-align:right}.cfa-news-more a{display:inline-block;padding:10px 16px;border:2px solid #41c9c6;border-radius:10px;color:#fff !important;text-decoration:none;font-weight:700;font-size:14px}</style>
 <script>
 (function(){var hs=document.querySelectorAll('section .section-head h2');var news=null;
 for(var i=0;i<hs.length;i++){if(hs[i].textContent.trim()==='NEWS'){news=hs[i].closest('section');break}}if(!news)return;
@@ -210,6 +264,7 @@ var cc=document.querySelector('.catch-card');var after=cc?cc.closest('section'):
 if(!after){var hf=document.querySelector('.hero-flow');after=hf?hf.querySelector('section'):null}
 if(after&&after!==news){after.parentNode.insertBefore(news,after.nextSibling)}
 var list=news.querySelector('.news');if(list&&!news.querySelector('.cfa-news-more')){var p=document.createElement('p');p.className='cfa-news-more';p.innerHTML='<a href="<?php echo $all; ?>">すべての記事を見る →</a>';list.parentNode.appendChild(p)}
+var ps=document.getElementById('cfa-pop-src');if(ps){var sec=ps.querySelector('section');if(sec)news.parentNode.insertBefore(sec,news.nextSibling);ps.remove()}
 var r=news.querySelectorAll('.reveal');for(var j=0;j<r.length;j++)r[j].classList.add('in','is-visible','visible');})();
 </script>
 		<?php

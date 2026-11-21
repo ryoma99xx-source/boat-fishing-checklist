@@ -1,0 +1,51 @@
+{
+ "maker": "オリムピック",
+ "rods": [
+  {
+   "series": "パグロUX (PAGRO UX)",
+   "model": "24GPAGUC-632ML-S",
+   "type": "bait",
+   "length_m": 1.91,
+   "lure_g": "MAX100",
+   "pe": "MAX1.2",
+   "price_jpy": 26500,
+   "url": "https://olympic-co-ltd.jp/fishing/products/24-pagro-ux/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "パグロUX (PAGRO UX)",
+   "model": "27GPAGUC-662L-S",
+   "type": "bait",
+   "length_m": 1.98,
+   "lure_g": "MAX100",
+   "pe": "MAX1.0",
+   "price_jpy": 28000,
+   "url": "https://olympic-co-ltd.jp/fishing/products/24-pagro-ux/",
+   "status": "'27 NEW（公式表記『発売中/先行発売中』）",
+   "source": "official"
+  },
+  {
+   "series": "パグロUX (PAGRO UX)",
+   "model": "24GPAGUC-672M-S",
+   "type": "bait",
+   "length_m": 2.01,
+   "lure_g": "MAX150",
+   "pe": "MAX1.5",
+   "price_jpy": 27000,
+   "url": "https://olympic-co-ltd.jp/fishing/products/24-pagro-ux/",
+   "status": "",
+   "source": "official"
+  }
+ ],
+ "sources": [
+  "https://olympic-co-ltd.jp/fishing/tairubber_lineup/",
+  "https://olympic-co-ltd.jp/fishing/products/24-pagro-ux/"
+ ],
+ "notes": [
+  "公式ドメインは olympic-co-ltd.jp。タイラバ/テンヤロッド一覧に掲載の現行品はパグロUXのみ（パグロプロトタイプ/ヌーボパグロ等は一覧に無く旧製品と判断）。",
+  "price_jpy は消費税抜き本体価格。",
+  "type=bait は品番に S/B 区別が無く、公式ページにベイト明記が見当たらないための推定（パグロUXはベイトモデルとして流通）。要確認。",
+  "632ML/672M の重量欄は 'Jig (g)'、662L は 'Lure (g)' と表記。全機種ソリッドティップ。"
+ ]
+}
