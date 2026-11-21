@@ -303,5 +303,8 @@ open(os.path.join(HERE, 'tairaba', 'base.html'), 'w', encoding='utf-8').write(s)
 sys.path.insert(0, HERE)
 import tairaba_sasoi
 s = tairaba_sasoi.apply(s)
+# 竿とリールのカタログ（ベイト／キャスラバ、ベイト／電動／スピニング）（tairaba_tackle.py）
+import tairaba_tackle
+s = tairaba_tackle.apply(s)
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))

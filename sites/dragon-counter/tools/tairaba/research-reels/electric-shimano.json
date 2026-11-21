@@ -1,0 +1,167 @@
+{
+ "maker": "シマノ",
+ "reels": [
+  {
+   "series": "フォースマスター",
+   "model": "200",
+   "kind": "electric",
+   "counter": true,
+   "year": null,
+   "price_jpy": 86600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003dsymyqa5_p.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "フォースマスター",
+   "model": "201",
+   "kind": "electric",
+   "counter": true,
+   "year": null,
+   "price_jpy": 86600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003dsymyqa5_p.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "フォースマスター",
+   "model": "200DH",
+   "kind": "electric",
+   "counter": true,
+   "year": null,
+   "price_jpy": 86600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003dsymyqa5_p.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "フォースマスター",
+   "model": "201DH",
+   "kind": "electric",
+   "counter": true,
+   "year": null,
+   "price_jpy": 86600,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003dsymyqa5_p.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "フォースマスター",
+   "model": "300",
+   "kind": "electric",
+   "counter": true,
+   "year": 2025,
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qe1koqaq.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "フォースマスター",
+   "model": "301",
+   "kind": "electric",
+   "counter": true,
+   "year": 2025,
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qe1koqaq.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "フォースマスター",
+   "model": "300DH",
+   "kind": "electric",
+   "counter": true,
+   "year": 2025,
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qe1koqaq.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "フォースマスター",
+   "model": "301DH",
+   "kind": "electric",
+   "counter": true,
+   "year": 2025,
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qe1koqaq.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "フォースマスター",
+   "model": "600",
+   "kind": "electric",
+   "counter": true,
+   "year": 2023,
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qw9eaqal.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "フォースマスター",
+   "model": "601",
+   "kind": "electric",
+   "counter": true,
+   "year": 2024,
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qw9eaqal.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "フォースマスター",
+   "model": "600DH",
+   "kind": "electric",
+   "counter": true,
+   "year": 2024,
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qw9eaqal.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "フォースマスター",
+   "model": "601DH",
+   "kind": "electric",
+   "counter": true,
+   "year": 2023,
+   "price_jpy": 95200,
+   "url": "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qw9eaqal.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "プレイズ",
+   "model": "600",
+   "kind": "electric",
+   "counter": true,
+   "year": null,
+   "price_jpy": null,
+   "url": "https://fish.shimano.com/ja-JP/content/special_contents/dendo-reel/plays.html",
+   "status": "",
+   "source": "official (search index only)"
+  }
+ ],
+ "sources": [
+  "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003dsymyqa5_p.html",
+  "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qe1koqaq.html",
+  "https://fish.shimano.com/ja-JP/product/reel/electricaccessories/a075f00003qw9eaqal.html",
+  "https://fish.shimano.com/ja-JP/news/news-listing/important-notice/2026/correct_20260318_v1.html",
+  "https://fish.shimano.com/ja-JP/content/special_contents/dendo-reel/plays.html",
+  "https://fish.shimano.com/ja-JP/content/special_contents/dendo-reel/lineup.html",
+  "https://fish.shimano.com/ja-JP/product/list.html"
+ ],
+ "notes": [
+  "fish.shimano.com は curl / WebFetch とも 403 で直接取得不可。品番・価格・URLは検索エンジンのインデックス（公式ページのタイトル・抜粋）から取得。要ブラウザでの再確認。",
+  "price_jpy は公式ページ抜粋の本体価格（税別）。フォースマスター200系は公式ページ/製品一覧で『200/200DH/201/201DH 86,600円(税別)』とまとめ表記、300系・600系も4機種まとめて95,200円(税別)表記。DH(ダブルハンドル)仕様の個別価格は未確認（同額とは限らない）。",
+  "year: 300系は公式お知らせの『25フォースマスター300/300DH/301/301DH』表記から2025。600系は同お知らせの『23フォースマスター600 / 24 600DH / 24 601 / 23 601DH』表記から（年式は品番ごとに公式表記のまま）。200系は公式で年式表記を確認できず null（販売店では21フォースマスター200、22フォースマスター201/201DH等の表記）。",
+  "フォースマスター200系の公式ページタイトルは『200/201/201DH』と『200/200DH/201/201DH』の2種が存在。300系発売後も200系は製品一覧に価格付きで掲載されている模様だが、継続販売かは未確定。",
+  "右/左ハンドル: 末尾0=右(200/300/600)、末尾1=左(201/301/601)。",
+  "プレイズ600: 公式シリーズページ・ラインナップに掲載。日本語製品ページURLと本体価格は公式から取得できず null。販売店表記は『19プレイズ600』希望小売57,200円（税抜）。左ハンドル版(601)は確認できず。",
+  "範囲外として除外: プレミオ（現行は3000のみ）、プレイズ800/1000/3000/4000、フォースマスター1000以上、ビーストマスター（最小1000）。フォースマスター400/401・プレイズ400 は現行公式ラインナップで確認できず（旧モデル）。",
+  "counter=true: シマノ電動リールは全機種カウンター付き。"
+ ]
+}
