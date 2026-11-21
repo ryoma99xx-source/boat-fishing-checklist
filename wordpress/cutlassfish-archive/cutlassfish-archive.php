@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cutlassfish Archive（記事一覧・釣行記の年表・検索）
  * Description: 過去記事を見つけやすくします。全記事一覧（/articles/：魚・テーマ・年月で絞り込み、文字で検索）、釣行記の年表（/fishing-log/）、メニューの検索欄、記事の下の「前後の記事」と「同じ魚の記事」。釣果速報は一覧に入れません。
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPLv2 or later
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class CF_Archive {
-	const V     = '1.0.2';
+	const V     = '1.0.3';
 	const TYPES = array( 'tachiuo_post' );   // 釣り記事だけ。釣果速報（tbt_catch）・動画・初期の投稿（Hello world!）は入れない
 	const CACHE = 'cf_archive_items_v1';
 	// 目立たせるカタログ（メニューと記事の下）。slug は記事のURL。sp：この魚種の記事に出す／kw：タイトル・抜粋にこの言葉がある記事に出す（両方あれば両方を満たすとき）
@@ -41,6 +41,7 @@ final class CF_Archive {
 		}
 		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'menu_js' ), 20 );
+		add_action( 'wp_footer', array( __CLASS__, 'front_news_js' ), 21 );
 		add_filter( 'the_content', array( __CLASS__, 'after_content' ), 30 );
 		add_action( 'save_post', array( __CLASS__, 'clear' ) );
 		add_action( 'deleted_post', array( __CLASS__, 'clear' ) );
@@ -189,6 +190,26 @@ var els=[f,a,b];
 els.push((function(){var x=document.createElement('a');x.href='<?php echo esc_url( home_url( '/article/' . $c['slug'] . '/' ) ); ?>';x.className='en';x.innerHTML='<?php echo esc_js( $c['en'] ); ?><small><?php echo esc_js( $c['ja'] ); ?></small>';return x})());
 <?php endforeach; ?>
 els.forEach(function(el){nav.insertBefore(el,ref)});})();
+</script>
+		<?php
+	}
+
+	/* ---------- トップページ：一番下にある NEWS（最新記事）を、釣果速報のすぐ下へ動かす（テーマは変えない） ---------- */
+	public static function front_news_js() {
+		if ( ! is_front_page() ) {
+			return;
+		}
+		$all = esc_url( home_url( '/articles/' ) );
+		?>
+<style>.cfa-news-more{margin:18px 0 0;text-align:right}.cfa-news-more a{display:inline-block;padding:10px 16px;border:2px solid #41c9c6;border-radius:10px;color:#fff !important;text-decoration:none;font-weight:700;font-size:14px}</style>
+<script>
+(function(){var hs=document.querySelectorAll('section .section-head h2');var news=null;
+for(var i=0;i<hs.length;i++){if(hs[i].textContent.trim()==='NEWS'){news=hs[i].closest('section');break}}if(!news)return;
+var cc=document.querySelector('.catch-card');var after=cc?cc.closest('section'):null;
+if(!after){var hf=document.querySelector('.hero-flow');after=hf?hf.querySelector('section'):null}
+if(after&&after!==news){after.parentNode.insertBefore(news,after.nextSibling)}
+var list=news.querySelector('.news');if(list&&!news.querySelector('.cfa-news-more')){var p=document.createElement('p');p.className='cfa-news-more';p.innerHTML='<a href="<?php echo $all; ?>">すべての記事を見る →</a>';list.parentNode.appendChild(p)}
+var r=news.querySelectorAll('.reveal');for(var j=0;j<r.length;j++)r[j].classList.add('in','is-visible','visible');})();
 </script>
 		<?php
 	}
