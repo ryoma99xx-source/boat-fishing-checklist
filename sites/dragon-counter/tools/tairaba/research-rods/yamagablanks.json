@@ -1,0 +1,68 @@
+{
+ "maker": "ヤマガブランクス",
+ "rods": [
+  {
+   "series": "シーウォーク・タイラバ (SeaWalk Tairubber)",
+   "model": "70AT",
+   "type": "bait",
+   "length_m": 2.143,
+   "lure_g": "60-150 (Tairubber)",
+   "pe": "PE0.6-1",
+   "price_jpy": 34500,
+   "url": "https://yamaga-blanks.com/sewalk-tr-70at/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "シーウォーク・タイラバ (SeaWalk Tairubber)",
+   "model": "611D",
+   "type": "bait",
+   "length_m": 2.125,
+   "lure_g": "100-250 (Tairubber)",
+   "pe": "PE0.8-1.2",
+   "price_jpy": 35500,
+   "url": "https://yamaga-blanks.com/sewalk-tr-611d/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "シーウォーク・タイラバ (SeaWalk Tairubber)",
+   "model": "72S",
+   "type": "bait",
+   "length_m": 2.185,
+   "lure_g": "30-100 (Tairubber)",
+   "pe": "PE0.4-0.8",
+   "price_jpy": 33500,
+   "url": "https://yamaga-blanks.com/sewalk-tr-72s/",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "シーウォーク・タイラバ (SeaWalk Tairubber)",
+   "model": "60F",
+   "type": "bait",
+   "length_m": 1.853,
+   "lure_g": "60-120 (Tairubber) / ~100 (Jig)",
+   "pe": "PE0.6-1.0",
+   "price_jpy": 34000,
+   "url": "https://yamaga-blanks.com/sewalk-tr-60f/",
+   "status": "",
+   "source": "official"
+  }
+ ],
+ "sources": [
+  "https://yamaga-blanks.com/product/boat-light-game/seawalk-tr-re/",
+  "https://yamaga-blanks.com/products/",
+  "https://yamaga-blanks.com/sewalk-tr-70at/",
+  "https://yamaga-blanks.com/sewalk-tr-611d/",
+  "https://yamaga-blanks.com/sewalk-tr-72s/",
+  "https://yamaga-blanks.com/sewalk-tr-60f/"
+ ],
+ "notes": [
+  "price_jpy は税抜希望小売価格。",
+  "全4機種ともベイト（リールシートPULS17/PLS18/PMTS17、適合リール目安がベイトサイズ）。type=bait は推定ではなくリールシート・適合リール記載に基づく判断だが、公式に『ベイト』の明記はない。",
+  "品番は公式表記 'SeaWalk Tairubber 70AT' 等の機種名部分。",
+  "旧シーウォーク・タイラバは製品一覧で discontinued-product 扱いのため除外。スピニングのタイラバ専用機はなし（シーウォーク キャストジギング スイム&スキップ はキャストジギング用で除外）。",
+  "611D は適合リール目安に 電動 D社200 / S社600 の記載あり。"
+ ]
+}
