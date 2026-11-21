@@ -291,6 +291,11 @@ if os.path.exists(_tp) and not os.environ.get('TIPRAN_HOLD_TACKLE'):   # TIPRAN_
     # メーカーが多いので、メーカーの並びは1行で横に送る。絞り込みの文字は折り返さない大きさに
     R(".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}", ".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}\n.chips.wrap.tk-mk{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px}.seg.tk-kind button{font-size:14px;padding-left:4px;padding-right:4px;white-space:nowrap}")
 
+# ───────── 竿・リールの検索：メーカーの読み替え（公式表記のままでは見つけにくいもの）。例：「アオリネット」で あおりねっと☆ が出る
+R("every(w=>(tkMaker(x)+' '+x.m+' '+x.s+' '+x.model).toLowerCase().includes(w))",
+  "every(w=>(tkMaker(x)+' '+x.m+' '+x.s+' '+x.model+' '+(TK_ALIAS[x.m]||'')).toLowerCase().includes(w))")
+R("function tkCatList(){", "const TK_ALIAS={'あおりねっと☆':'アオリネット あおりねっと aorinet'};\nfunction tkCatList(){")
+
 # ───────── 片舷流しの人数は、はじめ8人（両舷は16人）。前に選んだ人数があればそれを使う
 R("people:b?(b.people||b.seats*2):(p.people||(p.seats||8)*2)", "people:b?(b.people||b.seats*2):(p.people||((p.lay||'one')==='one'?8:16))")
 # ───────── 使い方（チュートリアル）の絵と、残っていたタチウオ・テンヤの言葉

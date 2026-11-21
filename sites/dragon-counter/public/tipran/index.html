@@ -2394,8 +2394,9 @@ function tkPickHTML(){const t=TK(),mine=new Set(t.reels.mine),L=t.reels.custom.f
    ${open?L.map(x=>`<button class="tk-ci" data-act="tkToggle" data-k="reel" data-id="${x.id}"><span>${esc(tkName(x))}${lineTxt(x.id)?`<small>${esc(lineTxt(x.id))}</small>`:''}</span><b>＋ 加える</b></button>`).join(''):''}</div>`}
 /* カタログから選ぶ */
 let tkQ={k:'rod',q:'',m:'',kind:''};
+const TK_ALIAS={'あおりねっと☆':'アオリネット あおりねっと aorinet'};
 function tkCatList(){const t=TK(),k=tkQ.k,mine=new Set(t[k+'s'].mine),q=tkQ.q.trim().toLowerCase().replace(/\s+/g,' ');
-  const L=Object.values(tcIndex()).filter(x=>x.k===k&&(!tkQ.m||x.m===tkQ.m)&&(!tkQ.kind||(tkQ.kind==='counter'?x.counter:x.kind===tkQ.kind))&&(!q||q.split(' ').every(w=>(tkMaker(x)+' '+x.m+' '+x.s+' '+x.model).toLowerCase().includes(w))));
+  const L=Object.values(tcIndex()).filter(x=>x.k===k&&(!tkQ.m||x.m===tkQ.m)&&(!tkQ.kind||(tkQ.kind==='counter'?x.counter:x.kind===tkQ.kind))&&(!q||q.split(' ').every(w=>(tkMaker(x)+' '+x.m+' '+x.s+' '+x.model+' '+(TK_ALIAS[x.m]||'')).toLowerCase().includes(w))));
   if(!L.length)return `<p class="muted">見つかりませんでした。カタログに無いものは「自分で登録」から追加できます。</p>`;
   let html='',prev='';L.slice(0,300).forEach(x=>{const g=tkMaker(x)+'　'+x.s;if(g!==prev){html+=`<h3 class="tk-g">${esc(g)}</h3>`;prev=g}
     html+=`<button class="tk-ci ${mine.has(x.id)?'on':''}" data-act="tkToggle" data-k="${k}" data-id="${x.id}"><span>${esc(x.model)}${x.len?`<small>${x.len}m</small>`:''}${x.kind==='bait'?'<small>ベイト</small>':''}${x.egi?`<small>${esc(x.egi)}g</small>`:''}${x.counter?'<small>カウンター付き</small>':''}${x.st?`<small class="tk-st">${esc(x.st)}</small>`:''}</span><b>${mine.has(x.id)?'✓ 所有':'＋'}</b></button>`});
