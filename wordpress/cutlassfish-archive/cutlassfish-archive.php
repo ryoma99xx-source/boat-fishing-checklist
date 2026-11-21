@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cutlassfish Archive（記事一覧・釣行記の年表・検索）
  * Description: 過去記事を見つけやすくします。全記事一覧（/articles/：魚・テーマ・年月で絞り込み、文字で検索）、釣行記の年表（/fishing-log/）、メニューの検索欄、記事の下の「前後の記事」と「同じ魚の記事」。釣果速報は一覧に入れません。
- * Version: 1.0.4
+ * Version: 1.0.5
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPLv2 or later
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class CF_Archive {
-	const V     = '1.0.4';
+	const V     = '1.0.5';
 	const TYPES = array( 'tachiuo_post' );   // 釣り記事だけ。釣果速報（tbt_catch）・動画・初期の投稿（Hello world!）は入れない
 	const CACHE = 'cf_archive_items_v1';
 	// 目立たせるカタログ（メニューと記事の下）。slug は記事のURL。sp：この魚種の記事に出す／kw：タイトル・抜粋にこの言葉がある記事に出す（両方あれば両方を満たすとき）
@@ -245,7 +245,7 @@ var r=news.querySelectorAll('.reveal');for(var j=0;j<r.length;j++)r[j].classList
 (function(){var el=document.getElementById('cfa-promo'),k='cfa-promo-<?php echo esc_js( $p['id'] ); ?>';if(!el)return;
 if(Date.now()>=<?php echo (int) $p['end']; ?>*1000){el.remove();return}
 try{if(localStorage.getItem(k)){el.remove();return}}catch(e){}
-el.hidden=false;el.querySelector('button').addEventListener('click',function(){el.remove();try{localStorage.setItem(k,'1')}catch(e){}});})();
+el.hidden=false;el.querySelector('button').addEventListener('click',function(){el.remove();try{localStorage.setItem(k,'1')}catch(e){}});/* ほかの帯（画面の下に固定された低い要素）と重ならないよう、その上に出す */function lift(){if(!el.isConnected)return;var h=0,a=document.querySelectorAll('body *');for(var i=0;i<a.length;i++){var e=a[i];if(e===el||el.contains(e))continue;var c=getComputedStyle(e);if(c.position!=='fixed'||c.display==='none'||c.visibility==='hidden')continue;var r=e.getBoundingClientRect();if(r.height<1||r.height>220||innerHeight-r.bottom>40)continue;h=Math.max(h,innerHeight-r.top)}el.style.bottom=(h?h+8:8)+'px'}lift();addEventListener('resize',lift);var n=0,t=setInterval(function(){lift();if(++n>15)clearInterval(t)},1000);new MutationObserver(lift).observe(document.body,{childList:true});})();
 </script>
 		<?php
 	}
