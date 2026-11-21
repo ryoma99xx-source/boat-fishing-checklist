@@ -1,0 +1,402 @@
+{
+ "maker": "海遊",
+ "heads": [
+  {
+   "series": "TGシャンクス",
+   "url": "https://kai-yu.com/product/tg-shanks/",
+   "material": "TG",
+   "type": "",
+   "weights": [
+    40,
+    50,
+    60,
+    70,
+    80,
+    100,
+    130,
+    160
+   ],
+   "colors": [
+    "ショウケツ（無塗装）",
+    "オレンジゴールド",
+    "インパクトレッド",
+    "レッドオレンジゴールド",
+    "ベッコウ"
+   ],
+   "note": "ヘッド単体。遊動/固定の明記なし。価格表より50g・70gはショウケツ（無塗装）・インパクトレッド・ベッコウのみ(オレンジゴールド・レッドオレンジゴールドは「—」)。"
+  },
+  {
+   "series": "TGシャンクス 30g",
+   "url": "https://kai-yu.com/product/tgshanks-30g/",
+   "material": "TG",
+   "type": "",
+   "weights": [
+    30
+   ],
+   "colors": [
+    "ショウケツ（無塗装）"
+   ],
+   "note": "ヘッド単体。シャロー特化型。遊動/固定の明記なし。"
+  },
+  {
+   "series": "TGシャンクス チョイ角",
+   "url": "https://kai-yu.com/product/tgshanks-tyoikado/",
+   "material": "TG",
+   "type": "",
+   "weights": [
+    60,
+    80
+   ],
+   "colors": [],
+   "note": "ヘッド単体。硬質パイプ搭載。ページにカラー名の記載なし(製品画像は無塗装に見えるが未確認のため空欄)。遊動/固定の明記なし。"
+  },
+  {
+   "series": "シャンクスII（鉛ヘッド単体）",
+   "url": "https://kai-yu.com/product/shanks2/",
+   "material": "鉛",
+   "type": "",
+   "weights": [
+    25,
+    35,
+    45,
+    60,
+    80,
+    100
+   ],
+   "colors": [],
+   "note": "ヘッド単体。ページに「ひと味違う本気の鉛ヘッド（無塗装）」とあり、カラー名の記載なし。25g・35gは2個入り、45g以上は1個入り。硬質パイプ搭載。遊動/固定の明記なし。"
+  },
+  {
+   "series": "シャンクスII&サウザー（セット）",
+   "url": "https://kai-yu.com/product/shanks2-thouther/",
+   "material": "鉛",
+   "type": "",
+   "weights": [
+    45,
+    60,
+    80,
+    100
+   ],
+   "colors": [
+    "インパクトレッド/IS オレンジ ドット",
+    "インパクトレッド/IS オレンジ KAIYU ゼブラ",
+    "ベッコウ/IS オレンジドット",
+    "ベッコウ/IS オレンジ KAIYU ゼブラ"
+   ],
+   "note": "完成品セット(シャンクスIIヘッド+「サウザー」ネクタイユニット)。カラーは「ヘッドカラー/ネクタイカラー」の公式表記。遊動/固定の明記なし。"
+  },
+  {
+   "series": "シャンクス 海峡式",
+   "url": "https://kai-yu.com/product/shanks-kaikyou/",
+   "material": "",
+   "type": "",
+   "weights": [
+    60,
+    80,
+    100
+   ],
+   "colors": [
+    "インパクトレッド/ISオレンジアワビ",
+    "ベッコウ/シマシマレッドアワビ",
+    "インパクトオレンジ/ISシマシマオレンジアワビ"
+   ],
+   "note": "完成品セット(ヘッド+WGショートカーリーのビーズユニット、カルティバ「ジガーライトマダイ」・「チェンジストッパー」標準装備)。ヘッド素材の記載なし。カラーは「ヘッドカラー/ネクタイカラー」の公式表記。遊動/固定の明記なし。"
+  }
+ ],
+ "ties": [
+  {
+   "series": "シリコンネクタイ WGショートカーリー",
+   "url": "https://kai-yu.com/product/siliconnekutai-wg-shortcurly/",
+   "shape": "WGショートカーリー",
+   "colors": [
+    "ISオレンジドットゴールド",
+    "レッドドットゴールド",
+    "黒金",
+    "シマシマケイムラブラウン",
+    "シマシマエビオレンジ",
+    "シマシマレッドアワビ",
+    "シマシマ蛍光オレンジアワビ",
+    "WGレッドゴールドアワビ",
+    "ISオレンジアワビ",
+    "ISシマシマオレンジアワビ",
+    "TKブラックゴールドアワビ"
+   ],
+   "note": "シリコン。4本入。"
+  },
+  {
+   "series": "シリコンネクタイヘラクレスカーリー",
+   "url": "https://kai-yu.com/product/silicone-necktie_wgheracles-curly/",
+   "shape": "WGヘラクレスカーリー",
+   "colors": [
+    "IS オレンジドットゴールド",
+    "レッドドットゴールド",
+    "黒金",
+    "IS オレンジ",
+    "IS オレンジウロコ",
+    "WG レッドゴールドウロコ",
+    "蛍光オレンジウロコ",
+    "シマシマケイムラブラウン",
+    "シマシマエビオレ"
+   ],
+   "note": "シリコン。3本入。本文の製品名は「WGヘラクレスカーリー」(WGシリーズ第2弾)。ページ下部の価格表見出しは「シリコンネクタイ エイリアンカーリー」と誤記されている。"
+  },
+  {
+   "series": "シリコンネクタイ ビッグWGシングル",
+   "url": "https://kai-yu.com/product/silicone-necktie_big-wg-single/",
+   "shape": "ビッグWGシングル(ビッグベイト)",
+   "colors": [
+    "IS オレンジドットゴールド",
+    "レッドドットゴールド",
+    "黒金",
+    "IS オレンジ",
+    "IS オレンジドット",
+    "WGレッドゴールドドット",
+    "シェンロン"
+   ],
+   "note": "シリコン。1本入。大型ネクタイ(ビッグベイト)。"
+  },
+  {
+   "series": "シリコンネクタイ ビッグWGヘラクレス",
+   "url": "https://kai-yu.com/product/silicone-necktie_big-wgheracles-curly/",
+   "shape": "ビッグWGヘラクレス(ミドルベイト)",
+   "colors": [
+    "激アツオレンジ",
+    "ISオレンジドット",
+    "WGレッドドット ゴールド",
+    "ISオレンジドット ゴールド",
+    "レッドベリー",
+    "黒金"
+   ],
+   "note": "シリコン(1mm厚)。2本入。"
+  },
+  {
+   "series": "シリコンネクタイ WGカメレオンカーリー",
+   "url": "https://kai-yu.com/product/silicone-necktie_wgchameleon-curly/",
+   "shape": "WGカメレオンカーリー(ミドルベイト)",
+   "colors": [
+    "ISオレンジドットゴールド",
+    "WGレッドゴールドドット",
+    "激アツオレンジ",
+    "ケイムラブラウンウロコ",
+    "ブラックレッドゴールドラメ",
+    "ISオレンジレッド",
+    "ISオレンジ/Revホログラム"
+   ],
+   "note": "シリコン。2本入。リバーシブルカラー採用。"
+  },
+  {
+   "series": "シリコンネクタイ WGカメレオンテール",
+   "url": "https://kai-yu.com/product/silicone-necktie_wgchameleon-tail/",
+   "shape": "WGカメレオンテール(ミドルベイト)",
+   "colors": [
+    "ISオレンジドットゴールド",
+    "WGレッドゴールドドット",
+    "ISオレンジ/rev.ホログラム",
+    "黒金",
+    "オレンジドットハート",
+    "ISオレンジドットハート",
+    "ISオレンジ/rev.TKブラック",
+    "ケイムラブラウンウロコ"
+   ],
+   "note": "シリコン。2本入。"
+  },
+  {
+   "series": "シリコンネクタイ シングルカーリー“サウザー”",
+   "url": "https://kai-yu.com/product/singlecurly-thouser/",
+   "shape": "シングルカーリー(サウザー)",
+   "colors": [
+    "スケスケオレンジゼブラ",
+    "激アツISオレンジゴールドラメ",
+    "エビオレンジドット",
+    "ISオレンジ/revギラギラゴールド",
+    "ISオレンジKAIYUゼブラ",
+    "ISオレンジドットゴールド",
+    "レッドドットゴールド",
+    "ケイムラブラウン",
+    "激アツオレンジ",
+    "黒金",
+    "ISオレンジ/revレッドラメ"
+   ],
+   "note": "シリコン。4本入。"
+  },
+  {
+   "series": "シリコンネクタイ シングルカーリー",
+   "url": "https://kai-yu.com/product/singlecurly/",
+   "shape": "シングルカーリー(細身・超フィネス)",
+   "colors": [
+    "ISオレンジドットゴールド",
+    "レッドドットゴールド",
+    "黒金",
+    "シマシマケイムラブラウン",
+    "シマシマエビオレンジ",
+    "ISオレンジアワビ",
+    "ISシマシマオレンジアワビ",
+    "レッドアワビ",
+    "コーラアワビ",
+    "エビオレンジアワビ",
+    "ブラックアワビ",
+    "オレンジゴールドアワビ",
+    "シマシマレッドアワビ",
+    "シマシマ蛍光オレンジアワビ"
+   ],
+   "note": "シリコン(アワビ粉配合)。6本入。"
+  },
+  {
+   "series": "シリコンネクタイストレートカーリー",
+   "url": "https://kai-yu.com/product/silicone-necktie_s-curly/",
+   "shape": "ストレートカーリー",
+   "colors": [
+    "ISオレンジドットゴールド",
+    "レッドドットゴールド",
+    "黒金",
+    "シマシマケイムラブラウン",
+    "シマシマエビオレンジ",
+    "ISオレンジアワビ",
+    "ISシマシマオレンジアワビ",
+    "レッドアワビ",
+    "コーラアワビ",
+    "エビオレンジアワビ",
+    "ブラックアワビ",
+    "オレンジゴールドアワビ",
+    "シマシマレッドアワビ",
+    "シマシマ蛍光オレンジアワビ"
+   ],
+   "note": "シリコン(アワビ粉配合)。4本入。"
+  },
+  {
+   "series": "シリコンネクタイゆるくるカーリー",
+   "url": "https://kai-yu.com/product/silicone-yurukuru-curly/",
+   "shape": "ゆるくるカーリー(左右非対称)",
+   "colors": [
+    "ISオレンジドットゴールド",
+    "レッドドットゴールド",
+    "黒金",
+    "シマシマケイムラブラウン",
+    "シマシマエビオレンジ",
+    "ISオレンジアワビ",
+    "ISシマシマオレンジアワビ",
+    "レッドアワビ",
+    "コーラアワビ",
+    "エビオレンジアワビ",
+    "ブラックアワビ",
+    "オレンジゴールドアワビ",
+    "シマシマレッドアワビ",
+    "シマシマ蛍光オレンジアワビ"
+   ],
+   "note": "シリコン(アワビ粉配合)。4本入。"
+  },
+  {
+   "series": "シリコンネクタイ エイリアンカーリー",
+   "url": "https://kai-yu.com/product/silicone-necktie_a-curly/",
+   "shape": "エイリアンカーリー(大小カーリー+ストレート)",
+   "colors": [
+    "ISオレンジドットゴールド",
+    "レッドドットゴールド",
+    "黒金",
+    "レッドアワビ",
+    "ブラックアワビ",
+    "シマシマレッドアワビ",
+    "ISオレンジアワビ",
+    "ISシマシマオレンジアワビ",
+    "シマシマゴールドアワビ"
+   ],
+   "note": "シリコン。3本入。"
+  },
+  {
+   "series": "シリコンネクタイ ウホウホカーリー",
+   "url": "https://kai-yu.com/product/silicone-necktie_uhouhocurly/",
+   "shape": "ウホウホカーリー",
+   "colors": [
+    "ISオレンジ",
+    "ISオレンジゴリラ",
+    "ISオレンジゴリラ ゴールド",
+    "スケスケ オレンジゼブラ",
+    "レッドゴリラ ゴールド",
+    "海苔海苔ゴールド",
+    "ケイムラ ブラウンゴリラ"
+   ],
+   "note": "シリコン。3本入。前田大将監修。"
+  },
+  {
+   "series": "シリコンネクタイカーリーテール",
+   "url": "https://kai-yu.com/product/silicone-necktie/",
+   "shape": "カーリーテール",
+   "colors": [
+    "レッドアワビ",
+    "オレンジアワビ",
+    "コーラアワビ",
+    "エビオレンジアワビ",
+    "サビキグリーンアワビ",
+    "クリアアワビ"
+   ],
+   "note": "シリコン(アワビ粉配合)。4本入。"
+  },
+  {
+   "series": "WGショートカーリーユニット",
+   "url": "https://kai-yu.com/product/nectie-unit_wgshort-curly/",
+   "shape": "WGショートカーリー(ネクタイ+フックのビーズユニット)",
+   "colors": [
+    "レッドKAIYUゼブラゴールド",
+    "ISオレンジKAIYUゼブラゴールド",
+    "IS オレンジ",
+    "オレンジKAIYUゼブラ",
+    "レッドKAIYUゼブラ"
+   ],
+   "note": "ネクタイユニット(ネクタイ+フック、チェンジストッパー+ビーズ搭載)。2本入。ユニット限定カラーあり。"
+  },
+  {
+   "series": "WGヘラクレスカーリーユニット",
+   "url": "https://kai-yu.com/product/nectie-unit_wgheracles-curly/",
+   "shape": "WGヘラクレスカーリー(ネクタイ+フックのビーズユニット)",
+   "colors": [
+    "レッド KAIYUゼブラゴールド",
+    "IS オレンジ KAIYUゼブラゴールド",
+    "IS オレンジ",
+    "IS オレンジドット",
+    "WG レッドゴールドドット"
+   ],
+   "note": "ネクタイユニット(ネクタイ+フック、チェンジストッパー+ビーズ搭載)。2本入。"
+  },
+  {
+   "series": "ネクタイユニット シングルカーリー\"サウザー\"",
+   "url": "https://kai-yu.com/product/necktie-unit_singlecurly-thouser/",
+   "shape": "シングルカーリー(サウザー)(ネクタイ+フックのユニット)",
+   "colors": [
+    "ISオレンジドット",
+    "激アツ ISオレンジゴールドラメ",
+    "激アツ レッドゴールドラメ",
+    "エビオレ KAIYUゼブラ"
+   ],
+   "note": "ネクタイユニット(ネクタイ+フック)。2本入。"
+  }
+ ],
+ "skirts": [],
+ "sources": [
+  "https://kai-yu.com/product/",
+  "https://kai-yu.com/corporation/",
+  "https://kai-yu.com/product/tg-shanks/",
+  "https://kai-yu.com/product/tgshanks-30g/",
+  "https://kai-yu.com/product/tgshanks-tyoikado/",
+  "https://kai-yu.com/product/shanks2/",
+  "https://kai-yu.com/product/shanks2-thouther/",
+  "https://kai-yu.com/product/shanks-kaikyou/",
+  "https://kai-yu.com/product/siliconnekutai-wg-shortcurly/",
+  "https://kai-yu.com/product/silicone-necktie_wgheracles-curly/",
+  "https://kai-yu.com/product/silicone-necktie_big-wg-single/",
+  "https://kai-yu.com/product/silicone-necktie_big-wgheracles-curly/",
+  "https://kai-yu.com/product/silicone-necktie_wgchameleon-curly/",
+  "https://kai-yu.com/product/silicone-necktie_wgchameleon-tail/",
+  "https://kai-yu.com/product/singlecurly-thouser/",
+  "https://kai-yu.com/product/singlecurly/",
+  "https://kai-yu.com/product/silicone-necktie_s-curly/",
+  "https://kai-yu.com/product/silicone-yurukuru-curly/",
+  "https://kai-yu.com/product/silicone-necktie_a-curly/",
+  "https://kai-yu.com/product/silicone-necktie_uhouhocurly/",
+  "https://kai-yu.com/product/silicone-necktie/",
+  "https://kai-yu.com/product/nectie-unit_wgshort-curly/",
+  "https://kai-yu.com/product/nectie-unit_wgheracles-curly/",
+  "https://kai-yu.com/product/necktie-unit_singlecurly-thouser/",
+  "https://kai-yu.com/product/silicone-rubberseat/"
+ ],
+ "notes": "マダイ専用ルアーブランド「海遊 -KAIYU-」(株式会社 海遊、兵庫県神戸市垂水区、2018年12月設立)。公式サイト https://kai-yu.com/ の製品情報ページ掲載品から2026-11-21に取得。カラー名は各製品ページ本文(画像alt表記と一致)のまま。スペース有無・全角半角も公式表記のまま(製品ごとに「IS オレンジ」「ISオレンジ」等の揺れあり)。スカート単体製品は掲載なし。遊動/固定はどのヘッドにも明記なし。除外: シリコンラバーシート(ネクタイ自作用、14色)、ビッグベイト スペアフック(3本針)・スペアフック 3本針・スペアフック ビーズユニット・TGシャンクス 交換用パイプ(フック/パーツ)、ロッド・クランクベイト等。生産終了の表記なし。"
+}
