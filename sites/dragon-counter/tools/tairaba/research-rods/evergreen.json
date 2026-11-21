@@ -1,0 +1,62 @@
+{
+ "maker": "エバーグリーン",
+ "rods": [
+  {
+   "series": "ポセイドン スパリッドマスター",
+   "model": "PSMC-66L/MLST",
+   "type": "bait",
+   "length_m": 1.98,
+   "lure_g": "40-150",
+   "pe": "PE0.5-1.2",
+   "price_jpy": 65000,
+   "url": "https://www.evergreen-fishing.com/goods_list/Psmc66lMlst.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "ポセイドン スパリッドマスター",
+   "model": "PSMC-68UL/MLST",
+   "type": "bait",
+   "length_m": 2.03,
+   "lure_g": "40-80",
+   "pe": "PE0.5-1.2",
+   "price_jpy": 65000,
+   "url": "https://www.evergreen-fishing.com/goods_list/Psmc68ulMlst.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "ポセイドン スパリッドマスター",
+   "model": "PSMS-70L/M",
+   "type": "spinning",
+   "length_m": 2.14,
+   "lure_g": "30-70",
+   "pe": "PE0.8-1.5",
+   "price_jpy": 66000,
+   "url": "https://www.evergreen-fishing.com/goods_list/Psms70lM.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "ポセイドン スパリッドマスター",
+   "model": "PSMS-68UL/MLST",
+   "type": "spinning",
+   "length_m": 2.03,
+   "lure_g": "40-80",
+   "pe": "PE0.5-1.2",
+   "price_jpy": 65000,
+   "url": "https://www.evergreen-fishing.com/goods_list/Psms68ulMlst.html",
+   "status": "",
+   "source": "official"
+  }
+ ],
+ "sources": [
+  "https://www.evergreen-fishing.com/goods_list/goods_list_22rod.php?vctt_no=2&vcts_no=64&r=2&s_no=64",
+  "https://www.evergreen-fishing.com/goods_list/Psms70lM.html"
+ ],
+ "notes": [
+  "price_jpy は公式表記の税別価格。",
+  "公式ソルト『タイラバ』カテゴリはポセイドン スパリッドマスターのみ。",
+  "PSMS-70L/M はキャスティングタイラバ特化型チューブラースピニング（公式記載）。"
+ ]
+}

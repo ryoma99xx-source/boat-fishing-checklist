@@ -1,0 +1,135 @@
+{
+ "maker": "天龍",
+ "rods": [
+  {
+   "series": "レッドフリップ (Red Flip)",
+   "model": "RF5101B-UL/VSN",
+   "type": "bait",
+   "length_m": 1.78,
+   "lure_g": "Vertical 30-100, Dotera MAX150",
+   "pe": "MAX1.0",
+   "price_jpy": 38500,
+   "url": "https://fishing.tenryu-magna.com/offshore/redflip.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "レッドフリップ (Red Flip)",
+   "model": "RF5101B-ML/VSK",
+   "type": "bait",
+   "length_m": 1.78,
+   "lure_g": "Vertical 45-160, Dotera MAX200",
+   "pe": "MAX1.2",
+   "price_jpy": 39000,
+   "url": "https://fishing.tenryu-magna.com/offshore/redflip.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "レッドフリップ (Red Flip)",
+   "model": "RF642B-UL/VDN",
+   "type": "bait",
+   "length_m": 1.93,
+   "lure_g": "Vertical 30-100, Dotera MAX150",
+   "pe": "MAX1.0",
+   "price_jpy": 39500,
+   "url": "https://fishing.tenryu-magna.com/offshore/redflip.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "レッドフリップ (Red Flip)",
+   "model": "RF642B-L/VDN",
+   "type": "bait",
+   "length_m": 1.93,
+   "lure_g": "Vertical 45-120, Dotera MAX180",
+   "pe": "MAX1.0",
+   "price_jpy": 40500,
+   "url": "https://fishing.tenryu-magna.com/offshore/redflip.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "レッドフリップ (Red Flip)",
+   "model": "RF642B-M/VDK",
+   "type": "bait",
+   "length_m": 1.93,
+   "lure_g": "Vertical 60-180, Dotera MAX250",
+   "pe": "MAX1.2",
+   "price_jpy": 41000,
+   "url": "https://fishing.tenryu-magna.com/offshore/redflip.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "レッドフリップ (Red Flip)",
+   "model": "RF6102B-L/DN",
+   "type": "bait",
+   "length_m": 2.08,
+   "lure_g": "Vertical 45-140, Dotera MAX250",
+   "pe": "MAX1.2",
+   "price_jpy": 42000,
+   "url": "https://fishing.tenryu-magna.com/offshore/redflip.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "レッドフリップ (Red Flip)",
+   "model": "RF6102B-MH/DK",
+   "type": "bait",
+   "length_m": 2.08,
+   "lure_g": "Vertical 60-200, Dotera MAX300",
+   "pe": "MAX1.5",
+   "price_jpy": 42500,
+   "url": "https://fishing.tenryu-magna.com/offshore/redflip.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "レッドフリップ (Red Flip)",
+   "model": "RF772B-L/LN",
+   "type": "bait",
+   "length_m": 2.31,
+   "lure_g": "Vertical 45-140, Dotera MAX250",
+   "pe": "MAX1.2",
+   "price_jpy": 43500,
+   "url": "https://fishing.tenryu-magna.com/offshore/redflip.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "レッドフリップ (Red Flip)",
+   "model": "RF652S-L/CN",
+   "type": "spinning",
+   "length_m": 1.96,
+   "lure_g": "Vertical 45-120, Dotera MAX180, Cast MAX60",
+   "pe": "MAX1.0",
+   "price_jpy": 39000,
+   "url": "https://fishing.tenryu-magna.com/offshore/redflip.html",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "レッドフリップ (Red Flip)",
+   "model": "RF672S-ML/CK",
+   "type": "spinning",
+   "length_m": 2.0,
+   "lure_g": "Vertical 45-160, Dotera MAX200, Cast MAX75",
+   "pe": "MAX1.2",
+   "price_jpy": 39500,
+   "url": "https://fishing.tenryu-magna.com/offshore/redflip.html",
+   "status": "",
+   "source": "official"
+  }
+ ],
+ "sources": [
+  "https://fishing.tenryu-magna.com/offshore/redflip.html",
+  "https://fishing.tenryu-magna.com/offshore/"
+ ],
+ "notes": [
+  "price_jpy は公式スペック表の本体価格（希望小売価格・税抜）。",
+  "公式オフショア一覧で現行のタイラバ専用シリーズはレッドフリップのみ（レッドフリップ リアクション-テンヤ はテンヤ用、ベイブレイズはシーバス/ライトキャスティング用のため除外）。",
+  "スピニング2機種(RF652S-L/CN, RF672S-ML/CK)はキャスト対応モデル（キャスラバ）。公式はアンダーハンドキャスト推奨。",
+  "RF6102B-L/DN は公式で『小型電動リールにも対応可能』と記載。"
+ ]
+}
