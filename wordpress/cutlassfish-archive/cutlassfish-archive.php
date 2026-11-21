@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cutlassfish Archive（記事一覧・釣行記の年表・検索）
  * Description: 過去記事を見つけやすくします。全記事一覧（/articles/：魚・テーマ・年月で絞り込み、文字で検索）、釣行記の年表（/fishing-log/）、メニューの検索欄、記事の下の「前後の記事」と「同じ魚の記事」。釣果速報は一覧に入れません。
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPLv2 or later
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class CF_Archive {
-	const V     = '1.0.0';
+	const V     = '1.0.1';
 	const TYPES = array( 'tachiuo_post' );   // 釣り記事だけ。釣果速報（tbt_catch）・動画・初期の投稿（Hello world!）は入れない
 	const CACHE = 'cf_archive_items_v1';
 
@@ -24,6 +24,16 @@ final class CF_Archive {
 		add_action( 'pre_get_posts', array( __CLASS__, 'pre_get_posts' ) );
 		add_filter( 'template_include', array( __CLASS__, 'template' ), 99 );
 		add_filter( 'document_title_parts', array( __CLASS__, 'title' ) );
+		add_filter( 'pre_get_document_title', array( __CLASS__, 'doc_title' ), PHP_INT_MAX );
+		foreach ( array( 'title', 'og_title', 'twitter_title' ) as $k ) {          // SEO SIMPLE PACK の出力も、このページ用に
+			add_filter( 'ssp_output_' . $k, array( __CLASS__, 'doc_title_ssp' ), 99 );
+		}
+		foreach ( array( 'canonical', 'og_url' ) as $k ) {
+			add_filter( 'ssp_output_' . $k, array( __CLASS__, 'ssp_url' ), 99 );
+		}
+		foreach ( array( 'description', 'og_description', 'twitter_description' ) as $k ) {
+			add_filter( 'ssp_output_' . $k, array( __CLASS__, 'ssp_desc' ), 99 );
+		}
 		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'menu_js' ), 20 );
 		add_filter( 'the_content', array( __CLASS__, 'after_content' ), 30 );
@@ -69,6 +79,26 @@ final class CF_Archive {
 			$parts['title'] = 'all' === $m ? '記事一覧' : '釣行記の年表';
 		}
 		return $parts;
+	}
+	private static function page_title() {
+		return ( 'all' === self::mode() ? '記事一覧' : '釣行記の年表' ) . ' | ' . get_bloginfo( 'name' );
+	}
+	public static function doc_title( $t ) {
+		return self::mode() ? self::page_title() : $t;
+	}
+	public static function doc_title_ssp( $v ) {
+		return self::mode() ? self::page_title() : $v;
+	}
+	public static function ssp_url( $v ) {
+		$m = self::mode();
+		return $m ? home_url( 'all' === $m ? '/articles/' : '/fishing-log/' ) : $v;
+	}
+	public static function ssp_desc( $v ) {
+		$m = self::mode();
+		if ( ! $m ) {
+			return $v;
+		}
+		return 'all' === $m ? '東京湾の魚・釣りの記事を全部並べた一覧です。魚・テーマ・年月で絞り込んだり、言葉で探したりできます。' : 'これまでの釣行記を、月ごとに並べた年表です。';
 	}
 	public static function body_class( $c ) {
 		if ( self::mode() ) {
@@ -148,9 +178,8 @@ var f=document.createElement('form');f.className='cfa-nav-search';f.action='<?ph
 f.innerHTML='<input type="search" name="q" placeholder="記事を探す（例：テンヤ 色）" aria-label="記事を探す" enterkeyhint="search"><button type="submit">検索</button>';
 var a=document.createElement('a');a.href='<?php echo $all; ?>';a.className='en';a.innerHTML='ARCHIVE<small>記事一覧</small>';
 var b=document.createElement('a');b.href='<?php echo $log; ?>';b.className='en';b.innerHTML='FISHING LOG<small>釣行記の年表</small>';
-var s=document.createElement('span');s.className='nav-sep';s.setAttribute('aria-hidden','true');
 var first=nav.firstElementChild;var ref=first?first.nextSibling:null;
-[f,a,b,s].forEach(function(el){nav.insertBefore(el,ref)});})();
+[f,a,b].forEach(function(el){nav.insertBefore(el,ref)});})();
 </script>
 		<?php
 	}
