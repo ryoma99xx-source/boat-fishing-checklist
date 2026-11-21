@@ -4,3 +4,4 @@ dist
 .DS_Store
 sites/dragon-counter/work/
 __pycache__/
+sites/dragon-counter/tools/tairaba/base.html

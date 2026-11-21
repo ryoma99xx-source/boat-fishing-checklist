@@ -297,5 +297,11 @@ R('<span>${SA_JP[k]}</span><b>${m[k].catch}本<small>', '<span>${SA_JP[k]}</span
 R('<span>${KA_JP[k]}</span><b>${m[k].catch}本<small>', '<span>${KA_JP[k]}</span><b>${m[k].catch}' + U + '<small>')
 R("タチウオ以外に釣れた魚を、今の時刻と使用テンヤで1匹記録します（タチウオの本数には入りません）。", "マダイ以外に釣れた魚を、今の時刻と使っているタイラバで1匹記録します（マダイの枚数には入りません）。")
 
+# ティップランカウンターの元になる版（ここまでの共通部分）。tipran_build.py はこれを読む
+open(os.path.join(HERE, 'tairaba', 'base.html'), 'w', encoding='utf-8').write(s)
+# ここから先はタイラバだけ：出方・速さ・位置・合わせ（tairaba_sasoi.py）
+sys.path.insert(0, HERE)
+import tairaba_sasoi
+s = tairaba_sasoi.apply(s)
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))

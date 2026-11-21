@@ -2,7 +2,7 @@
 
 タイラバカウンター is itself built from ドラゴンカウンター (tools/tairaba_build.py), so the chain is
     public/index.html  →  tairaba_build.py  →  public/tairaba/index.html  →  tipran_build.py  →  public/tipran/index.html
-Run tairaba_build.py first. What changes here: name and addresses, the target (アオリイカ, 杯, size in g),
+Run tairaba_build.py first (it writes tools/tairaba/base.html, the version before the タイラバ-only patches). What changes here: name and addresses, the target (アオリイカ, 杯, size in g),
 the parts (エギ and an optional シンカー instead of ヘッド・ネクタイ・針・スカート), and the キロアップ mark
 (ドラゴンカウンターの「ドラゴン」の仕組みを、1kg以上の印として使う).
 
@@ -18,7 +18,7 @@ PUB = os.path.join(HERE, '..', 'public')
 OUT = os.path.join(PUB, 'tipran')
 URL = 'https://dragon-counter.cutlassfish.tokyo/tipran/'
 
-s = open(os.path.join(PUB, 'tairaba', 'index.html'), encoding='utf-8').read()
+s = open(os.path.join(HERE, 'tairaba', 'base.html'), encoding='utf-8').read()   # tairaba_build.py が書く、タイラバだけの変更を当てる前の版
 
 
 def R(old, new, n=1):
