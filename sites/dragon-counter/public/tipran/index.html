@@ -2,7 +2,7 @@
 <html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ティップランカウンター｜TOKYO BAY FISHING</title>
-<script>/* Googleアナリティクス（cutlassfish.tokyo と同じ GA4）。本番のドメインのときだけ。釣果などの記録は送らない */(function(){if(location.hostname!=="dragon-counter.cutlassfish.tokyo")return;window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config","G-3MCRXM8WJS");var s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id=G-3MCRXM8WJS";document.head.appendChild(s)})();</script>
+<script>/* tipran-words v1 *//* Googleアナリティクス（cutlassfish.tokyo と同じ GA4）。本番のドメインのときだけ。釣果などの記録は送らない */(function(){if(location.hostname!=="dragon-counter.cutlassfish.tokyo")return;window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config","G-3MCRXM8WJS");var s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id=G-3MCRXM8WJS";document.head.appendChild(s)})();</script>
 <meta name="description" content="ティップランのアオリイカの釣果を時間の経過と共に、エギ・シンカー・潮・流れと一緒に記録する無料ツール。全国どこの釣り場でも、潮回りと満潮・干潮、流れの向きと速さが自動で入ります。キロアップ（1kg以上）も記録できます。記録は端末に保存され、釣果データは匿名で集計に使います。">
 <link rel="canonical" href="https://dragon-counter.cutlassfish.tokyo/tipran/">
 <meta property="og:type" content="website"><meta property="og:title" content="ティップランカウンター"><meta property="og:url" content="https://dragon-counter.cutlassfish.tokyo/tipran/"><meta property="og:image" content="https://dragon-counter.cutlassfish.tokyo/tipran/icon-512.png">
@@ -1785,7 +1785,7 @@ function pointSegs(tr){const P=(tr.points||[]).slice().sort((a,b)=>a.t-b.t);retu
 function pointsCard(tr){const sg=pointSegs(tr);if(!sg.length)return '';const s=spOf(tr.cur.sp);
   const route=sg.length>1?`https://www.google.com/maps/dir/${sg.map(p=>p.lat.toFixed(5)+','+p.lon.toFixed(5)).join('/')}`:mapUrl(sg[0]);
   return `<div class="card"><h2>📍で記録した場所（${sg.length}か所）</h2><p class="muted">「📍場所」を押した時刻から、次に押すまでの記録です。</p>
-   <div class="pts">${sg.map(p=>`<div class="pt"><b>${p.i+1}</b><span><em>${hm(p.t)}〜${p.te?hm(p.te):''}${p.i?`・前から約${kmTxt(p.km)}`:''}</em><small>${esc(s.name)} ${p.catch}${esc(s.unit)}・アタリ ${p.bite}・バラシ ${p.lost}</small></span><a class="btn sm" href="${mapUrl(p)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
+   <div class="pts">${sg.map(p=>`<div class="pt"><b>${p.i+1}</b><span><em>${hm(p.t)}〜${p.te?hm(p.te):''}${p.i?`・一つ前の記録から約${kmTxt(p.km)}`:''}</em><small>${esc(s.name)} ${p.catch}${esc(s.unit)}・アタリ ${p.bite}・バラシ ${p.lost}</small></span><a class="btn sm" href="${mapUrl(p)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
    <a class="btn sm" href="${route}" target="_blank" rel="noopener">${sg.length>1?'移動した順に地図で見る':'地図で見る'}</a></div>`}
 /* 釣れたときに、その時の位置（GPS）も自動で残す。取れなければ何もしない（記録はそのまま） */
 function catchLoc(tid,eid){if(!navigator.geolocation||S.prefs.catchLoc===false)return;
@@ -1796,7 +1796,7 @@ function catchLocCard(tr,sp){const s=spOf(sp);let n=0;const L=evOf(tr,sp).filter
   const KL={catch:'釣れた',bite:'アタリ',lost:'バラシ'},KC={catch:'var(--teal)',bite:'var(--amber,#e3a43b)',lost:'#e0587a'};
   const route=L.length>1?`https://www.google.com/maps/dir/${L.slice(-25).map(p=>p.lat.toFixed(5)+','+p.lon.toFixed(5)).join('/')}`:mapUrl(L[0]);
   return `<div class="card"><h2>釣れた・アタリ・バラシの場所（${L.length}件）</h2><p class="muted">「釣れた」「アタリ」「バラシ」を押した時の位置を自動で残しています。押した時の位置なので、実際の場所とは少しずれます。</p>
-   <div class="pts">${L.map((e,i)=>`<div class="pt"><b style="color:${KC[e.kind]}">${e.kind==='catch'?e.n:e.kind==='bite'?'ア':'バ'}</b><span><em>${hm(e.t)}・${KL[e.kind]}${e.kind==='catch'&&e.dragon?'（キロアップ）':''}${i?`・前から約${kmTxt(ptKm(L[i-1],e))}`:''}</em><small>${e.acc?'誤差 約'+e.acc+'m':''}</small></span><a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
+   <div class="pts">${L.map((e,i)=>`<div class="pt"><b style="color:${KC[e.kind]}">${e.kind==='catch'?e.n:e.kind==='bite'?'ア':'バ'}</b><span><em>${hm(e.t)}・${KL[e.kind]}${e.kind==='catch'&&e.dragon?'（キロアップ）':''}${i?`・一つ前の記録から約${kmTxt(ptKm(L[i-1],e))}`:''}</em><small>${e.acc?'誤差 約'+e.acc+'m':''}</small></span><a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
    <a class="btn sm" href="${route}" target="_blank" rel="noopener">${L.length>1?'記録した順に地図で見る':'地図で見る'}</a></div>`}
 function addEvent(kind,v,src,osp,rig){const tr=active();if(!tr)return;const now=Date.now();if(now-lastTap<450)return;lastTap=now;
   const tsp=tr.cur.sp,g=curGear(tr),sp=osp||tsp;if(rig&&rig!==g.rig){g.rig=rig;logGear(tr)}const e={id:uid(),t:now,kind,sp,gsp:tsp,rig:g.rig,bait:needBait(tsp,g)?g.bait:'',hook:g.hook||'',skirt:g.skirt||'',size:'',...(tr.tk&&tr.tk.cur?{tk:tr.tk.cur}:{})};if(kind==='catch')e.v=v||mainV(sp);if(kind==='catch'&&sp===SOLO&&dragonNext){e.dragon=true;dragonNext=false}if(src)e.src=src;if(nextSa){e.sa=nextSa;nextSa=null}if(nextKa){e.ka=nextKa;nextKa=null}
@@ -1979,7 +1979,7 @@ function figSp(tr){const ss=tripSpecies(tr);return ss.includes(S.ui.figSp)?S.ui.
 function viewFig(){const tr=figTrip();wxEnsure(tr);ocurEnsure(tr);if(!tr)return `<h1>図</h1><p class="muted">釣行を記録すると、ここに図が出ます。</p>`;const sp=figSp(tr);const ss=tripSpecies(tr);
   const opts=trips().map(t=>`<option value="${t.id}" ${t.id===tr.id?'selected':''}>${t.date.slice(5).replace('-','/')} ${esc(t.boat)}・${esc(tripSummary(t))}${t.sample?'（サンプル）':''}${t.status==='active'?'（記録中）':''}</option>`).join('');
   return `<div class="figsel"><select id="figPick" aria-label="釣行を選ぶ">${opts}</select><button class="btn sm figcal" data-act="figCal" aria-label="カレンダーから釣行を選ぶ">カレンダー</button>${tr.status==='active'?'<span class="badge live">記録中</span>':''}</div>
-   ${isTairyo(tr.date)||nDragon(tr,SOLO)?`<div class="fig-badges">${isTairyo(tr.date)?tairyoTag():''}${nDragon(tr,SOLO)?`<span class="dn-s"><i class="ic ic-dragon"></i>キロアップ ${nDragon(tr,SOLO)}本</span>`:''}</div>`:''}
+   ${isTairyo(tr.date)||nDragon(tr,SOLO)?`<div class="fig-badges">${isTairyo(tr.date)?tairyoTag():''}${nDragon(tr,SOLO)?`<span class="dn-s"><i class="ic ic-dragon"></i>キロアップ ${nDragon(tr,SOLO)}杯</span>`:''}</div>`:''}
    ${photoIds(tr).length?`<div class="card"><h2>この日の写真</h2>${photoStrip(tr)}<button class="btn sm" data-act="phOpen" data-id="${tr.id}">写真を追加・外す</button></div>`:''}
    ${ss.length>1?`<div class="chips">${ss.map(x=>`<button class="chip ${x===sp?'on':''}" data-act="figSp" data-id="${x}">${esc(spOf(x).name)}</button>`).join('')}</div>`:''}
    ${tr.sample?`<p class="sample-note">これは見本のサンプル釣行です。実際に出船して記録すると、自分の図が作られます。<button class="btn sm" data-act="delSample" data-id="${tr.id}">サンプルを消す</button></p>`:''}
@@ -2054,7 +2054,7 @@ function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYe
   const rank=(title,keyFn,nameFn,lim,act)=>{const m={};L.forEach(t=>catchesOf(t,SOLO).forEach(e=>{const k=keyFn(t,e);if(k)m[k]=(m[k]||0)+1}));const it=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,lim||3);if(!it.length)return '';const mx=it[0][1];
     return `<div class="rank"><h3>${title}</h3>${it.map(([k,v])=>act?`<button class="rk rk-btn" data-act="${act}" data-id="${esc(k)}" data-n="${v}"><span>${esc(nameFn(k))}</span><i style="width:${Math.max(6,v/mx*100)}%"></i><b>${v}杯</b></button>`:`<div class="rk"><span>${esc(nameFn(k))}</span><i style="width:${Math.max(6,v/mx*100)}%"></i><b>${v}杯</b></div>`).join('')}${act?'<p class="muted rk-hint">押すとテンヤの写真が見られます</p>':''}</div>`};
   const avgBy=(title,keyFn)=>{const m={};L.forEach(t=>{const k=keyFn(t);if(!k)return;m[k]=m[k]||{n:0,s:0};m[k].n++;m[k].s+=N(t)});const it=Object.entries(m).sort((a,b)=>b[1].s/b[1].n-a[1].s/a[1].n).slice(0,5);if(!it.length)return '';const mx=Math.max(...it.map(x=>x[1].s/x[1].n),1);
-    return `<div class="rank"><h3>${title}</h3>${it.map(([k,v])=>`<div class="rk"><span>${esc(k)}</span><i style="width:${Math.max(6,v.s/v.n/mx*100)}%"></i><b>${r1(v.s/v.n)}本<small>／${v.n}回</small></b></div>`).join('')}</div>`};
+    return `<div class="rank"><h3>${title}</h3>${it.map(([k,v])=>`<div class="rk"><span>${esc(k)}</span><i style="width:${Math.max(6,v.s/v.n/mx*100)}%"></i><b>${r1(v.s/v.n)}杯<small>／${v.n}回</small></b></div>`).join('')}</div>`};
   return `<div class="card dash"><h2>ダッシュボード</h2>${seg}
    <div class="kpis">${kpi(L.length,'回','釣行')}${kpi(tot,'杯','アオリイカ合計')}${kpi(r1(tot/L.length),'杯','1回あたり')}${kpi(hrs?r1(tot/hrs):0,'杯','1時間あたり')}
     ${kpi(drag,'杯','キロアップ',tot?`全体の${Math.round(drag/tot*100)}%`:'')}${kpi(N(best),'杯','最高',`${best.date.slice(5).replace('-','/')} ${esc(best.boat)}`)}${kpi(L.reduce((a,t)=>a+nKind(t,SOLO,'lost'),0),'回','バラシ')}</div>
@@ -2063,14 +2063,14 @@ function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYe
    ${avgBy('釣り場ごとの平均',t=>t.spot?t.spot.name:(t.port||''))}
    ${avgBy('潮回りごとの平均',t=>tideNameOf(t))}
    ${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.sa||!['catch','bite','lost'].includes(e.kind))return;if(e.kind==='catch'&&e.sp!==SOLO)return;m[e.sa]=m[e.sa]||{catch:0,bite:0,lost:0};m[e.sa][e.kind]++}));const it=SA_KEYS.filter(k=>m[k]);if(!it.length)return '';
-     return `<div class="rank"><h3>誘いごと（詳細モードで記録した分）</h3>${it.map(k=>`<div class="rk sa-rk"><span>${SA_JP[k]}</span><b>${m[k].catch}本<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
+     return `<div class="rank"><h3>誘いごと（詳細モードで記録した分）</h3>${it.map(k=>`<div class="rk sa-rk"><span>${SA_JP[k]}</span><b>${m[k].catch}杯<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
    ${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.ka||!['catch','bite','lost'].includes(e.kind))return;if(e.kind==='catch'&&e.sp!==SOLO)return;m[e.ka]=m[e.ka]||{catch:0,bite:0,lost:0};m[e.ka][e.kind]++}));const it=KA_KEYS.filter(k=>m[k]);if(!it.length)return '';
-     return `<div class="rank"><h3>アタリの出方ごと</h3>${it.map(k=>`<div class="rk sa-rk"><span>${KA_JP[k]}</span><b>${m[k].catch}本<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
+     return `<div class="rank"><h3>アタリの出方ごと</h3>${it.map(k=>`<div class="rk sa-rk"><span>${KA_JP[k]}</span><b>${m[k].catch}杯<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
    ${avgBy('船ごとの平均',t=>t.boat)}</div>`}
 function calCells(ym,by,sel,act){const [Y,M]=ym.split('-').map(Number);const first=new Date(Y,M-1,1),dim=new Date(Y,M,0).getDate(),lead=first.getDay();
   const today=ymd(Date.now());let cells='';for(let i=0;i<lead;i++)cells+='<span class="cd empty"></span>';
   for(let d=1;d<=dim;d++){const ds=`${ym}-${String(d).padStart(2,'0')}`;const ts=by[ds]||[];const n=ts.reduce((a,t)=>a+catchesOf(t,SOLO).length,0);const dg=ts.reduce((a,t)=>a+nDragon(t,SOLO),0);const wd=(lead+d-1)%7;
-    cells+=ts.length?`<button class="cd has ${ds===sel?'on':''} ${n>=TAIRYO?'tai':''} ${wd===0?'sun':wd===6?'sat':''}" data-act="${act}" data-d="${ds}"><span class="cd-d">${d}</span><b>${n}<small>本</small></b>${n>=TAIRYO?'<i class="ic ic-tairyo"></i>':dg?'<i class="ic ic-dragon"></i>':''}</button>`
+    cells+=ts.length?`<button class="cd has ${ds===sel?'on':''} ${n>=TAIRYO?'tai':''} ${wd===0?'sun':wd===6?'sat':''}" data-act="${act}" data-d="${ds}"><span class="cd-d">${d}</span><b>${n}<small>杯</small></b>${n>=TAIRYO?'<i class="ic ic-tairyo"></i>':dg?'<i class="ic ic-dragon"></i>':''}</button>`
       :`<span class="cd ${ds===today?'today':''} ${wd===0?'sun':wd===6?'sat':''}"><span class="cd-d">${d}</span></span>`}
   return cells}
 function calHTML(){const all0=trips(),real=all0.filter(t=>!t.sample),all=real.length?real:all0;const now=new Date();let ym=S.ui.calYM;if(!ym){const lt=all.find(t=>!t.sample)||all[0];ym=lt?lt.date.slice(0,7):`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`}
@@ -2080,7 +2080,7 @@ function calHTML(){const all0=trips(),real=all0.filter(t=>!t.sample),all=real.le
   const mTrips=all.filter(t=>t.date.startsWith(ym));const mTot=mTrips.reduce((a,t)=>a+catchesOf(t,SOLO).length,0);
   const list=(sel?by[sel]||[]:mTrips).slice().sort((a,b)=>b.start-a.start);
   return `<div class="card cal"><div class="cal-h"><button class="btn sm" data-act="calMove" data-d="-1" aria-label="前の月">‹</button><b>${Y}年${M}月</b><button class="btn sm" data-act="calMove" data-d="1" aria-label="次の月">›</button></div>
-   <p class="muted cal-sum">${mTrips.length?`この月：釣行 ${mTrips.length}回・タチウオ ${mTot}本`:'この月の釣行はありません'}</p>
+   <p class="muted cal-sum">${mTrips.length?`この月：釣行 ${mTrips.length}回・アオリイカ ${mTot}杯`:'この月の釣行はありません'}</p>
    <div class="cal-w">${['日','月','火','水','木','金','土'].map(x=>`<span>${x}</span>`).join('')}</div><div class="cal-g">${cells}</div></div>
    ${list.length?`<h2 class="sec-h">${sel?`${jdate(sel)}の釣行`:`${M}月の釣行`}${sel?'<button class="golink" data-act="calDay" data-d="">月全体に戻す</button>':''}</h2><div class="card">${list.map(tripCardHTML).join('')}</div>`:''}`}
 function viewHist(){const statSp=spOf(S.ui.statSp).id!=='?'?S.ui.statSp:(spVisible()[0]||{}).id;
@@ -2528,7 +2528,7 @@ function helpHTML(){return `<div class="sheet-h"><h2>ボタンで数える<small
 function tenViewSheet(id,n){const t=tenyaOf(id);if(!t)return;const img=TIMG.has(id)?`<img class="tv-img" src="/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}" alt="${esc(tenyaFull(id))}">`:'<div class="tv-noimg">写真はありません</div>';
   openSheet(`<div class="sheet-h"><h2>よく釣れたテンヤ</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
    <div class="tv-box">${img}</div><p class="tv-sub">${esc(tenyaSub(t))}</p><h3 class="tv-main">${esc(tenyaMain(t))}</h3><div class="tv-badges">${tenyaBadges(t)}</div>
-   <p class="tv-n">この期間に<b>${n}本</b></p>${t.u?`<a class="golink" href="${esc(t.u)}" target="_blank" rel="noopener">メーカーの商品ページ →</a>`:''}`,{kind:'tenview'})}
+   <p class="tv-n">この期間に<b>${n}杯</b></p>${t.u?`<a class="golink" href="${esc(t.u)}" target="_blank" rel="noopener">メーカーの商品ページ →</a>`:''}`,{kind:'tenview'})}
 const acts={
   modeHelp:()=>openSheet(`<div class="sheet-h"><h2>シンプルと詳細の違い</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
    <div class="mh"><h3>シンプル</h3><p>「釣れた」「アタリ」「バラシ」を押すと、その場ですぐ1件記録します。時刻と使っているテンヤ・タックルが残ります。手早く数えたいとき向けです。</p></div>
@@ -2888,7 +2888,7 @@ function renderRestore(){const {d}=rs;const c=d.cfg||{};const when=d.exportedAt?
   const catches=d.trips.reduce((n,t)=>n+t.events.filter(e=>e.kind==='catch').length,0);
   openSheet(`<div class="sheet-h"><h2>バックアップから復元</h2><button class="btn sm ghost" data-act="closeSheet">やめる</button></div>
    <div class="bkinfo"><b>${when?`${jdate(ymd(when.getTime()))} ${hm(when.getTime())} のバックアップ`:'バックアップ'}</b><span>${esc(rs.src||'')}</span>
-    <ul><li>釣行 <b>${d.trips.length}</b>件（釣果 ${catches}本）</li><li>釣り場 ${(c.spots||[]).length}・船 ${(c.boats||[]).length}・所有テンヤ ${((c.tenya||{}).mine||[]).length}</li></ul></div>
+    <ul><li>釣行 <b>${d.trips.length}</b>件（釣果 ${catches}杯）</li><li>釣り場 ${(c.spots||[]).length}・船 ${(c.boats||[]).length}・所有テンヤ ${((c.tenya||{}).mine||[]).length}</li></ul></div>
    <p class="muted">この端末には今、釣行 ${cur.length}件があります。</p>
    <div class="field"><span>復元のしかた</span><div class="seg"><button class="${rs.mode==='merge'?'on':''}" data-act="rsMode" data-d="merge">足して合わせる</button><button class="${rs.mode==='replace'?'on':''}" data-act="rsMode" data-d="replace">そっくり置き換える</button></div></div>
    <p class="muted">${rs.mode==='merge'?`今の記録は残したまま、バックアップにしかない釣行（${rs.nNew}件）を足し、同じ釣行はより新しいほう（バックアップが新しいのは${rs.nNewer}件）を残します。設定（釣り場・船・エギ）は、新しいほうを使います。`:'今のこの端末の記録と設定をすべて消して、バックアップの内容にします。バックアップにない釣行は消えます（クラウドからも消えます）。'}</p>
