@@ -25,6 +25,17 @@ FIX = [
 ]
 
 
+# ドラゴンカウンターから入ってくる新しい機能（インスタ用の画像）をティップラン用に
+FIX_NEW = [
+    ("'いちばん釣れたテンヤ'", "'いちばん釣れたエギ'"),
+    ("o.push(T(32,y+14,'DRAGON COUNTER',", "o.push(T(32,y+14,'TIPRUN COUNTER',"),
+    ("o.push(T(W/2,bot,'dragon-counter.cutlassfish.tokyo',", "o.push(T(W/2,bot,'dragon-counter.cutlassfish.tokyo/tipran',"),
+    # いちばん釣れたエギの写真は、ティップランのエギの写真（/tipran/egi/）から
+    ("if(t&&TIMG.has(id)){try{const im=new Image();await new Promise((ok,ng)=>{im.onload=ok;im.onerror=ng;im.src=`/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}`});",
+     "const ei=rigIm(sp,id);if(ei){try{const im=new Image();await new Promise((ok,ng)=>{im.onload=ok;im.onerror=ng;im.src=`/tipran/egi/${ei}.webp`});"),
+]
+
+
 def apply(s):
     if MARK in s:
         return s
@@ -34,6 +45,11 @@ def apply(s):
             raise SystemExit('tipran_words: not found: ' + old[:80])
         s = s.replace(old, new)
     s = s.replace('・前から約${kmTxt', '・一つ前の記録から約${kmTxt')
+    for old, new in FIX_NEW:   # 入っていれば直す
+        s = s.replace(old, new)
+    s = s.replace('/* いちばん釣れたテンヤ（', '/* いちばん釣れたエギ（')
+    if "'いちばん釣れたテンヤ'" in s or "T(32,y+14,'DRAGON COUNTER'" in s or "/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}`});\n    const k=Math.min(1,480" in s:
+        raise SystemExit('tipran_words: insta left over')
     s = s.replace('<script>', '<script>' + MARK, 1)
     return s
 

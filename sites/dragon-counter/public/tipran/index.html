@@ -172,7 +172,7 @@ input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width
 /* iPhone: keep sheet children at full height so the panel itself scrolls; stop the page behind from scrolling */
 .sheet-panel>*{flex-shrink:0}
 body:has(#sheet:not([hidden])){overflow:hidden}
-.shr-pick{display:flex;flex-direction:column;gap:10px}.ph-strip{display:flex;gap:6px;overflow-x:auto;margin:8px 0}.ph-it{flex:none;padding:0;border:0;background:var(--surface2);border-radius:10px;overflow:hidden;width:72px;height:72px;cursor:pointer}.ph-it img{width:100%;height:100%;object-fit:cover;display:block}.ph-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}.ph-cell{display:flex;flex-direction:column;gap:4px;min-width:0}.ph-cell .ph-it{width:100%;height:auto;aspect-ratio:1/1}.ph-big{display:block;width:100%;height:auto;max-height:75vh;object-fit:contain;border-radius:12px;margin-top:8px}.ph-miss{display:none!important}.ph-add{display:block;text-align:center;cursor:pointer;margin-top:8px}.safe-box{display:flex;flex-direction:column;gap:8px;margin:10px 0 14px}.safe-box .sb-row{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid rgba(227,164,59,.55);border-radius:12px;background:rgba(227,164,59,.1);font-size:13px;line-height:1.6}.safe-box .sb-row span{flex:1;min-width:0}.safe-box .btn{flex:none}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
+.shr-pick{display:flex;flex-direction:column;gap:10px}.ph-strip{display:flex;gap:6px;overflow-x:auto;margin:8px 0}.ph-it{flex:none;padding:0;border:0;background:var(--surface2);border-radius:10px;overflow:hidden;width:72px;height:72px;cursor:pointer}.ph-it img{width:100%;height:100%;object-fit:cover;display:block}.ph-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}.ph-cell{display:flex;flex-direction:column;gap:4px;min-width:0}.ph-cell .ph-it{width:100%;height:auto;aspect-ratio:1/1}.ph-big{display:block;width:100%;height:auto;max-height:75vh;object-fit:contain;border-radius:12px;margin-top:8px}.ph-miss{display:none!important}.ph-add{display:block;text-align:center;cursor:pointer;margin-top:8px}.safe-box{display:flex;flex-direction:column;gap:8px;margin:10px 0 14px}.safe-box .sb-row{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid rgba(227,164,59,.55);border-radius:12px;background:rgba(227,164,59,.1);font-size:13px;line-height:1.6}.safe-box .sb-row span{flex:1;min-width:0}.safe-box .btn{flex:none}.locmap-w{margin:10px 0 0}.locmap{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#e6eef2}.locmap-h{margin:0 0 4px;font-size:13px;font-weight:700}.locmap-lg{margin:6px 0 8px;font-size:12px;color:var(--muted)}.locmap-lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 8px;vertical-align:-1px}.locmap-lg i:first-child{margin-left:0}.evmap{cursor:crosshair}.evmap-act{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.evmap-act .btn{min-height:34px}.linkbtn{background:none;border:0;padding:0 2px;color:var(--teal);text-decoration:underline;font:inherit;font-size:12px;cursor:pointer}.locmap-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.btn.gmap{font-size:12px;min-height:32px;padding:4px 12px}.shr-ig-h{margin:16px 0 8px;font-size:14px;color:var(--muted)}.shr-ig{display:grid;grid-template-columns:1fr 1fr;gap:10px}.shr-ig .btn small{display:block;font-weight:500;font-size:12px}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
 /* the tenya catalog is long: keep the title + 完了 pinned at the top and a 完了 bar pinned at the bottom of the sheet */
 .sheet-h.stick{position:sticky;top:-18px;z-index:3;margin:-18px calc(-1 * max(16px,env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:14px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-bottom:1px solid var(--line)}
 .tb-foot{position:sticky;bottom:calc(-24px - env(safe-area-inset-bottom,0px));z-index:3;margin:0 calc(-1 * max(16px,env(safe-area-inset-right,0px))) calc(-24px - env(safe-area-inset-bottom,0px)) calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-top:1px solid var(--line)}
@@ -394,7 +394,7 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 .td-bl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 [data-lp]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .td-catch .lp-hint{font-style:normal;font-size:11px;font-weight:600;opacity:.65;margin-top:2px}
-.sa-grid{display:grid;grid-template-columns:44px 1fr 1fr;gap:8px;align-items:center;margin:6px 0 10px}.sa-grid .sa-fall{grid-column:1/-1;min-height:52px}.sa-grid.tr-sa{grid-template-columns:1fr 1fr}.sa-grid.tr-sa .sa-b{min-height:64px;font-size:18px}.ka-grid .sa-b{min-height:64px;font-size:18px}.sa-fall small{display:block;font-size:12px;font-weight:400;color:var(--muted)}.sa-grid>b{font-size:13px;color:var(--muted);text-align:center}
+.sa-grid{display:grid;grid-template-columns:44px 1fr 1fr;gap:8px;align-items:center;margin:6px 0 10px}.sa-grid .sa-fall{grid-column:1/-1;min-height:52px}.sa-grid.tr-sa{grid-template-columns:1fr 1fr}.sa-grid.tr-sa .sa-b{min-height:64px;font-size:18px}.ka-grid .sa-b{min-height:64px;font-size:18px}.sa-grid .sa-fo{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px}.sa-fall small{display:block;font-size:12px;font-weight:400;color:var(--muted)}.sa-grid>b{font-size:13px;color:var(--muted);text-align:center}
 .sa-b{min-height:76px;border-radius:14px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);font-size:17px;font-weight:800;line-height:1.3}.sa-b.on{border-color:var(--teal);box-shadow:0 0 0 2px rgba(65,201,198,.35)}
 .fd-sa{color:var(--amber)!important}
 .ka-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 12px}.ka-grid .sa-b{min-height:96px;font-size:22px}
@@ -416,7 +416,7 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 body.kbd .tabs,body.kbd .dock{display:none}
 .tab{font-size:13px}
 .tab.on{color:var(--teal);background:transparent}
-.sheet-panel{background:var(--surface)}
+.sheet-panel{background:var(--surface)}.sheet-panel{overflow-x:hidden;overscroll-behavior-x:none;touch-action:pan-y pinch-zoom}.sheet-panel select,.sheet-panel input{min-width:0;max-width:100%}.sheet-panel select{text-overflow:ellipsis}.sheet-panel .grid2>*{min-width:0}.evmap{touch-action:manipulation}
 .toast{background:#e9f3f6;color:#06121b;touch-action:pan-x;transition:transform .15s ease-out}
 .top{background:var(--bg)}
 .sample-note{background:var(--surface);border-color:rgba(227,164,59,.4);color:var(--amber)}
@@ -1096,9 +1096,9 @@ const methodOf=(sp,g)=>spOf(sp).catalog?((g&&g.method)||spOf(sp).method||'tenya'
 const isTenya=(sp,g)=>methodOf(sp,g)==='tenya';
 const needBait=(sp,g)=>!!spOf(sp).baitLabel&&methodOf(sp,g)!=='tenbin'; // 天秤のときは餌を記録しない
 const METHOD_JP={tenya:'テンヤ',tenbin:'天秤'};
-/* タチウオの餌: 種類（イワシ・ハイブリッドクロス・カマス・その他）。イワシはサイズ・頭・内臓も持つ。
+/* タチウオの餌: 種類（イワシ・ハイブリッドクロス・カマス・身餌・その他）。イワシはサイズ・頭・内臓も持つ。
    id は "bz:iw:中:h0:g0" の形（h1=頭つき, g1=内臓あり）。その他は登録した餌の id。 */
-const BZ_TYPES=[['iw','イワシ'],['hc','ハイブリッドクロス'],['km','カマス']],BZ_DEF='bz:iw:中:h0:g0',bzX={};
+const BZ_TYPES=[['iw','イワシ'],['hc','ハイブリッドクロス'],['km','カマス'],['mi','身餌']],BZ_DEF='bz:iw:中:h0:g0',bzX={};
 const isBzSp=sp=>spOf(sp).id==='tachiuo';
 const bzLegacy=b=>/^イワシ\s*(大|中|小)$/.exec(b&&b.name||'');
 function bzParse(sp,id){if(id&&id.startsWith('bz:')){const [,t,z,h,g]=id.split(':');return {t,z:z||'中',h:h||'h0',g:g||'g0'}}
@@ -1786,18 +1786,64 @@ function pointsCard(tr){const sg=pointSegs(tr);if(!sg.length)return '';const s=s
   const route=sg.length>1?`https://www.google.com/maps/dir/${sg.map(p=>p.lat.toFixed(5)+','+p.lon.toFixed(5)).join('/')}`:mapUrl(sg[0]);
   return `<div class="card"><h2>📍で記録した場所（${sg.length}か所）</h2><p class="muted">「📍場所」を押した時刻から、次に押すまでの記録です。</p>
    <div class="pts">${sg.map(p=>`<div class="pt"><b>${p.i+1}</b><span><em>${hm(p.t)}〜${p.te?hm(p.te):''}${p.i?`・一つ前の記録から約${kmTxt(p.km)}`:''}</em><small>${esc(s.name)} ${p.catch}${esc(s.unit)}・アタリ ${p.bite}・バラシ ${p.lost}</small></span><a class="btn sm" href="${mapUrl(p)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
-   <a class="btn sm" href="${route}" target="_blank" rel="noopener">${sg.length>1?'移動した順に地図で見る':'地図で見る'}</a></div>`}
+   ${locMaps(sg,()=>'#13939b')}<div class="locmap-act"><button class="btn sm" data-act="shareMake" data-which="map-pts" data-id="${tr.id}">地図を画像で保存・共有</button><a class="btn sm gmap" href="${route}" target="_blank" rel="noopener">Googleマップで開く</a></div></div>`}
+/* 場所の地図：国土地理院の淡色地図の上に、記録した順の点と矢印線を描く。
+   縮尺：全部の点が入るいちばん細かい縮尺（ただし1枚の幅が約1km未満にはしない）。続けて記録した2点が5km以上離れたら、そこで地図を分ける */
+const MAP_SPLIT_KM=5,MAP_MIN_KM=1;
+function mapSegs(L){const out=[];L.forEach((p,i)=>{if(!i||ptKm(L[i-1],p)>=MAP_SPLIT_KM)out.push([]);out[out.length-1].push({...p,no:i+1})});return out}
+function locMapSVG(P,col,W=360,H=250){const pad=26,wx=lon=>(lon+180)/360,wy=lat=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2};
+  const xs=P.map(p=>wx(p.lon)),ys=P.map(p=>wy(p.lat)),x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys),lat=(Math.min(...P.map(p=>p.lat))+Math.max(...P.map(p=>p.lat)))/2;
+  const zMin=Math.floor(Math.log2(W*156543.03*Math.cos(lat*Math.PI/180)/(MAP_MIN_KM*1000)));   // 幅が約1km未満にならない一番細かい縮尺
+  let z=Math.min(16,zMin);while(z>5&&((x1-x0)*256*2**z>W-2*pad||(y1-y0)*256*2**z>H-2*pad))z--;
+  const S=256*2**z,cx=(x0+x1)/2*S,cy=(y0+y1)/2*S,ox=cx-W/2,oy=cy-H/2,o=[];
+  for(let tx=Math.floor(ox/256);tx<=Math.floor((ox+W)/256);tx++)for(let ty=Math.floor(oy/256);ty<=Math.floor((oy+H)/256);ty++)
+    o.push(`<image href="https://cyberjapandata.gsi.go.jp/xyz/pale/${z}/${tx}/${ty}.png" x="${r1(tx*256-ox)}" y="${r1(ty*256-oy)}" width="256" height="256"/>`);
+  const pt=P.map(p=>({...p,x:wx(p.lon)*S-ox,y:wy(p.lat)*S-oy})),R=10;
+  pt.forEach((p,i)=>{if(!i)return;const a=pt[i-1],dx=p.x-a.x,dy=p.y-a.y,d=Math.hypot(dx,dy);if(d<2*R+4)return;const ux=dx/d,uy=dy/d;
+    o.push(`<line x1="${r1(a.x+ux*R)}" y1="${r1(a.y+uy*R)}" x2="${r1(p.x-ux*(R+2))}" y2="${r1(p.y-uy*(R+2))}" stroke="#1d2b36" stroke-width="2" stroke-opacity=".75" marker-end="url(#mArr)"/>`)});
+  pt.forEach(p=>o.push(`<circle cx="${r1(p.x)}" cy="${r1(p.y)}" r="${R}" fill="${col(p)}" stroke="#fff" stroke-width="2"/><text x="${r1(p.x)}" y="${r1(p.y+4)}" font-size="${p.no>99?9:11}" font-weight="700" fill="#fff" text-anchor="middle">${p.no}</text>`));
+  const mpp=156543.03*Math.cos(lat*Math.PI/180)/2**z,nice=[50,100,200,500,1000,2000,5000,10000,20000,50000].filter(m=>m/mpp<=W/4).pop()||50,bw=nice/mpp;
+  o.push(`<rect x="8" y="${H-26}" width="${r1(bw+16)}" height="20" rx="4" fill="#fff" fill-opacity=".85"/><path d="M16 ${H-12}v4h${r1(bw)}v-4" fill="none" stroke="#1d2b36" stroke-width="1.6"/><text x="${r1(16+bw/2)}" y="${H-14}" font-size="10" fill="#1d2b36" text-anchor="middle">${nice>=1000?nice/1000+'km':nice+'m'}</text>`);
+  o.push(`<rect x="${W-74}" y="${H-16}" width="74" height="16" fill="#fff" fill-opacity=".8"/><text x="${W-4}" y="${H-5}" font-size="9" fill="#444" text-anchor="end">地理院タイル</text>`);
+  // 広域の小さな地図（どのあたりかが分かるように）。点に重ならない角に置く
+  {const zi=Math.max(8,Math.min(10,z-4)),Si=256*2**zi,IW=Math.round(W*.34),IH=Math.round(H*.4),m=8,icx=(x0+x1)/2*Si,icy=(y0+y1)/2*Si,iox=icx-IW/2,ioy=icy-IH/2,q=[];
+    for(let tx=Math.floor(iox/256);tx<=Math.floor((iox+IW)/256);tx++)for(let ty=Math.floor(ioy/256);ty<=Math.floor((ioy+IH)/256);ty++)
+      q.push(`<image href="https://cyberjapandata.gsi.go.jp/xyz/pale/${zi}/${tx}/${ty}.png" x="${r1(tx*256-iox)}" y="${r1(ty*256-ioy)}" width="256" height="256"/>`);
+    const k=2**(zi-z),rw=Math.max(8,W*k),rh=Math.max(8,H*k);
+    q.push(`<rect x="${r1(IW/2-rw/2)}" y="${r1(IH/2-rh/2)}" width="${r1(rw)}" height="${r1(rh)}" fill="#e53935" fill-opacity=".15" stroke="#e53935" stroke-width="2"/>`);
+    const corners=[[W-IW-m,m],[m,m],[W-IW-m,H-IH-22],[m,H-IH-32]],hit=([cx,cy])=>pt.some(p=>p.x>cx-R&&p.x<cx+IW+R&&p.y>cy-R&&p.y<cy+IH+R);
+    const [ix,iy]=corners.find(c=>!hit(c))||corners[0];
+    o.push(`<rect x="${ix-2}" y="${iy-2}" width="${IW+4}" height="${IH+4}" rx="6" fill="#fff"/><svg x="${ix}" y="${iy}" width="${IW}" height="${IH}" viewBox="0 0 ${IW} ${IH}"><rect width="${IW}" height="${IH}" fill="#e6eef2"/>${q.join('')}</svg><rect x="${ix}" y="${iy}" width="${IW}" height="${IH}" rx="4" fill="none" stroke="#1d2b36" stroke-opacity=".5"/><text x="${ix+4}" y="${iy+IH-4}" font-size="9" fill="#1d2b36" stroke="#fff" stroke-width="2.5" paint-order="stroke">広域（赤枠＝この地図）</text>`)}
+  return `<svg class="locmap" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="記録した場所の地図"><defs><marker id="mArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1d2b36"/></marker></defs><rect width="${W}" height="${H}" fill="#e6eef2"/>${o.join('')}</svg>`}
+function locMaps(L,col){const sg=mapSegs(L);return sg.map((P,k)=>`<div class="locmap-w">${sg.length>1?`<p class="locmap-h">${k+1}枚目（${P.length>1?`${hm(P[0].t)}〜${hm(P[P.length-1].t)}・${P[0].no}〜${P[P.length-1].no}`:`${hm(P[0].t)}・${P[0].no}`}）</p>`:''}${locMapSVG(P,col)}</div>`).join('')+(sg.length>1?`<p class="muted" style="font-size:12px;margin:4px 0 0">続けて記録した場所が${MAP_SPLIT_KM}km以上離れたところで、地図を分けています。</p>`:'')}
 /* 釣れたときに、その時の位置（GPS）も自動で残す。取れなければ何もしない（記録はそのまま） */
 function catchLoc(tid,eid){if(!navigator.geolocation||S.prefs.catchLoc===false)return;
   navigator.geolocation.getCurrentPosition(pos=>{const t=S.trips[tid];const e=t&&t.events.find(x=>x.id===eid);if(!e)return;
     e.lat=+pos.coords.latitude.toFixed(6);e.lon=+pos.coords.longitude.toFixed(6);e.acc=Math.round(pos.coords.accuracy||0);touch(t);if(S.ui.tab==='fig'&&$('#sheet').hidden)render()},
     ()=>{},{enableHighAccuracy:true,timeout:15000,maximumAge:5000})}
-function catchLocCard(tr,sp){const s=spOf(sp);let n=0;const L=evOf(tr,sp).filter(e=>['catch','bite','lost'].includes(e.kind)).map(e=>({...e,n:e.kind==='catch'?++n:0})).filter(e=>isFinite(e.lat)&&isFinite(e.lon));if(!L.length)return '';
+const LOC_COL={catch:'#e47b25',bite:'#6a58b3',lost:'#c2412d'};
+function catchLocList(tr,sp){let n=0;return evOf(tr,sp).filter(e=>['catch','bite','lost'].includes(e.kind)).map(e=>({...e,n:e.kind==='catch'?++n:0})).filter(e=>isFinite(e.lat)&&isFinite(e.lon))}
+/* 地図を画像にする：ほかの図と同じ幅（600）。地図の絵は国土地理院のタイルを読み込んで埋め込む */
+function mapExportSVG(tr,sp,kind){const W=600,MW=552,MH=400,o=[],ct=kind==='map-catch',L=ct?catchLocList(tr,sp):pointSegs(tr),col=ct?(p=>LOC_COL[p.kind]):(()=>'#13939b');
+  o.push(TX(24,48,ct?'釣れた・アタリ・バラシの場所':'📍で記録した場所',{size:24,bold:1}));o.push(TX(W-24,48,`${L.length}${ct?'件':'か所'}`,{size:17,bold:1,fill:P.catch,anchor:'end'}));
+  o.push(TX(24,76,`${jdate(tr.date)}｜${tr.boat||''}${tr.port?'（'+tr.port+'）':''}`,{size:15,fill:P.muted}));
+  let y=96;const sg=mapSegs(L);
+  sg.forEach((Q,k)=>{if(sg.length>1){o.push(TX(24,y+18,`${k+1}枚目（${Q.length>1?`${hm(Q[0].t)}〜${hm(Q[Q.length-1].t)}・${Q[0].no}〜${Q[Q.length-1].no}`:`${hm(Q[0].t)}・${Q[0].no}`}）`,{size:15,bold:1}));y+=28}
+    o.push(locMapSVG(Q,col,MW,MH).replace(/^<svg class="locmap" /,`<svg x="24" y="${y}" width="${MW}" height="${MH}" `));o.push(`<rect x="24" y="${y}" width="${MW}" height="${MH}" rx="12" fill="none" stroke="${P.grid}" stroke-width="2"/>`);y+=MH+14});
+  if(ct){const lg=[['catch','釣れた'],['bite','アタリ'],['lost','バラシ']];let x=24;lg.forEach(([k,t])=>{o.push(`<circle cx="${x+6}" cy="${y+8}" r="6" fill="${LOC_COL[k]}"/>`+TX(x+16,y+13,t,{size:13,fill:P.muted}));x+=16+t.length*13+16});o.push(TX(x,y+13,'番号は記録した順',{size:13,fill:P.muted}))}
+  else o.push(TX(24,y+13,'番号は「📍場所」を押した順',{size:13,fill:P.muted}));y+=24;
+  if(sg.length>1){o.push(TX(24,y+13,`続けて記録した場所が${MAP_SPLIT_KM}km以上離れたところで、地図を分けています。`,{size:12,fill:P.muted}));y+=22}
+  o.push(TX(24,y+13,'地図：国土地理院（地理院タイル・淡色地図）',{size:12,fill:P.muted}));y+=30;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${y}" viewBox="0 0 ${W} ${y}" font-family="${CF}" role="img" aria-label="場所の地図"><rect width="${W}" height="${y}" rx="16" fill="${P.card}"/>${o.join('')}</svg>`}
+async function inlineTiles(svg){const urls=[...new Set([...svg.matchAll(/href="(https:\/\/cyberjapandata\.gsi\.go\.jp\/[^"]+)"/g)].map(m=>m[1]))];
+  const map={};await Promise.all(urls.map(async u=>{try{const r=await fetch(u,{mode:'cors'});if(!r.ok)return;const b=await r.blob();map[u]=await new Promise(ok=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.readAsDataURL(b)})}catch(e){}}));
+  return svg.replace(/href="(https:\/\/cyberjapandata\.gsi\.go\.jp\/[^"]+)"/g,(m,u)=>map[u]?`href="${map[u]}"`:'href=""')}
+function catchLocCard(tr,sp){const s=spOf(sp);const L=catchLocList(tr,sp);if(!L.length)return '';
   const KL={catch:'釣れた',bite:'アタリ',lost:'バラシ'},KC={catch:'var(--teal)',bite:'var(--amber,#e3a43b)',lost:'#e0587a'};
   const route=L.length>1?`https://www.google.com/maps/dir/${L.slice(-25).map(p=>p.lat.toFixed(5)+','+p.lon.toFixed(5)).join('/')}`:mapUrl(L[0]);
   return `<div class="card"><h2>釣れた・アタリ・バラシの場所（${L.length}件）</h2><p class="muted">「釣れた」「アタリ」「バラシ」を押した時の位置を自動で残しています。押した時の位置なので、実際の場所とは少しずれます。</p>
    <div class="pts">${L.map((e,i)=>`<div class="pt"><b style="color:${KC[e.kind]}">${e.kind==='catch'?e.n:e.kind==='bite'?'ア':'バ'}</b><span><em>${hm(e.t)}・${KL[e.kind]}${e.kind==='catch'&&e.dragon?'（キロアップ）':''}${i?`・一つ前の記録から約${kmTxt(ptKm(L[i-1],e))}`:''}</em><small>${e.acc?'誤差 約'+e.acc+'m':''}</small></span><a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
-   <a class="btn sm" href="${route}" target="_blank" rel="noopener">${L.length>1?'記録した順に地図で見る':'地図で見る'}</a></div>`}
+   ${locMaps(L,p=>LOC_COL[p.kind])}<p class="locmap-lg"><i style="background:#e47b25"></i>釣れた<i style="background:#6a58b3"></i>アタリ<i style="background:#c2412d"></i>バラシ　番号は記録した順</p><div class="locmap-act"><button class="btn sm" data-act="shareMake" data-which="map-catch" data-id="${tr.id}">地図を画像で保存・共有</button><a class="btn sm gmap" href="${route}" target="_blank" rel="noopener">Googleマップで開く</a></div></div>`}
 function addEvent(kind,v,src,osp,rig){const tr=active();if(!tr)return;const now=Date.now();if(now-lastTap<450)return;lastTap=now;
   const tsp=tr.cur.sp,g=curGear(tr),sp=osp||tsp;if(rig&&rig!==g.rig){g.rig=rig;logGear(tr)}const e={id:uid(),t:now,kind,sp,gsp:tsp,rig:g.rig,bait:needBait(tsp,g)?g.bait:'',hook:g.hook||'',skirt:g.skirt||'',size:'',...(tr.tk&&tr.tk.cur?{tk:tr.tk.cur}:{})};if(kind==='catch')e.v=v||mainV(sp);if(kind==='catch'&&sp===SOLO&&dragonNext){e.dragon=true;dragonNext=false}if(src)e.src=src;if(nextSa){e.sa=nextSa;nextSa=null}if(nextKa){e.ka=nextKa;nextKa=null}
   tr.events.push(e);touch(tr);buzz();keepAwake();if(kind==='catch'||kind==='bite'||kind==='lost')catchLoc(tr.id,e.id);
@@ -1847,7 +1893,7 @@ function timelineSVG(tr,sp){
     [Math.round(mx),Math.round(mn)].forEach(cm=>o.push(TX(L-8,Y(cm)+4,cm,{size:12,fill:'#a8bdd2',anchor:'end'})));
     tidePts(tr,t0,t1).filter(p=>p.t>=t0&&p.t<=t1).forEach(p=>{const x=X(p.t),yy=Y(p.cm),up=p.type==='high';const bw=76,bx=Math.min(Math.max(x-bw/2,L),W-R-bw),by=up?yy-44:yy+12;
       o.push(`<rect x="${r1(bx)}" y="${r1(by)}" width="${bw}" height="34" rx="6" fill="#f2e55a"/>`);o.push(TX(bx+bw/2,by+15,`${up?'満潮':'干潮'} ${hm(p.t)}`,{size:13,bold:1,fill:'#1a1a1a',anchor:'middle'}));o.push(TX(bx+bw/2,by+29,`${Math.round(p.cm)}cm`,{size:12,bold:1,fill:'#1a1a1a',anchor:'middle'}))});
-    catchesOf(tr,sp).forEach(e=>{if(e.t<t0||e.t>t1)return;const x=X(e.t),yy=Y(fn(e.t));o.push(e.dragon?`<circle cx="${r1(x)}" cy="${r1(yy)}" r="8.5" fill="#e3a43b" stroke="#2a1600" stroke-width="2"/><circle cx="${r1(x)}" cy="${r1(yy)}" r="3.4" fill="#fff3d6"/>`:`<circle cx="${r1(x)}" cy="${r1(yy)}" r="6.5" fill="${P.catch}" stroke="#2a1300" stroke-width="2"/>`)});
+    catchesOf(tr,sp).forEach(e=>{if(e.t<t0||e.t>t1)return;const x=X(e.t),yy=Y(fn(e.t));o.push(e.dragon?`<circle cx="${r1(x)}" cy="${r1(yy)}" r="12.5" fill="#e3a43b"/>`+DGI(x,yy,22):`<circle cx="${r1(x)}" cy="${r1(yy)}" r="6.5" fill="${P.catch}" stroke="#2a1300" stroke-width="2"/>`)});
     y+=H+10}
   else{const top=y;band(top,48,P.bTide);label(top-4,'潮位');o.push(TX(L,top+29,'潮位の地点を選ぶか、満潮・干潮を入れると、ここに潮位の曲線が出ます。',{size:13,fill:P.muted}));y+=58}
   {const H=96,top=y;band(top,H,P.bFlow);label(top,'船首・潮','潮は船から見た向き');const hs=headSegs(tr,t1),fs=stateSegs(tr,t1);
@@ -1880,7 +1926,7 @@ function timelineSVG(tr,sp){
       const rest=es.filter(e=>!s.variants.some(v=>v.id===e.v)).length;if(rest){const h=rest/mx*(bb-bt);yy-=h;o.push(`<rect x="${r1(x)}" y="${r1(yy)}" width="${r1(w)}" height="${r1(h)}" fill="${P.catch}" fill-opacity=".88"/>`)}
       o.push(TX((xa+xb)/2,yy-6,n,{size:13,bold:1,anchor:'middle',fill:P.catch}))});
     o.push(`<line x1="${L}" y1="${bb}" x2="${W-R}" y2="${bb}" stroke="${P.grid}"/>`);
-    const lv=[-99,-99,-99];c.forEach(e=>{const x=X(e.t);let l=lv.findIndex(v=>x-v>=9);if(l<0)l=2;lv[l]=x;o.push(`<circle cx="${r1(x)}" cy="${top+150+l*10}" r="4.2" fill="${vColor(sp,e.v)}"/>`)});
+    const lv=[-99,-99,-99];c.forEach(e=>{const x=X(e.t);let l=lv.findIndex(v=>x-v>=9);if(l<0)l=2;lv[l]=x;o.push(e.dragon?`<circle cx="${r1(x)}" cy="${top+150+l*10}" r="7.5" fill="#e3a43b"/>`+DGI(x,top+150+l*10,13):`<circle cx="${r1(x)}" cy="${top+150+l*10}" r="4.2" fill="${vColor(sp,e.v)}"/>`)});
     ev.filter(e=>e.kind!=='catch').forEach(e=>{const x=X(e.t),yy=top+186;
       o.push(e.kind==='bite'?`<polygon points="${r1(x-5.5)},${yy-5} ${r1(x+5.5)},${yy-5} ${r1(x)},${yy+5}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`:`<polygon points="${r1(x-5.5)},${yy+5} ${r1(x+5.5)},${yy+5} ${r1(x)},${yy-5}" fill="none" stroke="${P.lost}" stroke-width="1.8"/>`)});
     y+=H}
@@ -1907,14 +1953,14 @@ function timelineSVG(tr,sp){
   y+=66;let lx=24;const leg=(sw,txt)=>{o.push(sw(lx)+TX(lx+14,y,txt,{size:12,fill:P.muted}));lx+=14+txt.length*12.5+18};
   const usedV=s.variants.filter(v=>c.some(e=>e.v===v.id));
   if(usedV.length>1)usedV.forEach(v=>leg(x=>`<circle cx="${x+5}" cy="${y-4}" r="4.5" fill="${vColor(sp,v.id)}"/>`,v.short||v.name));else leg(x=>`<circle cx="${x+5}" cy="${y-4}" r="4.5" fill="${P.catch}"/>`,'釣れた');
-  leg(x=>`<polygon points="${x},${y-9} ${x+11},${y-9} ${x+5.5},${y+1}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`,'アタリ');
+  if(c.some(e=>e.dragon))leg(x=>DGI(x+6,y-4,15),'キロアップ');leg(x=>`<polygon points="${x},${y-9} ${x+11},${y-9} ${x+5.5},${y+1}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`,'アタリ');
   leg(x=>`<polygon points="${x},${y+1} ${x+11},${y+1} ${x+5.5},${y-9}" fill="none" stroke="${P.lost}" stroke-width="1.8"/>`,'バラシ');
   o.push(`<rect x="${lx}" y="${y-9}" width="20" height="8" rx="4" fill="${P.slow}"/><rect x="${lx+22}" y="${y-9}" width="20" height="8" rx="4" fill="${P.normal}"/><rect x="${lx+44}" y="${y-9}" width="20" height="8" rx="4" fill="${P.fast}"/>`+TX(lx+72,y,'潮の速さ（緩い・普通・速い）',{size:12,fill:P.muted}));
   if(dv.length){y+=22;o.push(`<rect x="24" y="${y-12}" width="16" height="16" rx="3" fill="${P.catch}"/>`+TX(32,y+1,'シ',{size:10,bold:1,fill:'#fff',anchor:'middle'})+TX(46,y,'動かしている間（塗り）',{size:12,fill:P.muted})+`<rect x="196" y="${y-12}" width="16" height="16" rx="3" fill="#fff" stroke="${P.catch}" stroke-width="1.6"/>`+TX(204,y+1,'直',{size:10,bold:1,fill:P.catch,anchor:'middle'})+TX(218,y,'止めている間（白抜き）　枠の色＝釣れた／アタリ／バラシ',{size:12,fill:P.muted}));y+=20;o.push(TX(24,y,'シ＝シャクリ中　直＝ステイ直後　長＝ロングステイ　フ＝フォール中　巻＝巻き上げ中',{size:12,fill:P.muted}));y+=20;o.push(TX(24,y,'入＝穂先が入る　戻＝穂先が戻る　重＝重みが乗る　手＝手元に来る',{size:12,fill:P.muted}))}
   y+=22;o.push(TX(24,y,tr.station?`※潮位は気象庁の潮位表（${stName(tr.station)}）をもとに計算した推算値です。潮の向きは船首を上にしたときの、潮が流れていく向きです。`:'※潮位は満潮・干潮の時刻と潮位から補間した概形です。潮の向きは船首を上にしたときの、潮が流れていく向きです。',{size:11,fill:P.muted}));
   if(tr.station&&offBay(tr)){y+=20;o.push(TX(24,y,'※潮の向きと速さは、Open-Meteo の海流データ（約8km四方の推算値）から出しています。',{size:11,fill:P.muted}))}
   y+=18;o.push(TX(24,y,'※杯数は自分の席で釣れた分だけです。',{size:11,fill:P.muted}));const Ht=y+20;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}" font-family="${CF}" role="img" aria-label="${esc(tlTitle(tr,sp))}"><rect width="${W}" height="${Ht}" rx="16" fill="${P.card}"/>${under.join('')}${o.join('')}</svg>`}
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}" font-family="${CF}" role="img" aria-label="${esc(tlTitle(tr,sp))}"><rect width="${W}" height="${Ht}" rx="16" fill="${P.card}"/>${under.join('')}${dgDefs(o)}${o.join('')}</svg>`}
 function sizeBins(sp,vals){const u=spOf(sp).sizeUnit,m={},ord=[];const add=k=>{if(!(k in m)){m[k]=0;ord.push(k)}m[k]++};
   const nums=vals.map(Number).filter(v=>isFinite(v)).sort((a,b)=>a-b);
   if(u==='指')nums.forEach(v=>add(v<=3?'指3以下':v>=5?'1kg以上':'指'+v));
@@ -1946,7 +1992,8 @@ function seatSVG(tr,sp){
     if(st.length>maxRows){ly+=19;o.push(TX(lx,ly,`ほか${st.length-maxRows}件は下の一覧`,{size:11.5,fill:P.muted}))}}
   for(const side of (tr.lay==='one'?[tr.side||'R']:['L','R']))for(let i=1;i<=n;i++){const x=side==='L'?xl:xr,y=ys(i),me=tr.side===side&&tr.seat===i;
     o.push(me?`<circle cx="${x}" cy="${r1(y)}" r="13" fill="${P.catch}" stroke="#fff" stroke-width="3"/>`:`<circle cx="${x}" cy="${r1(y)}" r="6.5" fill="${P.seatOff}"/>`)}
-  {const y=ys(tr.seat),R=tr.side==='R',x=R?xr+28:xl-28,an=R?'start':'end';o.push(TX(x,y-12,seatShort(tr),{size:17,bold:1,anchor:an}));o.push(TX(x,y+32,`${N}${s.unit}`,{size:42,bold:1,fill:P.catch,anchor:an}))}
+  {const y=ys(tr.seat),R=tr.side==='R',x=R?xr+28:xl-28,an=R?'start':'end';o.push(TX(x,y-12,seatShort(tr),{size:17,bold:1,anchor:an}));o.push(TX(x,y+32,`${N}${s.unit}`,{size:42,bold:1,fill:P.catch,anchor:an}));
+    const nd=c.filter(e=>e.dragon).length;if(nd){const t=`キロアップ ${nd}${s.unit}`;o.push(R?DGI(x+11,y+58,22)+TX(x+26,y+64,t,{size:15,bold:1,fill:'#b7791f'}):DGI(x-11,y+58,22)+TX(x-26,y+64,t,{size:15,bold:1,fill:'#b7791f',anchor:'end'}))}}
   let y=746;const X0=32,X1=310;const span=tripEndT(tr,ev.length?ev[ev.length-1].t:tr.start)-tr.start;
   o.push(TX(X0,y,`${s.name}の合計`,{size:15,fill:P.muted}));o.push(TX(X0,y+62,`${N}${s.unit}`,{size:62,bold:1,fill:P.catch}));
   o.push(TX(X1,y,`1時間あたり ${span>0?r1(N/(span/3600e3)):0}${s.unit}`,{size:17}));o.push(TX(X1,y+30,`アタリ ${nKind(tr,sp,'bite')}回・バラシ ${nKind(tr,sp,'lost')}回`,{size:17}));
@@ -1964,7 +2011,7 @@ function seatSVG(tr,sp){
     const gaps=[];let cur=tr.start;hs.forEach(q=>{if(q.t-cur>5*60e3)gaps.push([cur,q.t]);cur=Math.max(cur,q.te)});if(tE-cur>5*60e3)gaps.push([cur,tE]);
     gaps.forEach(([a,b])=>{y+=30;o.push(TX(X0,y,`${hm(a)}〜${hm(b)}`,{size:15,fill:P.muted}));o.push(TX(X0+120,y,'船首の向きなし（潮の向きなし）',{size:15,fill:P.muted}))})}
   const H=y+56;o.push(TX(W/2,H-20,'※杯数は自分の席で釣れた分だけです。ほかの席の点は位置だけを示します。',{size:13,fill:P.muted,anchor:'middle'}));
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="${esc(title)}"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${o.join('')}</svg>`}
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="${esc(title)}"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${dgDefs(o)}${o.join('')}</svg>`}
 function figCalSheet(){const all=trips(),cur=figTrip();const now=new Date();
   const ym=S.ui.figCalYM||(cur?cur.date.slice(0,7):`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`);const [Y,M]=ym.split('-').map(Number);
   const by={};all.forEach(t=>{(by[t.date]=by[t.date]||[]).push(t)});const sel=S.ui.figCalDay&&S.ui.figCalDay.startsWith(ym)?S.ui.figCalDay:'';
@@ -2007,7 +2054,7 @@ function memoSheet(id){const tr=S.trips[id];if(!tr)return;
 const memoHTML=t=>(t.memo||'').trim()?`<div class="memo-box">📝 ${esc(t.memo.trim()).replace(/\n/g,'<br>')}</div>`:'';
 function tripCardHTML(t){wxEnsure(t);return `<div class="trip"><div class="trip-h"><div style="min-width:0"><b>${jdate(t.date)}</b>${isTairyo(t.date)?tairyoTag():''}<div class="muted">${esc(t.boat)}・${esc(seatLabel(t))}${t.port?'・'+esc(t.port):''}</div></div></div>
     <div class="trip-sum">${esc(tripSummary(t))||'記録なし'}${nDragon(t,SOLO)?`<span class="dn-s"><i class="ic ic-dragon"></i>キロアップ ${nDragon(t,SOLO)}</span>`:''}</div>
-    <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>${t.tk&&t.tk.sets&&t.tk.sets.length?`<div class="muted tk-used">🎣 ${t.tk.sets.map(id=>esc(tkLabelOf(t,id))).join('<br>🎣 ')}</div>`:''}${memoHTML(t)}${photoStrip(t)}${t.wx&&wxTxt(t.wx)?`<div class="muted wx-line">${wxTxt(t.wx).split('・').map(x=>`<span>${esc(x)}</span>`).join('・')}</div>`:''}
+    <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>${t.tk&&t.tk.sets&&t.tk.sets.length?`<div class="muted tk-used">🎣 ${t.tk.sets.map(id=>esc(tkLabelOf(t,id))).join('<br>🎣 ')}</div>`:''}${memoHTML(t)}${photoStrip(t)}${t.wx&&wxTxt(t.wx)?`<div class="muted wx-line">${wxTxt(t.wx).split('・').map(x=>`<span>${esc(x)}</span>`).join('・')} <button class="linkbtn" data-act="wxRefresh" data-id="${t.id}">天気を取り直す</button></div>`:''}
     <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm" data-act="phOpen" data-id="${t.id}">📷 写真${photoIds(t).length?`（${photoIds(t).length}）`:''}</button><button class="btn sm two" data-act="tripEdit" data-id="${t.id}">釣行の情報を直す<small>日付・船・席・時間</small></button><button class="btn sm two" data-act="evList" data-id="${t.id}">記録を見る・修正する<small>釣れた・アタリ・バラシ・外道を1件ずつ</small></button>
     ${t.status==='done'&&!t.sample&&!active()?`<button class="btn sm" data-act="reopen" data-id="${t.id}">記録を再開</button>`:''}
     <button class="btn sm danger" data-act="delTrip" data-id="${t.id}">${t.sample?'サンプルを消す':'消す'}</button></div></div>`}
@@ -2037,11 +2084,17 @@ async function wxMeteo(tr){let ll=tr.spot&&tr.spot.lat!=null?[tr.spot.lat,tr.spo
   const w={src:'open-meteo',weather:mode!=null?wmoLabel(mode):'',temp:r1n(avg(pick(f,'temperature_2m'))),wind:r1n(avg(ws)),dir,wave:r1n(avg(pick(m,'wave_height'))),noWave:false,sst:r1n(avg(pick(m,'sea_surface_temperature'))),prov:tr.date>=ymd(Date.now())||tr.status==='active',win:hm(a)+'-'+hm(b)};
   return wxTxt(w)?w:null}
 const wxBusy=new Set(),wxTried={};
-function wxEnsure(tr){if(!tr||tr.sample||!tr.date||!tr.start||tr.start>Date.now()||wxBusy.has(tr.id))return;const w=tr.wx;
-  if(w&&!w.prov)return;if(w&&Date.now()-(w.at||0)<2*3600e3)return;if(Date.now()-(wxTried[tr.id]||0)<10*60e3)return;
+function wxEnsure(tr,force){if(!tr||tr.sample||!tr.date||!tr.start||tr.start>Date.now()||wxBusy.has(tr.id))return;const w=tr.wx;if(!force){
+  const full=w&&w.weather&&w.temp!=null&&w.wind!=null;   // 天気・気温・風が欠けた記録は、確定値でも取り直す（10分おき）
+  if(w&&!w.prov&&full)return;if(w&&full&&Date.now()-(w.at||0)<2*3600e3)return;if(Date.now()-(wxTried[tr.id]||0)<10*60e3)return}
   wxTried[tr.id]=Date.now();wxBusy.add(tr.id);
-  (async()=>{let r=null;try{if(tr.station==='QN')r=await wxCatch(tr)}catch(e){}if(!r){try{r=await wxMeteo(tr)}catch(e){}}
-    wxBusy.delete(tr.id);const t=S.trips[tr.id];if(!r||!t)return;r.at=Date.now();t.wx=r;touch(t);if(['fig','hist'].includes(S.ui.tab)&&$('#sheet').hidden)render()})()}
+  (async()=>{let r=null;try{if(tr.station==='QN')r=await wxCatch(tr)}catch(e){}
+    // 釣果サイトの記録に天気・気温・風が無いときは、Open-Meteo で埋める
+    if(!r||!r.weather||r.temp==null||r.wind==null){let m=null;try{m=await wxMeteo(tr)}catch(e){}
+      if(!r)r=m;else if(m){for(const k of ['weather','temp','wind','dir'])if(r[k]==null||r[k]==='')r[k]=m[k];if(m.prov&&(r.temp===m.temp||r.wind===m.wind))r.prov=true}}
+    wxBusy.delete(tr.id);const t=S.trips[tr.id];if(!r||!t){if(force)toast('天気を取れませんでした。電波のある所でもう一度押してください');return}
+    const old=t.wx||{};for(const k of ['weather','temp','wind','dir','wave','sst'])if((r[k]==null||r[k]==='')&&old[k]!=null&&old[k]!=='')r[k]=old[k];   // 取り直しで値が消えないように、前の値を残す
+    r.at=Date.now();t.wx=r;if(force)toast('天気：'+wxTxt(r));touch(t);if(['fig','hist'].includes(S.ui.tab)&&$('#sheet').hidden)render()})()}
 const tripHours=t=>Math.max(0,(tripEndT(t)-t.start)/3600e3);
 function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYear());
   const all=trips().filter(t=>!t.sample);const L=per==='year'?all.filter(t=>t.date.startsWith(y0)):per==='90'?all.filter(t=>Date.now()-dayStart(t.date)<=90*864e5):all;
@@ -2443,11 +2496,28 @@ function renderStateSheet(){const f=stF,tr=S.trips[f.tid];const AR={N:'↑',NE:'
 let evF=null;
 function evBack(){const tid=evF&&evF.back;if(tid&&S.trips[tid]){$('#sheet').hidden=true;sheetCtx=null;render();acts.evList({dataset:{id:tid}})}else closeSheet()}
 function openEvSheet(id,tid,back){const tr=S.trips[tid||(active()&&active().id)];if(!tr)return;const e=tr.events.find(x=>x.id===id);if(!e)return;
-  evF={tid:tr.id,back:back||null,id,sa:e.sa||'',ka:e.ka||'',dragon:!!e.dragon,kind:e.kind,name:e.name||'',sp:spOf(e.sp).id!=='?'?e.sp:tr.cur.sp,gsp:e.gsp||e.sp,v:e.v,t:hm2(e.t),rig:e.rig,bait:e.bait,hook:e.hook||'',skirt:e.skirt||'',size:e.size===undefined||e.size===null?'':String(e.size),memo:e.memo||'',armed:false};renderEvSheet()}
+  evF={tid:tr.id,back:back||null,id,sa:e.sa||'',ka:e.ka||'',dragon:!!e.dragon,kind:e.kind,name:e.name||'',sp:spOf(e.sp).id!=='?'?e.sp:tr.cur.sp,gsp:e.gsp||e.sp,v:e.v,t:hm2(e.t),rig:e.rig,bait:e.bait,hook:e.hook||'',skirt:e.skirt||'',size:e.size===undefined||e.size===null?'':String(e.size),memo:e.memo||'',armed:false,lat:isFinite(e.lat)?e.lat:null,lon:isFinite(e.lon)?e.lon:null,acc:e.acc||0,mz:null,locEd:false};renderEvSheet()}
+/* 記録を直す：場所。地図を押すとそこに動かす */
+function evMapHTML(tr,f){const W=360,H=230,has=f.lat!=null;
+  const oth=tr.events.filter(x=>x.id!==f.id&&isFinite(x.lat)&&isFinite(x.lon)).sort((a,b)=>a.t-b.t);
+  const ft=tAt(tr,f.t),near=oth.slice().sort((a,b)=>Math.abs(a.t-ft)-Math.abs(b.t-ft))[0];
+  const c=has?{lat:f.lat,lon:f.lon}:near?{lat:near.lat,lon:near.lon}:null;
+  const btn=(a,t,dis)=>`<button class="btn sm" data-act="${a}"${dis?' disabled':''}>${t}</button>`;
+  const prev=oth.filter(x=>x.t<ft).pop();
+  const tools=`<div class="evmap-act">${btn('evMapZ','＋',!c)}${btn('evMapZo','−',!c)}${btn('evLocPrev','前の記録と同じ場所',!prev)}${has?btn('evLocDel','場所を消す'):''}${f.locEd?btn('evLocReset','元に戻す'):''}</div>`;
+  if(!c)return `<p class="muted" style="margin:0">この記録には場所がありません（ほかの記録にも場所がないため、地図を出せません）。</p>${tools}`;
+  const z=f.mz||14,S2=256*2**z,wx=lon=>(lon+180)/360*S2,wy=lat=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*S2};
+  const ox=wx(c.lon)-W/2,oy=wy(c.lat)-H/2,o=[];
+  for(let tx=Math.floor(ox/256);tx<=Math.floor((ox+W)/256);tx++)for(let ty=Math.floor(oy/256);ty<=Math.floor((oy+H)/256);ty++)o.push(`<image href="https://cyberjapandata.gsi.go.jp/xyz/pale/${z}/${tx}/${ty}.png" x="${r1(tx*256-ox)}" y="${r1(ty*256-oy)}" width="256" height="256"/>`);
+  oth.forEach(x=>o.push(`<circle cx="${r1(wx(x.lon)-ox)}" cy="${r1(wy(x.lat)-oy)}" r="5" fill="${LOC_COL[x.kind]||'#13939b'}" fill-opacity=".55" stroke="#fff" stroke-width="1.5"/>`));
+  if(has){const x=wx(f.lon)-ox,y=wy(f.lat)-oy,col=LOC_COL[f.kind]||'#13939b';o.push(`<path d="M${r1(x)} ${r1(y)} l-10 -18 a12 12 0 1 1 20 0z" fill="${col}" stroke="#fff" stroke-width="2"/><circle cx="${r1(x)}" cy="${r1(y-22)}" r="4.5" fill="#fff"/>`)}
+  o.push(`<rect x="${W-74}" y="${H-16}" width="74" height="16" fill="#fff" fill-opacity=".8"/><text x="${W-4}" y="${H-5}" font-size="9" fill="#444" text-anchor="end">地理院タイル</text>`);
+  return `<p class="muted" style="margin:0 0 6px;font-size:13px">${has?'地図を押すと、その場所に動かせます。':'場所がありません。地図を押すと、その場所を入れます。'}薄い点はほかの記録です。</p><svg class="locmap evmap" viewBox="0 0 ${W} ${H}" data-act="evMapTap" data-z="${z}" data-ox="${r1(ox)}" data-oy="${r1(oy)}" data-w="${W}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="場所を選ぶ地図"><rect width="${W}" height="${H}" fill="#e6eef2"/>${o.join('')}</svg>${tools}`}
+function evRerender(){const p=$('#sheetPanel'),y=p?p.scrollTop:0;renderEvSheet();if(p)p.scrollTop=y}
 function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.some(v=>v.id===f.v))f.v=mainV(f.sp);
   const sel=k=>{if(k==='rigs'&&gs.catalog){const tr=S.trips[f.tid];const ids=[...new Set([f.rig,...(tr.cur&&tr.cur.g&&tr.cur.g[f.gsp]?dayTenya(tr,f.gsp):[]),...tr.events.map(e=>e.rig),...myTenya()].filter(Boolean))].filter(id=>tenyaOf(id));
       return `<option value="" ${!f.rig?'selected':''}>未選択</option><optgroup label="テンヤ">`+ids.map(id=>`<option value="${id}" ${id===f.rig?'selected':''}>${esc(tenyaFull(id))}</option>`).join('')+`</optgroup><optgroup label="天秤">`+(gs.rigs||[]).map(g=>`<option value="${g.id}" ${g.id===f.rig?'selected':''}>${esc(g.name)}</option>`).join('')+'</optgroup>'}
-    return (k==='baits'&&f.bait&&f.bait.startsWith('bz:')?`<option value="${esc(f.bait)}" selected>${esc(bzLabel(f.bait))}</option>`:'')+(isBzSp(f.gsp)&&k==='baits'?[BZ_DEF,'bz:hc','bz:km'].filter(x=>x!==f.bait).map(x=>`<option value="${x}">${esc(bzLabel(x))}</option>`).join(''):'')+(gs[k]||[]).filter(g=>!(k==='baits'&&isBzSp(f.gsp)&&bzLegacy(g)&&g.id!==f.bait)).map(g=>`<option value="${g.id}" ${g.id===f[k==='rigs'?'rig':k==='hooks'?'hook':k==='skirts'?'skirt':'bait']?'selected':''}>${esc(g.name)}${g.hidden?'（隠し中）':''}</option>`).join('')};
+    return (k==='baits'&&f.bait&&f.bait.startsWith('bz:')?`<option value="${esc(f.bait)}" selected>${esc(bzLabel(f.bait))}</option>`:'')+(isBzSp(f.gsp)&&k==='baits'?['大','中','小'].flatMap(z=>['h0','h1'].flatMap(h=>['g0','g1'].map(g=>`bz:iw:${z}:${h}:${g}`))).concat(BZ_TYPES.filter(t=>t[0]!=='iw').map(t=>'bz:'+t[0])).filter(x=>x!==f.bait).map(x=>`<option value="${x}">${esc(bzLabel(x))}</option>`).join(''):'')+(gs[k]||[]).filter(g=>!(k==='baits'&&isBzSp(f.gsp)&&bzLegacy(g)&&g.id!==f.bait)).map(g=>`<option value="${g.id}" ${g.id===f[k==='rigs'?'rig':k==='hooks'?'hook':k==='skirts'?'skirt':'bait']?'selected':''}>${esc(g.name)}${g.hidden?'（隠し中）':''}</option>`).join('')};
   const sizeUI=!s.sizeUnit?'':s.sizeUnit==='指'?`<div class="chips">${['','2','2.5','3','3.5','4','4.5','5','5.5','6'].map(x=>`<button class="chip ${f.size===x?'on':''}" data-act="evSize" data-d="${x}">${x?'指'+x:'未記入'}</button>`).join('')}</div>`
     :`<div class="grow"><input type="number" inputmode="decimal" id="evSize" data-ef="size" value="${esc(f.size)}" placeholder="${s.sizeUnit==='cm'?'例：95':'例：800'}" min="0" max="6000" step="10"><span class="muted">${esc(s.sizeUnit)}</span></div>`;
   $('#sheetPanel').innerHTML=`<div class="sheet-h"><h2>記録を直す</h2>${f.back?'<button class="btn sm ghost" data-act="evClose">← 一覧に戻る</button>':'<button class="btn sm ghost" data-act="closeSheet">閉じる</button>'}</div>
@@ -2458,6 +2528,7 @@ function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.
    ${f.kind==='catch'&&s.variants.length>1?`<div class="field"><span>種類</span><div class="chips">${s.variants.map(v=>`<button class="chip ${v.id===f.v?'on':''}" data-act="evV" data-d="${v.id}">${esc(v.name)}</button>`).join('')}</div></div>`:''}
    ${f.kind!=='gedo'?`<div class="field"><span>誘い</span><div class="chips wrap">${['',...SA_KEYS].map(k=>`<button class="chip ${f.sa===k?'on':''}" data-act="evSa" data-d="${k}">${k?SA_JP[k]:'なし'}</button>`).join('')}</div></div>${true?`<div class="field"><span>アタリの出方</span><div class="chips wrap">${['',...KA_KEYS].map(k=>`<button class="chip ${f.ka===k?'on':''}" data-act="evKa" data-d="${k}">${k?KA_JP[k]:'なし'}</button>`).join('')}</div></div>`:''}`:''}
    <label class="field"><span>時刻</span><input type="time" id="evTime" data-ef="t" value="${esc(f.t)}"></label>
+   ${f.kind!=='gedo'?`<div class="field"><span>場所${f.locEd?'<small class="muted">（直しました。保存すると反映されます）</small>':''}</span>${evMapHTML(S.trips[f.tid],f)}</div>`:''}
    <div class="grid2"><label class="field"><span>${esc(gs.catalog?'仕掛け':gs.rigLabel)}${f.gsp!==f.sp?`（${esc(gs.name)}の道具）`:''}</span><select id="evRig" data-ef="rig">${sel('rigs')}</select></label>${gs.baitLabel?`<label class="field"><span>${esc(gs.baitLabel)}</span><select id="evBait" data-ef="bait">${sel('baits')}</select></label>`:''}${gs.hookLabel?`<label class="field"><span>${esc(gs.hookLabel)}</span><select id="evHook" data-ef="hook"><option value="" ${!f.hook?'selected':''}>未選択</option>${sel('hooks')}</select></label>`:''}${gs.skirtLabel?`<label class="field"><span>${esc(gs.skirtLabel)}</span><select id="evSkirt" data-ef="skirt"><option value="" ${!f.skirt?'selected':''}>なし</option>${sel('skirts')}</select></label>`:''}</div>
    ${f.kind==='catch'&&sizeUI?`<div class="field"><span>サイズ（重さ・任意）</span>${sizeUI}</div>`:''}
    <label class="field"><span>メモ</span><input type="text" id="evMemo" data-ef="memo" value="${esc(f.memo)}" placeholder="水深・誘い方など"></label>
@@ -2742,7 +2813,15 @@ const acts={
      <a class="btn" href="${mapUrl(p)}" target="_blank" rel="noopener">地図で見る</a><button class="btn danger" data-act="locDel" data-tid="${t.id}" data-id="${p.id}">この場所の記録を消す</button>`,{kind:'loc'})},
   locDel:b=>{if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='もう一度押すと消します';return}const t=S.trips[b.dataset.tid];t.points=(t.points||[]).filter(p=>p.id!==b.dataset.id);touch(t);closeSheet();toast('場所の記録を消しました')},
   evSave:()=>{const f=evF,tr=S.trips[f.tid],e=tr.events.find(x=>x.id===f.id);const dc=$('#evDragon');if(dc)f.dragon=dc.checked;if(f.kind==='catch'&&f.sp===SOLO&&f.dragon)e.dragon=true;else delete e.dragon;
-    Object.assign(e,{kind:f.kind,sp:f.sp,gsp:f.gsp,v:f.kind==='catch'?f.v:undefined,t:tAt(tr,f.t)+(new Date(e.t).getSeconds()*1000),rig:f.rig,bait:f.bait,hook:f.hook||'',skirt:f.skirt||'',size:f.kind==='catch'?f.size:'',memo:f.memo.trim()});if(f.kind==='gedo')e.name=(f.name||'').trim()||e.name;else delete e.name;if(f.sa&&f.kind!=='gedo')e.sa=f.sa;else delete e.sa;if(f.ka&&f.kind!=='gedo'&&f.kind!=='bite')e.ka=f.ka;else delete e.ka;touch(tr);toast('直しました');evBack()},
+    Object.assign(e,{kind:f.kind,sp:f.sp,gsp:f.gsp,v:f.kind==='catch'?f.v:undefined,t:tAt(tr,f.t)+(new Date(e.t).getSeconds()*1000),rig:f.rig,bait:f.bait,hook:f.hook||'',skirt:f.skirt||'',size:f.kind==='catch'?f.size:'',memo:f.memo.trim()});if(f.kind==='gedo')e.name=(f.name||'').trim()||e.name;else delete e.name;if(f.locEd){if(f.lat==null){delete e.lat;delete e.lon;delete e.acc}else{e.lat=+f.lat.toFixed(6);e.lon=+f.lon.toFixed(6);e.acc=f.acc||0}}if(f.sa&&f.kind!=='gedo')e.sa=f.sa;else delete e.sa;if(f.ka&&f.kind!=='gedo'&&f.kind!=='bite')e.ka=f.ka;else delete e.ka;touch(tr);toast('直しました');evBack()},
+  evMapTap:(b,ev)=>{const f=evF;if(!f||!ev)return;const r=b.getBoundingClientRect(),W=+b.dataset.w,k=W/r.width,z=+b.dataset.z,S2=256*2**z;
+    const px=+b.dataset.ox+(ev.clientX-r.left)*k,py=+b.dataset.oy+(ev.clientY-r.top)*k;f.lon=px/S2*360-180;f.lat=Math.atan(Math.sinh(Math.PI*(1-2*py/S2)))*180/Math.PI;f.acc=0;f.locEd=true;f.mz=z;evRerender()},
+  evMapZ:()=>{evF.mz=Math.min(18,(evF.mz||14)+1);evRerender()},
+  evMapZo:()=>{evF.mz=Math.max(9,(evF.mz||14)-1);evRerender()},
+  evLocPrev:()=>{const f=evF,tr=S.trips[f.tid],ft=tAt(tr,f.t),p=tr.events.filter(x=>x.id!==f.id&&isFinite(x.lat)&&x.t<ft).sort((a,b)=>a.t-b.t).pop();if(!p)return;f.lat=p.lat;f.lon=p.lon;f.acc=p.acc||0;f.locEd=true;evRerender()},
+  evLocDel:()=>{evF.lat=null;evF.lon=null;evF.locEd=true;evRerender()},
+  evLocReset:()=>{const f=evF,e=S.trips[f.tid].events.find(x=>x.id===f.id);f.lat=isFinite(e.lat)?e.lat:null;f.lon=isFinite(e.lon)?e.lon:null;f.acc=e.acc||0;f.locEd=false;evRerender()},
+  wxRefresh:b=>{const t=S.trips[b.dataset.id];if(!t)return;toast('天気を取り直しています…');wxEnsure(t,true)},
   evDel:()=>{if(!evF.armed){evF.armed=true;return renderEvSheet()}const tr=S.trips[evF.tid];tr.events=tr.events.filter(x=>x.id!==evF.id);touch(tr);toast('消しました');evBack()},
   png:b=>savePng(b.dataset.which),
   figSp:b=>{S.ui.figSp=b.dataset.id;saveLocal();render()},
@@ -2822,10 +2901,10 @@ document.addEventListener('keydown',e=>{if(!active()||S.ui.tab!=='rec'||!$('#she
   if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();addEvent('catch',null,'remote')}else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();addEvent('lost',null,'remote')}});
 
 /* ---------- export ---------- */
-async function svgToPng(svg){const m=svg.match(/width="(\d+)" height="(\d+)"/);const w=+m[1],h=+m[2];const img=new Image();
+async function svgToPng(svg,jpg){const m=svg.match(/width="(\d+)" height="(\d+)"/);const w=+m[1],h=+m[2];const img=new Image();
   await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)});
   const sc=2,cv=document.createElement('canvas');cv.width=w*sc;cv.height=h*sc;const ctx=cv.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);
-  return {blob:await new Promise(r=>cv.toBlob(r,'image/png')),url:cv.toDataURL('image/png')}}
+  const ty=jpg?'image/jpeg':'image/png';return {blob:await new Promise(r=>cv.toBlob(r,ty,.92)),url:cv.toDataURL(ty,.92),type:ty}}
 async function savePng(which){const tr=figTrip();if(!tr)return;const sp=figSp(tr);toast('画像を作っています…');
   try{const svg=which==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(brandSVG(svg));const name=`tipran-${tr.date}-${sp}-${which==='tl'?'timeline':'seat'}.png`;
     if(!SITE){let dl=null;try{dl=await window.claude?.use?.('downloads')}catch(e){}
@@ -2834,6 +2913,11 @@ async function savePng(which){const tr=figTrip();if(!tr)return;const sp=figSp(tr
     $('#toast').hidden=true;openSheet(`<div class="sheet-h"><h2>画像</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${SITE?'<button class="btn primary big" data-act="shareFile">写真に保存・共有する</button>':''}<p class="muted">画像を長押しして「写真に保存」を選んでも保存できます。</p><img class="imgout" src="${url}" alt="${esc(name)}">`,{kind:'img'})
   }catch(e){toast('画像を作れませんでした。もう一度お試しください')}}
 /* record list as an image (oldest first), for sharing */
+/* 画像の中のキロアップのアイコン（アプリのアイコンと同じ絵。SVG の中に1回だけ埋め込んで <use> で使う） */
+let DG_URI=null;
+const dgUri=()=>{if(DG_URI===null){const m=[...document.querySelectorAll('style')].map(x=>x.textContent).join('').match(/\.ic-dragon\{background-image:url\((data:image\/[a-z]+;base64,[^)]+)\)/);DG_URI=m?m[1]:''}return DG_URI};
+const DGI=(cx,cy,d)=>`<use href="#dgI" x="${r1(cx-d/2)}" y="${r1(cy-d/2)}" width="${r1(d)}" height="${r1(d)}"/>`;
+const dgDefs=o=>o.some(x=>x.includes('#dgI'))&&dgUri()?`<defs><clipPath id="dgC"><circle cx="32" cy="32" r="32"/></clipPath><symbol id="dgI" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="#2a1600"/><image href="${dgUri()}" width="64" height="64" clip-path="url(#dgC)"/></symbol></defs>`:'';
 function listSVG(tr){const W=600,X0=28,RH=40,ev=sortEv(tr),o=[];const nCatch=ev.filter(e=>e.kind==='catch').length;
   o.push(TX(X0,50,'記録一覧',{size:26,bold:1}));o.push(TX(W-X0,50,nCatch?`釣果 ${nCatch}`:'',{size:17,bold:1,fill:P.catch,anchor:'end'}));
   o.push(TX(X0,78,`${jdate(tr.date)}｜${tr.boat||''}${tr.port?'（'+tr.port+'）':''}`,{size:15,fill:P.muted}));
@@ -2842,22 +2926,73 @@ function listSVG(tr){const W=600,X0=28,RH=40,ev=sortEv(tr),o=[];const nCatch=ev.
     if(e.kind==='catch'){cnt[e.sp]=(cnt[e.sp]||0)+1;kind=`${s.variants.length>1?vShort(e.sp,e.v):s.name} ${cnt[e.sp]}${s.unit}目`;col=P.catch}
     else if(e.kind==='gedo'){kind='外道 '+(e.name||'');col=P.muted}else{kind=KIND_JP[e.kind]||'';col=P[e.kind]||P.ink}
     if(i%2===0)o.push(`<rect x="16" y="${y}" width="${W-32}" height="${RH}" rx="8" fill="#eef4f6"/>`);
-    o.push(TX(X0,y+27,hm(e.t),{size:19,bold:1}));o.push(TX(X0+70,y+27,clip(kind,150,15),{size:15,bold:1,fill:col}));
+    o.push(TX(X0,y+27,hm(e.t),{size:19,bold:1}));const dgn=e.kind==='catch'&&e.dragon;if(dgn)o.push(DGI(X0+81,y+RH/2,24));o.push(TX(X0+(dgn?98:70),y+27,clip(kind,dgn?122:150,15),{size:15,bold:1,fill:col}));
     o.push(TX(X0+232,y+27,clip(evGearText(e),W-X0-232-X0,14),{size:14,fill:P.muted}));y+=RH});
   if(!ev.length){o.push(TX(X0,y+30,'記録がありません',{size:15,fill:P.muted}));y+=50}
   const H=y+24;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="記録一覧"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${o.join('')}</svg>`}
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="記録一覧"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${dgDefs(o)}${o.join('')}</svg>`}
 /* shared images carry the tool name and its address in a footer band */
 function brandSVG(svg){const m=svg.match(/width="(\d+)" height="(\d+)"/);if(!m)return svg;const W=+m[1],H=+m[2],k=W/600,F=Math.round(56*k),z=n=>r1(n*k);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H+F}" viewBox="0 0 ${W} ${H+F}" font-family="${CF}"><rect width="${W}" height="${H+F}" fill="#0b1422"/><rect width="${W}" height="${H}" fill="${P.card}"/>${svg.replace('<svg ','<svg x="0" y="0" ')}<text x="${z(24)}" y="${H+z(25)}" font-size="${z(17)}" font-weight="700" fill="#ffffff" letter-spacing="${z(1.5)}">TIPRUN COUNTER</text><text x="${z(24)}" y="${H+z(43)}" font-size="${z(11)}" fill="#9fb4c6">東京湾の魚・釣り / 3rd-Penguin Fishing Lab.</text><text x="${W-z(24)}" y="${H+z(34)}" font-size="${z(13)}" font-weight="700" fill="#3fc8c4" text-anchor="end">dragon-counter.cutlassfish.tokyo/tipran</text></svg>`}
+/* インスタ用の画像：ストーリーズ（1080×1920）と投稿（1080×1350）。大見出し・基本情報・1時間ごとの本数だけを大きな文字で */
+/* いちばん釣れたエギ（写真は data URL にして SVG に埋め込む） */
+async function instaTop(tr,sp){const m={};catchesOf(tr,sp).forEach(e=>{if(e.rig)m[e.rig]=(m[e.rig]||0)+1});const id=Object.keys(m).sort((a,b)=>m[b]-m[a])[0];if(!id)return null;
+  const t=tenyaOf(id),top={n:m[id],sub:t?tenyaSub(t):'',main:t?tenyaMain(t):listName(sp,'rigs',id),img:''};
+  const ei=rigIm(sp,id);if(ei){try{const im=new Image();await new Promise((ok,ng)=>{im.onload=ok;im.onerror=ng;im.src=`/tipran/egi/${ei}.webp`});
+    const k=Math.min(1,480/Math.max(im.naturalWidth,im.naturalHeight)),cv=document.createElement('canvas');cv.width=Math.round(im.naturalWidth*k);cv.height=Math.round(im.naturalHeight*k);
+    cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);top.img=cv.toDataURL('image/png');top.w=cv.width;top.h=cv.height}catch(e){}}
+  return top}
+function instaSVG(tr,sp,fmt,tt){const story=fmt==='story',W=540,H=story?960:675,s=spOf(sp),c=catchesOf(tr,sp),N=c.length,dg=c.filter(e=>e.dragon).length;
+  const T=(x,y,t,o={})=>`<text x="${r1(x)}" y="${r1(y)}" font-size="${o.size||16}" fill="${o.fill||'#eef3f8'}"${o.anchor?` text-anchor="${o.anchor}"`:''}${o.bold?' font-weight="800"':''}${o.ls?` letter-spacing="${o.ls}"`:''}>${esc(t)}</text>`;
+  const fit=(t,px,w)=>clip(t,w,px);const o=[];
+  const top=story?118:34,bot=story?H-118:H-26;   // ストーリーズは上下をインスタの表示に隠れない位置まで空ける
+  let y=top;
+  o.push(T(32,y+14,'TIPRUN COUNTER',{size:15,bold:1,fill:'#3fc8c4',ls:2}));o.push(T(W-32,y+14,jdate(tr.date),{size:15,fill:'#9fb4c6',anchor:'end'}));y+=story?78:58;
+  const yName=y;o.push(`<text x="32" y="${r1(y)}" font-weight="800"><tspan font-size="${story?30:26}" fill="#eef3f8">${esc(s.name)}</tspan></text>`);
+  if(dg){const nz=story?30:26,dz=story?22:19,dx=32+s.name.length*nz+18;o.push(DGI(dx+dz*.6,y-dz*.35,dz*1.3)+T(dx+dz*1.4,y,`キロアップ ${dg}${s.unit}`,{size:dz,bold:1,fill:'#f2c063'}))}
+  const big=String(N),bs=story?120:96;o.push(`<text x="32" y="${r1(y+bs*.95)}" font-weight="800"><tspan font-size="${bs}" fill="#ffb04a">${esc(big)}</tspan><tspan dx="10" font-size="${story?40:34}" fill="#eef3f8">${esc(s.unit)}</tspan></text>`);
+  y+=bs*.95;
+  if(tt){const cw=story?222:212,cx=W-32-cw,cy=yName+(story?16:12),ph=story?84:70,lw=cw-24,fz=story?15:14;
+    const mn=Math.floor(lw/fz),ml=tt.main.length>mn?[tt.main.slice(0,mn),tt.main.slice(mn)]:[tt.main],lines=[[tt.sub,13,'#9fb4c6',0],...ml.slice(0,2).map(t=>[t,fz,'#eef3f8',1])].filter(l=>l[0]);
+    const ch=28+ph+8+lines.reduce((a,l)=>a+l[1]+6,0)+8;
+    o.push(`<rect x="${cx}" y="${cy}" width="${cw}" height="${ch}" rx="16" fill="#132236" stroke="#2c3e55"/>`+T(cx+12,cy+19,'いちばん釣れたエギ',{size:13,bold:1,fill:'#9fb4c6'}));
+    o.push(`<text x="${cx+cw-12}" y="${cy+21}" text-anchor="end" font-weight="800"><tspan font-size="${story?20:18}" fill="#ffb04a">${tt.n}</tspan><tspan dx="2" font-size="13" fill="#eef3f8">${esc(s.unit)}</tspan></text>`);
+    o.push(`<rect x="${cx+12}" y="${cy+28}" width="${cw-24}" height="${ph}" rx="10" fill="#ffffff"/>`);
+    if(tt.img)o.push(`<image href="${tt.img}" x="${cx+18}" y="${cy+31}" width="${cw-36}" height="${ph-6}" preserveAspectRatio="xMidYMid meet"/>`);
+    else o.push(T(cx+cw/2,cy+28+ph/2+5,'写真なし',{size:13,fill:'#9aa6b2',anchor:'middle'}));
+    let ly=cy+28+ph+8;lines.forEach(([t,z,c,b])=>{ly+=z+2;o.push(T(cx+12,ly,clip(t,lw,z),{size:z,fill:c,bold:b}));ly+=4});
+    y=Math.max(y,cy+ch-(story?14:10))}
+  y+=story?54:40;
+  const head=tlTitle(tr,sp).replace(new RegExp('^'+s.name+'は'),'').replace(/、?計\d+.*$/,'');
+  if(N&&head&&!/^計|釣果なし/.test(head)){o.push(T(32,y,fit('ピークは'+head,story?26:22,W-64),{size:story?26:22,bold:1,fill:'#3fc8c4'}));y+=story?46:36}
+  const b=nKind(tr,sp,'bite'),l=nKind(tr,sp,'lost');
+  const info=[[tr.port,tr.boat].filter(Boolean).join('・'),'席：'+seatLabel(tr),[tideNameOf(tr),tr.start?hm(tr.start)+(tr.end?'〜'+hm(tr.end):''):''].filter(Boolean).join('・'),(b||l)?`アタリ ${b}・バラシ ${l}`:''].filter(Boolean);
+  const fs=story?21:18;info.forEach(t=>{o.push(T(32,y,fit(t,fs,W-64),{size:fs,fill:'#c5d3e2'}));y+=fs*1.6});
+  // 1時間ごとの本数
+  const [t0,t1]=range(tr),h0=new Date(t0).getHours(),h1=Math.max(h0,new Date(t1-1).getHours());const hs=[];for(let h=h0;h<=h1;h++)hs.push(h);
+  const cnt=h=>c.filter(e=>new Date(e.t).getHours()===h),mx=Math.max(1,...hs.map(h=>cnt(h).length));
+  const gy0=y+(story?36:22),gy1=bot-(story?82:72),cx0=32,cw=W-64,bw=cw/hs.length;
+  o.push(`<rect x="${cx0-14}" y="${gy0-16}" width="${cw+28}" height="${gy1-gy0+70}" rx="18" fill="#132236"/>`);
+  o.push(T(cx0,gy0+10,'1時間ごとの'+s.name,{size:story?20:17,bold:1,fill:'#9fb4c6'}));
+  const by0=gy0+(story?62:46),bh=gy1-by0;
+  o.push(`<line x1="${cx0}" y1="${gy1}" x2="${cx0+cw}" y2="${gy1}" stroke="#2c3e55" stroke-width="2"/>`);
+  hs.forEach((h,i)=>{const e=cnt(h),n=e.length,d=e.filter(x=>x.dragon).length,x=cx0+i*bw,w=Math.min(bw*.68,56),xm=x+bw/2;
+    if(n){const hh=Math.max(6,n/mx*bh),hd=d/n*hh;o.push(`<rect x="${r1(xm-w/2)}" y="${r1(gy1-hh)}" width="${r1(w)}" height="${r1(hh)}" rx="6" fill="#e47b25"/>`);
+      if(d)o.push(`<rect x="${r1(xm-w/2)}" y="${r1(gy1-hd)}" width="${r1(w)}" height="${r1(hd)}" rx="6" fill="#f2c063"/>`);
+      o.push(T(xm,gy1-hh-10,String(n),{size:story?26:22,bold:1,anchor:'middle'}))}
+    o.push(T(xm,gy1+(story?30:26),h+'時',{size:hs.length>9?14:story?18:16,fill:'#9fb4c6',anchor:'middle'}))});
+  if(dg)o.push(`<rect x="${cx0+cw-80}" y="${gy0-2}" width="14" height="14" rx="3" fill="#f2c063"/>`+T(cx0+cw,gy0+10,'キロアップ',{size:14,fill:'#9fb4c6',anchor:'end'}));
+  o.push(T(W/2,bot,'dragon-counter.cutlassfish.tokyo/tipran',{size:story?18:16,bold:1,fill:'#3fc8c4',anchor:'middle'}));
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}"><defs><linearGradient id="igbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d1a2b"/><stop offset="1" stop-color="#060a11"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#igbg)"/>${dgDefs(o)}${o.join('')}</svg>`}
 const SHR_NM={list:'記録一覧',tl:'時系列の図',seat:'座席の図'};
 function shrSp(tr){return S.ui.figTrip===tr.id?figSp(tr):mainSp(tr)}
-acts.shareAsk=b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which;
-  openSheet(`<div class="sheet-h"><h2>画像で保存・共有</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">LINE・メール・メッセージなどで送れます。</p><div class="shr-pick"><button class="btn primary" data-act="shareMake" data-which="${w}" data-id="${tr.id}">${SHR_NM[w]}だけ</button><button class="btn" data-act="shareMake" data-which="all" data-id="${tr.id}">3つまとめて<small style="display:block;font-weight:500">記録一覧・時系列の図・座席の図</small></button></div>`,{kind:'shr'})};
-acts.shareMake=async b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which,ws=w==='all'?['list','tl','seat']:[w],sp=shrSp(tr);
+acts.shareAsk=b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which,sp=shrSp(tr),mc=catchLocList(tr,sp).length,mp=pointSegs(tr).length,maps=[mc?'map-catch':'',mp?'map-pts':''].filter(Boolean),all=['list','tl','seat',...maps];
+  const nm=k=>({list:'記録一覧',tl:'時系列の図',seat:'座席の図','map-catch':'釣れた場所の地図','map-pts':'📍の地図'})[k];
+  openSheet(`<div class="sheet-h"><h2>画像で保存・共有</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">LINE・メール・メッセージなどで送れます。</p><div class="shr-pick"><button class="btn primary" data-act="shareMake" data-which="${w}" data-id="${tr.id}">${nm(w)}だけ</button><button class="btn" data-act="shareMake" data-which="all" data-id="${tr.id}">${all.length}つまとめて<small style="display:block;font-weight:500">${all.map(nm).join('・')}</small></button></div>${maps.length?`<h3 class="shr-ig-h">地図（国土地理院の地図。電波のある所で）</h3><div class="shr-ig">${maps.map(k=>`<button class="btn" data-act="shareMake" data-which="${k}" data-id="${tr.id}">${k==='map-catch'?'釣れた・アタリ・<br>バラシの場所':'📍で記録した<br>場所'}</button>`).join('')}</div>`:''}<h3 class="shr-ig-h">インスタ用（文字を大きく・インスタのサイズで）</h3><div class="shr-ig"><button class="btn" data-act="shareMake" data-which="ig-story" data-id="${tr.id}">ストーリーズ用<small>縦長 1080×1920</small></button><button class="btn" data-act="shareMake" data-which="ig-post" data-id="${tr.id}">投稿用<small>1080×1350</small></button></div>`,{kind:'shr'})};
+acts.shareMake=async b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which,sp=shrSp(tr),ws=w==='all'?['list','tl','seat',...(catchLocList(tr,sp).length?['map-catch']:[]),...(pointSegs(tr).length?['map-pts']:[])]:[w];
   b.disabled=true;b.textContent='画像を作っています…';
-  try{const out=[];for(const k of ws){const svg=k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(brandSVG(svg));
-      out.push({blob,url,name:`tipran-${tr.date}-${k==='list'?'list':k==='tl'?'timeline':'seat'}.png`,type:'image/png'})}
+  try{const out=[];for(const k of ws){const ig=k.startsWith('ig-'),svg=ig?instaSVG(tr,sp,k.slice(3),await instaTop(tr,sp)):k.startsWith('map-')?await inlineTiles(mapExportSVG(tr,sp,k)):k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url,type}=await svgToPng(ig?svg:brandSVG(svg),ig);
+      out.push({blob,url,name:`tipran-${tr.date}-${ig?'insta-'+k.slice(3):k.startsWith('map-')?k:k==='list'?'list':k==='tl'?'timeline':'seat'}.${type==='image/jpeg'?'jpg':'png'}`,type})}
     pendingFile={files:out};
     openSheet(`<div class="sheet-h"><h2>画像${out.length>1?`（${out.length}枚）`:''}</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${SITE?`<button class="btn primary big" data-act="shareFile">写真に保存・共有する</button>`:''}<p class="muted" style="margin:0">画像を長押しして「写真に保存」を選んでも保存できます。</p><div class="shr-imgs">${out.map(f=>`<img class="imgout" src="${f.url}" alt="${esc(f.name)}">`).join('')}</div>`,{kind:'img'})
   }catch(e){toast('画像を作れませんでした。もう一度お試しください');closeSheet()}};
