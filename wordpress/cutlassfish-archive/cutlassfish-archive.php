@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cutlassfish Archive（記事一覧・釣行記の年表・検索）
  * Description: 過去記事を見つけやすくします。全記事一覧（/articles/：魚・テーマ・年月で絞り込み、文字で検索）、釣行記の年表（/fishing-log/）、メニューの検索欄、記事の下の「前後の記事」と「同じ魚の記事」。釣果速報は一覧に入れません。
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPLv2 or later
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class CF_Archive {
-	const V     = '1.0.3';
+	const V     = '1.0.4';
 	const TYPES = array( 'tachiuo_post' );   // 釣り記事だけ。釣果速報（tbt_catch）・動画・初期の投稿（Hello world!）は入れない
 	const CACHE = 'cf_archive_items_v1';
 	// 目立たせるカタログ（メニューと記事の下）。slug は記事のURL。sp：この魚種の記事に出す／kw：タイトル・抜粋にこの言葉がある記事に出す（両方あれば両方を満たすとき）
@@ -42,6 +42,7 @@ final class CF_Archive {
 		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'menu_js' ), 20 );
 		add_action( 'wp_footer', array( __CLASS__, 'front_news_js' ), 21 );
+		add_action( 'wp_footer', array( __CLASS__, 'promo_bar' ), 22 );
 		add_filter( 'the_content', array( __CLASS__, 'after_content' ), 30 );
 		add_action( 'save_post', array( __CLASS__, 'clear' ) );
 		add_action( 'deleted_post', array( __CLASS__, 'clear' ) );
@@ -210,6 +211,41 @@ if(!after){var hf=document.querySelector('.hero-flow');after=hf?hf.querySelector
 if(after&&after!==news){after.parentNode.insertBefore(news,after.nextSibling)}
 var list=news.querySelector('.news');if(list&&!news.querySelector('.cfa-news-more')){var p=document.createElement('p');p.className='cfa-news-more';p.innerHTML='<a href="<?php echo $all; ?>">すべての記事を見る →</a>';list.parentNode.appendChild(p)}
 var r=news.querySelectorAll('.reveal');for(var j=0;j<r.length;j++)r[j].classList.add('in','is-visible','visible');})();
+</script>
+		<?php
+	}
+
+	/* ---------- 期間限定の告知の帯（画面の下）。期限を過ぎたら出さない。その記事自身では出さない ---------- */
+	const PROMO = array(
+		'id'   => 'bf2026',
+		'post' => 1462,                       // ブラックフライデーの記事
+		'end'  => 1795532400,                 // 2026-11-25 00:00（日本時間）
+		'tag'  => 'BLACK FRIDAY',
+		'text' => '高額釣具が定価から実質約40%OFF｜24日まで',
+	);
+
+	public static function promo_bar() {
+		$p = self::PROMO;
+		if ( time() >= $p['end'] || is_singular() && get_queried_object_id() === $p['post'] ) {
+			return;
+		}
+		$url = get_permalink( $p['post'] );
+		if ( ! $url || get_post_status( $p['post'] ) !== 'publish' ) {
+			return;
+		}
+		?>
+<style>
+.cfa-promo{position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;display:flex;align-items:center;gap:6px;max-width:560px;margin:0 auto;padding:10px 8px 10px 14px;background:#111;border:2px solid #f5c83c;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.45);font-family:inherit;line-height:1.35}
+.cfa-promo a.cfa-promo-go{flex:1;color:#fff !important;text-decoration:none;font-size:14px;font-weight:700}
+.cfa-promo b{display:block;color:#f5c83c;font-size:12px;letter-spacing:.08em}
+.cfa-promo button{flex:none;width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:#aaa;font-size:22px;line-height:1;cursor:pointer}
+</style>
+<div class="cfa-promo" id="cfa-promo" hidden><a class="cfa-promo-go" href="<?php echo esc_url( $url ); ?>"><b><?php echo esc_html( $p['tag'] ); ?></b><?php echo esc_html( $p['text'] ); ?> →</a><button type="button" aria-label="閉じる">×</button></div>
+<script>
+(function(){var el=document.getElementById('cfa-promo'),k='cfa-promo-<?php echo esc_js( $p['id'] ); ?>';if(!el)return;
+if(Date.now()>=<?php echo (int) $p['end']; ?>*1000){el.remove();return}
+try{if(localStorage.getItem(k)){el.remove();return}}catch(e){}
+el.hidden=false;el.querySelector('button').addEventListener('click',function(){el.remove();try{localStorage.setItem(k,'1')}catch(e){}});})();
 </script>
 		<?php
 	}
