@@ -1,0 +1,76 @@
+{
+ "maker": "クレイジーオーシャン",
+ "rods": [
+  {
+   "series": "オーシャンセンサータイラバ",
+   "model": "OSE-TAR B60V",
+   "type": "bait",
+   "length_m": 1.83,
+   "lure_g": "MAX150",
+   "pe": "MAX1.0",
+   "price_jpy": 31500,
+   "url": "https://crazy-ocean.com/itemlist/%E3%82%AA%E3%83%BC%E3%82%B7%E3%83%A3%E3%83%B3%E3%82%BB%E3%83%B3%E3%82%B5%E3%83%BC%E3%82%BF%E3%82%A4%E3%83%A9%E3%83%90",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "オーシャンセンサータイラバ",
+   "model": "OSE-TAR B54DD",
+   "type": "bait",
+   "length_m": 1.63,
+   "lure_g": "MAX250",
+   "pe": "MAX1.0",
+   "price_jpy": 31500,
+   "url": "https://crazy-ocean.com/itemlist/%E3%82%AA%E3%83%BC%E3%82%B7%E3%83%A3%E3%83%B3%E3%82%BB%E3%83%B3%E3%82%B5%E3%83%BC%E3%82%BF%E3%82%A4%E3%83%A9%E3%83%90",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "オーシャンセンサータイラバ",
+   "model": "OSE-TAR S60QS",
+   "type": "spinning",
+   "length_m": 1.83,
+   "lure_g": "MAX100",
+   "pe": "MAX1.0",
+   "price_jpy": 31000,
+   "url": "https://crazy-ocean.com/itemlist/%E3%82%AA%E3%83%BC%E3%82%B7%E3%83%A3%E3%83%B3%E3%82%BB%E3%83%B3%E3%82%B5%E3%83%BC%E3%82%BF%E3%82%A4%E3%83%A9%E3%83%90",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "オーシャンフレイル タイラバ",
+   "model": "OFTA-B54ML",
+   "type": "bait",
+   "length_m": 1.63,
+   "lure_g": "MAX150",
+   "pe": "MAX1.0",
+   "price_jpy": 17800,
+   "url": "https://crazy-ocean.com/itemlist/%E3%82%AA%E3%83%BC%E3%82%B7%E3%83%A3%E3%83%B3%E3%83%95%E3%83%AC%E3%82%A4%E3%83%AB-%E3%82%BF%E3%82%A4%E3%83%A9%E3%83%90",
+   "status": "",
+   "source": "official"
+  },
+  {
+   "series": "オーシャンフレイル タイラバ",
+   "model": "OFTA-B65ML",
+   "type": "bait",
+   "length_m": 1.96,
+   "lure_g": "MAX150",
+   "pe": "MAX1.0",
+   "price_jpy": 18000,
+   "url": "https://crazy-ocean.com/itemlist/%E3%82%AA%E3%83%BC%E3%82%B7%E3%83%A3%E3%83%B3%E3%83%95%E3%83%AC%E3%82%A4%E3%83%AB-%E3%82%BF%E3%82%A4%E3%83%A9%E3%83%90",
+   "status": "",
+   "source": "official"
+  }
+ ],
+ "sources": [
+  "https://crazy-ocean.com/itemlist_category/tairaba-rod",
+  "https://crazy-ocean.com/itemlist/%E3%82%AA%E3%83%BC%E3%82%B7%E3%83%A3%E3%83%B3%E3%82%BB%E3%83%B3%E3%82%B5%E3%83%BC%E3%82%BF%E3%82%A4%E3%83%A9%E3%83%90",
+  "https://crazy-ocean.com/itemlist/%E3%82%AA%E3%83%BC%E3%82%B7%E3%83%A3%E3%83%B3%E3%83%95%E3%83%AC%E3%82%A4%E3%83%AB-%E3%82%BF%E3%82%A4%E3%83%A9%E3%83%90"
+ ],
+ "notes": [
+  "price_jpy は本体価格（税抜）。",
+  "公式カテゴリ『タイラバ＞ロッド』掲載の2シリーズ。",
+  "type は品番の B/S 接頭辞から判断（B=ベイト, S=スピニング）。OSE-TAR S60QS は公式説明では『早く着底させる競技系ロッド』でキャスト専用ではない。",
+  "OFTA（オーシャンフレイル）はアマダイ狙いにも対応と記載。"
+ ]
+}
