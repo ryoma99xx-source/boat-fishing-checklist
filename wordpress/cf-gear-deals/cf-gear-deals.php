@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cutlassfish Gear Deals
  * Description: 楽天・Yahoo!の釣具（高額品）の実質価格を毎日記録し、「直近90日の実質最安＋ポイント3%以内」に入ったときだけバナー表示・SNS通知する。
- * Version: 0.9.12
+ * Version: 0.9.13
  * Author: 3rd Penguin
  * Requires PHP: 8.0
  */
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CFGD_VERSION', '0.9.12' );
+define( 'CFGD_VERSION', '0.9.13' );
 define( 'CFGD_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CFGD_URL', plugin_dir_url( __FILE__ ) );
 

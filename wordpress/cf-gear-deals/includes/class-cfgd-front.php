@@ -163,7 +163,8 @@ class CFGD_Front {
 		usort( $deals, function ( $a, $b ) use ( $terms ) {
 			$ra = self::relevance( $a['tags'], $terms );
 			$rb = self::relevance( $b['tags'], $terms );
-			return $rb <=> $ra ?: ( (int) ( $a['verdict']['diff'] ?? 0 ) <=> (int) ( $b['verdict']['diff'] ?? 0 ) );
+			// 同じなら、本体価格から見た実質の割引率（クーポン＋ポイント）が大きいほうを先に。同じ率なら過去最安からの下がり幅
+			return $rb <=> $ra ?: ( self::deal_off( $b ) <=> self::deal_off( $a ) ?: ( (int) ( $a['verdict']['diff'] ?? 0 ) <=> (int) ( $b['verdict']['diff'] ?? 0 ) ) );
 		} );
 		$d    = $deals[0];
 		$b    = $d['best'];
@@ -201,6 +202,19 @@ class CFGD_Front {
 		$r = rest_ensure_response( $resp );
 		$r->header( 'Cache-Control', 'public, max-age=600' );
 		return $r;
+	}
+
+	/** 本体価格から見た実質の割引率（%・小数1桁）。店舗まとめは、その中でいちばん大きい品番の値 */
+	private static function deal_off( array $d ) {
+		$bs = 'store' === ( $d['type'] ?? '' ) ? array_column( (array) ( $d['products'] ?? array() ), 'best' ) : array( $d['best'] ?? array() );
+		$m  = 0.0;
+		foreach ( $bs as $b ) {
+			$price = (int) ( $b['price'] ?? 0 );
+			if ( $price > 0 ) {
+				$m = max( $m, round( 100 * ( $price - (int) ( $b['eff_price'] ?? $price ) ) / $price, 1 ) );
+			}
+		}
+		return $m;
 	}
 
 	private static function relevance( $tags, array $terms ) {

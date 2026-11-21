@@ -56,6 +56,10 @@
       body.appendChild(el('span', 'cfgd-bar__price', d.line ? d.line :
         d.mall + ' 実質' + yen(d.eff) + '円（ポイント' + yen(d.points) + '円相当' +
         (d.coupon ? '・クーポン' + yen(d.coupon) + '円' : '') + '）'));
+      // 計算に入れていない施策（最大+〇%・対象ストアならなど）があるときは、そのことを添える
+      if (d.possible && d.possible.length) {
+        body.appendChild(el('span', 'cfgd-bar__note', '※条件しだいのキャンペーン分は含まず'));
+      }
       link.appendChild(body);
       bar.appendChild(link);
 

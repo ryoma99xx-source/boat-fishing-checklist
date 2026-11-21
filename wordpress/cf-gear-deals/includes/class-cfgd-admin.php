@@ -481,6 +481,7 @@ class CFGD_Admin {
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $t WHERE recur<>'' OR end_at >= %s ORDER BY mall, (recur='') , start_at", wp_date( 'Y-m-d 00:00:00' ) ) ); // phpcs:ignore
 		$labels = array( 'confirmed' => '計算に使う', 'hint' => '予想', 'info' => '情報のみ', 'disabled' => '無効' );
 
+		echo '<p>「最大」に印がある施策（最大+23%など）は、条件や上限しだいなので実質価格の計算に入れず「付くかも」として扱います。ブラックフライデーのBONUS（合計購入額で+7%）のように、条件を満たせば確実に付く分は、倍率をその分（例：7）に直して「最大」の印を外すと計算に入ります。</p>';
 		echo '<p>「予想」は楽天カレンダー（ユーザー投稿）から拾った日程です。告知を確認したら倍率と上限を入れて「確定」にしてください。手で直した行はメモに <code>[固定]</code> が付き、自動取得で上書きされません。</p>';
 		echo '<table class="widefat striped"><thead><tr><th>モール</th><th>名前</th><th>期間／繰り返し</th><th>倍率%</th><th>上限円</th><th>範囲</th><th>状態</th><th>出どころ・メモ</th><th></th></tr></thead><tbody>';
 		foreach ( $rows as $r ) {
@@ -489,7 +490,7 @@ class CFGD_Admin {
 			self::form_open( 'campaign_status' );
 			printf( '<input type="hidden" name="id" value="%d">', (int) $r->id );
 			printf( '<td>%s</td><td>%s<br><small>%s</small></td><td>%s</td>', esc_html( $r->mall ), esc_html( $r->name ), esc_html( $r->conditions ), esc_html( $when ) );
-			printf( '<td><input name="rate_pct" value="%s" size="4"></td><td><input name="cap_yen" value="%d" size="6"></td>', esc_attr( $r->rate_pct ?? '' ), (int) $r->cap_yen );
+			printf( '<td><input name="rate_pct" value="%s" size="4"><br><label title="外すと、この倍率を計算に入れる（条件を満たせば確実に付くものだけ外す）"><input type="checkbox" name="is_max" value="1"%s> 最大</label></td><td><input name="cap_yen" value="%d" size="6"></td>', esc_attr( $r->rate_pct ?? '' ), checked( (int) $r->is_max, 1, false ), (int) $r->cap_yen );
 			printf( '<td><input name="stores" value="%s" size="10" placeholder="%s"></td>', esc_attr( $r->stores ), 'limited' === $r->scope ? '対象ストア' : '全店' );
 			echo '<td><select name="status">';
 			foreach ( $labels as $k => $l ) {
@@ -549,6 +550,7 @@ class CFGD_Admin {
 			$wpdb->update( $t, array(
 				'rate_pct'   => '' === $p['rate_pct'] ? null : (float) $p['rate_pct'],
 				'cap_yen'    => (int) $p['cap_yen'],
+				'is_max'     => empty( $p['is_max'] ) ? 0 : 1,
 				'stores'     => $stores,
 				'scope'      => ( $stores || 'limited' === $old->scope ) ? 'limited' : 'all',
 				'status'     => sanitize_key( $p['status'] ),

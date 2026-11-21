@@ -148,3 +148,5 @@
 .cfgd-bar__head { display: flex; align-items: baseline; gap: 6px; min-width: 0; white-space: nowrap; }
 .cfgd-bar__head .cfgd-bar__label { flex: none; }
 .cfgd-bar__pt { flex: none; font-size: 11px; font-weight: 700; color: #13232c; background: var(--cfgd-accent); border-radius: 999px; padding: 0 6px; line-height: 1.5; }
+
+.cfgd-bar__note{display:block;font-size:11px;line-height:1.3;opacity:.7;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
