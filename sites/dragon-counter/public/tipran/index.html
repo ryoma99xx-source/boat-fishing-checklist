@@ -394,7 +394,7 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 .td-bl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 [data-lp]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .td-catch .lp-hint{font-style:normal;font-size:11px;font-weight:600;opacity:.65;margin-top:2px}
-.sa-grid{display:grid;grid-template-columns:44px 1fr 1fr;gap:8px;align-items:center;margin:6px 0 10px}.sa-grid .sa-fall{grid-column:1/-1;min-height:52px}.sa-fall small{display:block;font-size:12px;font-weight:400;color:var(--muted)}.sa-grid>b{font-size:13px;color:var(--muted);text-align:center}
+.sa-grid{display:grid;grid-template-columns:44px 1fr 1fr;gap:8px;align-items:center;margin:6px 0 10px}.sa-grid .sa-fall{grid-column:1/-1;min-height:52px}.sa-grid.tr-sa{grid-template-columns:1fr 1fr}.sa-grid.tr-sa .sa-b{min-height:64px;font-size:18px}.ka-grid .sa-b{min-height:64px;font-size:18px}.sa-fall small{display:block;font-size:12px;font-weight:400;color:var(--muted)}.sa-grid>b{font-size:13px;color:var(--muted);text-align:center}
 .sa-b{min-height:76px;border-radius:14px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);font-size:17px;font-weight:800;line-height:1.3}.sa-b.on{border-color:var(--teal);box-shadow:0 0 0 2px rgba(65,201,198,.35)}
 .fd-sa{color:var(--amber)!important}
 .ka-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 12px}.ka-grid .sa-b{min-height:96px;font-size:22px}
@@ -1522,9 +1522,9 @@ function rigZRow(l){const zs=[...new Set((l||[]).filter(g=>!g.hidden&&g.shape).m
 function chipsHTML(sp,k,sel,act){const s=spOf(sp);const label=k==='rigs'?s.rigLabel:k==='hooks'?s.hookLabel:s.baitLabel;if(!label)return '';
   return `<div class="gearpick"><div class="gp-lbl">${esc(label)}</div>${k==='rigs'?rigZRow(s[k]):''}<div class="chips wrap">${(s[k]||[]).filter(g=>!g.hidden).map(g=>
   `<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}"${k==='rigs'?` data-z="${esc(g.shape||'')}"`:''} aria-pressed="${g.id===sel}">${k==='rigs'?eimg(egiIm(g),'ch'):''}${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">＋</button></div></div>`}
-function fModeHTML(f){f.rmode='simple';return '';const m=f.rmode||'';
+function fModeHTML(f){const m=f.rmode||'';
   return `<div class="card ${m?'':'need-pick'}" id="fModeSeg"><h2>記録のしかた<small class="req">必須</small><button class="qhelp" data-act="modeHelp" aria-label="シンプルと詳細の違い">?</button></h2><div class="seg">${[['simple','シンプル'],['detail','詳細']].map(([k,l])=>`<button class="${m===k?'on':''}" data-act="fMode" data-d="${k}">${l}</button>`).join('')}</div>
-   <p class="muted">${!m?'シンプルか詳細のどちらかを選んでください。':m==='detail'?'釣れた・アタリ・バラシを押すたびに、誘い（巻き／叩き × 誘い中／ステイ中）と掛け方（即掛け／深追い）を選んで記録します。長押しすると選ばずにすぐ記録。':'押すとすぐ記録します。誘いや掛け方は付けません（あとから記録の一覧で付けることもできます）。'}釣行中も「本日の釣果」の左上で切り替えられます。</p></div>`}
+   <p class="muted">${!m?'シンプルか詳細のどちらかを選んでください。':m==='detail'?'釣れた・アタリ・バラシを押すたびに、誘い（シャクリ中・ステイ直後・ロングステイ・フォール中・巻き上げ中）とアタリの出方（穂先が入る・穂先が戻る・重みが乗る・手元に来る）を選んで記録します。長押しすると選ばずにすぐ記録。':'押すとすぐ記録します。誘いやアタリの出方は付けません（あとから記録の一覧で付けることもできます）。'}釣行中も「本日の釣果」の左上で切り替えられます。</p></div>`}
 function formHTML(f){const boats=S.cfg.boats.map(b=>`<option value="${esc(b.name)}">`).join('');
   return `<div class="card tight"><h2>日時と船</h2>
    <div class="dtrow"><label class="field"><span>日付</span><input type="date" id="fDate" data-f="date" value="${esc(f.date)}"></label>
@@ -1732,8 +1732,8 @@ function viewActive(tr){ocurEnsure(tr);const sp=tr.cur.sp,s=spOf(sp),g=curGear(t
   return `<header class="rhead"><div class="rh-l"><h1>${jdate(tr.date).replace(/^\d+年/,'')}</h1><span>${hm(tr.start)}〜${tr.planEnd?hm(tr.planEnd):''}・${status}</span></div><button class="pill sm" data-act="tripEdit" data-id="${tr.id}">直す</button></header>
    <div class="rmeta"><div class="rm-txt">${[tr.boat,seatShort(tr),tr.spot?tr.spot.name:(tr.station?stName(tr.station):''),tideNameOf(tr)].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')}</div><button class="pill sm rm-loc" data-act="locRec" aria-label="今いる場所を記録">📍場所${(tr.points||[]).length?`<small>${tr.points.length}</small>`:''}</button><button class="pill sm rm-loc rm-memo" data-act="memoOpen" data-id="${tr.id}" aria-label="この釣行のメモ">📝メモ${(tr.memo||'').trim()?'<small>●</small>':''}</button><button class="pill sm rm-loc" data-act="phOpen" data-id="${tr.id}" aria-label="この釣行の写真">📷写真${photoIds(tr).length?`<small>${photoIds(tr).length}</small>`:''}</button><button class="pill sm rm-edit" data-act="tripEdit" data-id="${tr.id}">出船条件を直す</button></div>
    <section class="today" aria-label="本日の釣果">
-    <div class="td-top"><span class="td-h">${isTairyo(tr.date)?tairyoTag():''}</span><span class="td-n"><b id="cnum">${c.length}</b>${esc(s.unit)}${SOLO?'':`<small>${esc(s.name)}</small>`}${sp===SOLO?`<small class="td-dn"><i class="ic ic-dragon"></i>キロアップ <b>${nd}</b></small>`:''}</span></div>
-    <div class="td-row"><button class="td-catch" data-act="catchCur"${modeOf(tr)==='detail'?' data-lp="catch"':''}><b>釣れた</b><small>＋1</small>${modeOf(tr)==='detail'?'<i class="lp-hint">誘い・掛け方を選ぶ<br>長押しですぐ記録</i>':''}</button>
+    <div class="td-top"><span class="td-h"><span class="mseg" role="group" aria-label="記録のしかた"><button class="${modeOf(tr)==='simple'?'on':''}" data-act="recMode" data-d="simple">シンプル</button><button class="${modeOf(tr)==='detail'?'on':''}" data-act="recMode" data-d="detail">詳細</button></span>${isTairyo(tr.date)?tairyoTag():''}</span><span class="td-n"><b id="cnum">${c.length}</b>${esc(s.unit)}${SOLO?'':`<small>${esc(s.name)}</small>`}${sp===SOLO?`<small class="td-dn"><i class="ic ic-dragon"></i>キロアップ <b>${nd}</b></small>`:''}</span></div>
+    <div class="td-row"><button class="td-catch" data-act="catchCur"${modeOf(tr)==='detail'?' data-lp="catch"':''}><b>釣れた</b><small>＋1</small>${modeOf(tr)==='detail'?'<i class="lp-hint">誘い・アタリの出方を選ぶ<br>長押しですぐ記録</i>':''}</button>
      <div class="td-side"><button class="td-tenya ${(ten?curGear(tr).rig&&TIMG.has(curGear(tr).rig):rigIm(sp,curGear(tr).rig))?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):eimg(rigIm(sp,curGear(tr).rig),'cur')}<span>${ten?'使用テンヤ':'エギ'}</span><b>${esc(curRigLabel(tr))}</b><i aria-hidden="true">▾</i></button>
       ${sp===SOLO?`<label class="td-dragon ${dragonNext?'on':''}"><input type="checkbox" id="dragonChk" ${dragonNext?'checked':''}><i class="ic ic-dragon lg"></i><span><b>キロアップ</b><small>1kg以上</small></span></label>`:''}</div></div>
     <div class="td-bl"><button data-act="bite"${modeOf(tr)==='detail'?' data-lp="bite"':''}><b>${nKind(tr,sp,'bite')}</b><span>アタリ</span><small>${ten?'使用テンヤで記録':'＋1'}</small></button><button data-act="lost"${modeOf(tr)==='detail'?' data-lp="lost"':''}><b>${nKind(tr,sp,'lost')}</b><span>バラシ</span><small>${ten?'使用テンヤで記録':'＋1'}</small></button></div>
@@ -1752,27 +1752,25 @@ let lastTap=0;
 function addGedo(name){const tr=active();if(!tr||!name)return;const g=curGear(tr),now=Date.now();const e={id:uid(),t:now,kind:'gedo',name,sp:tr.cur.sp,gsp:tr.cur.sp,rig:g.rig,bait:needBait(tr.cur.sp,g)?g.bait:'',size:''};
   tr.events.push(e);touch(tr);buzz();$('#sheet').hidden=true;sheetCtx=null;render();const id=tr.id;
   toast(`${hm(now)} 外道 ${name} を記録`,'取り消す',()=>{const t=S.trips[id];t.events=t.events.filter(x=>x.id!==e.id);touch(t);render()})}
-/* 誘い：釣れた・アタリ・バラシに、巻き／叩き × 誘い中／ステイ中 を付ける（長押しで選ぶ） */
-const SA_JP={'maki-move':'巻き・誘い中','maki-stay':'巻き・ステイ中','tata-move':'叩き・誘い中','tata-stay':'叩き・ステイ中','fall':'フォール中'};
+/* tipran-sasoi v1 */
+/* 誘い：ティップラン用。釣れた・アタリ・バラシに付ける */
+const SA_JP={'shakuri':'シャクリ中','stay-just':'ステイ直後','stay-long':'ロングステイ','fall':'フォール中','maki':'巻き上げ中'};
 const SA_KEYS=Object.keys(SA_JP);let nextSa=null;
-/* 掛け方：即掛け／深追い。詳細モードでは 誘い → 掛け方 の2段で記録する */
-const KA_JP={soku:'即掛け',fuka:'深追い'},KA_KEYS=Object.keys(KA_JP);let nextKa=null,bypassDetail=false;
-const modeOf=tr=>'simple';
+/* アタリの出方（e.ka に入れる）。アタリにも付ける */
+const KA_JP={'iru':'穂先が入る','modoru':'穂先が戻る','omomi':'重みが乗る','te':'手元に来る'},KA_KEYS=Object.keys(KA_JP);let nextKa=null,bypassDetail=false;
+const modeOf=tr=>tr&&tr.mode==='detail'?'detail':'simple';
 const detailTxt=e=>[e.sa?SA_JP[e.sa]:'',e.ka?KA_JP[e.ka]:''].filter(Boolean).join('・');
 function recKind(kind){if(kind==='catch'){const tr=active();if(!tr)return;const g=curGear(tr);addEvent('catch',mainV(tr.cur.sp),null,null,g.rig)}else addEvent(kind)}
 function openKake(kind,sa){const last=S.ui.lastKa;
-  openSheet(`<div class="sheet-h"><h2>${KIND_JP[kind]}：掛け方</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
-   <p class="muted">2/2　${sa?SA_JP[sa]+' → ':''}掛け方を押すと記録します。</p>
+  openSheet(`<div class="sheet-h"><h2>${KIND_JP[kind]}：アタリの出方</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
+   <p class="muted">2/2　${sa?SA_JP[sa]+' → ':''}アタリの出方を押すと記録します。</p>
    <div class="ka-grid">${KA_KEYS.map(k=>`<button class="sa-b ${last===k?'on':''}" data-act="kaRec" data-k="${kind}" data-sa="${sa}" data-ka="${k}">${KA_JP[k]}</button>`).join('')}</div>
-   <button class="btn" data-act="kaRec" data-k="${kind}" data-sa="${sa}" data-ka="">掛け方なしで記録</button><button class="btn sm ghost" data-act="saBack" data-k="${kind}">← 誘いを選び直す</button>`,{kind:'sasoi'})}
+   <button class="btn" data-act="kaRec" data-k="${kind}" data-sa="${sa}" data-ka="">出方は選ばずに記録</button><button class="btn sm ghost" data-act="saBack" data-k="${kind}">← 誘いを選び直す</button>`,{kind:'sasoi'})}
 function openSasoi(kind){const tr=active();if(!tr)return;const last=S.ui.lastSa;
   openSheet(`<div class="sheet-h"><h2>${KIND_JP[kind]}：誘い</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
-   <p class="muted">${kind==='bite'?'そのとき、どう誘っていたかを押すと記録します。':'1/2　そのとき、どう誘っていたか。次に掛け方を選びます。'}</p>
-   <div class="sa-grid"><span></span><b>誘い中</b><b>ステイ中</b>
-    <b>巻き</b><button class="sa-b ${last==='maki-move'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="maki-move">巻き<br>誘い中</button><button class="sa-b ${last==='maki-stay'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="maki-stay">巻き<br>ステイ中</button>
-    <b>叩き</b><button class="sa-b ${last==='tata-move'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="tata-move">叩き<br>誘い中</button><button class="sa-b ${last==='tata-stay'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="tata-stay">叩き<br>ステイ中</button>
-    <button class="sa-b sa-fall ${last==='fall'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="fall">フォール中${kind==='bite'?'':'<small>即掛けで記録</small>'}</button></div>
-   <button class="btn" data-act="saRec" data-k="${kind}" data-sa="">${kind==='bite'?'誘いなしで記録':'誘いは選ばない（次へ）'}</button>`,{kind:'sasoi'})}
+   <p class="muted">1/2　そのとき、どうしていたか。次にアタリの出方を選びます。</p>
+   <div class="sa-grid tr-sa">${SA_KEYS.map(k=>`<button class="sa-b ${last===k?'on':''}" data-act="saRec" data-k="${kind}" data-sa="${k}">${SA_JP[k]}</button>`).join('')}</div>
+   <button class="btn" data-act="saRec" data-k="${kind}" data-sa="">誘いは選ばない（次へ）</button>`,{kind:'sasoi'})}
 /* 場所：📍場所ボタンで、その時刻の位置を記録（リアルタイム追跡はしない） */
 const ptKm=(a,b)=>{const R=6371,r=x=>x*Math.PI/180,dl=r(b.lat-a.lat),dn=r(b.lon-a.lon);const h=Math.sin(dl/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
 const kmTxt=k=>k<1?Math.round(k*100)*10+'m':r1(k)+'km';
@@ -1886,18 +1884,18 @@ function timelineSVG(tr,sp){
     ev.filter(e=>e.kind!=='catch').forEach(e=>{const x=X(e.t),yy=top+186;
       o.push(e.kind==='bite'?`<polygon points="${r1(x-5.5)},${yy-5} ${r1(x+5.5)},${yy-5} ${r1(x)},${yy+5}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`:`<polygon points="${r1(x-5.5)},${yy+5} ${r1(x+5.5)},${yy+5} ${r1(x)},${yy-5}" fill="none" stroke="${P.lost}" stroke-width="1.8"/>`)});
     y+=H}
-  // 誘い・掛け方：詳細モードで付けた分だけ。各記録の時刻に小さな札（上＝巻／叩、塗り＝誘い中・白抜き＝ステイ中、下＝即／深）
+  // 誘い・アタリの出方：詳細モードで付けた分だけ。各記録の時刻に小さな札（上＝巻／叩、塗り＝誘い中・白抜き＝ステイ中、下＝即／深）
   const dv=tr.events.filter(e=>(e.sa||e.ka)&&['catch','bite','lost'].includes(e.kind)&&e.t>=t0&&e.t<=t1&&(e.kind!=='catch'||e.sp===sp)).sort((a,b)=>a.t-b.t);
   if(dv.length){const kc={catch:P.catch,bite:P.bite,lost:P.lost},tw=24,gap=3,lanes=[];const placed=dv.map(e=>{const x=Math.min(Math.max(X(e.t),L+tw/2),W-14-tw/2);let li=lanes.findIndex(r=>r<x-tw/2-gap);if(li<0){li=lanes.length;lanes.push(-1e9)}lanes[li]=x+tw/2;return {e,x,li}});
-    const nl=Math.min(lanes.length,4),th=34,H=34+nl*(th+6)+8,top=y;band(top,H,'#f2f0f8');label(top,'誘い・掛け方','詳細モードの記録');
-    placed.filter(q=>q.li<nl).forEach(({e,x,li})=>{const yy=top+30+li*(th+6),c=kc[e.kind],mv=e.sa&&e.sa.endsWith('move'),st=e.sa&&e.sa.endsWith('stay');
+    const nl=Math.min(lanes.length,4),th=34,H=34+nl*(th+6)+8,top=y;band(top,H,'#f2f0f8');label(top,'誘い・アタリ','詳細モードの記録');
+    placed.filter(q=>q.li<nl).forEach(({e,x,li})=>{const yy=top+30+li*(th+6),c=kc[e.kind],mv=e.sa&&['shakuri','fall','maki'].includes(e.sa),st=e.sa&&e.sa.startsWith('stay');
       o.push(`<rect x="${r1(x-tw/2)}" y="${yy}" width="${tw}" height="${th}" rx="5" fill="${mv?c:'#fff'}" stroke="${c}" stroke-width="1.8"/>`);
-      if(e.sa)o.push(TX(x,yy+14,e.sa.startsWith('maki')?'巻':e.sa==='fall'?'フ':'叩',{size:12,bold:1,fill:mv?'#fff':c,anchor:'middle'}));
-      if(e.ka)o.push(TX(x,yy+29,e.ka==='soku'?'即':'深',{size:11.5,bold:1,fill:mv?'#fff':c,anchor:'middle'}))});
+      if(e.sa)o.push(TX(x,yy+14,({'shakuri':'シ','stay-just':'直','stay-long':'長','fall':'フ','maki':'巻'})[e.sa]||'',{size:12,bold:1,fill:mv?'#fff':c,anchor:'middle'}));
+      if(e.ka)o.push(TX(x,yy+29,({'iru':'入','modoru':'戻','omomi':'重','te':'手'})[e.ka]||'',{size:11.5,bold:1,fill:mv?'#fff':c,anchor:'middle'}))});
     y+=H+10;
     // 集計表
     const cnt=(f,k)=>dv.filter(e=>f(e)&&e.kind===k).length,rows=SA_KEYS.map(k=>[SA_JP[k],e=>e.sa===k]).concat(KA_KEYS.map(k=>[KA_JP[k],e=>e.ka===k])).filter(([,f])=>dv.some(f));
-    const RH=24,TH=46+rows.length*RH+10,tt=y;band(tt,TH,'#f2f0f8');o.push(TX(26,tt+24,'誘い・掛け方ごとの数',{size:15,bold:1}));
+    const RH=24,TH=46+rows.length*RH+10,tt=y;band(tt,TH,'#f2f0f8');o.push(TX(26,tt+24,'誘い・アタリの出方ごとの数',{size:15,bold:1}));
     const cx=[W*0.42,W*0.56,W*0.70,W*0.86];['釣れた','アタリ','バラシ','取り込み'].forEach((h,i)=>o.push(TX(cx[i],tt+24,h,{size:12,fill:P.muted,anchor:'middle'})));
     rows.forEach(([nm,f],i)=>{const yy=tt+48+i*RH,a=cnt(f,'catch'),b=cnt(f,'bite'),l=cnt(f,'lost');if(i===SA_KEYS.filter(k=>dv.some(e=>e.sa===k)).length&&i)o.push(`<line x1="26" y1="${yy-16}" x2="${W-26}" y2="${yy-16}" stroke="${P.grid}"/>`);
       o.push(TX(40,yy,nm,{size:13,bold:1}));[[a,P.catch],[b,P.bite],[l,P.lost]].forEach(([v,c],j)=>o.push(TX(cx[j],yy,v,{size:14,bold:1,fill:v?c:P.muted,anchor:'middle'})));
@@ -1912,7 +1910,7 @@ function timelineSVG(tr,sp){
   leg(x=>`<polygon points="${x},${y-9} ${x+11},${y-9} ${x+5.5},${y+1}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`,'アタリ');
   leg(x=>`<polygon points="${x},${y+1} ${x+11},${y+1} ${x+5.5},${y-9}" fill="none" stroke="${P.lost}" stroke-width="1.8"/>`,'バラシ');
   o.push(`<rect x="${lx}" y="${y-9}" width="20" height="8" rx="4" fill="${P.slow}"/><rect x="${lx+22}" y="${y-9}" width="20" height="8" rx="4" fill="${P.normal}"/><rect x="${lx+44}" y="${y-9}" width="20" height="8" rx="4" fill="${P.fast}"/>`+TX(lx+72,y,'潮の速さ（緩い・普通・速い）',{size:12,fill:P.muted}));
-  if(dv.length){y+=22;o.push(`<rect x="24" y="${y-12}" width="16" height="16" rx="3" fill="${P.catch}"/>`+TX(32,y+1,'巻',{size:10,bold:1,fill:'#fff',anchor:'middle'})+TX(46,y,'誘い中（塗り）',{size:12,fill:P.muted})+`<rect x="140" y="${y-12}" width="16" height="16" rx="3" fill="#fff" stroke="${P.catch}" stroke-width="1.6"/>`+TX(148,y+1,'叩',{size:10,bold:1,fill:P.catch,anchor:'middle'})+TX(162,y,'ステイ中（白抜き）　巻＝巻き　叩＝叩き　フ＝フォール　即＝即掛け　深＝深追い　枠の色＝釣れた／アタリ／バラシ',{size:12,fill:P.muted}))}
+  if(dv.length){y+=22;o.push(`<rect x="24" y="${y-12}" width="16" height="16" rx="3" fill="${P.catch}"/>`+TX(32,y+1,'シ',{size:10,bold:1,fill:'#fff',anchor:'middle'})+TX(46,y,'動かしている間（塗り）',{size:12,fill:P.muted})+`<rect x="196" y="${y-12}" width="16" height="16" rx="3" fill="#fff" stroke="${P.catch}" stroke-width="1.6"/>`+TX(204,y+1,'直',{size:10,bold:1,fill:P.catch,anchor:'middle'})+TX(218,y,'止めている間（白抜き）　枠の色＝釣れた／アタリ／バラシ',{size:12,fill:P.muted}));y+=20;o.push(TX(24,y,'シ＝シャクリ中　直＝ステイ直後　長＝ロングステイ　フ＝フォール中　巻＝巻き上げ中',{size:12,fill:P.muted}));y+=20;o.push(TX(24,y,'入＝穂先が入る　戻＝穂先が戻る　重＝重みが乗る　手＝手元に来る',{size:12,fill:P.muted}))}
   y+=22;o.push(TX(24,y,tr.station?`※潮位は気象庁の潮位表（${stName(tr.station)}）をもとに計算した推算値です。潮の向きは船首を上にしたときの、潮が流れていく向きです。`:'※潮位は満潮・干潮の時刻と潮位から補間した概形です。潮の向きは船首を上にしたときの、潮が流れていく向きです。',{size:11,fill:P.muted}));
   if(tr.station&&offBay(tr)){y+=20;o.push(TX(24,y,'※潮の向きと速さは、Open-Meteo の海流データ（約8km四方の推算値）から出しています。',{size:11,fill:P.muted}))}
   y+=18;o.push(TX(24,y,'※杯数は自分の席で釣れた分だけです。',{size:11,fill:P.muted}));const Ht=y+20;
@@ -2067,7 +2065,7 @@ function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYe
    ${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.sa||!['catch','bite','lost'].includes(e.kind))return;if(e.kind==='catch'&&e.sp!==SOLO)return;m[e.sa]=m[e.sa]||{catch:0,bite:0,lost:0};m[e.sa][e.kind]++}));const it=SA_KEYS.filter(k=>m[k]);if(!it.length)return '';
      return `<div class="rank"><h3>誘いごと（詳細モードで記録した分）</h3>${it.map(k=>`<div class="rk sa-rk"><span>${SA_JP[k]}</span><b>${m[k].catch}本<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
    ${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.ka||!['catch','bite','lost'].includes(e.kind))return;if(e.kind==='catch'&&e.sp!==SOLO)return;m[e.ka]=m[e.ka]||{catch:0,bite:0,lost:0};m[e.ka][e.kind]++}));const it=KA_KEYS.filter(k=>m[k]);if(!it.length)return '';
-     return `<div class="rank"><h3>掛け方ごと</h3>${it.map(k=>`<div class="rk sa-rk"><span>${KA_JP[k]}</span><b>${m[k].catch}本<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
+     return `<div class="rank"><h3>アタリの出方ごと</h3>${it.map(k=>`<div class="rk sa-rk"><span>${KA_JP[k]}</span><b>${m[k].catch}本<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
    ${avgBy('船ごとの平均',t=>t.boat)}</div>`}
 function calCells(ym,by,sel,act){const [Y,M]=ym.split('-').map(Number);const first=new Date(Y,M-1,1),dim=new Date(Y,M,0).getDate(),lead=first.getDay();
   const today=ymd(Date.now());let cells='';for(let i=0;i<lead;i++)cells+='<span class="cd empty"></span>';
@@ -2458,7 +2456,7 @@ function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.
    ${SOLO?'':`<div class="field"><span>魚種</span><div class="chips">${S.cfg.species.filter(x=>!x.hidden||x.id===f.sp).map(x=>`<button class="chip ${x.id===f.sp?'on':''}" data-act="evSp" data-d="${x.id}">${esc(x.name)}</button>`).join('')}</div></div>`}
    ${f.kind==='catch'&&f.sp===SOLO?`<label class="check"><input type="checkbox" id="evDragon" ${f.dragon?'checked':''}><i class="ic ic-dragon lg"></i>キロアップ（1kg以上）</label>`:''}
    ${f.kind==='catch'&&s.variants.length>1?`<div class="field"><span>種類</span><div class="chips">${s.variants.map(v=>`<button class="chip ${v.id===f.v?'on':''}" data-act="evV" data-d="${v.id}">${esc(v.name)}</button>`).join('')}</div></div>`:''}
-   ${false?`<div class="field"><span>誘い</span><div class="chips wrap">${['',...SA_KEYS].map(k=>`<button class="chip ${f.sa===k?'on':''}" data-act="evSa" data-d="${k}">${k?SA_JP[k]:'なし'}</button>`).join('')}</div></div>${f.kind!=='bite'?`<div class="field"><span>掛け方</span><div class="chips wrap">${['',...KA_KEYS].map(k=>`<button class="chip ${f.ka===k?'on':''}" data-act="evKa" data-d="${k}">${k?KA_JP[k]:'なし'}</button>`).join('')}</div></div>`:''}`:''}
+   ${f.kind!=='gedo'?`<div class="field"><span>誘い</span><div class="chips wrap">${['',...SA_KEYS].map(k=>`<button class="chip ${f.sa===k?'on':''}" data-act="evSa" data-d="${k}">${k?SA_JP[k]:'なし'}</button>`).join('')}</div></div>${true?`<div class="field"><span>アタリの出方</span><div class="chips wrap">${['',...KA_KEYS].map(k=>`<button class="chip ${f.ka===k?'on':''}" data-act="evKa" data-d="${k}">${k?KA_JP[k]:'なし'}</button>`).join('')}</div></div>`:''}`:''}
    <label class="field"><span>時刻</span><input type="time" id="evTime" data-ef="t" value="${esc(f.t)}"></label>
    <div class="grid2"><label class="field"><span>${esc(gs.catalog?'仕掛け':gs.rigLabel)}${f.gsp!==f.sp?`（${esc(gs.name)}の道具）`:''}</span><select id="evRig" data-ef="rig">${sel('rigs')}</select></label>${gs.baitLabel?`<label class="field"><span>${esc(gs.baitLabel)}</span><select id="evBait" data-ef="bait">${sel('baits')}</select></label>`:''}${gs.hookLabel?`<label class="field"><span>${esc(gs.hookLabel)}</span><select id="evHook" data-ef="hook"><option value="" ${!f.hook?'selected':''}>未選択</option>${sel('hooks')}</select></label>`:''}${gs.skirtLabel?`<label class="field"><span>${esc(gs.skirtLabel)}</span><select id="evSkirt" data-ef="skirt"><option value="" ${!f.skirt?'selected':''}>なし</option>${sel('skirts')}</select></label>`:''}</div>
    ${f.kind==='catch'&&sizeUI?`<div class="field"><span>サイズ（重さ・任意）</span>${sizeUI}</div>`:''}
@@ -2534,8 +2532,8 @@ function tenViewSheet(id,n){const t=tenyaOf(id);if(!t)return;const img=TIMG.has(
 const acts={
   modeHelp:()=>openSheet(`<div class="sheet-h"><h2>シンプルと詳細の違い</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
    <div class="mh"><h3>シンプル</h3><p>「釣れた」「アタリ」「バラシ」を押すと、その場ですぐ1件記録します。時刻と使っているテンヤ・タックルが残ります。手早く数えたいとき向けです。</p></div>
-   <div class="mh"><h3>詳細</h3><p>押したあとに、そのときの<b>誘い</b>（巻き／叩き × 誘い中／ステイ中、またはフォール中）と、<b>掛け方</b>（即掛け／深追い）を選んで記録します。アタリは誘いだけ、フォールの釣れた・バラシは即掛けとして記録します。</p><p>急いでいるときは、ボタンを<b>長押し</b>すると選ばずにすぐ記録できます。</p><p>誘い・掛け方は、振り返りの図とダッシュボードで「どの誘いで釣れたか」「取り込み率」として見られます。</p></div>
-   <p class="muted">釣行中も「本日の釣果」の左上で切り替えられます。シンプルで付けた記録も、あとから記録の一覧で誘い・掛け方を付け足せます。</p>`,{kind:'help'}),
+   <div class="mh"><h3>詳細</h3><p>押したあとに、そのときの<b>誘い</b>（シャクリ中・ステイ直後・ロングステイ・フォール中・巻き上げ中）と、<b>アタリの出方</b>（穂先が入る・穂先が戻る・重みが乗る・手元に来る）を選んで記録します。</p><p>急いでいるときは、ボタンを<b>長押し</b>すると選ばずにすぐ記録できます。</p><p>誘い・アタリの出方は、振り返りの図とダッシュボードで「どの誘いで釣れたか」「取り込み率」として見られます。</p></div>
+   <p class="muted">釣行中も「本日の釣果」の左上で切り替えられます。シンプルで付けた記録も、あとから記録の一覧で誘い・アタリの出方を付け足せます。</p>`,{kind:'help'}),
   tkSetEdit:b=>tkSetSheet(b.dataset.id),tkSetNew:()=>tkSetSheet(''),
   tkSetSave:b=>{const t=TK(),rod=$('#tseRod').value,reel=$('#tseReel').value;if(!rod||!reel)return;
     let st=b.dataset.id?setOf(b.dataset.id):null;if(!st){if(t.sets.some(x=>x.rod===rod&&x.reel===reel))return toast('同じ組み合わせがもうあります');st={id:'ts-'+uid(),rod,reel};t.sets.push(st);startDraft.tk=startDraft.tk||[];startDraft.tk.push(st.id)}else{st.rod=rod;st.reel=reel}
@@ -2729,12 +2727,12 @@ const acts={
   stDel:()=>{if(!stF.armed){stF.armed=true;return renderStateSheet()}const tr=S.trips[stF.tid];tr.states=tr.states.filter(x=>x.id!==stF.sid);touch(tr);closeSheet()},
   evKind:b=>{evF.kind=b.dataset.d;renderEvSheet()},evSize:b=>{evF.size=b.dataset.d;renderEvSheet()},evV:b=>{evF.v=b.dataset.d;renderEvSheet()},
   evSp:b=>{if(evF.sp===b.dataset.d)return;evF.sp=b.dataset.d;evF.v=mainV(evF.sp);evF.size='';renderEvSheet()},
-  saRec:b=>{const sa=b.dataset.sa,k=b.dataset.k;if(sa)S.ui.lastSa=sa;if(k!=='bite'&&sa==='fall')return acts.kaRec({dataset:{k,sa,ka:'soku'}});if(k!=='bite')return openKake(k,sa);
+  saRec:b=>{const sa=b.dataset.sa,k=b.dataset.k;if(sa)S.ui.lastSa=sa;return openKake(k,sa);
     $('#sheet').hidden=true;sheetCtx=null;nextSa=sa||null;lastTap=0;bypassDetail=true;try{recKind(k)}finally{bypassDetail=false;nextSa=null}},
   saBack:b=>openSasoi(b.dataset.k),
   kaRec:b=>{const k=b.dataset.k,sa=b.dataset.sa,ka=b.dataset.ka;if(ka)S.ui.lastKa=ka;$('#sheet').hidden=true;sheetCtx=null;nextSa=sa||null;nextKa=ka||null;lastTap=0;bypassDetail=true;
     try{recKind(k)}finally{bypassDetail=false;nextSa=null;nextKa=null}},
-  recMode:b=>{const tr=active();if(!tr)return;tr.mode=b.dataset.d;S.prefs.recMode=b.dataset.d;touch(tr);render();toast(b.dataset.d==='detail'?'詳細モード：釣れた・アタリ・バラシを押すと、誘いと掛け方を選んで記録します':'シンプルモード：押すとすぐ記録します')},
+  recMode:b=>{const tr=active();if(!tr)return;tr.mode=b.dataset.d;S.prefs.recMode=b.dataset.d;touch(tr);render();toast(b.dataset.d==='detail'?'詳細モード：釣れた・アタリ・バラシを押すと、誘いとアタリの出方を選んで記録します':'シンプルモード：押すとすぐ記録します')},
   fMode:b=>{startDraft.rmode=b.dataset.d;const w=$('#fModeSeg');if(w)w.outerHTML=fModeHTML(startDraft)},
   evKa:b=>{const tm=$('#evTime');if(tm)evF.t=tm.value;const m=$('#evMemo');if(m)evF.memo=m.value;evF.ka=b.dataset.d;renderEvSheet()},
   evSa:b=>{const tm=$('#evTime');if(tm)evF.t=tm.value;const m=$('#evMemo');if(m)evF.memo=m.value;evF.sa=b.dataset.d;renderEvSheet()},

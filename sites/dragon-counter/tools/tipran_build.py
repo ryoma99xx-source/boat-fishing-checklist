@@ -367,5 +367,8 @@ RX(r'(<a class="brand" href="https://cutlassfish.tokyo/"><img class="b-ic" src="
 
 if 'マダイ' in s:
     sys.exit('left over: マダイ')
+# ティップラン用の誘い・アタリの出方（詳細モード）。tools/tipran_sasoi.py
+import tipran_sasoi
+s = tipran_sasoi.apply(s)
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))
