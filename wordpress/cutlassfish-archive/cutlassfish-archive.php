@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cutlassfish Archive（記事一覧・釣行記の年表・検索）
  * Description: 過去記事を見つけやすくします。全記事一覧（/articles/：魚・テーマ・年月で絞り込み、文字で検索）、釣行記の年表（/fishing-log/）、メニューの検索欄、記事の下の「前後の記事」と「同じ魚の記事」。釣果速報は一覧に入れません。
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPLv2 or later
  */
@@ -12,9 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class CF_Archive {
-	const V     = '1.0.1';
+	const V     = '1.0.2';
 	const TYPES = array( 'tachiuo_post' );   // 釣り記事だけ。釣果速報（tbt_catch）・動画・初期の投稿（Hello world!）は入れない
 	const CACHE = 'cf_archive_items_v1';
+	// 目立たせるカタログ（メニューと記事の下）。slug は記事のURL。sp：この魚種の記事に出す／kw：タイトル・抜粋にこの言葉がある記事に出す（両方あれば両方を満たすとき）
+	const CATALOGS = array(
+		array( 'slug' => 'tachiuo-tenya-catalog', 'en' => 'TENYA CATALOG', 'ja' => 'テンヤカタログ', 'sp' => 'tachiuo', 'kw' => '', 'lead' => 'テンヤ選びに迷ったら', 'title' => '船タチウオテンヤ カタログ｜全色を写真で一覧（毎月更新）' ),
+		array( 'slug' => 'tipran-egi-catalog', 'en' => 'EGI CATALOG', 'ja' => 'エギ・シンカーカタログ', 'sp' => '', 'kw' => '/ティップラン|エギ|アオリ/u', 'lead' => 'エギ選びに迷ったら', 'title' => 'ティップラン用エギ・シンカー カタログ｜全色を写真で一覧' ),
+	);
 
 	public static function init() {
 		add_action( 'init', array( __CLASS__, 'rewrite' ) );
@@ -179,7 +184,11 @@ f.innerHTML='<input type="search" name="q" placeholder="記事を探す（例：
 var a=document.createElement('a');a.href='<?php echo $all; ?>';a.className='en';a.innerHTML='ARCHIVE<small>記事一覧</small>';
 var b=document.createElement('a');b.href='<?php echo $log; ?>';b.className='en';b.innerHTML='FISHING LOG<small>釣行記の年表</small>';
 var first=nav.firstElementChild;var ref=first?first.nextSibling:null;
-[f,a,b].forEach(function(el){nav.insertBefore(el,ref)});})();
+var els=[f,a,b];
+<?php foreach ( self::CATALOGS as $c ) : ?>
+els.push((function(){var x=document.createElement('a');x.href='<?php echo esc_url( home_url( '/article/' . $c['slug'] . '/' ) ); ?>';x.className='en';x.innerHTML='<?php echo esc_js( $c['en'] ); ?><small><?php echo esc_js( $c['ja'] ); ?></small>';return x})());
+<?php endforeach; ?>
+els.forEach(function(el){nav.insertBefore(el,ref)});})();
 </script>
 		<?php
 	}
@@ -218,6 +227,7 @@ var first=nav.firstElementChild;var ref=first?first.nextSibling:null;
 		}
 		$o  = self::css();
 		$o .= '<nav class="cfa-after" aria-label="ほかの記事">';
+		$o .= self::catalog_banner( $me, $items );
 		if ( $older || $newer ) {
 			$o .= '<div class="cfa-pn">';
 			$o .= $older ? self::pn( $older, '← 前の記事' ) : '<span></span>';
@@ -236,6 +246,28 @@ var first=nav.firstElementChild;var ref=first?first.nextSibling:null;
 		$o .= '</nav>';
 		return $html . $o;
 	}
+	private static function catalog_banner( $me, $items ) {
+		$hay = $me['title'] . ' ' . $me['ex'];
+		foreach ( self::CATALOGS as $c ) {
+			if ( ( $c['sp'] && ! isset( $me['sp'][ $c['sp'] ] ) ) || ( $c['kw'] && ! preg_match( $c['kw'], $hay ) ) ) {
+				continue;
+			}
+			$url = home_url( '/article/' . $c['slug'] . '/' );
+			if ( untrailingslashit( $me['url'] ) === untrailingslashit( $url ) ) {
+				continue;   // カタログの記事そのものには出さない
+			}
+			$img = '';
+			foreach ( $items as $it ) {
+				if ( untrailingslashit( $it['url'] ) === untrailingslashit( $url ) ) {
+					$img = $it['img'];
+					break;
+				}
+			}
+			return '<a class="cfa-cat" href="' . esc_url( $url ) . '">' . ( $img ? '<img src="' . esc_url( $img ) . '" alt="" loading="lazy" width="84" height="84">' : '' )
+				. '<span><small>' . esc_html( $c['lead'] ) . '</small><b>' . esc_html( $c['title'] ) . '</b><em>カタログを見る →</em></span></a>';
+		}
+		return '';
+	}
 	private static function pn( $it, $label ) {
 		$img = $it['img'] ? '<img src="' . esc_url( $it['img'] ) . '" alt="" loading="lazy" width="72" height="72">' : '';
 		return '<a class="cfa-pn-a" href="' . esc_url( $it['url'] ) . '">' . $img . '<span><small>' . esc_html( $label ) . '</small>' . esc_html( $it['title'] ) . '</span></a>';
@@ -248,6 +280,12 @@ var first=nav.firstElementChild;var ref=first?first.nextSibling:null;
 		$done = true;
 		return '<style>
 .cfa-after{margin:44px 0 10px;padding-top:24px;border-top:1px solid rgba(255,255,255,.14)}
+.cfa-cat{display:flex;gap:14px;align-items:center;margin:0 0 18px;padding:12px;border:2px solid #e3a43b;border-radius:14px;background:#0f1a28;color:#ffffff !important;text-decoration:none}
+.cfa-cat img{flex:none;width:84px;height:84px;object-fit:cover;border-radius:8px;margin:0}
+.cfa-cat span{min-width:0;display:block;line-height:1.5}
+.cfa-cat small{display:block;font-size:12px;letter-spacing:.08em;color:#e3a43b;font-weight:700}
+.cfa-cat b{display:block;font-size:16px;color:#ffffff}
+.cfa-cat em{display:block;font-style:normal;font-size:13px;color:#9fb4c6;margin-top:4px}
 .cfa-pn{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .cfa-pn-a{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.18);border-radius:10px;background:#0f1a28;color:#eef3f8 !important;text-decoration:none;font-size:13px;line-height:1.5;min-width:0}
 .cfa-pn-a img{flex:none;width:56px;height:56px;object-fit:cover;border-radius:6px;margin:0}
