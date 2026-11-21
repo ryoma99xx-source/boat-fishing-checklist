@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Dragon Counter Data
- * Description: ドラゴンカウンター（TOOL 05）とティップランカウンターから匿名で届いた釣果データを、管理画面（ツール → ドラゴンカウンターのデータ）でダッシュボード・一覧・ダウンロード・削除します。上のタブでアプリを切り替えます。データはサーバーの .data/trips/（ティップランは tipran/.data/trips/）にあるものを読むだけで、外には出しません。
- * Version: 1.3.0
+ * Description: ドラゴンカウンター（TOOL 05）・ティップランカウンター・タイラバカウンターから匿名で届いた釣果データを、管理画面（ツール → ドラゴンカウンターのデータ）でダッシュボード・一覧・ダウンロード・削除します。上のタブでアプリを切り替えます。データはサーバーの .data/trips/（ティップランは tipran/.data/trips/、タイラバは tairaba/.data/trips/）にあるものを読むだけで、外には出しません。
+ * Version: 1.4.0
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -15,6 +15,7 @@ final class DCD_Admin {
     const APPS = [
         'dc' => ['name' => 'ドラゴンカウンター', 'id' => 'dragon-counter', 'sub' => '', 'fish' => 'タチウオ', 'unit' => '本', 'big' => 'ドラゴン', 'rig' => 'テンヤ', 'file' => 'dragon-counter-data'],
         'tipran' => ['name' => 'ティップランカウンター', 'id' => 'tipran-counter', 'sub' => '/tipran', 'fish' => 'アオリイカ', 'unit' => '杯', 'big' => 'キロアップ', 'rig' => 'エギ', 'file' => 'tipran-counter-data'],
+        'tairaba' => ['name' => 'タイラバカウンター', 'id' => 'tairaba-counter', 'sub' => '/tairaba', 'fish' => 'マダイ', 'unit' => '枚', 'big' => '大物の印', 'rig' => 'タイラバ', 'file' => 'tairaba-counter-data'],
     ];
     private static $app = 'dc';
     private static function A($k) { return self::APPS[self::$app][$k]; }

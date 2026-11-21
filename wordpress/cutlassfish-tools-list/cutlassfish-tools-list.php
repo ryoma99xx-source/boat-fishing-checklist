@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Cutlassfish ツール一覧の追加
- * Description: テーマのツール一覧（トップの TOOLS・ツールのページ・メニュー）に、潮と流れマップ・ドラゴンカウンター・ティップランカウンターを足します。テーマの仕組み（tbt_tools）に足すので、テーマ本体は変えません。紹介記事は公開されているものだけ「READ ARTICLE」を出します。以前の「Tool 04」「Tool 05」プラグインの表示は、二重にならないよう止めます。
- * Version: 1.0.0
+ * Description: テーマのツール一覧（トップの TOOLS・ツールのページ・メニュー）に、潮と流れマップ・ドラゴンカウンター・ティップランカウンター・タイラバカウンターを足します。テーマの仕組み（tbt_tools）に足すので、テーマ本体は変えません。紹介記事は公開されているものだけ「READ ARTICLE」を出します。以前の「Tool 04」「Tool 05」プラグインの表示は、二重にならないよう止めます。
+ * Version: 1.1.0
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -31,6 +31,13 @@ function cftl_tools() {
             'lead' => 'アオリイカの釣果を時間と一緒に、エギ・シンカー・潮・船の向きと一緒に記録する無料ツール。エギ・シンカー・竿・リールは写真付きのカタログから選べ、釣り場を選ぶと潮回りと満潮・干潮が自動で入ります。記録は端末に保存され、釣果データは匿名で集計に使います。',
             'url'  => 'https://dragon-counter.cutlassfish.tokyo/tipran/',
             'post' => 'tipran-counter',
+        ),
+        array(
+            'en'   => 'TAIRABA COUNTER',
+            'name' => 'タイラバカウンター',
+            'lead' => 'マダイの釣果を時間と一緒に、タイラバ（ヘッド・ネクタイ・針・スカート）・潮・流れと一緒に記録する無料ツール。ヘッド・ネクタイ・竿・リールはメーカーのカタログから選べ、巻きの速さやアタリの位置も残せます。全国どこの釣り場でも使え、記録は端末に保存されます。釣果データは匿名で集計に使います。',
+            'url'  => 'https://dragon-counter.cutlassfish.tokyo/tairaba/',
+            'post' => 'tairaba-counter',
         ),
     );
 }
