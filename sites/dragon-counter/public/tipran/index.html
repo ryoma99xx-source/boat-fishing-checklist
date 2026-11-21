@@ -491,7 +491,7 @@ body.has-dock .sync span{display:none}
 .chips.wrap .chip.cimg{box-sizing:border-box;display:inline-flex;flex-direction:column;align-items:stretch;gap:4px;flex:0 0 calc(50% - 4px);width:calc(50% - 4px);max-width:calc(50% - 4px);min-width:0;border-radius:12px;padding:6px;white-space:normal;text-align:center;font-size:14px;line-height:1.3}
 .eimg.cc{width:100%;height:60px;border-radius:8px}
 .chip.cimg.on .eimg{outline:3px solid var(--chipon);outline-offset:-3px}
-[data-act=tbcSeries]{max-width:100%;white-space:normal;text-align:left;border-radius:14px}
+[data-act=tbcSeries]{max-width:100%;white-space:normal;text-align:left;border-radius:14px}.gph{flex:none;object-fit:cover;background:#fff;border-radius:6px}.gph.ch{width:44px;height:26px;vertical-align:middle;margin:-4px 8px -4px -6px}.gph.row{width:64px;height:40px}.grow{flex-wrap:wrap}.grow .tb-nm{min-width:8em}.gph.eimg.cur{grid-column:1;grid-row:1;width:64px;height:28px}.gph-pv{background:#fff;border-radius:14px;padding:8px;margin:0 0 10px;text-align:center}.gph-pv img{max-width:100%;max-height:300px;border-radius:8px}.gph-pv .muted{color:#667;margin:30px 0}
 .td-tenya.has-img span{grid-column:2;grid-row:1;white-space:nowrap;align-self:center} .td-tenya.has-img b{grid-column:1/3;grid-row:2;font-size:15px}
 .td-dragon{flex:1;display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-height:62px;cursor:pointer}
 .td-dragon input{width:24px;height:24px;flex:none;accent-color:var(--amber)}
@@ -1165,7 +1165,7 @@ function tenyaBadges(t){const b=[];if(isNewTenya(t))b.push('<span class="tb new"
 /* head photos: public/tenya/<id>.webp, listed in tenya/index.json (derived from maker photos, see tools/tenya_images.py) */
 let TIMG=new Set(),TV='';
 if(SITE){fetch('/tenya/index.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&Array.isArray(j.ids)){TIMG=new Set(j.ids);TV=String(j.v||'');if(typeof render==='function'&&$('#sheet').hidden)render()}}).catch(()=>{})}
-const timg=(id,cls)=>TIMG.has(id)?`<img class="timg ${cls||''}" src="/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}" alt="" loading="lazy" decoding="async">`:'';
+const timg=(id,cls)=>TIMG.has(id)?`<img class="timg ${cls||''}" src="/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}" alt="" loading="lazy" decoding="async">`:gph(id,'timg '+(cls||''));
 const TEN=()=>S.cfg.tenya;
 const myTenya=()=>TEN().mine.filter(id=>tenyaOf(id));
 const qtyOf=id=>Math.max(1,+((TEN().qty||{})[id])||1); // 所有している個数
@@ -1188,8 +1188,25 @@ function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(S));localOK=true
    localStorage が消えたときのために、同じ内容を IndexedDB にも控えておき、起動時に記録が空なら控えから戻す。
    写真は IndexedDB にだけ保存する（この端末の中だけ。送信・バックアップには含めない） */
 let idbP=null,mirrorT=0;const PH_URL={};
-function idb(){if(!idbP)idbP=new Promise((ok,ng)=>{try{const r=indexedDB.open(LS+'.idb',1);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv');if(!d.objectStoreNames.contains('photos'))d.createObjectStore('photos',{keyPath:'id'})};r.onsuccess=()=>ok(r.result);r.onerror=()=>ng(r.error)}catch(e){ng(e)}});return idbP}
+function idb(){if(!idbP)idbP=new Promise((ok,ng)=>{try{const r=indexedDB.open(LS+'.idb',2);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv');if(!d.objectStoreNames.contains('photos'))d.createObjectStore('photos',{keyPath:'id'});if(!d.objectStoreNames.contains('gear'))d.createObjectStore('gear',{keyPath:'id'})};r.onsuccess=()=>ok(r.result);r.onerror=()=>ng(r.error)}catch(e){ng(e)}});return idbP}
 function idbReq(store,mode,fn){return idb().then(d=>new Promise((ok,ng)=>{const tx=d.transaction(store,mode);const q=fn(tx.objectStore(store));tx.oncomplete=()=>ok(q&&q.result);tx.onerror=()=>ng(tx.error);tx.onabort=()=>ng(tx.error)}))}
+/* ---------- 自分で登録した道具（テンヤ・エギ・ヘッド・シンカー・ネクタイ）の写真 ----------
+   1品に1枚。長い辺600pxに縮めて IndexedDB の gear に置き、全データのバックアップにも入れる（釣行の写真とは別） */
+const GPH={};
+function gphLoad(){return idb().then(d=>new Promise(ok=>{try{const q=d.transaction('gear','readonly').objectStore('gear').getAll();q.onsuccess=()=>{(q.result||[]).forEach(r=>{if(r&&r.id&&r.url)GPH[r.id]=r.url});ok()};q.onerror=()=>ok()}catch(e){ok()}})).then(()=>{if(Object.keys(GPH).length&&typeof render==='function'&&$('#sheet').hidden)render()}).catch(()=>{})}
+function gphPut(id,url){GPH[id]=url;return idbReq('gear','readwrite',st=>st.put({id,url,at:Date.now()})).catch(()=>{})}
+function gphRemove(id){delete GPH[id];return idbReq('gear','readwrite',st=>st.delete(id)).catch(()=>{})}
+const gph=(id,cls)=>id&&GPH[id]?`<img class="gph ${cls||''}" src="${GPH[id]}" alt="" decoding="async">`:'';
+function gphFromFile(f){return new Promise((ok,ng)=>{const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{const k=Math.min(1,600/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL('image/jpeg',.85))};im.onerror=()=>{URL.revokeObjectURL(u);ng(new Error('img'))};im.src=u})}
+let gphTarget=null;
+function openGph(id,name){gphTarget={id,name:name||''};
+  openSheet(`<div class="sheet-h"><h2>写真：${esc(name||'')}</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
+   <div class="gph-pv">${GPH[id]?`<img src="${GPH[id]}" alt="">`:'<p class="muted">まだ写真はありません。</p>'}</div>
+   <p class="muted">アルバムから選ぶか、その場で撮れます。写真は小さくしてこの端末に保存し、全データのバックアップにも入ります。</p>
+   <label class="btn primary big" for="gphFile">${GPH[id]?'写真を変える':'写真を選ぶ・撮る'}<input type="file" id="gphFile" accept="image/*" hidden></label>
+   ${GPH[id]?'<button class="btn" data-act="gphDel">写真を消す</button>':''}`,{kind:'gph'})}
+addEventListener('change',e=>{const el=e.target;if(!el||el.id!=='gphFile'||!el.files||!el.files[0]||!gphTarget)return;const g=gphTarget,f=el.files[0];el.value='';
+  gphFromFile(f).then(u=>gphPut(g.id,u)).then(()=>{toast('写真を登録しました');render();openGph(g.id,g.name)}).catch(()=>toast('写真を読めませんでした'))});
 function idbMirror(){clearTimeout(mirrorT);mirrorT=setTimeout(()=>{try{idbReq('kv','readwrite',st=>st.put({at:Date.now(),s:JSON.stringify(S)},'state')).catch(()=>{})}catch(e){}},800)}
 async function idbRestore(){try{if(trips().some(t=>!t.sample))return;const v=await idbReq('kv','readonly',st=>st.get('state'));if(!v||!v.s)return;const o=JSON.parse(v.s);
   if(!o||!o.trips||!Object.values(o.trips).some(t=>t&&!t.sample&&!t.deleted))return;S=migrateState(o);saveLocal();render();toast('この端末に残っていた控えから、記録を戻しました')}catch(e){}}
@@ -1283,7 +1300,7 @@ function makeSampleFugu(){
   return tr}
 function defaults(){return {v:2,trips:{},activeId:null,prefs:{port:'',boat:'',seats:8,side:'R',seat:null,sp:'tiprun',g:{}},dirty:{trips:[],cfg:false},ui:{tab:'rec'}}}
 S=migrateState(loadLocal()||defaults());
-setTimeout(()=>{askPersist();idbRestore();photoCleanup();try{new MutationObserver(hydratePhotos).observe(document.body,{childList:true,subtree:true});hydratePhotos()}catch(e){}},60);
+setTimeout(()=>{askPersist();idbRestore();gphLoad();photoCleanup();try{new MutationObserver(hydratePhotos).observe(document.body,{childList:true,subtree:true});hydratePhotos()}catch(e){}},60);
 setTimeout(()=>{if(snapOwned())cfgTouch()},0); // after every top-level declaration has run
 
 const active=()=>S.activeId&&S.trips[S.activeId]&&!S.trips[S.activeId].deleted?S.trips[S.activeId]:null;
@@ -1521,7 +1538,7 @@ function rigZRow(l){const zs=[...new Set((l||[]).filter(g=>!g.hidden&&g.shape).m
   return `<div class="chips rigz">${['',...zs].map(z=>`<button class="chip ${z?'':'on'}" data-act="rigZ" data-d="${esc(z)}">${z?esc(z)+'号':'全号数'}</button>`).join('')}</div>`}
 function chipsHTML(sp,k,sel,act){const s=spOf(sp);const label=k==='rigs'?s.rigLabel:k==='hooks'?s.hookLabel:s.baitLabel;if(!label)return '';
   return `<div class="gearpick"><div class="gp-lbl">${esc(label)}</div>${k==='rigs'?rigZRow(s[k]):''}<div class="chips wrap">${(s[k]||[]).filter(g=>!g.hidden).map(g=>
-  `<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}"${k==='rigs'?` data-z="${esc(g.shape||'')}"`:''} aria-pressed="${g.id===sel}">${k==='rigs'?eimg(egiIm(g),'ch'):''}${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">＋</button></div></div>`}
+  `<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}"${k==='rigs'?` data-z="${esc(g.shape||'')}"`:''} aria-pressed="${g.id===sel}">${k==='rigs'?eimg(egiIm(g),'ch'):''}${gph(g.id,'ch')}${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">＋</button></div></div>`}
 function fModeHTML(f){const m=f.rmode||'';
   return `<div class="card ${m?'':'need-pick'}" id="fModeSeg"><h2>記録のしかた<small class="req">必須</small><button class="qhelp" data-act="modeHelp" aria-label="シンプルと詳細の違い">?</button></h2><div class="seg">${[['simple','シンプル'],['detail','詳細']].map(([k,l])=>`<button class="${m===k?'on':''}" data-act="fMode" data-d="${k}">${l}</button>`).join('')}</div>
    <p class="muted">${!m?'シンプルか詳細のどちらかを選んでください。':m==='detail'?'釣れた・アタリ・バラシを押すたびに、誘い（シャクリ中・ステイ直後・ロングステイ・フォール中・巻き上げ中）とアタリの出方（穂先が入る・穂先が戻る・重みが乗る・手元に来る）を選んで記録します。長押しすると選ばずにすぐ記録。':'押すとすぐ記録します。誘いやアタリの出方は付けません（あとから記録の一覧で付けることもできます）。'}釣行中も「本日の釣果」の左上で切り替えられます。</p></div>`}
@@ -1734,7 +1751,7 @@ function viewActive(tr){ocurEnsure(tr);const sp=tr.cur.sp,s=spOf(sp),g=curGear(t
    <section class="today" aria-label="本日の釣果">
     <div class="td-top"><span class="td-h"><span class="mseg" role="group" aria-label="記録のしかた"><button class="${modeOf(tr)==='simple'?'on':''}" data-act="recMode" data-d="simple">シンプル</button><button class="${modeOf(tr)==='detail'?'on':''}" data-act="recMode" data-d="detail">詳細</button></span>${isTairyo(tr.date)?tairyoTag():''}</span><span class="td-n"><b id="cnum">${c.length}</b>${esc(s.unit)}${SOLO?'':`<small>${esc(s.name)}</small>`}${sp===SOLO?`<small class="td-dn"><i class="ic ic-dragon"></i>キロアップ <b>${nd}</b></small>`:''}</span></div>
     <div class="td-row"><button class="td-catch" data-act="catchCur"${modeOf(tr)==='detail'?' data-lp="catch"':''}><b>釣れた</b><small>＋1</small>${modeOf(tr)==='detail'?'<i class="lp-hint">誘い・アタリの出方を選ぶ<br>長押しですぐ記録</i>':''}</button>
-     <div class="td-side"><button class="td-tenya ${(ten?curGear(tr).rig&&TIMG.has(curGear(tr).rig):rigIm(sp,curGear(tr).rig))?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):eimg(rigIm(sp,curGear(tr).rig),'cur')}<span>${ten?'使用テンヤ':'エギ'}</span><b>${esc(curRigLabel(tr))}</b><i aria-hidden="true">▾</i></button>
+     <div class="td-side"><button class="td-tenya ${(ten?curGear(tr).rig&&(TIMG.has(curGear(tr).rig)||GPH[curGear(tr).rig]):(rigIm(sp,curGear(tr).rig)||GPH[curGear(tr).rig]))?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):(eimg(rigIm(sp,curGear(tr).rig),'cur')||gph(curGear(tr).rig,'eimg cur'))}<span>${ten?'使用テンヤ':'エギ'}</span><b>${esc(curRigLabel(tr))}</b><i aria-hidden="true">▾</i></button>
       ${sp===SOLO?`<label class="td-dragon ${dragonNext?'on':''}"><input type="checkbox" id="dragonChk" ${dragonNext?'checked':''}><i class="ic ic-dragon lg"></i><span><b>キロアップ</b><small>1kg以上</small></span></label>`:''}</div></div>
     <div class="td-bl"><button data-act="bite"${modeOf(tr)==='detail'?' data-lp="bite"':''}><b>${nKind(tr,sp,'bite')}</b><span>アタリ</span><small>${ten?'使用テンヤで記録':'＋1'}</small></button><button data-act="lost"${modeOf(tr)==='detail'?' data-lp="lost"':''}><b>${nKind(tr,sp,'lost')}</b><span>バラシ</span><small>${ten?'使用テンヤで記録':'＋1'}</small></button></div>
     ${tkUseHTML(tr)}
@@ -2107,7 +2124,7 @@ function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYe
   const rank=(title,keyFn,nameFn,lim,act)=>{const m={};L.forEach(t=>catchesOf(t,SOLO).forEach(e=>{const k=keyFn(t,e);if(k)m[k]=(m[k]||0)+1}));const it=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,lim||3);if(!it.length)return '';const mx=it[0][1];
     return `<div class="rank"><h3>${title}</h3>${it.map(([k,v])=>act?`<button class="rk rk-btn" data-act="${act}" data-id="${esc(k)}" data-n="${v}"><span>${esc(nameFn(k))}</span><i style="width:${Math.max(6,v/mx*100)}%"></i><b>${v}杯</b></button>`:`<div class="rk"><span>${esc(nameFn(k))}</span><i style="width:${Math.max(6,v/mx*100)}%"></i><b>${v}杯</b></div>`).join('')}${act?'<p class="muted rk-hint">押すとテンヤの写真が見られます</p>':''}</div>`};
   const avgBy=(title,keyFn)=>{const m={};L.forEach(t=>{const k=keyFn(t);if(!k)return;m[k]=m[k]||{n:0,s:0};m[k].n++;m[k].s+=N(t)});const it=Object.entries(m).sort((a,b)=>b[1].s/b[1].n-a[1].s/a[1].n).slice(0,5);if(!it.length)return '';const mx=Math.max(...it.map(x=>x[1].s/x[1].n),1);
-    return `<div class="rank"><h3>${title}</h3>${it.map(([k,v])=>`<div class="rk"><span>${esc(k)}</span><i style="width:${Math.max(6,v.s/v.n/mx*100)}%"></i><b>${r1(v.s/v.n)}杯<small>／${v.n}回</small></b></div>`).join('')}</div>`};
+    return `<div class="rank"><h3>${title}</h3>${it.map(([k,v])=>`<div class="rk"><span>${esc(k)}</span><i style="width:${Math.max(6,v.s/v.n/mx*100)}%"></i><b>${r1(v.s/v.n)}${esc(spOf(SOLO).unit)}<small>／${v.n}回</small></b></div>`).join('')}</div>`};
   return `<div class="card dash"><h2>ダッシュボード</h2>${seg}
    <div class="kpis">${kpi(L.length,'回','釣行')}${kpi(tot,'杯','アオリイカ合計')}${kpi(r1(tot/L.length),'杯','1回あたり')}${kpi(hrs?r1(tot/hrs):0,'杯','1時間あたり')}
     ${kpi(drag,'杯','キロアップ',tot?`全体の${Math.round(drag/tot*100)}%`:'')}${kpi(N(best),'杯','最高',`${best.date.slice(5).replace('-','/')} ${esc(best.boat)}`)}${kpi(L.reduce((a,t)=>a+nKind(t,SOLO,'lost'),0),'回','バラシ')}</div>
@@ -2116,14 +2133,14 @@ function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYe
    ${avgBy('釣り場ごとの平均',t=>t.spot?t.spot.name:(t.port||''))}
    ${avgBy('潮回りごとの平均',t=>tideNameOf(t))}
    ${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.sa||!['catch','bite','lost'].includes(e.kind))return;if(e.kind==='catch'&&e.sp!==SOLO)return;m[e.sa]=m[e.sa]||{catch:0,bite:0,lost:0};m[e.sa][e.kind]++}));const it=SA_KEYS.filter(k=>m[k]);if(!it.length)return '';
-     return `<div class="rank"><h3>誘いごと（詳細モードで記録した分）</h3>${it.map(k=>`<div class="rk sa-rk"><span>${SA_JP[k]}</span><b>${m[k].catch}杯<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
+     return `<div class="rank"><h3>誘いごと（詳細モードで記録した分）</h3>${it.map(k=>`<div class="rk sa-rk"><span>${SA_JP[k]}</span><b>${m[k].catch}${esc(spOf(SOLO).unit)}<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
    ${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.ka||!['catch','bite','lost'].includes(e.kind))return;if(e.kind==='catch'&&e.sp!==SOLO)return;m[e.ka]=m[e.ka]||{catch:0,bite:0,lost:0};m[e.ka][e.kind]++}));const it=KA_KEYS.filter(k=>m[k]);if(!it.length)return '';
-     return `<div class="rank"><h3>アタリの出方ごと</h3>${it.map(k=>`<div class="rk sa-rk"><span>${KA_JP[k]}</span><b>${m[k].catch}杯<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
+     return `<div class="rank"><h3>アタリの出方ごと</h3>${it.map(k=>`<div class="rk sa-rk"><span>${KA_JP[k]}</span><b>${m[k].catch}${esc(spOf(SOLO).unit)}<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
    ${avgBy('船ごとの平均',t=>t.boat)}</div>`}
 function calCells(ym,by,sel,act){const [Y,M]=ym.split('-').map(Number);const first=new Date(Y,M-1,1),dim=new Date(Y,M,0).getDate(),lead=first.getDay();
   const today=ymd(Date.now());let cells='';for(let i=0;i<lead;i++)cells+='<span class="cd empty"></span>';
   for(let d=1;d<=dim;d++){const ds=`${ym}-${String(d).padStart(2,'0')}`;const ts=by[ds]||[];const n=ts.reduce((a,t)=>a+catchesOf(t,SOLO).length,0);const dg=ts.reduce((a,t)=>a+nDragon(t,SOLO),0);const wd=(lead+d-1)%7;
-    cells+=ts.length?`<button class="cd has ${ds===sel?'on':''} ${n>=TAIRYO?'tai':''} ${wd===0?'sun':wd===6?'sat':''}" data-act="${act}" data-d="${ds}"><span class="cd-d">${d}</span><b>${n}<small>杯</small></b>${n>=TAIRYO?'<i class="ic ic-tairyo"></i>':dg?'<i class="ic ic-dragon"></i>':''}</button>`
+    cells+=ts.length?`<button class="cd has ${ds===sel?'on':''} ${n>=TAIRYO?'tai':''} ${wd===0?'sun':wd===6?'sat':''}" data-act="${act}" data-d="${ds}"><span class="cd-d">${d}</span><b>${n}<small>${esc(spOf(SOLO).unit)}</small></b>${n>=TAIRYO?'<i class="ic ic-tairyo"></i>':dg?'<i class="ic ic-dragon"></i>':''}</button>`
       :`<span class="cd ${ds===today?'today':''} ${wd===0?'sun':wd===6?'sat':''}"><span class="cd-d">${d}</span></span>`}
   return cells}
 function calHTML(){const all0=trips(),real=all0.filter(t=>!t.sample),all=real.length?real:all0;const now=new Date();let ym=S.ui.calYM;if(!ym){const lt=all.find(t=>!t.sample)||all[0];ym=lt?lt.date.slice(0,7):`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`}
@@ -2133,7 +2150,7 @@ function calHTML(){const all0=trips(),real=all0.filter(t=>!t.sample),all=real.le
   const mTrips=all.filter(t=>t.date.startsWith(ym));const mTot=mTrips.reduce((a,t)=>a+catchesOf(t,SOLO).length,0);
   const list=(sel?by[sel]||[]:mTrips).slice().sort((a,b)=>b.start-a.start);
   return `<div class="card cal"><div class="cal-h"><button class="btn sm" data-act="calMove" data-d="-1" aria-label="前の月">‹</button><b>${Y}年${M}月</b><button class="btn sm" data-act="calMove" data-d="1" aria-label="次の月">›</button></div>
-   <p class="muted cal-sum">${mTrips.length?`この月：釣行 ${mTrips.length}回・アオリイカ ${mTot}杯`:'この月の釣行はありません'}</p>
+   <p class="muted cal-sum">${mTrips.length?`この月：釣行 ${mTrips.length}回・${esc(spOf(SOLO).name)} ${mTot}${esc(spOf(SOLO).unit)}`:'この月の釣行はありません'}</p>
    <div class="cal-w">${['日','月','火','水','木','金','土'].map(x=>`<span>${x}</span>`).join('')}</div><div class="cal-g">${cells}</div></div>
    ${list.length?`<h2 class="sec-h">${sel?`${jdate(sel)}の釣行`:`${M}月の釣行`}${sel?'<button class="golink" data-act="calDay" data-d="">月全体に戻す</button>':''}</h2><div class="card">${list.map(tripCardHTML).join('')}</div>`:''}`}
 function viewHist(){const statSp=spOf(S.ui.statSp).id!=='?'?S.ui.statSp:(spVisible()[0]||{}).id;
@@ -2180,7 +2197,7 @@ function tbcSheet(){const rows=tbcRows(),zOk=r=>!tbc.z||tbc.kind!=='rigs'||(r.o|
   if(tbc.add){const el=$('#'+({m:'tbcM',p:'tbcP',o:'tbcZ',c:'tbcCn'}[tbc.add]));if(el)setTimeout(()=>el.focus(),30)}}
 /* シンカーは付けない人も多いので「なし」を選べる。初期値は「なし」 */
 function skirtChips(sel,act){const s=spOf(SOLO),l=(s.skirts||[]).filter(g=>!g.hidden);
-  return `<div class="gearpick"><div class="gp-lbl">シンカー<small class="muted">（任意）</small></div><div class="chips wrap"><button class="chip ${!sel?'on':''}" data-act="${act}" data-id="" aria-pressed="${!sel}">なし</button>${l.map(g=>`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="シンカーを登録">＋</button></div></div>`}
+  return `<div class="gearpick"><div class="gp-lbl">シンカー<small class="muted">（任意）</small></div><div class="chips wrap"><button class="chip ${!sel?'on':''}" data-act="${act}" data-id="" aria-pressed="${!sel}">なし</button>${l.map(g=>`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${gph(g.id,'ch')}${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="シンカーを登録">＋</button></div></div>`}
 const tbVal=id=>{const el=$('#'+id);return el?el.value.trim():''};
 const tbDl=(id,k)=>`<datalist id="${id}">${TB_DL[k].map(x=>`<option value="${esc(x)}">`).join('')}</datalist>`;
 /* 写真：登録したエギのメーカー・製品・色でカタログを引く（前に登録したものにも出る） */
@@ -2188,7 +2205,9 @@ const eimg=(id,cls)=>id?`<img class="eimg ${cls||''}" src="/tipran/egi/${id}.web
 function egiIm(x){if(!x||!x.series)return '';const r=TB_CAT.heads.find(r=>r.m===x.maker&&r.s===x.series);if(!r||!r.i)return '';return r.i[r.c.indexOf(x.color)]||''}
 const rigIm=(sp,id)=>egiIm((spOf(sp).rigs||[]).find(x=>x.id===id));
 function tbName(k,x){if(k==='skirts')return [x.series,x.g?x.g+'g':'',x.color].filter(Boolean).join(' ');return [x.series||x.maker,x.shape?x.shape+'号':'',x.g?x.g+'g':'',x.color].filter(Boolean).join(' ')}
-function tbList(k){const s=spOf(SOLO),l=s[k]||[];return l.length?l.map(g=>`<div class="grow ${g.hidden?'hid':''}">${k==='rigs'?eimg(egiIm(g),'row'):''}<span class="tb-nm">${esc(g.name)}</span><button class="btn sm" data-act="itemHide" data-sp="${SOLO}" data-kind="${k}" data-id="${g.id}">${g.hidden?'表示する':'隠す'}</button><button class="btn sm" data-act="tbDel" data-kind="${k}" data-id="${g.id}">消す</button></div>`).join(''):'<p class="muted">まだありません。</p>'}
+/* 自分で登録したヘッド・ネクタイ・針・シンカーには写真を付けられる（キロアップカウンターの gph の仕組み） */
+const gphBtn=g=>egiIm(g)?'':`<button class="btn sm" data-act="gphOpen" data-id="${g.id}" data-name="${esc(g.name)}">写真</button>`;
+function tbList(k){const s=spOf(SOLO),l=s[k]||[];return l.length?l.map(g=>`<div class="grow ${g.hidden?'hid':''}">${k==='rigs'?eimg(egiIm(g),'row'):''}${gph(g.id,'row')}<span class="tb-nm">${esc(g.name)}</span>${gphBtn(g)}<button class="btn sm" data-act="itemHide" data-sp="${SOLO}" data-kind="${k}" data-id="${g.id}">${g.hidden?'表示する':'隠す'}</button><button class="btn sm" data-act="tbDel" data-kind="${k}" data-id="${g.id}">消す</button></div>`).join(''):'<p class="muted">まだありません。</p>'}
 function tbPartsHTML(){
   return `<div class="card" id="tbHeads"><h2>所有エギを登録する</h2><p class="muted">メーカーのカタログから選ぶか、メーカー・号数・重さ・色を入れて登録します。</p>${tbList('rigs')}${TB_CAT.heads.length?`<button class="btn sm" data-act="tbcOpen" data-kind="rigs" style="margin:8px 0">📖 カタログから選ぶ（${[...new Set(TB_CAT.heads.map(r=>r.m))].length}社・${TB_CAT.heads.length}製品）</button><p class="muted" style="margin:0">カタログにないものは、下に入れて登録</p>`:''}
    <div class="tb-form"><label class="field"><span>メーカー</span><input type="text" id="tbHm" list="tbHmL" placeholder="例：ダイワ">${tbDl('tbHmL','mk')}</label>
@@ -2230,7 +2249,7 @@ function tenyaSectionHTML(){const T=TEN();
 function mineChip(id){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip mine ${t.custom?'own':''}" data-q="${esc(tqText(id))}">${timg(id,'tci big')}<span class="mc-n"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}</span>${qtyHTML(id)}<button class="tx" data-act="mineDel" data-id="${id}" aria-label="所有から外す">×</button></span>`}
 function ctFieldsHTML(t){return `<div class="grid2"><label class="field"><span>メーカー</span><input type="text" id="ct-m" value="${esc(t.m||'')}" placeholder="例：DAIWA"></label><label class="field"><span>製品名</span><input type="text" id="ct-p" value="${esc(t.p||'')}" placeholder="例：船タチウオテンヤSS"></label></div>
     <div class="grid2"><label class="field"><span>号数</span><input type="number" inputmode="numeric" id="ct-z" value="${esc(t.z||'')}" placeholder="40"></label><label class="field"><span>カラー</span><input type="text" id="ct-c" value="${esc(t.c||'')}" placeholder="例：パープルグロー"></label></div>`}
-function ownChip(id){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip own"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}<button class="tx2" data-act="ctEdit" data-id="${id}">編集</button><button class="tx" data-act="customDel" data-id="${id}" aria-label="消す">×</button></span>`}
+function ownChip(id){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip own"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}${t.custom?`<button class="tx2" data-act="gphOpen" data-id="${id}" data-name="${esc(tenyaMain(t))}">写真</button>`:''}<button class="tx2" data-act="ctEdit" data-id="${id}">編集</button><button class="tx" data-act="customDel" data-id="${id}" aria-label="消す">×</button></span>`}
 /* edit a self-added tenya; legacy items only had a name like "40号 シルバー" */
 let ctF=null;
 function openCtEdit(id,from){const T=TEN();const it=id?T.custom.find(x=>x.id===id):null;let t=it?{...it}:{};
@@ -2596,10 +2615,10 @@ function helpHTML(){return `<div class="sheet-h"><h2>ボタンで数える<small
 /* ---------- actions ---------- */
 // keep the trip picker on the 図 tab just under the sticky header
 (()=>{const set=()=>{const h=document.querySelector('header.top');if(h)document.documentElement.style.setProperty('--topH',h.offsetHeight+'px')};set();addEventListener('resize',set);if(window.ResizeObserver){const h=document.querySelector('header.top');if(h)new ResizeObserver(set).observe(h)}})();
-function tenViewSheet(id,n){const t=tenyaOf(id);if(!t)return;const img=TIMG.has(id)?`<img class="tv-img" src="/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}" alt="${esc(tenyaFull(id))}">`:'<div class="tv-noimg">写真はありません</div>';
+function tenViewSheet(id,n){const t=tenyaOf(id);if(!t)return;const img=TIMG.has(id)?`<img class="tv-img" src="/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}" alt="${esc(tenyaFull(id))}">`:GPH[id]?`<img class="tv-img" src="${GPH[id]}" alt="${esc(tenyaFull(id))}">`:'<div class="tv-noimg">写真はありません</div>';
   openSheet(`<div class="sheet-h"><h2>よく釣れたテンヤ</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
    <div class="tv-box">${img}</div><p class="tv-sub">${esc(tenyaSub(t))}</p><h3 class="tv-main">${esc(tenyaMain(t))}</h3><div class="tv-badges">${tenyaBadges(t)}</div>
-   <p class="tv-n">この期間に<b>${n}杯</b></p>${t.u?`<a class="golink" href="${esc(t.u)}" target="_blank" rel="noopener">メーカーの商品ページ →</a>`:''}`,{kind:'tenview'})}
+   <p class="tv-n">この期間に<b>${n}${esc(spOf(SOLO).unit)}</b></p>${t.u?`<a class="golink" href="${esc(t.u)}" target="_blank" rel="noopener">メーカーの商品ページ →</a>`:''}`,{kind:'tenview'})}
 const acts={
   modeHelp:()=>openSheet(`<div class="sheet-h"><h2>シンプルと詳細の違い</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
    <div class="mh"><h3>シンプル</h3><p>「釣れた」「アタリ」「バラシ」を押すと、その場ですぐ1件記録します。時刻と使っているテンヤ・タックルが残ります。手早く数えたいとき向けです。</p></div>
@@ -2750,6 +2769,8 @@ const acts={
     if(ctF.id){const it=T.custom.find(x=>x.id===ctF.id);Object.assign(it,d);delete it.name}else{const it={id:'c'+uid(),...d,custom:true};T.custom.push(it);T.mine.push(it.id);if(tb.mode==='set'){const st=T.sets.find(x=>x.id===tb.setId);if(st)st.items.push(it.id)}}
     cfgTouch();toast('保存しました');ctBack()},
   ctDel:()=>{const T=TEN();const it=T.custom.find(x=>x.id===ctF.id);if(it)it.hidden=true;T.mine=T.mine.filter(x=>x!==ctF.id);T.sets.forEach(st=>st.items=st.items.filter(x=>x!==ctF.id));cfgTouch();toast('消しました');ctBack()},
+  gphOpen:b=>openGph(b.dataset.id,b.dataset.name),
+  gphDel:b=>{const g=gphTarget;if(!g)return;gphRemove(g.id).then(()=>{toast('写真を消しました');render();openGph(g.id,g.name)})},
   customDel:b=>{const T=TEN();const it=T.custom.find(x=>x.id===b.dataset.id);if(it)it.hidden=true;T.mine=T.mine.filter(x=>x!==b.dataset.id);T.sets.forEach(st=>st.items=st.items.filter(x=>x!==b.dataset.id));cfgTouch();render()},
   boatAdd:()=>{const el=$('#add-boat'),v=el.value.trim();if(!v)return el.focus();if(S.cfg.boats.some(x=>x.name===v))return toast('同じ名前の船が登録されています');const n=clampP(($('#add-boat-seats')||{}).value||16);
     const st=($('#add-boat-start')||{}).value||'',en=($('#add-boat-end')||{}).value||'';
@@ -2938,7 +2959,7 @@ function brandSVG(svg){const m=svg.match(/width="(\d+)" height="(\d+)"/);if(!m)r
 /* いちばん釣れたエギ（写真は data URL にして SVG に埋め込む） */
 async function instaTop(tr,sp){const m={};catchesOf(tr,sp).forEach(e=>{if(e.rig)m[e.rig]=(m[e.rig]||0)+1});const id=Object.keys(m).sort((a,b)=>m[b]-m[a])[0];if(!id)return null;
   const t=tenyaOf(id),top={n:m[id],sub:t?tenyaSub(t):'',main:t?tenyaMain(t):listName(sp,'rigs',id),img:''};
-  const ei=rigIm(sp,id);if(ei){try{const im=new Image();await new Promise((ok,ng)=>{im.onload=ok;im.onerror=ng;im.src=`/tipran/egi/${ei}.webp`});
+  const ei=rigIm(sp,id);if(ei||GPH[id]){try{const im=new Image();await new Promise((ok,ng)=>{im.onload=ok;im.onerror=ng;im.src=ei?`/tipran/egi/${ei}.webp`:GPH[id]});
     const k=Math.min(1,480/Math.max(im.naturalWidth,im.naturalHeight)),cv=document.createElement('canvas');cv.width=Math.round(im.naturalWidth*k);cv.height=Math.round(im.naturalHeight*k);
     cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);top.img=cv.toDataURL('image/png');top.w=cv.width;top.h=cv.height}catch(e){}}
   return top}
@@ -3000,7 +3021,7 @@ acts.shareMake=async b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.
 function backupData(){const ts=trips().filter(t=>!t.sample);
   return {app:'tipran-counter',kind:'backup',v:3,exportedAt:new Date().toISOString(),
     counts:{trips:ts.length,catches:ts.reduce((n,t)=>n+t.events.filter(e=>e.kind==='catch').length,0),spots:S.cfg.spots.length,boats:S.cfg.boats.length,tenya:myTenya().length},
-    cfg:S.cfg,trips:ts,prefs:S.prefs}}
+    cfg:S.cfg,trips:ts,prefs:S.prefs,gearPhotos:{...GPH}}}
 const bkName=()=>{const d=new Date(),p=x=>String(x).padStart(2,'0');return `tipran-counter-backup-${ymd(Date.now())}-${p(d.getHours())}${p(d.getMinutes())}.json`};
 function backupDone(){S.ui.lastBackup=Date.now();saveLocal();if(S.ui.tab==='gear'||S.ui.tab==='hist')render()}
 async function exportJson(){const data=JSON.stringify(backupData());const name=bkName();
@@ -3023,7 +3044,7 @@ function renderRestore(){const {d}=rs;const c=d.cfg||{};const when=d.exportedAt?
   const catches=d.trips.reduce((n,t)=>n+t.events.filter(e=>e.kind==='catch').length,0);
   openSheet(`<div class="sheet-h"><h2>バックアップから復元</h2><button class="btn sm ghost" data-act="closeSheet">やめる</button></div>
    <div class="bkinfo"><b>${when?`${jdate(ymd(when.getTime()))} ${hm(when.getTime())} のバックアップ`:'バックアップ'}</b><span>${esc(rs.src||'')}</span>
-    <ul><li>釣行 <b>${d.trips.length}</b>件（釣果 ${catches}杯）</li><li>釣り場 ${(c.spots||[]).length}・船 ${(c.boats||[]).length}・所有テンヤ ${((c.tenya||{}).mine||[]).length}</li></ul></div>
+    <ul><li>釣行 <b>${d.trips.length}</b>件（釣果 ${catches}${esc(spOf(SOLO).unit)}）</li><li>釣り場 ${(c.spots||[]).length}・船 ${(c.boats||[]).length}・所有テンヤ ${((c.tenya||{}).mine||[]).length}</li></ul></div>
    <p class="muted">この端末には今、釣行 ${cur.length}件があります。</p>
    <div class="field"><span>復元のしかた</span><div class="seg"><button class="${rs.mode==='merge'?'on':''}" data-act="rsMode" data-d="merge">足して合わせる</button><button class="${rs.mode==='replace'?'on':''}" data-act="rsMode" data-d="replace">そっくり置き換える</button></div></div>
    <p class="muted">${rs.mode==='merge'?`今の記録は残したまま、バックアップにしかない釣行（${rs.nNew}件）を足し、同じ釣行はより新しいほう（バックアップが新しいのは${rs.nNewer}件）を残します。設定（釣り場・船・エギ）は、新しいほうを使います。`:'今のこの端末の記録と設定をすべて消して、バックアップの内容にします。バックアップにない釣行は消えます（クラウドからも消えます）。'}</p>
@@ -3036,6 +3057,7 @@ function doRestore(){const {d,mode}=rs;let n=0;
   else{d.trips.forEach(t=>{const l=S.trips[t.id];if(!l||l.deleted||(t.updatedAt||0)>(l.updatedAt||0)){S.trips[t.id]=t;markDirty(t.id);n++}});
     if(d.cfg&&(d.cfg.updatedAt||0)>(S.cfg.updatedAt||0)){S.cfg=clone(d.cfg);migrateCfg(S.cfg);S.dirty.cfg=true}
     if(!active()){const a=trips().find(t=>t.status==='active');S.activeId=a?a.id:null}}
+  if(d.gearPhotos&&typeof d.gearPhotos==='object')Object.entries(d.gearPhotos).forEach(([id,u])=>{if(typeof u==='string'&&/^data:image\//.test(u)&&(mode==='replace'||!GPH[id]))gphPut(id,u)});
   startDraft=null;rs=null;saveLocal();scheduleFlush();closeSheet();toast(mode==='replace'?`バックアップの内容に置き換えました（釣行${n}件）`:`${n}件の釣行を復元しました`)}
 function pasteRestoreSheet(){openSheet(`<div class="sheet-h"><h2>文字を貼り付けて復元</h2><button class="btn sm ghost" data-act="closeSheet">やめる</button></div>
    <p class="muted">「文字で保存」でコピーしておいたバックアップを、そのまま貼り付けてください。</p><textarea id="rsText" style="min-height:200px" placeholder='{"app":"dragon-counter", …}'></textarea><button class="btn primary" data-act="rsPasteRead">読み取る</button>`,{kind:'restore'})}

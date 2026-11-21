@@ -106,6 +106,10 @@ R("function evGearText(e){const gs=e.gsp||e.sp,s=spOf(gs);return [listName(gs,'r
 R("function curRigLabel(tr){const sp=tr.cur.sp,g=curGear(tr);if(isTenya(sp,g))return g.rig&&tenyaOf(g.rig)?tenyaLabel(g.rig):'未選択';return listName(sp,'rigs',g.rig)}",
   "function curRigLabel(tr){const sp=tr.cur.sp,g=curGear(tr);if(isTenya(sp,g))return g.rig&&tenyaOf(g.rig)?tenyaLabel(g.rig):'未選択';return [listName(sp,'rigs',g.rig),listName(sp,'baits',g.bait),g.skirt?'スカート '+listName(sp,'skirts',g.skirt):''].filter(Boolean).join('／')||'未登録'}")
 R("<span>${ten?'使用テンヤ':'仕掛け'}</span>", "<span>${ten?'使用テンヤ':'タイラバ'}</span>")
+R("<button class=\"td-tenya ${ten&&curGear(tr).rig&&(TIMG.has(curGear(tr).rig)||GPH[curGear(tr).rig])?'has-img':''}\" data-act=\"${ten?'curTenya':'rigPick'}\">${ten?timg(curGear(tr).rig,'cur'):''}",
+  "<button class=\"td-tenya ${(ten?curGear(tr).rig&&(TIMG.has(curGear(tr).rig)||GPH[curGear(tr).rig]):GPH[curGear(tr).rig])?'has-img':''}\" data-act=\"${ten?'curTenya':'rigPick'}\">${ten?timg(curGear(tr).rig,'cur'):gph(curGear(tr).rig,'eimg cur')}")
+R("if(t&&(TIMG.has(id)||GPH[id])){try{", "if((t&&TIMG.has(id))||GPH[id]){try{")
+R("'いちばん釣れたテンヤ'", "'いちばん釣れたタイラバ'")
 R("`<button class=\"tb-btn\" data-act=\"rigPick\"><span>仕掛け</span><b>${esc(METHOD_JP[methodOf(sp,g)]||'仕掛け')}</b></button>`",
   "`<button class=\"tb-btn\" data-act=\"rigPick\"><span>針</span><b>${esc(listName(sp,'hooks',g.hook)||'未登録')}</b></button>`")
 R("${needBait(sp,g)?`<button class=\"tb-btn\" data-act=\"baitPick\">", "${needBait(sp,g)&&!s.tairaba?`<button class=\"tb-btn\" data-act=\"baitPick\">")
@@ -149,13 +153,15 @@ function tbcSheet(){const rows=tbcRows(),makers=[...new Set(rows.map(r=>r.m))];i
    <div class="tb-foot"><button class="btn primary" data-act="tbcSave" ${n?'':'disabled'}>${n?`${n}件を登録`:'重さと色を選んでください'}</button></div>`,{kind:'tbc'})}
 /* スカートは付けない人も多いので「なし」を選べる。初期値は「なし」 */
 function skirtChips(sel,act){const s=spOf(SOLO),l=(s.skirts||[]).filter(g=>!g.hidden);
-  return `<div class="gearpick"><div class="gp-lbl">スカート<small class="muted">（任意）</small></div><div class="chips wrap"><button class="chip ${!sel?'on':''}" data-act="${act}" data-id="" aria-pressed="${!sel}">なし</button>${l.map(g=>`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="スカートを登録">＋</button></div></div>`}
+  return `<div class="gearpick"><div class="gp-lbl">スカート<small class="muted">（任意）</small></div><div class="chips wrap"><button class="chip ${!sel?'on':''}" data-act="${act}" data-id="" aria-pressed="${!sel}">なし</button>${l.map(g=>`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${gph(g.id,'ch')}${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="スカートを登録">＋</button></div></div>`}
 const tbVal=id=>{const el=$('#'+id);return el?el.value.trim():''};
 const tbDl=(id,k)=>`<datalist id="${id}">${TB_DL[k].map(x=>`<option value="${esc(x)}">`).join('')}</datalist>`;
 function tbName(k,x){if(x.series)return [x.series,x.g?x.g+'g':'',x.color].filter(Boolean).join(' ');if(k==='rigs')return [x.g?x.g+'g':'',x.shape,x.color].filter(Boolean).join(' ')+(x.maker?`（${x.maker}）`:'');
   if(k==='baits'||k==='skirts')return [x.shape,x.color].filter(Boolean).join(' ');
   return x.type==='diy'?['自作',x.n?x.n+'本針':'',x.size?'針'+x.size:'',x.line?'糸'+x.line:''].filter(Boolean).join(' '):'市販 '+(x.pkg||'')}
-function tbList(k){const s=spOf(SOLO),l=s[k]||[];return l.length?l.map(g=>`<div class="grow ${g.hidden?'hid':''}"><span class="tb-nm">${esc(g.name)}</span><button class="btn sm" data-act="itemHide" data-sp="${SOLO}" data-kind="${k}" data-id="${g.id}">${g.hidden?'表示する':'隠す'}</button><button class="btn sm" data-act="tbDel" data-kind="${k}" data-id="${g.id}">消す</button></div>`).join(''):'<p class="muted">まだありません。</p>'}
+/* 自分で登録したヘッド・ネクタイ・針・スカートには写真を付けられる（ドラゴンカウンターの gph の仕組み） */
+const gphBtn=g=>`<button class="btn sm" data-act="gphOpen" data-id="${g.id}" data-name="${esc(g.name)}">写真</button>`;
+function tbList(k){const s=spOf(SOLO),l=s[k]||[];return l.length?l.map(g=>`<div class="grow ${g.hidden?'hid':''}">${gph(g.id,'row')}<span class="tb-nm">${esc(g.name)}</span>${gphBtn(g)}<button class="btn sm" data-act="itemHide" data-sp="${SOLO}" data-kind="${k}" data-id="${g.id}">${g.hidden?'表示する':'隠す'}</button><button class="btn sm" data-act="tbDel" data-kind="${k}" data-id="${g.id}">消す</button></div>`).join(''):'<p class="muted">まだありません。</p>'}
 function tbPartsHTML(){const H=tbHookType;
   return `<div class="card" id="tbHeads"><h2>ヘッド</h2><p class="muted">メーカーのカタログから選ぶか、重さ・形・色・メーカーを入れて登録します。</p>${tbList('rigs')}${TB_CAT.heads.length?`<button class="btn sm" data-act="tbcOpen" data-kind="rigs" style="margin:8px 0">📖 カタログから選ぶ</button><p class="muted" style="margin:0">カタログにないものは、下に入れて登録</p>`:''}
    <div class="tb-form"><label class="field"><span>重さ（g）</span><input type="number" id="tbHg" inputmode="numeric" min="1" max="500" placeholder="例：80"></label>
@@ -279,6 +285,17 @@ RX(r"  \{k:'出船',t:'釣り場と席を選ぶ',d:'[^']*'\},",
    "  {k:'出船',t:'釣り場と席を選ぶ',d:'釣り場を選ぶだけで、潮回りと満潮・干潮、流れの向きと速さが自動で入ります。釣り場は全国の地図か現在地から登録できます。船と自分の席もタップで選びます。'},")
 RX(r"  \{k:'釣れたら',t:'「釣れた」を1タップ',d:'[^']*'\},",
    "  {k:'釣れたら',t:'「釣れた」を1タップ',d:'「釣れた＋1」で、今使っているタイラバ（ヘッド・ネクタイ・針）と一緒に1枚記録します。部品を替えたら「タイラバ」のボタンから、替えた部品だけ選び直します（押しても記録はされません）。アタリ・バラシも同じように記録されます。押し間違えたら下の「直前の釣果を取り消し」。マダイ以外が掛かったら小さな「外道」ボタンから（枚数には入りません）。'},")
+
+# ───────── 数の単位・魚の名前（ドラゴンカウンターの「タチウオ」「本」の残り）。魚の名前と単位は spOf(SOLO) から出す（ティップランにもそのまま効く）
+U = "${esc(spOf(SOLO).unit)}"
+R("この月：釣行 ${mTrips.length}回・タチウオ ${mTot}本", "この月：釣行 ${mTrips.length}回・${esc(spOf(SOLO).name)} ${mTot}" + U)
+R('<span class="cd-d">${d}</span><b>${n}<small>本</small></b>', '<span class="cd-d">${d}</span><b>${n}<small>' + U + '</small></b>')
+R('<p class="tv-n">この期間に<b>${n}本</b></p>', '<p class="tv-n">この期間に<b>${n}' + U + '</b></p>')
+R('（釣果 ${catches}本）', '（釣果 ${catches}' + U + '）')
+R('${r1(v.s/v.n)}本<small>／${v.n}回</small>', '${r1(v.s/v.n)}' + U + '<small>／${v.n}回</small>')
+R('<span>${SA_JP[k]}</span><b>${m[k].catch}本<small>', '<span>${SA_JP[k]}</span><b>${m[k].catch}' + U + '<small>')
+R('<span>${KA_JP[k]}</span><b>${m[k].catch}本<small>', '<span>${KA_JP[k]}</span><b>${m[k].catch}' + U + '<small>')
+R("タチウオ以外に釣れた魚を、今の時刻と使用テンヤで1匹記録します（タチウオの本数には入りません）。", "マダイ以外に釣れた魚を、今の時刻と使っているタイラバで1匹記録します（マダイの枚数には入りません）。")
 
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))

@@ -62,7 +62,8 @@ p{margin:0}
 .field>span{font-size:13px;color:var(--muted);font-weight:500}
 input[type=text],input[type=date],input[type=time],input[type=number],select,textarea{width:100%;min-height:46px;border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:8px 12px;font-size:16px}
 textarea{min-height:140px;font-family:ui-monospace,Menlo,monospace;font-size:14px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%}input[type=time]::-webkit-date-and-time-value{text-align:center}
 .stepper{display:flex;align-items:center;gap:8px}
 .stepper b{font-family:var(--f-num);font-size:28px;min-width:2ch;text-align:center;font-variant-numeric:tabular-nums}
 .stepper .btn{min-width:48px;padding:0}
@@ -171,7 +172,7 @@ textarea{min-height:140px;font-family:ui-monospace,Menlo,monospace;font-size:14p
 /* iPhone: keep sheet children at full height so the panel itself scrolls; stop the page behind from scrolling */
 .sheet-panel>*{flex-shrink:0}
 body:has(#sheet:not([hidden])){overflow:hidden}
-.shr-pick{display:flex;flex-direction:column;gap:10px}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
+.shr-pick{display:flex;flex-direction:column;gap:10px}.ph-strip{display:flex;gap:6px;overflow-x:auto;margin:8px 0}.ph-it{flex:none;padding:0;border:0;background:var(--surface2);border-radius:10px;overflow:hidden;width:72px;height:72px;cursor:pointer}.ph-it img{width:100%;height:100%;object-fit:cover;display:block}.ph-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}.ph-cell{display:flex;flex-direction:column;gap:4px;min-width:0}.ph-cell .ph-it{width:100%;height:auto;aspect-ratio:1/1}.ph-big{display:block;width:100%;height:auto;max-height:75vh;object-fit:contain;border-radius:12px;margin-top:8px}.ph-miss{display:none!important}.ph-add{display:block;text-align:center;cursor:pointer;margin-top:8px}.safe-box{display:flex;flex-direction:column;gap:8px;margin:10px 0 14px}.safe-box .sb-row{display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid rgba(227,164,59,.55);border-radius:12px;background:rgba(227,164,59,.1);font-size:13px;line-height:1.6}.safe-box .sb-row span{flex:1;min-width:0}.safe-box .btn{flex:none}.locmap-w{margin:10px 0 0}.locmap{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#e6eef2}.locmap-h{margin:0 0 4px;font-size:13px;font-weight:700}.locmap-lg{margin:6px 0 8px;font-size:12px;color:var(--muted)}.locmap-lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 4px 0 8px;vertical-align:-1px}.locmap-lg i:first-child{margin-left:0}.evmap{cursor:crosshair}.evmap-act{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.evmap-act .btn{min-height:34px}.linkbtn{background:none;border:0;padding:0 2px;color:var(--teal);text-decoration:underline;font:inherit;font-size:12px;cursor:pointer}.locmap-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.btn.gmap{font-size:12px;min-height:32px;padding:4px 12px}.shr-ig-h{margin:16px 0 8px;font-size:14px;color:var(--muted)}.shr-ig{display:grid;grid-template-columns:1fr 1fr;gap:10px}.shr-ig .btn small{display:block;font-weight:500;font-size:12px}.shr-pick .btn{min-height:52px}.shr-imgs{display:flex;flex-direction:column;gap:12px}
 /* the tenya catalog is long: keep the title + 完了 pinned at the top and a 完了 bar pinned at the bottom of the sheet */
 .sheet-h.stick{position:sticky;top:-18px;z-index:3;margin:-18px calc(-1 * max(16px,env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:14px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-bottom:1px solid var(--line)}
 .tb-foot{position:sticky;bottom:calc(-24px - env(safe-area-inset-bottom,0px));z-index:3;margin:0 calc(-1 * max(16px,env(safe-area-inset-right,0px))) calc(-24px - env(safe-area-inset-bottom,0px)) calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-top:1px solid var(--line)}
@@ -393,7 +394,7 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 .td-bl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 [data-lp]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .td-catch .lp-hint{font-style:normal;font-size:11px;font-weight:600;opacity:.65;margin-top:2px}
-.sa-grid{display:grid;grid-template-columns:44px 1fr 1fr;gap:8px;align-items:center;margin:6px 0 10px}.sa-grid .sa-fall{grid-column:1/-1;min-height:52px}.sa-fall small{display:block;font-size:12px;font-weight:400;color:var(--muted)}.sa-grid>b{font-size:13px;color:var(--muted);text-align:center}
+.sa-grid{display:grid;grid-template-columns:44px 1fr 1fr;gap:8px;align-items:center;margin:6px 0 10px}.sa-grid .sa-fall{grid-column:1/-1;min-height:52px}.sa-grid .sa-fo{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px}.sa-grid .sa-fo .sa-fall{grid-column:auto}.sa-fall small{display:block;font-size:12px;font-weight:400;color:var(--muted)}.sa-grid>b{font-size:13px;color:var(--muted);text-align:center}
 .sa-b{min-height:76px;border-radius:14px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);font-size:17px;font-weight:800;line-height:1.3}.sa-b.on{border-color:var(--teal);box-shadow:0 0 0 2px rgba(65,201,198,.35)}
 .fd-sa{color:var(--amber)!important}
 .ka-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 12px}.ka-grid .sa-b{min-height:96px;font-size:22px}
@@ -415,7 +416,7 @@ body.has-dock main{padding-bottom:calc(96px + 196px + env(safe-area-inset-bottom
 body.kbd .tabs,body.kbd .dock{display:none}
 .tab{font-size:13px}
 .tab.on{color:var(--teal);background:transparent}
-.sheet-panel{background:var(--surface)}
+.sheet-panel{background:var(--surface)}.sheet-panel{overflow-x:hidden;overscroll-behavior-x:none;touch-action:pan-y pinch-zoom}.sheet-panel select,.sheet-panel input{min-width:0;max-width:100%}.sheet-panel select{text-overflow:ellipsis}.sheet-panel .grid2>*{min-width:0}.evmap{touch-action:manipulation}
 .toast{background:#e9f3f6;color:#06121b;touch-action:pan-x;transition:transform .15s ease-out}
 .top{background:var(--bg)}
 .sample-note{background:var(--surface);border-color:rgba(227,164,59,.4);color:var(--amber)}
@@ -479,7 +480,7 @@ body.has-dock .sync span{display:none}
 .td-tenya b{grid-column:1;font-size:16px;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-all}
 .td-tenya i{grid-column:3;grid-row:1/3;font-style:normal;color:var(--teal);font-size:18px;padding-left:6px}
 /* with a photo: row 1 = small photo + label, row 2 = the name across the full width (the box is narrow) */
-.td-tenya.has-img{grid-template-columns:auto 1fr auto;column-gap:6px;row-gap:2px} .timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}
+.td-tenya.has-img{grid-template-columns:auto 1fr auto;column-gap:6px;row-gap:2px} .timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}.gph{flex:none;object-fit:cover;background:#fff;border-radius:6px}.gph.ch{width:44px;height:26px;vertical-align:middle;margin:-4px 8px -4px -6px}.gph.row{width:64px;height:40px}.grow{flex-wrap:wrap}.grow .tb-nm{min-width:8em}.gph.eimg.cur{grid-column:1;grid-row:1;width:64px;height:28px}.gph-pv{background:#fff;border-radius:14px;padding:8px;margin:0 0 10px;text-align:center}.gph-pv img{max-width:100%;max-height:300px;border-radius:8px}.gph-pv .muted{color:#667;margin:30px 0}
 .td-tenya.has-img span{grid-column:2;grid-row:1;white-space:nowrap;align-self:center} .td-tenya.has-img b{grid-column:1/3;grid-row:2;font-size:15px}
 .td-dragon{flex:1;display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-height:62px;cursor:pointer}
 .td-dragon input{width:24px;height:24px;flex:none;accent-color:var(--amber)}
@@ -1084,9 +1085,9 @@ const methodOf=(sp,g)=>spOf(sp).catalog?((g&&g.method)||spOf(sp).method||'tenya'
 const isTenya=(sp,g)=>methodOf(sp,g)==='tenya';
 const needBait=(sp,g)=>!!spOf(sp).baitLabel&&methodOf(sp,g)!=='tenbin'; // 天秤のときは餌を記録しない
 const METHOD_JP={tenya:'テンヤ',tenbin:'天秤'};
-/* タチウオの餌: 種類（イワシ・ハイブリッドクロス・カマス・その他）。イワシはサイズ・頭・内臓も持つ。
+/* タチウオの餌: 種類（イワシ・ハイブリッドクロス・カマス・身餌・その他）。イワシはサイズ・頭・内臓も持つ。
    id は "bz:iw:中:h0:g0" の形（h1=頭つき, g1=内臓あり）。その他は登録した餌の id。 */
-const BZ_TYPES=[['iw','イワシ'],['hc','ハイブリッドクロス'],['km','カマス']],BZ_DEF='bz:iw:中:h0:g0',bzX={};
+const BZ_TYPES=[['iw','イワシ'],['hc','ハイブリッドクロス'],['km','カマス'],['mi','身餌']],BZ_DEF='bz:iw:中:h0:g0',bzX={};
 const isBzSp=sp=>spOf(sp).id==='tachiuo';
 const bzLegacy=b=>/^イワシ\s*(大|中|小)$/.exec(b&&b.name||'');
 function bzParse(sp,id){if(id&&id.startsWith('bz:')){const [,t,z,h,g]=id.split(':');return {t,z:z||'中',h:h||'h0',g:g||'g0'}}
@@ -1148,12 +1149,12 @@ const tenyaMain=t=>t.name?t.name:`${t.z?t.z+'号 ':''}${t.c||''}`.trim();
 const tenyaSub=t=>t.name?'':`${MK[t.m]||t.m||''} ${prodShort(t.p)}`.trim();
 function tenyaLabel(id){const t=tenyaOf(id);if(!t)return null;return tenyaShort(t)}
 function tenyaFull(id){const t=tenyaOf(id);if(!t)return '';const a=tenyaMain(t),b=tenyaSub(t);return b?`${b} ${a}`:a}
-const isNewTenya=t=>t&&t.a&&(Date.now()-new Date(t.a).getTime())<60*864e5;
+const isNewTenya=t=>{if(!t||!t.a)return false;const d=new Date(t.a);d.setMonth(d.getMonth()+3);return Date.now()<d.getTime()};   // カタログに入ってから3か月は新商品（テンヤカタログのページと同じ）
 function tenyaBadges(t){const b=[];if(isNewTenya(t))b.push('<span class="tb new">新商品</span>');if(t.s)b.push(`<span class="tb">${esc(t.s)}</span>`);if(t.h)b.push('<span class="tb">替えヘッド</span>');if(t.custom)b.push('<span class="tb own">自分で追加</span>');else if(t.id&&!CAT.by[t.id])b.push('<span class="tb">カタログから外れました（控えから表示）</span>');return b.join('')}
 /* head photos: public/tenya/<id>.webp, listed in tenya/index.json (derived from maker photos, see tools/tenya_images.py) */
 let TIMG=new Set(),TV='';
 if(SITE){fetch('/tenya/index.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&Array.isArray(j.ids)){TIMG=new Set(j.ids);TV=String(j.v||'');if(typeof render==='function'&&$('#sheet').hidden)render()}}).catch(()=>{})}
-const timg=(id,cls)=>TIMG.has(id)?`<img class="timg ${cls||''}" src="/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}" alt="" loading="lazy" decoding="async">`:'';
+const timg=(id,cls)=>TIMG.has(id)?`<img class="timg ${cls||''}" src="/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}" alt="" loading="lazy" decoding="async">`:gph(id,'timg '+(cls||''));
 const TEN=()=>S.cfg.tenya;
 const myTenya=()=>TEN().mine.filter(id=>tenyaOf(id));
 const qtyOf=id=>Math.max(1,+((TEN().qty||{})[id])||1); // 所有している個数
@@ -1171,7 +1172,56 @@ const firstVis=(sp,k)=>{const l=spOf(sp)[k]||[];const v=l.find(x=>!x.hidden)||l[
 const LS='tairaba-log.v1';
 let S=null,localOK=true;
 function loadLocal(){try{const r=localStorage.getItem(LS);return r?JSON.parse(r):null}catch(e){localOK=false;return null}}
-function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(S));localOK=true}catch(e){localOK=false}renderSync()}
+function saveLocal(){try{localStorage.setItem(LS,JSON.stringify(S));localOK=true}catch(e){localOK=false}idbMirror();renderSync()}
+/* ---------- 記録の控え（IndexedDB）と写真 ----------
+   localStorage が消えたときのために、同じ内容を IndexedDB にも控えておき、起動時に記録が空なら控えから戻す。
+   写真は IndexedDB にだけ保存する（この端末の中だけ。送信・バックアップには含めない） */
+let idbP=null,mirrorT=0;const PH_URL={};
+function idb(){if(!idbP)idbP=new Promise((ok,ng)=>{try{const r=indexedDB.open(LS+'.idb',2);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv');if(!d.objectStoreNames.contains('photos'))d.createObjectStore('photos',{keyPath:'id'});if(!d.objectStoreNames.contains('gear'))d.createObjectStore('gear',{keyPath:'id'})};r.onsuccess=()=>ok(r.result);r.onerror=()=>ng(r.error)}catch(e){ng(e)}});return idbP}
+function idbReq(store,mode,fn){return idb().then(d=>new Promise((ok,ng)=>{const tx=d.transaction(store,mode);const q=fn(tx.objectStore(store));tx.oncomplete=()=>ok(q&&q.result);tx.onerror=()=>ng(tx.error);tx.onabort=()=>ng(tx.error)}))}
+/* ---------- 自分で登録した道具（テンヤ・エギ・ヘッド・スカート・ネクタイ）の写真 ----------
+   1品に1枚。長い辺600pxに縮めて IndexedDB の gear に置き、全データのバックアップにも入れる（釣行の写真とは別） */
+const GPH={};
+function gphLoad(){return idb().then(d=>new Promise(ok=>{try{const q=d.transaction('gear','readonly').objectStore('gear').getAll();q.onsuccess=()=>{(q.result||[]).forEach(r=>{if(r&&r.id&&r.url)GPH[r.id]=r.url});ok()};q.onerror=()=>ok()}catch(e){ok()}})).then(()=>{if(Object.keys(GPH).length&&typeof render==='function'&&$('#sheet').hidden)render()}).catch(()=>{})}
+function gphPut(id,url){GPH[id]=url;return idbReq('gear','readwrite',st=>st.put({id,url,at:Date.now()})).catch(()=>{})}
+function gphRemove(id){delete GPH[id];return idbReq('gear','readwrite',st=>st.delete(id)).catch(()=>{})}
+const gph=(id,cls)=>id&&GPH[id]?`<img class="gph ${cls||''}" src="${GPH[id]}" alt="" decoding="async">`:'';
+function gphFromFile(f){return new Promise((ok,ng)=>{const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{const k=Math.min(1,600/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL('image/jpeg',.85))};im.onerror=()=>{URL.revokeObjectURL(u);ng(new Error('img'))};im.src=u})}
+let gphTarget=null;
+function openGph(id,name){gphTarget={id,name:name||''};
+  openSheet(`<div class="sheet-h"><h2>写真：${esc(name||'')}</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
+   <div class="gph-pv">${GPH[id]?`<img src="${GPH[id]}" alt="">`:'<p class="muted">まだ写真はありません。</p>'}</div>
+   <p class="muted">アルバムから選ぶか、その場で撮れます。写真は小さくしてこの端末に保存し、全データのバックアップにも入ります。</p>
+   <label class="btn primary big" for="gphFile">${GPH[id]?'写真を変える':'写真を選ぶ・撮る'}<input type="file" id="gphFile" accept="image/*" hidden></label>
+   ${GPH[id]?'<button class="btn" data-act="gphDel">写真を消す</button>':''}`,{kind:'gph'})}
+addEventListener('change',e=>{const el=e.target;if(!el||el.id!=='gphFile'||!el.files||!el.files[0]||!gphTarget)return;const g=gphTarget,f=el.files[0];el.value='';
+  gphFromFile(f).then(u=>gphPut(g.id,u)).then(()=>{toast('写真を登録しました');render();openGph(g.id,g.name)}).catch(()=>toast('写真を読めませんでした'))});
+function idbMirror(){clearTimeout(mirrorT);mirrorT=setTimeout(()=>{try{idbReq('kv','readwrite',st=>st.put({at:Date.now(),s:JSON.stringify(S)},'state')).catch(()=>{})}catch(e){}},800)}
+async function idbRestore(){try{if(trips().some(t=>!t.sample))return;const v=await idbReq('kv','readonly',st=>st.get('state'));if(!v||!v.s)return;const o=JSON.parse(v.s);
+  if(!o||!o.trips||!Object.values(o.trips).some(t=>t&&!t.sample&&!t.deleted))return;S=migrateState(o);saveLocal();render();toast('この端末に残っていた控えから、記録を戻しました')}catch(e){}}
+function askPersist(){try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted().then(p=>p||navigator.storage.persist()).catch(()=>{})}catch(e){}}
+function isStandaloneApp(){try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}}
+function isIOSdev(){return /iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)}
+function unBacked(){return trips().filter(t=>!t.sample&&!t.deleted&&t.status==='done'&&(t.end||t.updatedAt||0)>(S.ui.lastBackup||0)).length}
+function safeHTML(){const n=unBacked(),a2=isIOSdev()&&!isStandaloneApp()&&!S.ui.a2hsHide;if(!n&&!a2)return '';
+  return `<div class="safe-box">${n?`<div class="sb-row"><span>💾 まだバックアップしていない釣行が<b>${n}件</b>あります。スマホの中の記録は消えてしまうことがあるので、こまめに保存してください。</span><button class="btn sm primary" data-act="exportJson">今すぐバックアップ</button></div>`:''}${a2?`<div class="sb-row"><span>📱 ホーム画面に追加したアイコンから使うと、記録が消えにくくなります（Safariの共有ボタン →「ホーム画面に追加」）。</span><button class="btn sm ghost" data-act="a2hsHide">閉じる</button></div>`:''}</div>`}
+function bkAsk(){if(!unBacked())return;openSheet(`<div class="sheet-h"><h2>おつかれさまでした</h2><button class="btn sm ghost" data-act="closeSheet">あとで</button></div><p>スマホの中の記録は、ブラウザの都合で消えてしまうことがあります。今日の記録を守るために、バックアップを保存しておきましょう。</p><button class="btn primary big" data-act="exportJson">バックアップを保存する</button>`,{kind:'bk'})}
+function photoIds(tr){return (tr&&tr.photos)||[]}
+async function photoURL(id){if(PH_URL[id])return PH_URL[id];const p=await idbReq('photos','readonly',st=>st.get(id)).catch(()=>null);if(!p||!p.blob)return '';return PH_URL[id]=URL.createObjectURL(p.blob)}
+function hydratePhotos(){document.querySelectorAll('img[data-ph]:not([src]):not([data-busy])').forEach(async im=>{im.dataset.busy='1';const u=await photoURL(im.dataset.ph);if(u)im.src=u;else{const w=im.closest('.ph-it');(w||im).classList.add('ph-miss')}})}
+function photoStrip(tr){const ids=photoIds(tr);return ids.length?`<div class="ph-strip">${ids.map(id=>`<button class="ph-it" data-act="phView" data-id="${tr.id}" data-p="${id}" aria-label="写真を大きく見る"><img data-ph="${id}" alt=""></button>`).join('')}</div>`:''}
+function photoSheet(tid){const tr=S.trips[tid];if(!tr)return;const ids=photoIds(tr);
+  openSheet(`<div class="sheet-h"><h2>📷 この日の写真（${ids.length}/5）</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
+   <p class="muted">アルバムから5枚まで選べます。写真はこのスマホの中だけに保存され、送信やバックアップには含まれません（アルバムの写真はそのまま残ります）。</p>
+   ${ids.length?`<div class="ph-grid">${ids.map(id=>`<div class="ph-cell"><button class="ph-it" data-act="phView" data-id="${tid}" data-p="${id}" aria-label="写真を大きく見る"><img data-ph="${id}" alt=""></button><button class="btn sm ghost" data-act="phDel" data-id="${tid}" data-p="${id}">外す</button></div>`).join('')}</div>`:''}
+   ${ids.length<5?`<label class="btn primary big ph-add">＋ アルバムから選ぶ<input type="file" accept="image/*" multiple hidden data-phadd="${tid}"></label>`:'<p class="muted">5枚まで付けられます。入れ替えるときは、先に「外す」を押してください。</p>'}`,{kind:'photo',tid})}
+async function phAdd(tid,files){const tr=S.trips[tid];if(!tr||!files||!files.length)return;tr.photos=photoIds(tr).slice();const room=5-tr.photos.length;
+  const fs=[...files].slice(0,Math.max(0,room));if(files.length>room)toast(`5枚までなので、${room}枚だけ付けます`);
+  for(const f of fs){const id=uid();try{await idbReq('photos','readwrite',st=>st.put({id,tid,blob:f,type:f.type||'',at:Date.now()}));tr.photos.push(id)}catch(e){toast('写真を保存できませんでした（スマホの空き容量を確かめてください）');break}}
+  touch(tr);photoSheet(tid);askPersist()}
+async function photoCleanup(){try{const all=await idbReq('photos','readonly',st=>st.getAllKeys());const keep=new Set(trips().flatMap(t=>photoIds(t)));
+  const del=(all||[]).filter(k=>!keep.has(k));if(del.length)await idbReq('photos','readwrite',st=>{del.forEach(k=>st.delete(k))})}catch(e){}}
+document.addEventListener('change',e=>{const el=e.target;if(el&&el.dataset&&el.dataset.phadd){phAdd(el.dataset.phadd,el.files);el.value=''}});
 function migrateTrip(t){
   if(t&&!t.deleted&&t.v===2&&!t.cmV){(t.events||[]).forEach(e=>{if(e.sp==='tachiuo'&&e.size!==''&&e.size!=null&&+e.size<=10)e.size=''});t.cmV=1} // 指 → cm に変えたので、指の値は消す
   if(!t||t.deleted||t.v===2)return t;
@@ -1239,6 +1289,7 @@ function makeSampleFugu(){
   return tr}
 function defaults(){return {v:2,trips:{},activeId:null,prefs:{port:'',boat:'',seats:8,side:'R',seat:null,sp:'madai',g:{}},dirty:{trips:[],cfg:false},ui:{tab:'rec'}}}
 S=migrateState(loadLocal()||defaults());
+setTimeout(()=>{askPersist();idbRestore();gphLoad();photoCleanup();try{new MutationObserver(hydratePhotos).observe(document.body,{childList:true,subtree:true});hydratePhotos()}catch(e){}},60);
 setTimeout(()=>{if(snapOwned())cfgTouch()},0); // after every top-level declaration has run
 
 const active=()=>S.activeId&&S.trips[S.activeId]&&!S.trips[S.activeId].deleted?S.trips[S.activeId]:null;
@@ -1310,7 +1361,10 @@ function sharePayload(t){const r3=x=>typeof x==='number'?Math.round(x*1e3)/1e3:x
     events:(t.events||[]).map(e=>{const g=e.gsp||e.sp;return {t:e.t,kind:e.kind,sp:e.sp,gsp:e.gsp,v:e.v,rig:e.rig||'',rigName:nm(g,'rigs',e.rig),bait:e.bait||'',baitName:nm(g,'baits',e.bait),hook:e.hook||'',hookName:nm(g,'hooks',e.hook),skirt:e.skirt||'',skirtName:nm(g,'skirts',e.skirt),size:e.size||'',dragon:!!e.dragon,sa:e.sa||'',ka:e.ka||'',fish:e.kind==='gedo'?(e.name||''):'',tackle:e.tk?tkLabelOf(t,e.tk):'',...(isFinite(e.lat)?{lat:r3(e.lat),lon:r3(e.lon)}:{})}}),tackle:t.tk&&t.tk.snap?Object.values(t.tk.snap).map(x=>({rod:x.rod,rodMaker:x.rodMaker,reel:x.reel,reelMaker:x.reelMaker,line:x.line})):[],
     states:(t.states||[]).map(x=>{const y={...x};delete y.id;delete y.memo;delete y.note;return y}),
     gear:(t.gearLog||[]).map(g=>({t:g.t,sp:g.sp,rig:g.rig||'',rigName:nm(g.sp,'rigs',g.rig),bait:g.bait||'',baitName:nm(g.sp,'baits',g.bait)})),
-    points:(t.points||[]).map(q=>({t:q.t,lat:r3(q.lat),lon:r3(q.lon)}))}}
+    points:(t.points||[]).map(q=>({t:q.t,lat:r3(q.lat),lon:r3(q.lon)})),
+    /* この釣行で使った、カタログにないテンヤ（自分で登録したもの）：メーカー・製品・号数・色。カタログに足す候補を知るため */
+    custom:(()=>{const ids=new Set([...(t.events||[]).map(e=>e.rig),...(t.gearLog||[]).map(g=>g.rig)].filter(Boolean)),cu=(S.cfg&&S.cfg.tenya&&S.cfg.tenya.custom)||[];
+      return cu.filter(x=>ids.has(x.id)).map(x=>({id:x.id,m:x.m||'',p:x.p||'',z:x.z||'',c:x.c||'',name:x.name||''}))})()}}
 let shareTimer=null,sharing=false;function shareQueue(){clearTimeout(shareTimer);shareTimer=setTimeout(shareFlush,4000)}
 async function shareFlush(){if(sharing||!shareCan()||!navigator.onLine)return;sharing=true;
   const post=b=>fetch(SHARE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b),keepalive:true}).then(r=>r.ok);
@@ -1470,7 +1524,7 @@ function tideInnerHTML(f){
 function spChipsHTML(sel,act){return `<div class="chips" role="group" aria-label="魚種">${spVisible().map(s=>`<button class="chip ${s.id===sel?'on':''}" data-act="${act}" data-id="${s.id}" aria-pressed="${s.id===sel}">${esc(s.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="魚種を追加">＋</button></div>`}
 function chipsHTML(sp,k,sel,act){const s=spOf(sp);const label=k==='rigs'?s.rigLabel:k==='hooks'?s.hookLabel:s.baitLabel;if(!label)return '';
   return `<div class="gearpick"><div class="gp-lbl">${esc(label)}</div><div class="chips wrap">${(s[k]||[]).filter(g=>!g.hidden).map(g=>
-  `<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">＋</button></div></div>`}
+  `<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${gph(g.id,'ch')}${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">＋</button></div></div>`}
 function fModeHTML(f){f.rmode='simple';return '';const m=f.rmode||'';
   return `<div class="card ${m?'':'need-pick'}" id="fModeSeg"><h2>記録のしかた<small class="req">必須</small><button class="qhelp" data-act="modeHelp" aria-label="シンプルと詳細の違い">?</button></h2><div class="seg">${[['simple','シンプル'],['detail','詳細']].map(([k,l])=>`<button class="${m===k?'on':''}" data-act="fMode" data-d="${k}">${l}</button>`).join('')}</div>
    <p class="muted">${!m?'シンプルか詳細のどちらかを選んでください。':m==='detail'?'釣れた・アタリ・バラシを押すたびに、誘い（巻き／叩き × 誘い中／ステイ中）と掛け方（即掛け／深追い）を選んで記録します。長押しすると選ばずにすぐ記録。':'押すとすぐ記録します。誘いや掛け方は付けません（あとから記録の一覧で付けることもできます）。'}釣行中も「本日の釣果」の左上で切り替えられます。</p></div>`}
@@ -1489,8 +1543,8 @@ function formHTML(f){const boats=S.cfg.boats.map(b=>`<option value="${esc(b.name
   <div class="card"><div class="card-h"><h2>釣り場</h2><button class="golink" data-act="goSec" data-sec="secSpots">登録・編集 →</button></div><div id="spotChips">${spotChipsHTML(f)}</div><div id="tideInner">${tideInnerHTML(f)}</div></div>
   ${f.mode==='new'?`<div class="card"><h2>仕掛けと餌</h2>${SOLO?'':spChipsHTML(f.sp,'fSp')}<div class="${SOLO?'':'nest'}" id="fGear">${fGearHTML(f)}</div></div>`:''}
   ${f.mode==='new'?fTackleHTML(f):''}
-  <div class="card"><h2>メモ<small class="opt">任意</small></h2><p class="muted">タックル（竿の調子・リール・道糸）や気づいたことを、自由に残せます。釣行中も記録画面の「📝メモ」から書き足せます。</p>
-   <textarea id="fMemo" data-f="memo" rows="3" class="memo-ta" placeholder="例：竿 極鋭EX178／リール ソルティガBJ／PE0.8号・リーダー6号／底から10mまで反応">${esc(f.memo||'')}</textarea>
+  <div class="card"><h2>メモ<small class="opt">任意</small></h2><p class="muted">その日の天気・風・潮の見込みや、気づいたことを自由に残せます。釣行中も記録画面の「📝メモ」から書き足せます。</p>
+   <textarea id="fMemo" data-f="memo" rows="3" class="memo-ta" placeholder="例：北風が予報より強く、午後は釣りにくくなりそう／前回は朝の上げ潮で反応が集中">${esc(f.memo||'')}</textarea>
    ${f.mode==='new'&&lastMemo()&&!(f.memo||'').trim()?`<button class="golink" data-act="memoCopyLast">前回のメモを入れる →</button>`:''}</div>`}
 function methodSelHTML(sp,g,id){return `<label class="field msel"><span>仕掛け</span><select id="${id}" data-method="${sp}">${['tenya','tenbin'].map(m=>`<option value="${m}" ${methodOf(sp,g)===m?'selected':''}>${METHOD_JP[m]}</option>`).join('')}</select></label>`}
 function fGearHTML(f){const g=fGear(f,f.sp),sp=f.sp,s=spOf(sp);return (SOLO?'':`<div class="nest-h">${esc(s.name)}の道具</div>`)+(s.catalog?methodSelHTML(sp,g,'fMethod')+(isTenya(sp,g)?setPickHTML(g.set,'fSet'):''):chipsHTML(sp,'rigs',g.rig,'fRig')+chipsHTML(sp,'hooks',g.hook,'fHook')+skirtChips(g.skirt,'fSkirt'))+(needBait(sp,g)?(isBzSp(sp)?bzHTML(sp,g.bait,'f'):chipsHTML(sp,'baits',g.bait,'fBait')):'')}
@@ -1514,7 +1568,7 @@ function registerBoat(tr){const b=S.cfg.boats.find(x=>x.name===tr.boat);const v=
   if(b){let ch=Object.keys(v).some(k=>b[k]!==v[k]);Object.assign(b,v);if(tr.spotId&&S.cfg.spots.some(x=>x.id===tr.spotId)&&!(b.spots||[]).includes(tr.spotId)){b.spots=(b.spots||[]).concat([tr.spotId]);ch=true}if(ch)cfgTouch()}
   else{S.cfg.boats.push({id:uid(),name:tr.boat,...v,...(t0?{start:t0}:{}),...(t1?{end:t1}:{}),spots:tr.spotId?[tr.spotId]:[]});cfgTouch()}}
 function viewStart(){if(!startDraft)startDraft=newForm();curForm=startDraft;
-  return `<header class="hero"><p class="eyebrow">TOOL / TAIRABA COUNTER</p><div class="hero-h"><h1>タイラバカウンター</h1><span class="pill" style="margin-left:0">試験公開</span></div><p class="hero-sub">マダイの釣果を時間の経過と共に、タイラバ・潮・流れと一緒に記録する。<button class="btnlink-s" data-act="tutOpen">使い方を見る</button></p></header>
+  return safeHTML()+`<header class="hero"><p class="eyebrow">TOOL / TAIRABA COUNTER</p><div class="hero-h"><h1>タイラバカウンター</h1><span class="pill" style="margin-left:0">試験公開</span></div><p class="hero-sub">マダイの釣果を時間の経過と共に、タイラバ・潮・流れと一緒に記録する。<button class="btnlink-s" data-act="tutOpen">使い方を見る</button></p></header>
    <div class="field" style="gap:4px"><h2>出船の準備</h2><p class="muted">釣り場、船と自分の席、タイラバを選んで出船します。</p>${SITE&&!standalone()?`<p class="sample-note">Safariの「共有 → ホーム画面に追加」でアプリのように使え、電波のない船の上でも開けます。</p>`:''}</div>
    ${formHTML(startDraft)}${fModeHTML(startDraft)}<button class="btn primary big" data-act="depart">出船して記録を始める</button>`}
 
@@ -1679,11 +1733,11 @@ function viewActive(tr){ocurEnsure(tr);const sp=tr.cur.sp,s=spOf(sp),g=curGear(t
   const span=Date.now()-tr.start;const items=feedItems(tr);const nd=nDragon(tr,sp);
   const status=Date.now()<tr.start?'まだ始まっていません':tr.planEnd&&Date.now()>tr.planEnd?'終了時刻を過ぎました':dur(Math.max(0,span))+'経過';
   return `<header class="rhead"><div class="rh-l"><h1>${jdate(tr.date).replace(/^\d+年/,'')}</h1><span>${hm(tr.start)}〜${tr.planEnd?hm(tr.planEnd):''}・${status}</span></div><button class="pill sm" data-act="tripEdit" data-id="${tr.id}">直す</button></header>
-   <div class="rmeta"><div class="rm-txt">${[tr.boat,seatShort(tr),tr.spot?tr.spot.name:(tr.station?stName(tr.station):''),tideNameOf(tr)].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')}</div><button class="pill sm rm-loc" data-act="locRec" aria-label="今いる場所を記録">📍場所${(tr.points||[]).length?`<small>${tr.points.length}</small>`:''}</button><button class="pill sm rm-loc rm-memo" data-act="memoOpen" data-id="${tr.id}" aria-label="この釣行のメモ">📝メモ${(tr.memo||'').trim()?'<small>●</small>':''}</button><button class="pill sm rm-edit" data-act="tripEdit" data-id="${tr.id}">出船条件を直す</button></div>
+   <div class="rmeta"><div class="rm-txt">${[tr.boat,seatShort(tr),tr.spot?tr.spot.name:(tr.station?stName(tr.station):''),tideNameOf(tr)].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')}</div><button class="pill sm rm-loc" data-act="locRec" aria-label="今いる場所を記録">📍場所${(tr.points||[]).length?`<small>${tr.points.length}</small>`:''}</button><button class="pill sm rm-loc rm-memo" data-act="memoOpen" data-id="${tr.id}" aria-label="この釣行のメモ">📝メモ${(tr.memo||'').trim()?'<small>●</small>':''}</button><button class="pill sm rm-loc" data-act="phOpen" data-id="${tr.id}" aria-label="この釣行の写真">📷写真${photoIds(tr).length?`<small>${photoIds(tr).length}</small>`:''}</button><button class="pill sm rm-edit" data-act="tripEdit" data-id="${tr.id}">出船条件を直す</button></div>
    <section class="today" aria-label="本日の釣果">
     <div class="td-top"><span class="td-h">${isTairyo(tr.date)?tairyoTag():''}</span><span class="td-n"><b id="cnum">${c.length}</b>${esc(s.unit)}${SOLO?'':`<small>${esc(s.name)}</small>`}${sp==='tachiuo'?`<small class="td-dn"><i class="ic ic-dragon"></i>ドラゴン <b>${nd}</b></small>`:''}</span></div>
     <div class="td-row"><button class="td-catch" data-act="catchCur"${modeOf(tr)==='detail'?' data-lp="catch"':''}><b>釣れた</b><small>＋1</small>${modeOf(tr)==='detail'?'<i class="lp-hint">誘い・掛け方を選ぶ<br>長押しですぐ記録</i>':''}</button>
-     <div class="td-side"><button class="td-tenya ${ten&&curGear(tr).rig&&TIMG.has(curGear(tr).rig)?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):''}<span>${ten?'使用テンヤ':'タイラバ'}</span><b>${esc(curRigLabel(tr))}</b><i aria-hidden="true">▾</i></button>
+     <div class="td-side"><button class="td-tenya ${(ten?curGear(tr).rig&&(TIMG.has(curGear(tr).rig)||GPH[curGear(tr).rig]):GPH[curGear(tr).rig])?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):gph(curGear(tr).rig,'eimg cur')}<span>${ten?'使用テンヤ':'タイラバ'}</span><b>${esc(curRigLabel(tr))}</b><i aria-hidden="true">▾</i></button>
       ${sp==='tachiuo'?`<label class="td-dragon ${dragonNext?'on':''}"><input type="checkbox" id="dragonChk" ${dragonNext?'checked':''}><i class="ic ic-dragon lg"></i><span><b>ドラゴン</b><small>120cm以上</small></span></label>`:''}</div></div>
     <div class="td-bl"><button data-act="bite"${modeOf(tr)==='detail'?' data-lp="bite"':''}><b>${nKind(tr,sp,'bite')}</b><span>アタリ</span><small>${ten?'使用テンヤで記録':'＋1'}</small></button><button data-act="lost"${modeOf(tr)==='detail'?' data-lp="lost"':''}><b>${nKind(tr,sp,'lost')}</b><span>バラシ</span><small>${ten?'使用テンヤで記録':'＋1'}</small></button></div>
     ${tkUseHTML(tr)}
@@ -1702,7 +1756,7 @@ function addGedo(name){const tr=active();if(!tr||!name)return;const g=curGear(tr
   tr.events.push(e);touch(tr);buzz();$('#sheet').hidden=true;sheetCtx=null;render();const id=tr.id;
   toast(`${hm(now)} 外道 ${name} を記録`,'取り消す',()=>{const t=S.trips[id];t.events=t.events.filter(x=>x.id!==e.id);touch(t);render()})}
 /* 誘い：釣れた・アタリ・バラシに、巻き／叩き × 誘い中／ステイ中 を付ける（長押しで選ぶ） */
-const SA_JP={'maki-move':'巻き・誘い中','maki-stay':'巻き・ステイ中','tata-move':'叩き・誘い中','tata-stay':'叩き・ステイ中','fall':'フォール中'};
+const SA_JP={'maki-move':'巻き・誘い中','maki-stay':'巻き・ステイ中','tata-move':'叩き・誘い中','tata-stay':'叩き・ステイ中','fall':'フォール中','oki':'置き竿'};
 const SA_KEYS=Object.keys(SA_JP);let nextSa=null;
 /* 掛け方：即掛け／深追い。詳細モードでは 誘い → 掛け方 の2段で記録する */
 const KA_JP={soku:'即掛け',fuka:'深追い'},KA_KEYS=Object.keys(KA_JP);let nextKa=null,bypassDetail=false;
@@ -1720,7 +1774,7 @@ function openSasoi(kind){const tr=active();if(!tr)return;const last=S.ui.lastSa;
    <div class="sa-grid"><span></span><b>誘い中</b><b>ステイ中</b>
     <b>巻き</b><button class="sa-b ${last==='maki-move'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="maki-move">巻き<br>誘い中</button><button class="sa-b ${last==='maki-stay'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="maki-stay">巻き<br>ステイ中</button>
     <b>叩き</b><button class="sa-b ${last==='tata-move'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="tata-move">叩き<br>誘い中</button><button class="sa-b ${last==='tata-stay'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="tata-stay">叩き<br>ステイ中</button>
-    <button class="sa-b sa-fall ${last==='fall'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="fall">フォール中${kind==='bite'?'':'<small>即掛けで記録</small>'}</button></div>
+    <div class="sa-fo"><button class="sa-b sa-fall ${last==='fall'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="fall">フォール中${kind==='bite'?'':'<small>即掛けで記録</small>'}</button><button class="sa-b sa-fall ${last==='oki'?'on':''}" data-act="saRec" data-k="${kind}" data-sa="oki">置き竿${kind==='bite'?'':'<small>そのまま記録</small>'}</button></div></div>
    <button class="btn" data-act="saRec" data-k="${kind}" data-sa="">${kind==='bite'?'誘いなしで記録':'誘いは選ばない（次へ）'}</button>`,{kind:'sasoi'})}
 /* 場所：📍場所ボタンで、その時刻の位置を記録（リアルタイム追跡はしない） */
 const ptKm=(a,b)=>{const R=6371,r=x=>x*Math.PI/180,dl=r(b.lat-a.lat),dn=r(b.lon-a.lon);const h=Math.sin(dl/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
@@ -1736,19 +1790,65 @@ function pointSegs(tr){const P=(tr.points||[]).slice().sort((a,b)=>a.t-b.t);retu
 function pointsCard(tr){const sg=pointSegs(tr);if(!sg.length)return '';const s=spOf(tr.cur.sp);
   const route=sg.length>1?`https://www.google.com/maps/dir/${sg.map(p=>p.lat.toFixed(5)+','+p.lon.toFixed(5)).join('/')}`:mapUrl(sg[0]);
   return `<div class="card"><h2>📍で記録した場所（${sg.length}か所）</h2><p class="muted">「📍場所」を押した時刻から、次に押すまでの記録です。</p>
-   <div class="pts">${sg.map(p=>`<div class="pt"><b>${p.i+1}</b><span><em>${hm(p.t)}〜${p.te?hm(p.te):''}${p.i?`・前から約${kmTxt(p.km)}`:''}</em><small>${esc(s.name)} ${p.catch}${esc(s.unit)}・アタリ ${p.bite}・バラシ ${p.lost}</small></span><a class="btn sm" href="${mapUrl(p)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
-   <a class="btn sm" href="${route}" target="_blank" rel="noopener">${sg.length>1?'移動した順に地図で見る':'地図で見る'}</a></div>`}
+   <div class="pts">${sg.map(p=>`<div class="pt"><b>${p.i+1}</b><span><em>${hm(p.t)}〜${p.te?hm(p.te):''}${p.i?`・一つ前の記録から約${kmTxt(p.km)}`:''}</em><small>${esc(s.name)} ${p.catch}${esc(s.unit)}・アタリ ${p.bite}・バラシ ${p.lost}</small></span><a class="btn sm" href="${mapUrl(p)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
+   ${locMaps(sg,()=>'#13939b')}<div class="locmap-act"><button class="btn sm" data-act="shareMake" data-which="map-pts" data-id="${tr.id}">地図を画像で保存・共有</button><a class="btn sm gmap" href="${route}" target="_blank" rel="noopener">Googleマップで開く</a></div></div>`}
+/* 場所の地図：国土地理院の淡色地図の上に、記録した順の点と矢印線を描く。
+   縮尺：全部の点が入るいちばん細かい縮尺（ただし1枚の幅が約1km未満にはしない）。続けて記録した2点が5km以上離れたら、そこで地図を分ける */
+const MAP_SPLIT_KM=5,MAP_MIN_KM=1;
+function mapSegs(L){const out=[];L.forEach((p,i)=>{if(!i||ptKm(L[i-1],p)>=MAP_SPLIT_KM)out.push([]);out[out.length-1].push({...p,no:i+1})});return out}
+function locMapSVG(P,col,W=360,H=250){const pad=26,wx=lon=>(lon+180)/360,wy=lat=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2};
+  const xs=P.map(p=>wx(p.lon)),ys=P.map(p=>wy(p.lat)),x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys),lat=(Math.min(...P.map(p=>p.lat))+Math.max(...P.map(p=>p.lat)))/2;
+  const zMin=Math.floor(Math.log2(W*156543.03*Math.cos(lat*Math.PI/180)/(MAP_MIN_KM*1000)));   // 幅が約1km未満にならない一番細かい縮尺
+  let z=Math.min(16,zMin);while(z>5&&((x1-x0)*256*2**z>W-2*pad||(y1-y0)*256*2**z>H-2*pad))z--;
+  const S=256*2**z,cx=(x0+x1)/2*S,cy=(y0+y1)/2*S,ox=cx-W/2,oy=cy-H/2,o=[];
+  for(let tx=Math.floor(ox/256);tx<=Math.floor((ox+W)/256);tx++)for(let ty=Math.floor(oy/256);ty<=Math.floor((oy+H)/256);ty++)
+    o.push(`<image href="https://cyberjapandata.gsi.go.jp/xyz/pale/${z}/${tx}/${ty}.png" x="${r1(tx*256-ox)}" y="${r1(ty*256-oy)}" width="256" height="256"/>`);
+  const pt=P.map(p=>({...p,x:wx(p.lon)*S-ox,y:wy(p.lat)*S-oy})),R=10;
+  pt.forEach((p,i)=>{if(!i)return;const a=pt[i-1],dx=p.x-a.x,dy=p.y-a.y,d=Math.hypot(dx,dy);if(d<2*R+4)return;const ux=dx/d,uy=dy/d;
+    o.push(`<line x1="${r1(a.x+ux*R)}" y1="${r1(a.y+uy*R)}" x2="${r1(p.x-ux*(R+2))}" y2="${r1(p.y-uy*(R+2))}" stroke="#1d2b36" stroke-width="2" stroke-opacity=".75" marker-end="url(#mArr)"/>`)});
+  pt.forEach(p=>o.push(`<circle cx="${r1(p.x)}" cy="${r1(p.y)}" r="${R}" fill="${col(p)}" stroke="#fff" stroke-width="2"/><text x="${r1(p.x)}" y="${r1(p.y+4)}" font-size="${p.no>99?9:11}" font-weight="700" fill="#fff" text-anchor="middle">${p.no}</text>`));
+  const mpp=156543.03*Math.cos(lat*Math.PI/180)/2**z,nice=[50,100,200,500,1000,2000,5000,10000,20000,50000].filter(m=>m/mpp<=W/4).pop()||50,bw=nice/mpp;
+  o.push(`<rect x="8" y="${H-26}" width="${r1(bw+16)}" height="20" rx="4" fill="#fff" fill-opacity=".85"/><path d="M16 ${H-12}v4h${r1(bw)}v-4" fill="none" stroke="#1d2b36" stroke-width="1.6"/><text x="${r1(16+bw/2)}" y="${H-14}" font-size="10" fill="#1d2b36" text-anchor="middle">${nice>=1000?nice/1000+'km':nice+'m'}</text>`);
+  o.push(`<rect x="${W-74}" y="${H-16}" width="74" height="16" fill="#fff" fill-opacity=".8"/><text x="${W-4}" y="${H-5}" font-size="9" fill="#444" text-anchor="end">地理院タイル</text>`);
+  // 広域の小さな地図（どのあたりかが分かるように）。点に重ならない角に置く
+  {const zi=Math.max(8,Math.min(10,z-4)),Si=256*2**zi,IW=Math.round(W*.34),IH=Math.round(H*.4),m=8,icx=(x0+x1)/2*Si,icy=(y0+y1)/2*Si,iox=icx-IW/2,ioy=icy-IH/2,q=[];
+    for(let tx=Math.floor(iox/256);tx<=Math.floor((iox+IW)/256);tx++)for(let ty=Math.floor(ioy/256);ty<=Math.floor((ioy+IH)/256);ty++)
+      q.push(`<image href="https://cyberjapandata.gsi.go.jp/xyz/pale/${zi}/${tx}/${ty}.png" x="${r1(tx*256-iox)}" y="${r1(ty*256-ioy)}" width="256" height="256"/>`);
+    const k=2**(zi-z),rw=Math.max(8,W*k),rh=Math.max(8,H*k);
+    q.push(`<rect x="${r1(IW/2-rw/2)}" y="${r1(IH/2-rh/2)}" width="${r1(rw)}" height="${r1(rh)}" fill="#e53935" fill-opacity=".15" stroke="#e53935" stroke-width="2"/>`);
+    const corners=[[W-IW-m,m],[m,m],[W-IW-m,H-IH-22],[m,H-IH-32]],hit=([cx,cy])=>pt.some(p=>p.x>cx-R&&p.x<cx+IW+R&&p.y>cy-R&&p.y<cy+IH+R);
+    const [ix,iy]=corners.find(c=>!hit(c))||corners[0];
+    o.push(`<rect x="${ix-2}" y="${iy-2}" width="${IW+4}" height="${IH+4}" rx="6" fill="#fff"/><svg x="${ix}" y="${iy}" width="${IW}" height="${IH}" viewBox="0 0 ${IW} ${IH}"><rect width="${IW}" height="${IH}" fill="#e6eef2"/>${q.join('')}</svg><rect x="${ix}" y="${iy}" width="${IW}" height="${IH}" rx="4" fill="none" stroke="#1d2b36" stroke-opacity=".5"/><text x="${ix+4}" y="${iy+IH-4}" font-size="9" fill="#1d2b36" stroke="#fff" stroke-width="2.5" paint-order="stroke">広域（赤枠＝この地図）</text>`)}
+  return `<svg class="locmap" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="記録した場所の地図"><defs><marker id="mArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1d2b36"/></marker></defs><rect width="${W}" height="${H}" fill="#e6eef2"/>${o.join('')}</svg>`}
+function locMaps(L,col){const sg=mapSegs(L);return sg.map((P,k)=>`<div class="locmap-w">${sg.length>1?`<p class="locmap-h">${k+1}枚目（${P.length>1?`${hm(P[0].t)}〜${hm(P[P.length-1].t)}・${P[0].no}〜${P[P.length-1].no}`:`${hm(P[0].t)}・${P[0].no}`}）</p>`:''}${locMapSVG(P,col)}</div>`).join('')+(sg.length>1?`<p class="muted" style="font-size:12px;margin:4px 0 0">続けて記録した場所が${MAP_SPLIT_KM}km以上離れたところで、地図を分けています。</p>`:'')}
 /* 釣れたときに、その時の位置（GPS）も自動で残す。取れなければ何もしない（記録はそのまま） */
 function catchLoc(tid,eid){if(!navigator.geolocation||S.prefs.catchLoc===false)return;
   navigator.geolocation.getCurrentPosition(pos=>{const t=S.trips[tid];const e=t&&t.events.find(x=>x.id===eid);if(!e)return;
     e.lat=+pos.coords.latitude.toFixed(6);e.lon=+pos.coords.longitude.toFixed(6);e.acc=Math.round(pos.coords.accuracy||0);touch(t);if(S.ui.tab==='fig'&&$('#sheet').hidden)render()},
     ()=>{},{enableHighAccuracy:true,timeout:15000,maximumAge:5000})}
-function catchLocCard(tr,sp){const s=spOf(sp);let n=0;const L=evOf(tr,sp).filter(e=>['catch','bite','lost'].includes(e.kind)).map(e=>({...e,n:e.kind==='catch'?++n:0})).filter(e=>isFinite(e.lat)&&isFinite(e.lon));if(!L.length)return '';
+const LOC_COL={catch:'#e47b25',bite:'#6a58b3',lost:'#c2412d'};
+function catchLocList(tr,sp){let n=0;return evOf(tr,sp).filter(e=>['catch','bite','lost'].includes(e.kind)).map(e=>({...e,n:e.kind==='catch'?++n:0})).filter(e=>isFinite(e.lat)&&isFinite(e.lon))}
+/* 地図を画像にする：ほかの図と同じ幅（600）。地図の絵は国土地理院のタイルを読み込んで埋め込む */
+function mapExportSVG(tr,sp,kind){const W=600,MW=552,MH=400,o=[],ct=kind==='map-catch',L=ct?catchLocList(tr,sp):pointSegs(tr),col=ct?(p=>LOC_COL[p.kind]):(()=>'#13939b');
+  o.push(TX(24,48,ct?'釣れた・アタリ・バラシの場所':'📍で記録した場所',{size:24,bold:1}));o.push(TX(W-24,48,`${L.length}${ct?'件':'か所'}`,{size:17,bold:1,fill:P.catch,anchor:'end'}));
+  o.push(TX(24,76,`${jdate(tr.date)}｜${tr.boat||''}${tr.port?'（'+tr.port+'）':''}`,{size:15,fill:P.muted}));
+  let y=96;const sg=mapSegs(L);
+  sg.forEach((Q,k)=>{if(sg.length>1){o.push(TX(24,y+18,`${k+1}枚目（${Q.length>1?`${hm(Q[0].t)}〜${hm(Q[Q.length-1].t)}・${Q[0].no}〜${Q[Q.length-1].no}`:`${hm(Q[0].t)}・${Q[0].no}`}）`,{size:15,bold:1}));y+=28}
+    o.push(locMapSVG(Q,col,MW,MH).replace(/^<svg class="locmap" /,`<svg x="24" y="${y}" width="${MW}" height="${MH}" `));o.push(`<rect x="24" y="${y}" width="${MW}" height="${MH}" rx="12" fill="none" stroke="${P.grid}" stroke-width="2"/>`);y+=MH+14});
+  if(ct){const lg=[['catch','釣れた'],['bite','アタリ'],['lost','バラシ']];let x=24;lg.forEach(([k,t])=>{o.push(`<circle cx="${x+6}" cy="${y+8}" r="6" fill="${LOC_COL[k]}"/>`+TX(x+16,y+13,t,{size:13,fill:P.muted}));x+=16+t.length*13+16});o.push(TX(x,y+13,'番号は記録した順',{size:13,fill:P.muted}))}
+  else o.push(TX(24,y+13,'番号は「📍場所」を押した順',{size:13,fill:P.muted}));y+=24;
+  if(sg.length>1){o.push(TX(24,y+13,`続けて記録した場所が${MAP_SPLIT_KM}km以上離れたところで、地図を分けています。`,{size:12,fill:P.muted}));y+=22}
+  o.push(TX(24,y+13,'地図：国土地理院（地理院タイル・淡色地図）',{size:12,fill:P.muted}));y+=30;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${y}" viewBox="0 0 ${W} ${y}" font-family="${CF}" role="img" aria-label="場所の地図"><rect width="${W}" height="${y}" rx="16" fill="${P.card}"/>${o.join('')}</svg>`}
+async function inlineTiles(svg){const urls=[...new Set([...svg.matchAll(/href="(https:\/\/cyberjapandata\.gsi\.go\.jp\/[^"]+)"/g)].map(m=>m[1]))];
+  const map={};await Promise.all(urls.map(async u=>{try{const r=await fetch(u,{mode:'cors'});if(!r.ok)return;const b=await r.blob();map[u]=await new Promise(ok=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.readAsDataURL(b)})}catch(e){}}));
+  return svg.replace(/href="(https:\/\/cyberjapandata\.gsi\.go\.jp\/[^"]+)"/g,(m,u)=>map[u]?`href="${map[u]}"`:'href=""')}
+function catchLocCard(tr,sp){const s=spOf(sp);const L=catchLocList(tr,sp);if(!L.length)return '';
   const KL={catch:'釣れた',bite:'アタリ',lost:'バラシ'},KC={catch:'var(--teal)',bite:'var(--amber,#e3a43b)',lost:'#e0587a'};
   const route=L.length>1?`https://www.google.com/maps/dir/${L.slice(-25).map(p=>p.lat.toFixed(5)+','+p.lon.toFixed(5)).join('/')}`:mapUrl(L[0]);
   return `<div class="card"><h2>釣れた・アタリ・バラシの場所（${L.length}件）</h2><p class="muted">「釣れた」「アタリ」「バラシ」を押した時の位置を自動で残しています。押した時の位置なので、実際の場所とは少しずれます。</p>
-   <div class="pts">${L.map((e,i)=>`<div class="pt"><b style="color:${KC[e.kind]}">${e.kind==='catch'?e.n:e.kind==='bite'?'ア':'バ'}</b><span><em>${hm(e.t)}・${KL[e.kind]}${e.kind==='catch'&&e.dragon?'（ドラゴン）':''}${i?`・前から約${kmTxt(ptKm(L[i-1],e))}`:''}</em><small>${e.acc?'誤差 約'+e.acc+'m':''}</small></span><a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
-   <a class="btn sm" href="${route}" target="_blank" rel="noopener">${L.length>1?'記録した順に地図で見る':'地図で見る'}</a></div>`}
+   <div class="pts">${L.map((e,i)=>`<div class="pt"><b style="color:${KC[e.kind]}">${e.kind==='catch'?e.n:e.kind==='bite'?'ア':'バ'}</b><span><em>${hm(e.t)}・${KL[e.kind]}${e.kind==='catch'&&e.dragon?'（ドラゴン）':''}${i?`・一つ前の記録から約${kmTxt(ptKm(L[i-1],e))}`:''}</em><small>${e.acc?'誤差 約'+e.acc+'m':''}</small></span><a class="btn sm" href="${mapUrl(e)}" target="_blank" rel="noopener">地図</a></div>`).join('')}</div>
+   ${locMaps(L,p=>LOC_COL[p.kind])}<p class="locmap-lg"><i style="background:#e47b25"></i>釣れた<i style="background:#6a58b3"></i>アタリ<i style="background:#c2412d"></i>バラシ　番号は記録した順</p><div class="locmap-act"><button class="btn sm" data-act="shareMake" data-which="map-catch" data-id="${tr.id}">地図を画像で保存・共有</button><a class="btn sm gmap" href="${route}" target="_blank" rel="noopener">Googleマップで開く</a></div></div>`}
 function addEvent(kind,v,src,osp,rig){const tr=active();if(!tr)return;const now=Date.now();if(now-lastTap<450)return;lastTap=now;
   const tsp=tr.cur.sp,g=curGear(tr),sp=osp||tsp;if(rig&&rig!==g.rig){g.rig=rig;logGear(tr)}const e={id:uid(),t:now,kind,sp,gsp:tsp,rig:g.rig,bait:needBait(tsp,g)?g.bait:'',hook:g.hook||'',skirt:g.skirt||'',size:'',...(tr.tk&&tr.tk.cur?{tk:tr.tk.cur}:{})};if(kind==='catch')e.v=v||mainV(sp);if(kind==='catch'&&sp==='tachiuo'&&dragonNext){e.dragon=true;dragonNext=false}if(src)e.src=src;if(nextSa){e.sa=nextSa;nextSa=null}if(nextKa){e.ka=nextKa;nextKa=null}
   tr.events.push(e);touch(tr);buzz();keepAwake();if(kind==='catch'||kind==='bite'||kind==='lost')catchLoc(tr.id,e.id);
@@ -1798,7 +1898,7 @@ function timelineSVG(tr,sp){
     [Math.round(mx),Math.round(mn)].forEach(cm=>o.push(TX(L-8,Y(cm)+4,cm,{size:12,fill:'#a8bdd2',anchor:'end'})));
     tidePts(tr,t0,t1).filter(p=>p.t>=t0&&p.t<=t1).forEach(p=>{const x=X(p.t),yy=Y(p.cm),up=p.type==='high';const bw=76,bx=Math.min(Math.max(x-bw/2,L),W-R-bw),by=up?yy-44:yy+12;
       o.push(`<rect x="${r1(bx)}" y="${r1(by)}" width="${bw}" height="34" rx="6" fill="#f2e55a"/>`);o.push(TX(bx+bw/2,by+15,`${up?'満潮':'干潮'} ${hm(p.t)}`,{size:13,bold:1,fill:'#1a1a1a',anchor:'middle'}));o.push(TX(bx+bw/2,by+29,`${Math.round(p.cm)}cm`,{size:12,bold:1,fill:'#1a1a1a',anchor:'middle'}))});
-    catchesOf(tr,sp).forEach(e=>{if(e.t<t0||e.t>t1)return;const x=X(e.t),yy=Y(fn(e.t));o.push(e.dragon?`<circle cx="${r1(x)}" cy="${r1(yy)}" r="8.5" fill="#e3a43b" stroke="#2a1600" stroke-width="2"/><circle cx="${r1(x)}" cy="${r1(yy)}" r="3.4" fill="#fff3d6"/>`:`<circle cx="${r1(x)}" cy="${r1(yy)}" r="6.5" fill="${P.catch}" stroke="#2a1300" stroke-width="2"/>`)});
+    catchesOf(tr,sp).forEach(e=>{if(e.t<t0||e.t>t1)return;const x=X(e.t),yy=Y(fn(e.t));o.push(e.dragon?`<circle cx="${r1(x)}" cy="${r1(yy)}" r="12.5" fill="#e3a43b"/>`+DGI(x,yy,22):`<circle cx="${r1(x)}" cy="${r1(yy)}" r="6.5" fill="${P.catch}" stroke="#2a1300" stroke-width="2"/>`)});
     y+=H+10}
   else{const top=y;band(top,48,P.bTide);label(top-4,'潮位');o.push(TX(L,top+29,'潮位の地点を選ぶか、満潮・干潮を入れると、ここに潮位の曲線が出ます。',{size:13,fill:P.muted}));y+=58}
   {const H=96,top=y;band(top,H,P.bFlow);label(top,'船首・潮','潮は船から見た向き');const hs=headSegs(tr,t1),fs=stateSegs(tr,t1);
@@ -1831,7 +1931,7 @@ function timelineSVG(tr,sp){
       const rest=es.filter(e=>!s.variants.some(v=>v.id===e.v)).length;if(rest){const h=rest/mx*(bb-bt);yy-=h;o.push(`<rect x="${r1(x)}" y="${r1(yy)}" width="${r1(w)}" height="${r1(h)}" fill="${P.catch}" fill-opacity=".88"/>`)}
       o.push(TX((xa+xb)/2,yy-6,n,{size:13,bold:1,anchor:'middle',fill:P.catch}))});
     o.push(`<line x1="${L}" y1="${bb}" x2="${W-R}" y2="${bb}" stroke="${P.grid}"/>`);
-    const lv=[-99,-99,-99];c.forEach(e=>{const x=X(e.t);let l=lv.findIndex(v=>x-v>=9);if(l<0)l=2;lv[l]=x;o.push(`<circle cx="${r1(x)}" cy="${top+150+l*10}" r="4.2" fill="${vColor(sp,e.v)}"/>`)});
+    const lv=[-99,-99,-99];c.forEach(e=>{const x=X(e.t);let l=lv.findIndex(v=>x-v>=9);if(l<0)l=2;lv[l]=x;o.push(e.dragon?`<circle cx="${r1(x)}" cy="${top+150+l*10}" r="7.5" fill="#e3a43b"/>`+DGI(x,top+150+l*10,13):`<circle cx="${r1(x)}" cy="${top+150+l*10}" r="4.2" fill="${vColor(sp,e.v)}"/>`)});
     ev.filter(e=>e.kind!=='catch').forEach(e=>{const x=X(e.t),yy=top+186;
       o.push(e.kind==='bite'?`<polygon points="${r1(x-5.5)},${yy-5} ${r1(x+5.5)},${yy-5} ${r1(x)},${yy+5}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`:`<polygon points="${r1(x-5.5)},${yy+5} ${r1(x+5.5)},${yy+5} ${r1(x)},${yy-5}" fill="none" stroke="${P.lost}" stroke-width="1.8"/>`)});
     y+=H}
@@ -1841,7 +1941,7 @@ function timelineSVG(tr,sp){
     const nl=Math.min(lanes.length,4),th=34,H=34+nl*(th+6)+8,top=y;band(top,H,'#f2f0f8');label(top,'誘い・掛け方','詳細モードの記録');
     placed.filter(q=>q.li<nl).forEach(({e,x,li})=>{const yy=top+30+li*(th+6),c=kc[e.kind],mv=e.sa&&e.sa.endsWith('move'),st=e.sa&&e.sa.endsWith('stay');
       o.push(`<rect x="${r1(x-tw/2)}" y="${yy}" width="${tw}" height="${th}" rx="5" fill="${mv?c:'#fff'}" stroke="${c}" stroke-width="1.8"/>`);
-      if(e.sa)o.push(TX(x,yy+14,e.sa.startsWith('maki')?'巻':e.sa==='fall'?'フ':'叩',{size:12,bold:1,fill:mv?'#fff':c,anchor:'middle'}));
+      if(e.sa)o.push(TX(x,yy+14,e.sa.startsWith('maki')?'巻':e.sa==='fall'?'フ':e.sa==='oki'?'置':'叩',{size:12,bold:1,fill:mv?'#fff':c,anchor:'middle'}));
       if(e.ka)o.push(TX(x,yy+29,e.ka==='soku'?'即':'深',{size:11.5,bold:1,fill:mv?'#fff':c,anchor:'middle'}))});
     y+=H+10;
     // 集計表
@@ -1858,14 +1958,14 @@ function timelineSVG(tr,sp){
   y+=66;let lx=24;const leg=(sw,txt)=>{o.push(sw(lx)+TX(lx+14,y,txt,{size:12,fill:P.muted}));lx+=14+txt.length*12.5+18};
   const usedV=s.variants.filter(v=>c.some(e=>e.v===v.id));
   if(usedV.length>1)usedV.forEach(v=>leg(x=>`<circle cx="${x+5}" cy="${y-4}" r="4.5" fill="${vColor(sp,v.id)}"/>`,v.short||v.name));else leg(x=>`<circle cx="${x+5}" cy="${y-4}" r="4.5" fill="${P.catch}"/>`,'釣れた');
-  leg(x=>`<polygon points="${x},${y-9} ${x+11},${y-9} ${x+5.5},${y+1}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`,'アタリ');
+  if(c.some(e=>e.dragon))leg(x=>DGI(x+6,y-4,15),'ドラゴン');leg(x=>`<polygon points="${x},${y-9} ${x+11},${y-9} ${x+5.5},${y+1}" fill="none" stroke="${P.bite}" stroke-width="1.8"/>`,'アタリ');
   leg(x=>`<polygon points="${x},${y+1} ${x+11},${y+1} ${x+5.5},${y-9}" fill="none" stroke="${P.lost}" stroke-width="1.8"/>`,'バラシ');
   o.push(`<rect x="${lx}" y="${y-9}" width="20" height="8" rx="4" fill="${P.slow}"/><rect x="${lx+22}" y="${y-9}" width="20" height="8" rx="4" fill="${P.normal}"/><rect x="${lx+44}" y="${y-9}" width="20" height="8" rx="4" fill="${P.fast}"/>`+TX(lx+72,y,'潮の速さ（緩い・普通・速い）',{size:12,fill:P.muted}));
-  if(dv.length){y+=22;o.push(`<rect x="24" y="${y-12}" width="16" height="16" rx="3" fill="${P.catch}"/>`+TX(32,y+1,'巻',{size:10,bold:1,fill:'#fff',anchor:'middle'})+TX(46,y,'誘い中（塗り）',{size:12,fill:P.muted})+`<rect x="140" y="${y-12}" width="16" height="16" rx="3" fill="#fff" stroke="${P.catch}" stroke-width="1.6"/>`+TX(148,y+1,'叩',{size:10,bold:1,fill:P.catch,anchor:'middle'})+TX(162,y,'ステイ中（白抜き）　巻＝巻き　叩＝叩き　フ＝フォール　即＝即掛け　深＝深追い　枠の色＝釣れた／アタリ／バラシ',{size:12,fill:P.muted}))}
+  if(dv.length){y+=22;o.push(`<rect x="24" y="${y-12}" width="16" height="16" rx="3" fill="${P.catch}"/>`+TX(32,y+1,'巻',{size:10,bold:1,fill:'#fff',anchor:'middle'})+TX(46,y,'誘い中（塗り）',{size:12,fill:P.muted})+`<rect x="140" y="${y-12}" width="16" height="16" rx="3" fill="#fff" stroke="${P.catch}" stroke-width="1.6"/>`+TX(148,y+1,'叩',{size:10,bold:1,fill:P.catch,anchor:'middle'})+TX(162,y,'ステイ中（白抜き）　巻＝巻き　叩＝叩き　フ＝フォール　置＝置き竿　即＝即掛け　深＝深追い　枠の色＝釣れた／アタリ／バラシ',{size:12,fill:P.muted}))}
   y+=22;o.push(TX(24,y,tr.station?`※潮位は気象庁の潮位表（${stName(tr.station)}）をもとに計算した推算値です。潮の向きは船首を上にしたときの、潮が流れていく向きです。`:'※潮位は満潮・干潮の時刻と潮位から補間した概形です。潮の向きは船首を上にしたときの、潮が流れていく向きです。',{size:11,fill:P.muted}));
   if(tr.station&&offBay(tr)){y+=20;o.push(TX(24,y,'※潮の向きと速さは、Open-Meteo の海流データ（約8km四方の推算値）から出しています。',{size:11,fill:P.muted}))}
   y+=18;o.push(TX(24,y,'※枚数は自分の席で釣れた分だけです。',{size:11,fill:P.muted}));const Ht=y+20;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}" font-family="${CF}" role="img" aria-label="${esc(tlTitle(tr,sp))}"><rect width="${W}" height="${Ht}" rx="16" fill="${P.card}"/>${under.join('')}${o.join('')}</svg>`}
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}" font-family="${CF}" role="img" aria-label="${esc(tlTitle(tr,sp))}"><rect width="${W}" height="${Ht}" rx="16" fill="${P.card}"/>${under.join('')}${dgDefs(o)}${o.join('')}</svg>`}
 function sizeBins(sp,vals){const u=spOf(sp).sizeUnit,m={},ord=[];const add=k=>{if(!(k in m)){m[k]=0;ord.push(k)}m[k]++};
   const nums=vals.map(Number).filter(v=>isFinite(v)).sort((a,b)=>a-b);
   if(u==='指')nums.forEach(v=>add(v<=3?'指3以下':v>=5?'120cm以上':'指'+v));
@@ -1897,7 +1997,8 @@ function seatSVG(tr,sp){
     if(st.length>maxRows){ly+=19;o.push(TX(lx,ly,`ほか${st.length-maxRows}件は下の一覧`,{size:11.5,fill:P.muted}))}}
   for(const side of ['L','R'])for(let i=1;i<=n;i++){const x=side==='L'?xl:xr,y=ys(i),me=tr.side===side&&tr.seat===i;
     o.push(me?`<circle cx="${x}" cy="${r1(y)}" r="13" fill="${P.catch}" stroke="#fff" stroke-width="3"/>`:`<circle cx="${x}" cy="${r1(y)}" r="6.5" fill="${P.seatOff}"/>`)}
-  {const y=ys(tr.seat),R=tr.side==='R',x=R?xr+28:xl-28,an=R?'start':'end';o.push(TX(x,y-12,seatShort(tr),{size:17,bold:1,anchor:an}));o.push(TX(x,y+32,`${N}${s.unit}`,{size:42,bold:1,fill:P.catch,anchor:an}))}
+  {const y=ys(tr.seat),R=tr.side==='R',x=R?xr+28:xl-28,an=R?'start':'end';o.push(TX(x,y-12,seatShort(tr),{size:17,bold:1,anchor:an}));o.push(TX(x,y+32,`${N}${s.unit}`,{size:42,bold:1,fill:P.catch,anchor:an}));
+    const nd=c.filter(e=>e.dragon).length;if(nd){const t=`ドラゴン ${nd}${s.unit}`;o.push(R?DGI(x+11,y+58,22)+TX(x+26,y+64,t,{size:15,bold:1,fill:'#b7791f'}):DGI(x-11,y+58,22)+TX(x-26,y+64,t,{size:15,bold:1,fill:'#b7791f',anchor:'end'}))}}
   let y=746;const X0=32,X1=310;const span=tripEndT(tr,ev.length?ev[ev.length-1].t:tr.start)-tr.start;
   o.push(TX(X0,y,`${s.name}の合計`,{size:15,fill:P.muted}));o.push(TX(X0,y+62,`${N}${s.unit}`,{size:62,bold:1,fill:P.catch}));
   o.push(TX(X1,y,`1時間あたり ${span>0?r1(N/(span/3600e3)):0}${s.unit}`,{size:17}));o.push(TX(X1,y+30,`アタリ ${nKind(tr,sp,'bite')}回・バラシ ${nKind(tr,sp,'lost')}回`,{size:17}));
@@ -1915,7 +2016,7 @@ function seatSVG(tr,sp){
     const gaps=[];let cur=tr.start;hs.forEach(q=>{if(q.t-cur>5*60e3)gaps.push([cur,q.t]);cur=Math.max(cur,q.te)});if(tE-cur>5*60e3)gaps.push([cur,tE]);
     gaps.forEach(([a,b])=>{y+=30;o.push(TX(X0,y,`${hm(a)}〜${hm(b)}`,{size:15,fill:P.muted}));o.push(TX(X0+120,y,'船首の向きなし（潮の向きなし）',{size:15,fill:P.muted}))})}
   const H=y+56;o.push(TX(W/2,H-20,'※枚数は自分の席で釣れた分だけです。ほかの席の点は位置だけを示します。',{size:13,fill:P.muted,anchor:'middle'}));
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="${esc(title)}"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${o.join('')}</svg>`}
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="${esc(title)}"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${dgDefs(o)}${o.join('')}</svg>`}
 function figCalSheet(){const all=trips(),cur=figTrip();const now=new Date();
   const ym=S.ui.figCalYM||(cur?cur.date.slice(0,7):`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`);const [Y,M]=ym.split('-').map(Number);
   const by={};all.forEach(t=>{(by[t.date]=by[t.date]||[]).push(t)});const sel=S.ui.figCalDay&&S.ui.figCalDay.startsWith(ym)?S.ui.figCalDay:'';
@@ -1931,6 +2032,7 @@ function viewFig(){const tr=figTrip();wxEnsure(tr);ocurEnsure(tr);if(!tr)return 
   const opts=trips().map(t=>`<option value="${t.id}" ${t.id===tr.id?'selected':''}>${t.date.slice(5).replace('-','/')} ${esc(t.boat)}・${esc(tripSummary(t))}${t.sample?'（サンプル）':''}${t.status==='active'?'（記録中）':''}</option>`).join('');
   return `<div class="figsel"><select id="figPick" aria-label="釣行を選ぶ">${opts}</select><button class="btn sm figcal" data-act="figCal" aria-label="カレンダーから釣行を選ぶ">カレンダー</button>${tr.status==='active'?'<span class="badge live">記録中</span>':''}</div>
    ${isTairyo(tr.date)||nDragon(tr,'tachiuo')?`<div class="fig-badges">${isTairyo(tr.date)?tairyoTag():''}${nDragon(tr,'tachiuo')?`<span class="dn-s"><i class="ic ic-dragon"></i>ドラゴン ${nDragon(tr,'tachiuo')}本</span>`:''}</div>`:''}
+   ${photoIds(tr).length?`<div class="card"><h2>この日の写真</h2>${photoStrip(tr)}<button class="btn sm" data-act="phOpen" data-id="${tr.id}">写真を追加・外す</button></div>`:''}
    ${ss.length>1?`<div class="chips">${ss.map(x=>`<button class="chip ${x===sp?'on':''}" data-act="figSp" data-id="${x}">${esc(spOf(x).name)}</button>`).join('')}</div>`:''}
    ${tr.sample?`<p class="sample-note">これは見本のサンプル釣行です。実際に出船して記録すると、自分の図が作られます。<button class="btn sm" data-act="delSample" data-id="${tr.id}">サンプルを消す</button></p>`:''}
    <div class="card"><h2>時系列：潮と流れと釣果</h2><p class="swipe">← 図の中を左右にスワイプできます →</p><div class="scrollx">${timelineSVG(tr,sp)}</div>
@@ -1950,15 +2052,15 @@ const undoHint=tr=>{const e=tr.events[tr.events.length-1];return e?`${hm(e.t)} $
 const lastMemo=()=>{const t=trips().filter(x=>!x.sample&&(x.memo||'').trim()).sort((a,b)=>b.start-a.start)[0];return t?t.memo.trim():''};
 function memoSheet(id){const tr=S.trips[id];if(!tr)return;
   openSheet(`<div class="sheet-h"><h2>この釣行のメモ</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
-   <p class="muted">タックル（竿の調子・リール・道糸）や気づいたことを自由に。メモは釣果データとしては送られません。</p>
-   <textarea id="memoTa" rows="7" class="memo-ta" placeholder="例：竿 極鋭EX178／リール ソルティガBJ／PE0.8号・リーダー6号／底から10mまで反応">${esc(tr.memo||'')}</textarea>
+   <p class="muted">その日の状況や気づいたことを自由に。メモは釣果データとしては送られません。</p>
+   <textarea id="memoTa" rows="7" class="memo-ta" placeholder="例：北風が予報より強く、午後は釣りにくくなりそう／前回は朝の上げ潮で反応が集中">${esc(tr.memo||'')}</textarea>
    ${!(tr.memo||'').trim()&&lastMemo()?`<button class="golink" data-act="memoCopyLast" data-into="memoTa">前回のメモを入れる →</button>`:''}
    <button class="btn primary big" data-act="memoSave" data-id="${id}">保存する</button>`,{kind:'memo'});setTimeout(()=>{const t=$('#memoTa');if(t&&!t.value)t.focus()},250)}
 const memoHTML=t=>(t.memo||'').trim()?`<div class="memo-box">📝 ${esc(t.memo.trim()).replace(/\n/g,'<br>')}</div>`:'';
 function tripCardHTML(t){wxEnsure(t);return `<div class="trip"><div class="trip-h"><div style="min-width:0"><b>${jdate(t.date)}</b>${isTairyo(t.date)?tairyoTag():''}<div class="muted">${esc(t.boat)}・${esc(seatLabel(t))}${t.port?'・'+esc(t.port):''}</div></div></div>
     <div class="trip-sum">${esc(tripSummary(t))||'記録なし'}${nDragon(t,'tachiuo')?`<span class="dn-s"><i class="ic ic-dragon"></i>ドラゴン ${nDragon(t,'tachiuo')}</span>`:''}</div>
-    <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>${t.tk&&t.tk.sets&&t.tk.sets.length?`<div class="muted tk-used">🎣 ${t.tk.sets.map(id=>esc(tkLabelOf(t,id))).join('<br>🎣 ')}</div>`:''}${memoHTML(t)}${t.wx&&wxTxt(t.wx)?`<div class="muted wx-line">${wxTxt(t.wx).split('・').map(x=>`<span>${esc(x)}</span>`).join('・')}</div>`:''}
-    <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm two" data-act="tripEdit" data-id="${t.id}">釣行の情報を直す<small>日付・船・席・時間</small></button><button class="btn sm two" data-act="evList" data-id="${t.id}">記録を見る・修正する<small>釣れた・アタリ・バラシ・外道を1件ずつ</small></button>
+    <div>${t.sample?'<span class="badge">サンプル</span> ':''}${t.status==='active'?'<span class="badge live">記録中</span> ':''}<span class="muted">${hm(t.start)}〜${t.end?hm(t.end):t.planEnd?hm(t.planEnd):''}・${esc(tideNameOf(t))}${t.spot?'・'+esc(t.spot.name):t.station?'・潮位 '+esc(stName(t.station)):''}</span></div>${t.tk&&t.tk.sets&&t.tk.sets.length?`<div class="muted tk-used">🎣 ${t.tk.sets.map(id=>esc(tkLabelOf(t,id))).join('<br>🎣 ')}</div>`:''}${memoHTML(t)}${photoStrip(t)}${t.wx&&wxTxt(t.wx)?`<div class="muted wx-line">${wxTxt(t.wx).split('・').map(x=>`<span>${esc(x)}</span>`).join('・')} <button class="linkbtn" data-act="wxRefresh" data-id="${t.id}">天気を取り直す</button></div>`:''}
+    <div class="trip-act"><button class="btn sm" data-act="showFig" data-id="${t.id}">図を見る</button><button class="btn sm" data-act="phOpen" data-id="${t.id}">📷 写真${photoIds(t).length?`（${photoIds(t).length}）`:''}</button><button class="btn sm two" data-act="tripEdit" data-id="${t.id}">釣行の情報を直す<small>日付・船・席・時間</small></button><button class="btn sm two" data-act="evList" data-id="${t.id}">記録を見る・修正する<small>釣れた・アタリ・バラシ・外道を1件ずつ</small></button>
     ${t.status==='done'&&!t.sample&&!active()?`<button class="btn sm" data-act="reopen" data-id="${t.id}">記録を再開</button>`:''}
     <button class="btn sm danger" data-act="delTrip" data-id="${t.id}">${t.sample?'サンプルを消す':'消す'}</button></div></div>`}
 // 釣りの時間：終了時刻、なければ沖上がり予定まで（予定を過ぎても延ばさない）
@@ -1987,11 +2089,17 @@ async function wxMeteo(tr){let ll=tr.spot&&tr.spot.lat!=null?[tr.spot.lat,tr.spo
   const w={src:'open-meteo',weather:mode!=null?wmoLabel(mode):'',temp:r1n(avg(pick(f,'temperature_2m'))),wind:r1n(avg(ws)),dir,wave:r1n(avg(pick(m,'wave_height'))),noWave:false,sst:r1n(avg(pick(m,'sea_surface_temperature'))),prov:tr.date>=ymd(Date.now())||tr.status==='active',win:hm(a)+'-'+hm(b)};
   return wxTxt(w)?w:null}
 const wxBusy=new Set(),wxTried={};
-function wxEnsure(tr){if(!tr||tr.sample||!tr.date||!tr.start||tr.start>Date.now()||wxBusy.has(tr.id))return;const w=tr.wx;
-  if(w&&!w.prov)return;if(w&&Date.now()-(w.at||0)<2*3600e3)return;if(Date.now()-(wxTried[tr.id]||0)<10*60e3)return;
+function wxEnsure(tr,force){if(!tr||tr.sample||!tr.date||!tr.start||tr.start>Date.now()||wxBusy.has(tr.id))return;const w=tr.wx;if(!force){
+  const full=w&&w.weather&&w.temp!=null&&w.wind!=null;   // 天気・気温・風が欠けた記録は、確定値でも取り直す（10分おき）
+  if(w&&!w.prov&&full)return;if(w&&full&&Date.now()-(w.at||0)<2*3600e3)return;if(Date.now()-(wxTried[tr.id]||0)<10*60e3)return}
   wxTried[tr.id]=Date.now();wxBusy.add(tr.id);
-  (async()=>{let r=null;try{if(tr.station==='QN')r=await wxCatch(tr)}catch(e){}if(!r){try{r=await wxMeteo(tr)}catch(e){}}
-    wxBusy.delete(tr.id);const t=S.trips[tr.id];if(!r||!t)return;r.at=Date.now();t.wx=r;touch(t);if(['fig','hist'].includes(S.ui.tab)&&$('#sheet').hidden)render()})()}
+  (async()=>{let r=null;try{if(tr.station==='QN')r=await wxCatch(tr)}catch(e){}
+    // 釣果サイトの記録に天気・気温・風が無いときは、Open-Meteo で埋める
+    if(!r||!r.weather||r.temp==null||r.wind==null){let m=null;try{m=await wxMeteo(tr)}catch(e){}
+      if(!r)r=m;else if(m){for(const k of ['weather','temp','wind','dir'])if(r[k]==null||r[k]==='')r[k]=m[k];if(m.prov&&(r.temp===m.temp||r.wind===m.wind))r.prov=true}}
+    wxBusy.delete(tr.id);const t=S.trips[tr.id];if(!r||!t){if(force)toast('天気を取れませんでした。電波のある所でもう一度押してください');return}
+    const old=t.wx||{};for(const k of ['weather','temp','wind','dir','wave','sst'])if((r[k]==null||r[k]==='')&&old[k]!=null&&old[k]!=='')r[k]=old[k];   // 取り直しで値が消えないように、前の値を残す
+    r.at=Date.now();t.wx=r;if(force)toast('天気：'+wxTxt(r));touch(t);if(['fig','hist'].includes(S.ui.tab)&&$('#sheet').hidden)render()})()}
 const tripHours=t=>Math.max(0,(tripEndT(t)-t.start)/3600e3);
 function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYear());
   const all=trips().filter(t=>!t.sample);const L=per==='year'?all.filter(t=>t.date.startsWith(y0)):per==='90'?all.filter(t=>Date.now()-dayStart(t.date)<=90*864e5):all;
@@ -2004,7 +2112,7 @@ function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYe
   const rank=(title,keyFn,nameFn,lim,act)=>{const m={};L.forEach(t=>catchesOf(t,SOLO).forEach(e=>{const k=keyFn(t,e);if(k)m[k]=(m[k]||0)+1}));const it=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,lim||3);if(!it.length)return '';const mx=it[0][1];
     return `<div class="rank"><h3>${title}</h3>${it.map(([k,v])=>act?`<button class="rk rk-btn" data-act="${act}" data-id="${esc(k)}" data-n="${v}"><span>${esc(nameFn(k))}</span><i style="width:${Math.max(6,v/mx*100)}%"></i><b>${v}枚</b></button>`:`<div class="rk"><span>${esc(nameFn(k))}</span><i style="width:${Math.max(6,v/mx*100)}%"></i><b>${v}枚</b></div>`).join('')}${act?'<p class="muted rk-hint">押すとテンヤの写真が見られます</p>':''}</div>`};
   const avgBy=(title,keyFn)=>{const m={};L.forEach(t=>{const k=keyFn(t);if(!k)return;m[k]=m[k]||{n:0,s:0};m[k].n++;m[k].s+=N(t)});const it=Object.entries(m).sort((a,b)=>b[1].s/b[1].n-a[1].s/a[1].n).slice(0,5);if(!it.length)return '';const mx=Math.max(...it.map(x=>x[1].s/x[1].n),1);
-    return `<div class="rank"><h3>${title}</h3>${it.map(([k,v])=>`<div class="rk"><span>${esc(k)}</span><i style="width:${Math.max(6,v.s/v.n/mx*100)}%"></i><b>${r1(v.s/v.n)}本<small>／${v.n}回</small></b></div>`).join('')}</div>`};
+    return `<div class="rank"><h3>${title}</h3>${it.map(([k,v])=>`<div class="rk"><span>${esc(k)}</span><i style="width:${Math.max(6,v.s/v.n/mx*100)}%"></i><b>${r1(v.s/v.n)}${esc(spOf(SOLO).unit)}<small>／${v.n}回</small></b></div>`).join('')}</div>`};
   return `<div class="card dash"><h2>ダッシュボード</h2>${seg}
    <div class="kpis">${kpi(L.length,'回','釣行')}${kpi(tot,'枚','マダイ合計')}${kpi(r1(tot/L.length),'枚','1回あたり')}${kpi(hrs?r1(tot/hrs):0,'枚','1時間あたり')}
     ${kpi(N(best),'枚','最高',`${best.date.slice(5).replace('-','/')} ${esc(best.boat)}`)}${kpi(L.reduce((a,t)=>a+nKind(t,SOLO,'lost'),0),'回','バラシ')}</div>
@@ -2013,14 +2121,14 @@ function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYe
    ${avgBy('釣り場ごとの平均',t=>t.spot?t.spot.name:(t.port||''))}
    ${avgBy('潮回りごとの平均',t=>tideNameOf(t))}
    ${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.sa||!['catch','bite','lost'].includes(e.kind))return;if(e.kind==='catch'&&e.sp!==SOLO)return;m[e.sa]=m[e.sa]||{catch:0,bite:0,lost:0};m[e.sa][e.kind]++}));const it=SA_KEYS.filter(k=>m[k]);if(!it.length)return '';
-     return `<div class="rank"><h3>誘いごと（詳細モードで記録した分）</h3>${it.map(k=>`<div class="rk sa-rk"><span>${SA_JP[k]}</span><b>${m[k].catch}本<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
+     return `<div class="rank"><h3>誘いごと（詳細モードで記録した分）</h3>${it.map(k=>`<div class="rk sa-rk"><span>${SA_JP[k]}</span><b>${m[k].catch}${esc(spOf(SOLO).unit)}<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
    ${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.ka||!['catch','bite','lost'].includes(e.kind))return;if(e.kind==='catch'&&e.sp!==SOLO)return;m[e.ka]=m[e.ka]||{catch:0,bite:0,lost:0};m[e.ka][e.kind]++}));const it=KA_KEYS.filter(k=>m[k]);if(!it.length)return '';
-     return `<div class="rank"><h3>掛け方ごと</h3>${it.map(k=>`<div class="rk sa-rk"><span>${KA_JP[k]}</span><b>${m[k].catch}本<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
+     return `<div class="rank"><h3>掛け方ごと</h3>${it.map(k=>`<div class="rk sa-rk"><span>${KA_JP[k]}</span><b>${m[k].catch}${esc(spOf(SOLO).unit)}<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
    ${avgBy('船ごとの平均',t=>t.boat)}</div>`}
 function calCells(ym,by,sel,act){const [Y,M]=ym.split('-').map(Number);const first=new Date(Y,M-1,1),dim=new Date(Y,M,0).getDate(),lead=first.getDay();
   const today=ymd(Date.now());let cells='';for(let i=0;i<lead;i++)cells+='<span class="cd empty"></span>';
   for(let d=1;d<=dim;d++){const ds=`${ym}-${String(d).padStart(2,'0')}`;const ts=by[ds]||[];const n=ts.reduce((a,t)=>a+catchesOf(t,SOLO).length,0);const dg=ts.reduce((a,t)=>a+nDragon(t,'tachiuo'),0);const wd=(lead+d-1)%7;
-    cells+=ts.length?`<button class="cd has ${ds===sel?'on':''} ${n>=TAIRYO?'tai':''} ${wd===0?'sun':wd===6?'sat':''}" data-act="${act}" data-d="${ds}"><span class="cd-d">${d}</span><b>${n}<small>本</small></b>${n>=TAIRYO?'<i class="ic ic-tairyo"></i>':dg?'<i class="ic ic-dragon"></i>':''}</button>`
+    cells+=ts.length?`<button class="cd has ${ds===sel?'on':''} ${n>=TAIRYO?'tai':''} ${wd===0?'sun':wd===6?'sat':''}" data-act="${act}" data-d="${ds}"><span class="cd-d">${d}</span><b>${n}<small>${esc(spOf(SOLO).unit)}</small></b>${n>=TAIRYO?'<i class="ic ic-tairyo"></i>':dg?'<i class="ic ic-dragon"></i>':''}</button>`
       :`<span class="cd ${ds===today?'today':''} ${wd===0?'sun':wd===6?'sat':''}"><span class="cd-d">${d}</span></span>`}
   return cells}
 function calHTML(){const all0=trips(),real=all0.filter(t=>!t.sample),all=real.length?real:all0;const now=new Date();let ym=S.ui.calYM;if(!ym){const lt=all.find(t=>!t.sample)||all[0];ym=lt?lt.date.slice(0,7):`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`}
@@ -2030,11 +2138,11 @@ function calHTML(){const all0=trips(),real=all0.filter(t=>!t.sample),all=real.le
   const mTrips=all.filter(t=>t.date.startsWith(ym));const mTot=mTrips.reduce((a,t)=>a+catchesOf(t,SOLO).length,0);
   const list=(sel?by[sel]||[]:mTrips).slice().sort((a,b)=>b.start-a.start);
   return `<div class="card cal"><div class="cal-h"><button class="btn sm" data-act="calMove" data-d="-1" aria-label="前の月">‹</button><b>${Y}年${M}月</b><button class="btn sm" data-act="calMove" data-d="1" aria-label="次の月">›</button></div>
-   <p class="muted cal-sum">${mTrips.length?`この月：釣行 ${mTrips.length}回・タチウオ ${mTot}本`:'この月の釣行はありません'}</p>
+   <p class="muted cal-sum">${mTrips.length?`この月：釣行 ${mTrips.length}回・${esc(spOf(SOLO).name)} ${mTot}${esc(spOf(SOLO).unit)}`:'この月の釣行はありません'}</p>
    <div class="cal-w">${['日','月','火','水','木','金','土'].map(x=>`<span>${x}</span>`).join('')}</div><div class="cal-g">${cells}</div></div>
    ${list.length?`<h2 class="sec-h">${sel?`${jdate(sel)}の釣行`:`${M}月の釣行`}${sel?'<button class="golink" data-act="calDay" data-d="">月全体に戻す</button>':''}</h2><div class="card">${list.map(tripCardHTML).join('')}</div>`:''}`}
 function viewHist(){const statSp=spOf(S.ui.statSp).id!=='?'?S.ui.statSp:(spVisible()[0]||{}).id;
-  return `<h1>履歴</h1>${dashHTML()}${calHTML()}
+  return `<h1>履歴</h1>${safeHTML()}${dashHTML()}${calHTML()}
    <div class="card"><h2>席の場所ごとの平均（自分の記録）</h2>${seatStatsHTML(statSp)}</div>
    ${backupCardHTML()}`}
 
@@ -2060,13 +2168,15 @@ function tbcSheet(){const rows=tbcRows(),makers=[...new Set(rows.map(r=>r.m))];i
    <div class="tb-foot"><button class="btn primary" data-act="tbcSave" ${n?'':'disabled'}>${n?`${n}件を登録`:'重さと色を選んでください'}</button></div>`,{kind:'tbc'})}
 /* スカートは付けない人も多いので「なし」を選べる。初期値は「なし」 */
 function skirtChips(sel,act){const s=spOf(SOLO),l=(s.skirts||[]).filter(g=>!g.hidden);
-  return `<div class="gearpick"><div class="gp-lbl">スカート<small class="muted">（任意）</small></div><div class="chips wrap"><button class="chip ${!sel?'on':''}" data-act="${act}" data-id="" aria-pressed="${!sel}">なし</button>${l.map(g=>`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="スカートを登録">＋</button></div></div>`}
+  return `<div class="gearpick"><div class="gp-lbl">スカート<small class="muted">（任意）</small></div><div class="chips wrap"><button class="chip ${!sel?'on':''}" data-act="${act}" data-id="" aria-pressed="${!sel}">なし</button>${l.map(g=>`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${gph(g.id,'ch')}${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="スカートを登録">＋</button></div></div>`}
 const tbVal=id=>{const el=$('#'+id);return el?el.value.trim():''};
 const tbDl=(id,k)=>`<datalist id="${id}">${TB_DL[k].map(x=>`<option value="${esc(x)}">`).join('')}</datalist>`;
 function tbName(k,x){if(x.series)return [x.series,x.g?x.g+'g':'',x.color].filter(Boolean).join(' ');if(k==='rigs')return [x.g?x.g+'g':'',x.shape,x.color].filter(Boolean).join(' ')+(x.maker?`（${x.maker}）`:'');
   if(k==='baits'||k==='skirts')return [x.shape,x.color].filter(Boolean).join(' ');
   return x.type==='diy'?['自作',x.n?x.n+'本針':'',x.size?'針'+x.size:'',x.line?'糸'+x.line:''].filter(Boolean).join(' '):'市販 '+(x.pkg||'')}
-function tbList(k){const s=spOf(SOLO),l=s[k]||[];return l.length?l.map(g=>`<div class="grow ${g.hidden?'hid':''}"><span class="tb-nm">${esc(g.name)}</span><button class="btn sm" data-act="itemHide" data-sp="${SOLO}" data-kind="${k}" data-id="${g.id}">${g.hidden?'表示する':'隠す'}</button><button class="btn sm" data-act="tbDel" data-kind="${k}" data-id="${g.id}">消す</button></div>`).join(''):'<p class="muted">まだありません。</p>'}
+/* 自分で登録したヘッド・ネクタイ・針・スカートには写真を付けられる（ドラゴンカウンターの gph の仕組み） */
+const gphBtn=g=>`<button class="btn sm" data-act="gphOpen" data-id="${g.id}" data-name="${esc(g.name)}">写真</button>`;
+function tbList(k){const s=spOf(SOLO),l=s[k]||[];return l.length?l.map(g=>`<div class="grow ${g.hidden?'hid':''}">${gph(g.id,'row')}<span class="tb-nm">${esc(g.name)}</span>${gphBtn(g)}<button class="btn sm" data-act="itemHide" data-sp="${SOLO}" data-kind="${k}" data-id="${g.id}">${g.hidden?'表示する':'隠す'}</button><button class="btn sm" data-act="tbDel" data-kind="${k}" data-id="${g.id}">消す</button></div>`).join(''):'<p class="muted">まだありません。</p>'}
 function tbPartsHTML(){const H=tbHookType;
   return `<div class="card" id="tbHeads"><h2>ヘッド</h2><p class="muted">メーカーのカタログから選ぶか、重さ・形・色・メーカーを入れて登録します。</p>${tbList('rigs')}${TB_CAT.heads.length?`<button class="btn sm" data-act="tbcOpen" data-kind="rigs" style="margin:8px 0">📖 カタログから選ぶ</button><p class="muted" style="margin:0">カタログにないものは、下に入れて登録</p>`:''}
    <div class="tb-form"><label class="field"><span>重さ（g）</span><input type="number" id="tbHg" inputmode="numeric" min="1" max="500" placeholder="例：80"></label>
@@ -2120,7 +2230,7 @@ function tenyaSectionHTML(){const T=TEN();
 function mineChip(id){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip mine ${t.custom?'own':''}" data-q="${esc(tqText(id))}">${timg(id,'tci big')}<span class="mc-n"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}</span>${qtyHTML(id)}<button class="tx" data-act="mineDel" data-id="${id}" aria-label="所有から外す">×</button></span>`}
 function ctFieldsHTML(t){return `<div class="grid2"><label class="field"><span>メーカー</span><input type="text" id="ct-m" value="${esc(t.m||'')}" placeholder="例：DAIWA"></label><label class="field"><span>製品名</span><input type="text" id="ct-p" value="${esc(t.p||'')}" placeholder="例：船タチウオテンヤSS"></label></div>
     <div class="grid2"><label class="field"><span>号数</span><input type="number" inputmode="numeric" id="ct-z" value="${esc(t.z||'')}" placeholder="40"></label><label class="field"><span>カラー</span><input type="text" id="ct-c" value="${esc(t.c||'')}" placeholder="例：パープルグロー"></label></div>`}
-function ownChip(id){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip own"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}<button class="tx2" data-act="ctEdit" data-id="${id}">編集</button><button class="tx" data-act="customDel" data-id="${id}" aria-label="消す">×</button></span>`}
+function ownChip(id){const t=tenyaOf(id);if(!t)return '';return `<span class="tchip own"><b>${esc(tenyaMain(t))}</b>${tenyaSub(t)?`<small>${esc(tenyaSub(t))}</small>`:''}${t.custom?`<button class="tx2" data-act="gphOpen" data-id="${id}" data-name="${esc(tenyaMain(t))}">写真</button>`:''}<button class="tx2" data-act="ctEdit" data-id="${id}">編集</button><button class="tx" data-act="customDel" data-id="${id}" aria-label="消す">×</button></span>`}
 /* edit a self-added tenya; legacy items only had a name like "40号 シルバー" */
 let ctF=null;
 function openCtEdit(id,from){const T=TEN();const it=id?T.custom.find(x=>x.id===id):null;let t=it?{...it}:{};
@@ -2138,6 +2248,7 @@ function tbRows(){const T=TEN();const mine=new Set(myTenya());
   let list=CAT.list.concat(T.custom.filter(x=>!x.hidden).map(x=>({...x,custom:true})));
   if(tb.only==='mine')list=list.filter(t=>mine.has(t.id));else if(tb.only==='new')list=list.filter(t=>isNewTenya(t)||t.s==='発売予定');
   if(tb.z)list=list.filter(t=>String(t.z)===tb.z);if(tb.m)list=list.filter(t=>t.m===tb.m);
+  if(tb.tg)list=list.filter(t=>/(^|[^A-Za-z])TG([^A-Za-z]|$)|タングステン/.test(String(t.p||'')));   // タングステン（TG）だけ。テンヤカタログのページと同じ見分け方
   if(tb.q.trim()){const terms=normQ(tb.q).split(/\s+/).filter(Boolean);
     list=list.filter(t=>{const h=normQ(`${t.m} ${MK[t.m]||''} ${t.p} ${tenyaAbbr(t)} ${t.z}号 ${t.c} ${t.name||''} ${t.s||''} ${t.custom?'自分で追加':''}`),h2=h.replace(/[\s・･\-]/g,'');return terms.every(q=>{const n=q.replace(/号$/,'');if(/^\d+$/.test(n))return String(t.z)===n; return h.includes(q)||h2.includes(q.replace(/[・･\-]/g,''))})})}
   // 製品はシリーズ名で並べる（ダイワの「船タチウオテンヤSS Rhythm …」と「船タチウオテンヤ Rhythm 替えヘッド」が離れないように、共通の頭を外して比べる）
@@ -2178,9 +2289,10 @@ function normQ(x){return String(x||'').normalize('NFKC').toLowerCase().replace(/
 function tbBarHTML(){const makers=[...new Set(CAT.list.map(t=>t.m))].sort();
   return `<div class="seg">${[['','全号数'],['30','30号'],['40','40号'],['50','50号']].map(([v,l])=>`<button class="${tb.z===v?'on':''}" data-act="tbZ" data-d="${v}">${l}</button>`).join('')}</div>
    <div class="seg">${[['all','すべて'],['mine','所有だけ'],['new','新商品だけ']].map(([v,l])=>`<button class="${tb.only===v?'on':''}" data-act="tbOnly" data-d="${v}">${l}</button>`).join('')}</div>
+   <div class="seg">${[['','すべての素材'],['1','タングステンだけ']].map(([v,l])=>`<button class="${(tb.tg||'')===v?'on':''}" data-act="tbTg" data-d="${v}">${l}</button>`).join('')}</div>
    <select id="tbM" data-tbm="1" aria-label="メーカー"><option value="">すべてのメーカー</option>${makers.map(m=>`<option value="${esc(m)}" ${tb.m===m?'selected':''}>${esc(MK[m]?m+'（'+MK[m]+'）':m)}</option>`).join('')}</select>
    ${tb.mode==='mine'?`<p class="tb-own">「＋ 所有に追加」を押すと、その場で所有テンヤに入ります（左のチェックでも同じ）。<b>所有テンヤ：${myTenya().length}種・${ownTotal()}個</b></p>`:''}
-   <p class="muted tb-help">${tb.only==='mine'?'「所有だけ」：チェックを付けた、持っているテンヤだけを表示しています。':tb.only==='new'?`「新商品だけ」：発売予定のものと、ここ2か月以内にカタログへ追加されたテンヤです（カタログ ${esc(CAT.ver||'')} 時点）。`:''}</p>`}
+   <p class="muted tb-help">${tb.only==='mine'?'「所有だけ」：チェックを付けた、持っているテンヤだけを表示しています。':tb.only==='new'?`「新商品だけ」：発売予定のものと、ここ3か月以内にカタログへ追加されたテンヤです（カタログ ${esc(CAT.ver||'')} 時点）。`:''}</p>`}
 function openTenyaSheet(){const close=tb.mode==='catch'||tb.mode==='cur';const title=tb.mode==='cur'?'使うテンヤを選ぶ':tb.mode==='catch'?'釣れたテンヤを選ぶ':tb.mode==='set'?`「${esc((TEN().sets.find(x=>x.id===tb.setId)||{}).name||'')}」に入れるテンヤ`:'カタログから所有テンヤに追加';
   const back=tb.mode==='mine'&&tb.backSet;const backName=back?((TEN().sets.find(x=>x.id===tb.backSet)||{}).name||'リスト'):'';
   const doneAct=close?'closeSheet':back?'tbBackSet':'tbDone';
@@ -2369,7 +2481,7 @@ function renderStateSheet(){const f=stF,tr=S.trips[f.tid];const AR={N:'↑',NE:'
   const others=(tr.states||[]).slice().sort((a,b)=>b.t-a.t).filter(s=>s.id!==f.sid);
   $('#sheetPanel').innerHTML=`<div class="sheet-h"><h2>${f.sid?'船の向きを直す':'船の向きを記録'}</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
    <p class="muted">船首の向きは任意です。入れた時間だけ、潮の向き（船から見た向き）が図に出ます。</p>
-   <div class="grid2"><label class="field"><span>何時から</span><input type="time" id="stTime" data-sf="t" value="${esc(f.t)}"></label><label class="field"><span>何時まで<small class="muted">（空欄＝次の向きまで）</small></span><input type="time" id="stUntil" data-sf="until" value="${esc(f.until)}"></label></div>
+   <div class="grid2"><label class="field"><span>何時から</span><input type="time" id="stTime" data-sf="t" value="${esc(f.t)}"></label><label class="field"><span>何時まで</span><input type="time" id="stUntil" data-sf="until" value="${esc(f.until)}"></label></div><p class="muted" style="margin:6px 0 0;font-size:13px">「何時まで」は空欄でOK（次の向きを入れるまで続きます）</p>
    <div class="field"><span>船首の向き（ミヨシが向いている方位）</span><div class="grid3 hgrid">${hg}</div></div>
    <div class="field"><span>潮の向き</span><div class="seg">${can?`<button class="${f.auto?'on':''}" data-act="stAuto" data-d="1">自動（潮位から）</button>`:''}<button class="${!f.auto?'on':''}" data-act="stAuto" data-d="0">自分で入れる</button></div>
     ${can?'':'<small class="muted">この釣り場は東京湾の外なので、潮の向きは自分で入れてください。</small>'}</div>
@@ -2383,11 +2495,28 @@ function renderStateSheet(){const f=stF,tr=S.trips[f.tid];const AR={N:'↑',NE:'
 let evF=null;
 function evBack(){const tid=evF&&evF.back;if(tid&&S.trips[tid]){$('#sheet').hidden=true;sheetCtx=null;render();acts.evList({dataset:{id:tid}})}else closeSheet()}
 function openEvSheet(id,tid,back){const tr=S.trips[tid||(active()&&active().id)];if(!tr)return;const e=tr.events.find(x=>x.id===id);if(!e)return;
-  evF={tid:tr.id,back:back||null,id,sa:e.sa||'',ka:e.ka||'',dragon:!!e.dragon,kind:e.kind,name:e.name||'',sp:spOf(e.sp).id!=='?'?e.sp:tr.cur.sp,gsp:e.gsp||e.sp,v:e.v,t:hm2(e.t),rig:e.rig,bait:e.bait,hook:e.hook||'',skirt:e.skirt||'',size:e.size===undefined||e.size===null?'':String(e.size),memo:e.memo||'',armed:false};renderEvSheet()}
+  evF={tid:tr.id,back:back||null,id,sa:e.sa||'',ka:e.ka||'',dragon:!!e.dragon,kind:e.kind,name:e.name||'',sp:spOf(e.sp).id!=='?'?e.sp:tr.cur.sp,gsp:e.gsp||e.sp,v:e.v,t:hm2(e.t),rig:e.rig,bait:e.bait,hook:e.hook||'',skirt:e.skirt||'',size:e.size===undefined||e.size===null?'':String(e.size),memo:e.memo||'',armed:false,lat:isFinite(e.lat)?e.lat:null,lon:isFinite(e.lon)?e.lon:null,acc:e.acc||0,mz:null,locEd:false};renderEvSheet()}
+/* 記録を直す：場所。地図を押すとそこに動かす */
+function evMapHTML(tr,f){const W=360,H=230,has=f.lat!=null;
+  const oth=tr.events.filter(x=>x.id!==f.id&&isFinite(x.lat)&&isFinite(x.lon)).sort((a,b)=>a.t-b.t);
+  const ft=tAt(tr,f.t),near=oth.slice().sort((a,b)=>Math.abs(a.t-ft)-Math.abs(b.t-ft))[0];
+  const c=has?{lat:f.lat,lon:f.lon}:near?{lat:near.lat,lon:near.lon}:null;
+  const btn=(a,t,dis)=>`<button class="btn sm" data-act="${a}"${dis?' disabled':''}>${t}</button>`;
+  const prev=oth.filter(x=>x.t<ft).pop();
+  const tools=`<div class="evmap-act">${btn('evMapZ','＋',!c)}${btn('evMapZo','−',!c)}${btn('evLocPrev','前の記録と同じ場所',!prev)}${has?btn('evLocDel','場所を消す'):''}${f.locEd?btn('evLocReset','元に戻す'):''}</div>`;
+  if(!c)return `<p class="muted" style="margin:0">この記録には場所がありません（ほかの記録にも場所がないため、地図を出せません）。</p>${tools}`;
+  const z=f.mz||14,S2=256*2**z,wx=lon=>(lon+180)/360*S2,wy=lat=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*S2};
+  const ox=wx(c.lon)-W/2,oy=wy(c.lat)-H/2,o=[];
+  for(let tx=Math.floor(ox/256);tx<=Math.floor((ox+W)/256);tx++)for(let ty=Math.floor(oy/256);ty<=Math.floor((oy+H)/256);ty++)o.push(`<image href="https://cyberjapandata.gsi.go.jp/xyz/pale/${z}/${tx}/${ty}.png" x="${r1(tx*256-ox)}" y="${r1(ty*256-oy)}" width="256" height="256"/>`);
+  oth.forEach(x=>o.push(`<circle cx="${r1(wx(x.lon)-ox)}" cy="${r1(wy(x.lat)-oy)}" r="5" fill="${LOC_COL[x.kind]||'#13939b'}" fill-opacity=".55" stroke="#fff" stroke-width="1.5"/>`));
+  if(has){const x=wx(f.lon)-ox,y=wy(f.lat)-oy,col=LOC_COL[f.kind]||'#13939b';o.push(`<path d="M${r1(x)} ${r1(y)} l-10 -18 a12 12 0 1 1 20 0z" fill="${col}" stroke="#fff" stroke-width="2"/><circle cx="${r1(x)}" cy="${r1(y-22)}" r="4.5" fill="#fff"/>`)}
+  o.push(`<rect x="${W-74}" y="${H-16}" width="74" height="16" fill="#fff" fill-opacity=".8"/><text x="${W-4}" y="${H-5}" font-size="9" fill="#444" text-anchor="end">地理院タイル</text>`);
+  return `<p class="muted" style="margin:0 0 6px;font-size:13px">${has?'地図を押すと、その場所に動かせます。':'場所がありません。地図を押すと、その場所を入れます。'}薄い点はほかの記録です。</p><svg class="locmap evmap" viewBox="0 0 ${W} ${H}" data-act="evMapTap" data-z="${z}" data-ox="${r1(ox)}" data-oy="${r1(oy)}" data-w="${W}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="場所を選ぶ地図"><rect width="${W}" height="${H}" fill="#e6eef2"/>${o.join('')}</svg>${tools}`}
+function evRerender(){const p=$('#sheetPanel'),y=p?p.scrollTop:0;renderEvSheet();if(p)p.scrollTop=y}
 function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.some(v=>v.id===f.v))f.v=mainV(f.sp);
   const sel=k=>{if(k==='rigs'&&gs.catalog){const tr=S.trips[f.tid];const ids=[...new Set([f.rig,...(tr.cur&&tr.cur.g&&tr.cur.g[f.gsp]?dayTenya(tr,f.gsp):[]),...tr.events.map(e=>e.rig),...myTenya()].filter(Boolean))].filter(id=>tenyaOf(id));
       return `<option value="" ${!f.rig?'selected':''}>未選択</option><optgroup label="テンヤ">`+ids.map(id=>`<option value="${id}" ${id===f.rig?'selected':''}>${esc(tenyaFull(id))}</option>`).join('')+`</optgroup><optgroup label="天秤">`+(gs.rigs||[]).map(g=>`<option value="${g.id}" ${g.id===f.rig?'selected':''}>${esc(g.name)}</option>`).join('')+'</optgroup>'}
-    return (k==='baits'&&f.bait&&f.bait.startsWith('bz:')?`<option value="${esc(f.bait)}" selected>${esc(bzLabel(f.bait))}</option>`:'')+(isBzSp(f.gsp)&&k==='baits'?[BZ_DEF,'bz:hc','bz:km'].filter(x=>x!==f.bait).map(x=>`<option value="${x}">${esc(bzLabel(x))}</option>`).join(''):'')+(gs[k]||[]).filter(g=>!(k==='baits'&&isBzSp(f.gsp)&&bzLegacy(g)&&g.id!==f.bait)).map(g=>`<option value="${g.id}" ${g.id===f[k==='rigs'?'rig':k==='hooks'?'hook':k==='skirts'?'skirt':'bait']?'selected':''}>${esc(g.name)}${g.hidden?'（隠し中）':''}</option>`).join('')};
+    return (k==='baits'&&f.bait&&f.bait.startsWith('bz:')?`<option value="${esc(f.bait)}" selected>${esc(bzLabel(f.bait))}</option>`:'')+(isBzSp(f.gsp)&&k==='baits'?['大','中','小'].flatMap(z=>['h0','h1'].flatMap(h=>['g0','g1'].map(g=>`bz:iw:${z}:${h}:${g}`))).concat(BZ_TYPES.filter(t=>t[0]!=='iw').map(t=>'bz:'+t[0])).filter(x=>x!==f.bait).map(x=>`<option value="${x}">${esc(bzLabel(x))}</option>`).join(''):'')+(gs[k]||[]).filter(g=>!(k==='baits'&&isBzSp(f.gsp)&&bzLegacy(g)&&g.id!==f.bait)).map(g=>`<option value="${g.id}" ${g.id===f[k==='rigs'?'rig':k==='hooks'?'hook':k==='skirts'?'skirt':'bait']?'selected':''}>${esc(g.name)}${g.hidden?'（隠し中）':''}</option>`).join('')};
   const sizeUI=!s.sizeUnit?'':s.sizeUnit==='指'?`<div class="chips">${['','2','2.5','3','3.5','4','4.5','5','5.5','6'].map(x=>`<button class="chip ${f.size===x?'on':''}" data-act="evSize" data-d="${x}">${x?'指'+x:'未記入'}</button>`).join('')}</div>`
     :`<div class="grow"><input type="number" inputmode="decimal" id="evSize" data-ef="size" value="${esc(f.size)}" placeholder="${s.sizeUnit==='cm'?'例：95':'未記入'}" min="0" max="200" step="0.5"><span class="muted">${esc(s.sizeUnit)}</span></div>`;
   $('#sheetPanel').innerHTML=`<div class="sheet-h"><h2>記録を直す</h2>${f.back?'<button class="btn sm ghost" data-act="evClose">← 一覧に戻る</button>':'<button class="btn sm ghost" data-act="closeSheet">閉じる</button>'}</div>
@@ -2398,6 +2527,7 @@ function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.
    ${f.kind==='catch'&&s.variants.length>1?`<div class="field"><span>種類</span><div class="chips">${s.variants.map(v=>`<button class="chip ${v.id===f.v?'on':''}" data-act="evV" data-d="${v.id}">${esc(v.name)}</button>`).join('')}</div></div>`:''}
    ${false?`<div class="field"><span>誘い</span><div class="chips wrap">${['',...SA_KEYS].map(k=>`<button class="chip ${f.sa===k?'on':''}" data-act="evSa" data-d="${k}">${k?SA_JP[k]:'なし'}</button>`).join('')}</div></div>${f.kind!=='bite'?`<div class="field"><span>掛け方</span><div class="chips wrap">${['',...KA_KEYS].map(k=>`<button class="chip ${f.ka===k?'on':''}" data-act="evKa" data-d="${k}">${k?KA_JP[k]:'なし'}</button>`).join('')}</div></div>`:''}`:''}
    <label class="field"><span>時刻</span><input type="time" id="evTime" data-ef="t" value="${esc(f.t)}"></label>
+   ${f.kind!=='gedo'?`<div class="field"><span>場所${f.locEd?'<small class="muted">（直しました。保存すると反映されます）</small>':''}</span>${evMapHTML(S.trips[f.tid],f)}</div>`:''}
    <div class="grid2"><label class="field"><span>${esc(gs.catalog?'仕掛け':gs.rigLabel)}${f.gsp!==f.sp?`（${esc(gs.name)}の道具）`:''}</span><select id="evRig" data-ef="rig">${sel('rigs')}</select></label>${gs.baitLabel?`<label class="field"><span>${esc(gs.baitLabel)}</span><select id="evBait" data-ef="bait">${sel('baits')}</select></label>`:''}${gs.hookLabel?`<label class="field"><span>${esc(gs.hookLabel)}</span><select id="evHook" data-ef="hook"><option value="" ${!f.hook?'selected':''}>未選択</option>${sel('hooks')}</select></label>`:''}${gs.skirtLabel?`<label class="field"><span>${esc(gs.skirtLabel)}</span><select id="evSkirt" data-ef="skirt"><option value="" ${!f.skirt?'selected':''}>なし</option>${sel('skirts')}</select></label>`:''}</div>
    ${f.kind==='catch'&&sizeUI?`<div class="field"><span>サイズ（全長・任意）</span>${sizeUI}</div>`:''}
    <label class="field"><span>メモ</span><input type="text" id="evMemo" data-ef="memo" value="${esc(f.memo)}" placeholder="水深・誘い方など"></label>
@@ -2465,14 +2595,14 @@ function helpHTML(){return `<div class="sheet-h"><h2>ボタンで数える<small
 /* ---------- actions ---------- */
 // keep the trip picker on the 図 tab just under the sticky header
 (()=>{const set=()=>{const h=document.querySelector('header.top');if(h)document.documentElement.style.setProperty('--topH',h.offsetHeight+'px')};set();addEventListener('resize',set);if(window.ResizeObserver){const h=document.querySelector('header.top');if(h)new ResizeObserver(set).observe(h)}})();
-function tenViewSheet(id,n){const t=tenyaOf(id);if(!t)return;const img=TIMG.has(id)?`<img class="tv-img" src="/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}" alt="${esc(tenyaFull(id))}">`:'<div class="tv-noimg">写真はありません</div>';
+function tenViewSheet(id,n){const t=tenyaOf(id);if(!t)return;const img=TIMG.has(id)?`<img class="tv-img" src="/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}" alt="${esc(tenyaFull(id))}">`:GPH[id]?`<img class="tv-img" src="${GPH[id]}" alt="${esc(tenyaFull(id))}">`:'<div class="tv-noimg">写真はありません</div>';
   openSheet(`<div class="sheet-h"><h2>よく釣れたテンヤ</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
    <div class="tv-box">${img}</div><p class="tv-sub">${esc(tenyaSub(t))}</p><h3 class="tv-main">${esc(tenyaMain(t))}</h3><div class="tv-badges">${tenyaBadges(t)}</div>
-   <p class="tv-n">この期間に<b>${n}本</b></p>${t.u?`<a class="golink" href="${esc(t.u)}" target="_blank" rel="noopener">メーカーの商品ページ →</a>`:''}`,{kind:'tenview'})}
+   <p class="tv-n">この期間に<b>${n}${esc(spOf(SOLO).unit)}</b></p>${t.u?`<a class="golink" href="${esc(t.u)}" target="_blank" rel="noopener">メーカーの商品ページ →</a>`:''}`,{kind:'tenview'})}
 const acts={
   modeHelp:()=>openSheet(`<div class="sheet-h"><h2>シンプルと詳細の違い</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
    <div class="mh"><h3>シンプル</h3><p>「釣れた」「アタリ」「バラシ」を押すと、その場ですぐ1件記録します。時刻と使っているテンヤ・タックルが残ります。手早く数えたいとき向けです。</p></div>
-   <div class="mh"><h3>詳細</h3><p>押したあとに、そのときの<b>誘い</b>（巻き／叩き × 誘い中／ステイ中、またはフォール中）と、<b>掛け方</b>（即掛け／深追い）を選んで記録します。アタリは誘いだけ、フォールの釣れた・バラシは即掛けとして記録します。</p><p>急いでいるときは、ボタンを<b>長押し</b>すると選ばずにすぐ記録できます。</p><p>誘い・掛け方は、振り返りの図とダッシュボードで「どの誘いで釣れたか」「取り込み率」として見られます。</p></div>
+   <div class="mh"><h3>詳細</h3><p>押したあとに、そのときの<b>誘い</b>（巻き／叩き × 誘い中／ステイ中、フォール中、置き竿）と、<b>掛け方</b>（即掛け／深追い）を選んで記録します。アタリは誘いだけ、フォールの釣れた・バラシは即掛けとして記録します。置き竿は掛け方なしで記録します。</p><p>急いでいるときは、ボタンを<b>長押し</b>すると選ばずにすぐ記録できます。</p><p>誘い・掛け方は、振り返りの図とダッシュボードで「どの誘いで釣れたか」「取り込み率」として見られます。</p></div>
    <p class="muted">釣行中も「本日の釣果」の左上で切り替えられます。シンプルで付けた記録も、あとから記録の一覧で誘い・掛け方を付け足せます。</p>`,{kind:'help'}),
   tkSetEdit:b=>tkSetSheet(b.dataset.id),tkSetNew:()=>tkSetSheet(''),
   tkSetSave:b=>{const t=TK(),rod=$('#tseRod').value,reel=$('#tseReel').value;if(!rod||!reel)return;
@@ -2562,7 +2692,7 @@ const acts={
   dayListEdit:()=>{const tr=active();if(!tr)return;const g=curGear(tr);const set=g.set&&g.set!=='mine'&&TEN().sets.find(x=>x.id===g.set);
     if(set)tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'set',setId:set.id};else tb={q:'',z:'',m:'',only:'mine',mode:'mine'};openTenyaSheet()},
   gedoOpen:()=>{const tr=active();if(!tr)return;const cnt={};tr.events.filter(e=>e.kind==='gedo').forEach(e=>cnt[e.name]=(cnt[e.name]||0)+1);const own=S.cfg.gedo||[];
-    openSheet(`<div class="sheet-h"><h2>外道を記録</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">タチウオ以外に釣れた魚を、今の時刻と使用テンヤで1匹記録します（タチウオの本数には入りません）。</p>
+    openSheet(`<div class="sheet-h"><h2>外道を記録</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">マダイ以外に釣れた魚を、今の時刻と使っているタイラバで1匹記録します（マダイの枚数には入りません）。</p>
      <div class="vbtns">${gedoNames().map(n=>`<button class="vbtn" data-act="gedoAdd" data-name="${esc(n)}"><span>${esc(n)}</span><b>＋1${cnt[n]?`（${cnt[n]}）`:''}</b></button>`).join('')}</div>
      <div class="field"><span>自分で追加</span><div style="display:flex;gap:8px"><input type="text" id="gedoNew" placeholder="例：カサゴ、イナダ" style="flex:1;min-width:0"><button class="btn sm" data-act="gedoNew">追加して＋1</button></div></div>
      ${own.length?`<p class="muted" style="margin:0;font-size:13px">自分で追加した魚：${own.map(n=>`<button class="inl" data-act="gedoDel" data-name="${esc(n)}">${esc(n)} ×</button>`).join('　')}</p>`:''}`,{kind:'gedo'})},
@@ -2597,7 +2727,7 @@ const acts={
   tbToMine:()=>{tb={q:'',z:'',m:'',only:'all',mode:'mine',backSet:tb.setId};openTenyaSheet()},
   tbBackSet:()=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'set',setId:tb.backSet};openTenyaSheet()},
   setEdit:b=>{tb={q:'',z:'',m:'',only:myTenya().length?'mine':'all',mode:'set',setId:b.dataset.set};openTenyaSheet()},
-  tbZ:b=>{tb.z=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},tbFold:b=>{tb.fold=tb.fold||{};const z=b.dataset.z;tb.fold[z]=!tb.fold[z];tbRefresh()},tbOnly:b=>{tb.only=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},
+  tbZ:b=>{tb.z=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},tbFold:b=>{tb.fold=tb.fold||{};const z=b.dataset.z;tb.fold[z]=!tb.fold[z];tbRefresh()},tbOnly:b=>{tb.only=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},tbTg:b=>{tb.tg=b.dataset.d;tb.fold={};tb.foldInit=false;tbRefresh()},
   tbSetQuick:b=>{const T=TEN(),st=T.sets.find(x=>x.id===b.dataset.set),id=b.dataset.id;if(!st)return;const add=!st.items.includes(id);st.items=add?st.items.concat([id]):st.items.filter(x=>x!==id);cfgTouch();tbRefresh();toast(add?`「${st.name}」に入れました`:`「${st.name}」から外しました`)},
   tbSetNew:b=>{const T=TEN();const st={id:uid(),name:SET_NAMES[0],items:[b.dataset.id]};T.sets.push(st);cfgTouch();tbRefresh();toast(`「${st.name}」を作って入れました`)},
   tbMine:b=>{const T=TEN(),id=b.dataset.id;const add=!T.mine.includes(id);T.mine=add?T.mine.concat([id]):T.mine.filter(x=>x!==id);cfgTouch();tbRefresh();const t=tenyaOf(id);toast(`${t?tenyaMain(t):'テンヤ'}を所有テンヤ${add?'に追加しました':'から外しました'}（${myTenya().length}種）`)},
@@ -2616,6 +2746,8 @@ const acts={
     if(ctF.id){const it=T.custom.find(x=>x.id===ctF.id);Object.assign(it,d);delete it.name}else{const it={id:'c'+uid(),...d,custom:true};T.custom.push(it);T.mine.push(it.id);if(tb.mode==='set'){const st=T.sets.find(x=>x.id===tb.setId);if(st)st.items.push(it.id)}}
     cfgTouch();toast('保存しました');ctBack()},
   ctDel:()=>{const T=TEN();const it=T.custom.find(x=>x.id===ctF.id);if(it)it.hidden=true;T.mine=T.mine.filter(x=>x!==ctF.id);T.sets.forEach(st=>st.items=st.items.filter(x=>x!==ctF.id));cfgTouch();toast('消しました');ctBack()},
+  gphOpen:b=>openGph(b.dataset.id,b.dataset.name),
+  gphDel:b=>{const g=gphTarget;if(!g)return;gphRemove(g.id).then(()=>{toast('写真を消しました');render();openGph(g.id,g.name)})},
   customDel:b=>{const T=TEN();const it=T.custom.find(x=>x.id===b.dataset.id);if(it)it.hidden=true;T.mine=T.mine.filter(x=>x!==b.dataset.id);T.sets.forEach(st=>st.items=st.items.filter(x=>x!==b.dataset.id));cfgTouch();render()},
   boatAdd:()=>{const el=$('#add-boat'),v=el.value.trim();if(!v)return el.focus();if(S.cfg.boats.some(x=>x.name===v))return toast('同じ名前の船が登録されています');const n=clampP(($('#add-boat-seats')||{}).value||16);
     const st=($('#add-boat-start')||{}).value||'',en=($('#add-boat-end')||{}).value||'';
@@ -2640,7 +2772,7 @@ const acts={
   evClose:()=>evBack(),
   evList:b=>{const tr=S.trips[b.dataset.id],ev=sortEv(tr);openSheet(`<div class="sheet-h"><h2>記録を見る・修正する</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${ev.length?`<button class="btn sm" data-act="shareAsk" data-which="list" data-id="${tr.id}">この一覧を画像で保存・共有</button>`:''}<p class="muted" style="margin:0">直したい行を押すと、時刻・テンヤ・種類（釣れた／アタリ／バラシ）などを直したり、消したりできます。</p><ol class="log">${ev.slice().reverse().map(e=>logRow(e,e.kind==='catch'?catchesOf(tr,e.sp).indexOf(e)+1:0,tr.id)).join('')||'<li class="empty">記録がありません</li>'}</ol>`,{kind:'evlist',tid:b.dataset.id})},
   end:b=>{if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='もう一度押すと記録を終えます';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent='沖上がり（記録を終える）'}},3500);return}
-    const tr=active();const now=Date.now();tr.end=(tr.planEnd&&now>tr.planEnd)?tr.planEnd:now;tr.status='done';S.activeId=null;releaseAwake();S.ui.tab='fig';S.ui.figTrip=tr.id;S.ui.figSp=mainSp(tr);touch(tr);render();scrollTo(0,0);toast(`おつかれさまでした。${tripSummary(tr)}の記録を図にしました`)},
+    const tr=active();const now=Date.now();tr.end=(tr.planEnd&&now>tr.planEnd)?tr.planEnd:now;tr.status='done';S.activeId=null;releaseAwake();S.ui.tab='fig';S.ui.figTrip=tr.id;S.ui.figSp=mainSp(tr);touch(tr);render();if(!tr.sample)setTimeout(bkAsk,700);scrollTo(0,0);toast(`おつかれさまでした。${tripSummary(tr)}の記録を図にしました`)},
   btnImport:()=>{imp={text:'',rows:null,sel:new Set(),armed:false};openImportSheet()},
   impReset:()=>{imp.rows=null;imp.sel=new Set();imp.armed=false;openImportSheet()},
   impCheck:()=>{imp.text=$('#impText').value;const tr=active();imp.rows=reviewLines(tr,parseLines(tr,imp.text));imp.sel=new Set(imp.rows.filter(x=>x.ok&&!x.near).map(x=>x.i));imp.armed=false;if(!imp.rows.length)toast('時刻の入った行が見つかりませんでした');openImportSheet()},
@@ -2664,7 +2796,7 @@ const acts={
   stDel:()=>{if(!stF.armed){stF.armed=true;return renderStateSheet()}const tr=S.trips[stF.tid];tr.states=tr.states.filter(x=>x.id!==stF.sid);touch(tr);closeSheet()},
   evKind:b=>{evF.kind=b.dataset.d;renderEvSheet()},evSize:b=>{evF.size=b.dataset.d;renderEvSheet()},evV:b=>{evF.v=b.dataset.d;renderEvSheet()},
   evSp:b=>{if(evF.sp===b.dataset.d)return;evF.sp=b.dataset.d;evF.v=mainV(evF.sp);evF.size='';renderEvSheet()},
-  saRec:b=>{const sa=b.dataset.sa,k=b.dataset.k;if(sa)S.ui.lastSa=sa;if(k!=='bite'&&sa==='fall')return acts.kaRec({dataset:{k,sa,ka:'soku'}});if(k!=='bite')return openKake(k,sa);
+  saRec:b=>{const sa=b.dataset.sa,k=b.dataset.k;if(sa)S.ui.lastSa=sa;if(k!=='bite'&&sa==='fall')return acts.kaRec({dataset:{k,sa,ka:'soku'}});if(k!=='bite'&&sa==='oki')return acts.kaRec({dataset:{k,sa,ka:''}});if(k!=='bite')return openKake(k,sa);
     $('#sheet').hidden=true;sheetCtx=null;nextSa=sa||null;lastTap=0;bypassDetail=true;try{recKind(k)}finally{bypassDetail=false;nextSa=null}},
   saBack:b=>openSasoi(b.dataset.k),
   kaRec:b=>{const k=b.dataset.k,sa=b.dataset.sa,ka=b.dataset.ka;if(ka)S.ui.lastKa=ka;$('#sheet').hidden=true;sheetCtx=null;nextSa=sa||null;nextKa=ka||null;lastTap=0;bypassDetail=true;
@@ -2679,7 +2811,15 @@ const acts={
      <a class="btn" href="${mapUrl(p)}" target="_blank" rel="noopener">地図で見る</a><button class="btn danger" data-act="locDel" data-tid="${t.id}" data-id="${p.id}">この場所の記録を消す</button>`,{kind:'loc'})},
   locDel:b=>{if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='もう一度押すと消します';return}const t=S.trips[b.dataset.tid];t.points=(t.points||[]).filter(p=>p.id!==b.dataset.id);touch(t);closeSheet();toast('場所の記録を消しました')},
   evSave:()=>{const f=evF,tr=S.trips[f.tid],e=tr.events.find(x=>x.id===f.id);const dc=$('#evDragon');if(dc)f.dragon=dc.checked;if(f.kind==='catch'&&f.sp==='tachiuo'&&f.dragon)e.dragon=true;else delete e.dragon;
-    Object.assign(e,{kind:f.kind,sp:f.sp,gsp:f.gsp,v:f.kind==='catch'?f.v:undefined,t:tAt(tr,f.t)+(new Date(e.t).getSeconds()*1000),rig:f.rig,bait:f.bait,hook:f.hook||'',skirt:f.skirt||'',size:f.kind==='catch'?f.size:'',memo:f.memo.trim()});if(f.kind==='gedo')e.name=(f.name||'').trim()||e.name;else delete e.name;if(f.sa&&f.kind!=='gedo')e.sa=f.sa;else delete e.sa;if(f.ka&&f.kind!=='gedo'&&f.kind!=='bite')e.ka=f.ka;else delete e.ka;touch(tr);toast('直しました');evBack()},
+    Object.assign(e,{kind:f.kind,sp:f.sp,gsp:f.gsp,v:f.kind==='catch'?f.v:undefined,t:tAt(tr,f.t)+(new Date(e.t).getSeconds()*1000),rig:f.rig,bait:f.bait,hook:f.hook||'',skirt:f.skirt||'',size:f.kind==='catch'?f.size:'',memo:f.memo.trim()});if(f.kind==='gedo')e.name=(f.name||'').trim()||e.name;else delete e.name;if(f.locEd){if(f.lat==null){delete e.lat;delete e.lon;delete e.acc}else{e.lat=+f.lat.toFixed(6);e.lon=+f.lon.toFixed(6);e.acc=f.acc||0}}if(f.sa&&f.kind!=='gedo')e.sa=f.sa;else delete e.sa;if(f.ka&&f.kind!=='gedo'&&f.kind!=='bite')e.ka=f.ka;else delete e.ka;touch(tr);toast('直しました');evBack()},
+  evMapTap:(b,ev)=>{const f=evF;if(!f||!ev)return;const r=b.getBoundingClientRect(),W=+b.dataset.w,k=W/r.width,z=+b.dataset.z,S2=256*2**z;
+    const px=+b.dataset.ox+(ev.clientX-r.left)*k,py=+b.dataset.oy+(ev.clientY-r.top)*k;f.lon=px/S2*360-180;f.lat=Math.atan(Math.sinh(Math.PI*(1-2*py/S2)))*180/Math.PI;f.acc=0;f.locEd=true;f.mz=z;evRerender()},
+  evMapZ:()=>{evF.mz=Math.min(18,(evF.mz||14)+1);evRerender()},
+  evMapZo:()=>{evF.mz=Math.max(9,(evF.mz||14)-1);evRerender()},
+  evLocPrev:()=>{const f=evF,tr=S.trips[f.tid],ft=tAt(tr,f.t),p=tr.events.filter(x=>x.id!==f.id&&isFinite(x.lat)&&x.t<ft).sort((a,b)=>a.t-b.t).pop();if(!p)return;f.lat=p.lat;f.lon=p.lon;f.acc=p.acc||0;f.locEd=true;evRerender()},
+  evLocDel:()=>{evF.lat=null;evF.lon=null;evF.locEd=true;evRerender()},
+  evLocReset:()=>{const f=evF,e=S.trips[f.tid].events.find(x=>x.id===f.id);f.lat=isFinite(e.lat)?e.lat:null;f.lon=isFinite(e.lon)?e.lon:null;f.acc=e.acc||0;f.locEd=false;evRerender()},
+  wxRefresh:b=>{const t=S.trips[b.dataset.id];if(!t)return;toast('天気を取り直しています…');wxEnsure(t,true)},
   evDel:()=>{if(!evF.armed){evF.armed=true;return renderEvSheet()}const tr=S.trips[evF.tid];tr.events=tr.events.filter(x=>x.id!==evF.id);touch(tr);toast('消しました');evBack()},
   png:b=>savePng(b.dataset.which),
   figSp:b=>{S.ui.figSp=b.dataset.id;saveLocal();render()},
@@ -2690,6 +2830,10 @@ const acts={
     const id=b.dataset.id,tr=S.trips[id];if(tr.sample){delete S.trips[id];saveLocal()}else{S.trips[id]={id,deleted:true,updatedAt:Date.now()};markDirty(id);saveLocal();scheduleFlush()}
     if(S.activeId===id){S.activeId=null;releaseAwake()}render();toast('消しました')},
   exportJson:()=>exportJson(),
+  phOpen:b=>photoSheet(b.dataset.id),
+  phView:b=>{const id=b.dataset.p,tid=b.dataset.id;openSheet(`<div class="sheet-h"><h2>写真</h2><button class="btn sm ghost" data-act="phOpen" data-id="${tid}">← 写真の一覧</button></div><img class="ph-big" data-ph="${id}" alt="">`,{kind:'photo'})},
+  phDel:b=>{if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='もう一度で外す';return}const tr=S.trips[b.dataset.id],id=b.dataset.p;if(!tr)return;tr.photos=photoIds(tr).filter(x=>x!==id);touch(tr);idbReq('photos','readwrite',st=>st.delete(id)).catch(()=>{});if(PH_URL[id]){URL.revokeObjectURL(PH_URL[id]);delete PH_URL[id]}photoSheet(tr.id)},
+  a2hsHide:()=>{S.ui.a2hsHide=1;saveLocal();render()},
   dashPer:b=>{S.ui.dashPer=b.dataset.d;saveLocal();render()},
   calMove:b=>{const all=trips();const cur=S.ui.calYM||((all.find(t=>!t.sample)||all[0]||{date:ymd(Date.now())}).date.slice(0,7));let [y,m]=cur.split('-').map(Number);m+=+b.dataset.d;if(m<1){m=12;y--}if(m>12){m=1;y++}S.ui.calYM=`${y}-${String(m).padStart(2,'0')}`;S.ui.calDay='';saveLocal();render()},
   figCal:()=>{S.ui.figCalYM='';S.ui.figCalDay='';figCalSheet()},
@@ -2755,10 +2899,10 @@ document.addEventListener('keydown',e=>{if(!active()||S.ui.tab!=='rec'||!$('#she
   if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();addEvent('catch',null,'remote')}else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();addEvent('lost',null,'remote')}});
 
 /* ---------- export ---------- */
-async function svgToPng(svg){const m=svg.match(/width="(\d+)" height="(\d+)"/);const w=+m[1],h=+m[2];const img=new Image();
+async function svgToPng(svg,jpg){const m=svg.match(/width="(\d+)" height="(\d+)"/);const w=+m[1],h=+m[2];const img=new Image();
   await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)});
   const sc=2,cv=document.createElement('canvas');cv.width=w*sc;cv.height=h*sc;const ctx=cv.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,cv.width,cv.height);ctx.drawImage(img,0,0,cv.width,cv.height);
-  return {blob:await new Promise(r=>cv.toBlob(r,'image/png')),url:cv.toDataURL('image/png')}}
+  const ty=jpg?'image/jpeg':'image/png';return {blob:await new Promise(r=>cv.toBlob(r,ty,.92)),url:cv.toDataURL(ty,.92),type:ty}}
 async function savePng(which){const tr=figTrip();if(!tr)return;const sp=figSp(tr);toast('画像を作っています…');
   try{const svg=which==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(brandSVG(svg));const name=`tairaba-${tr.date}-${sp}-${which==='tl'?'timeline':'seat'}.png`;
     if(!SITE){let dl=null;try{dl=await window.claude?.use?.('downloads')}catch(e){}
@@ -2767,6 +2911,11 @@ async function savePng(which){const tr=figTrip();if(!tr)return;const sp=figSp(tr
     $('#toast').hidden=true;openSheet(`<div class="sheet-h"><h2>画像</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${SITE?'<button class="btn primary big" data-act="shareFile">写真に保存・共有する</button>':''}<p class="muted">画像を長押しして「写真に保存」を選んでも保存できます。</p><img class="imgout" src="${url}" alt="${esc(name)}">`,{kind:'img'})
   }catch(e){toast('画像を作れませんでした。もう一度お試しください')}}
 /* record list as an image (oldest first), for sharing */
+/* 画像の中のドラゴンのアイコン（アプリのアイコンと同じ絵。SVG の中に1回だけ埋め込んで <use> で使う） */
+let DG_URI=null;
+const dgUri=()=>{if(DG_URI===null){const m=[...document.querySelectorAll('style')].map(x=>x.textContent).join('').match(/\.ic-dragon\{background-image:url\((data:image\/[a-z]+;base64,[^)]+)\)/);DG_URI=m?m[1]:''}return DG_URI};
+const DGI=(cx,cy,d)=>`<use href="#dgI" x="${r1(cx-d/2)}" y="${r1(cy-d/2)}" width="${r1(d)}" height="${r1(d)}"/>`;
+const dgDefs=o=>o.some(x=>x.includes('#dgI'))&&dgUri()?`<defs><clipPath id="dgC"><circle cx="32" cy="32" r="32"/></clipPath><symbol id="dgI" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="#2a1600"/><image href="${dgUri()}" width="64" height="64" clip-path="url(#dgC)"/></symbol></defs>`:'';
 function listSVG(tr){const W=600,X0=28,RH=40,ev=sortEv(tr),o=[];const nCatch=ev.filter(e=>e.kind==='catch').length;
   o.push(TX(X0,50,'記録一覧',{size:26,bold:1}));o.push(TX(W-X0,50,nCatch?`釣果 ${nCatch}`:'',{size:17,bold:1,fill:P.catch,anchor:'end'}));
   o.push(TX(X0,78,`${jdate(tr.date)}｜${tr.boat||''}${tr.port?'（'+tr.port+'）':''}`,{size:15,fill:P.muted}));
@@ -2775,22 +2924,73 @@ function listSVG(tr){const W=600,X0=28,RH=40,ev=sortEv(tr),o=[];const nCatch=ev.
     if(e.kind==='catch'){cnt[e.sp]=(cnt[e.sp]||0)+1;kind=`${s.variants.length>1?vShort(e.sp,e.v):s.name} ${cnt[e.sp]}${s.unit}目`;col=P.catch}
     else if(e.kind==='gedo'){kind='外道 '+(e.name||'');col=P.muted}else{kind=KIND_JP[e.kind]||'';col=P[e.kind]||P.ink}
     if(i%2===0)o.push(`<rect x="16" y="${y}" width="${W-32}" height="${RH}" rx="8" fill="#eef4f6"/>`);
-    o.push(TX(X0,y+27,hm(e.t),{size:19,bold:1}));o.push(TX(X0+70,y+27,clip(kind,150,15),{size:15,bold:1,fill:col}));
+    o.push(TX(X0,y+27,hm(e.t),{size:19,bold:1}));const dgn=e.kind==='catch'&&e.dragon;if(dgn)o.push(DGI(X0+81,y+RH/2,24));o.push(TX(X0+(dgn?98:70),y+27,clip(kind,dgn?122:150,15),{size:15,bold:1,fill:col}));
     o.push(TX(X0+232,y+27,clip(evGearText(e),W-X0-232-X0,14),{size:14,fill:P.muted}));y+=RH});
   if(!ev.length){o.push(TX(X0,y+30,'記録がありません',{size:15,fill:P.muted}));y+=50}
   const H=y+24;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="記録一覧"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${o.join('')}</svg>`}
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="記録一覧"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${dgDefs(o)}${o.join('')}</svg>`}
 /* shared images carry the tool name and its address in a footer band */
 function brandSVG(svg){const m=svg.match(/width="(\d+)" height="(\d+)"/);if(!m)return svg;const W=+m[1],H=+m[2],k=W/600,F=Math.round(56*k),z=n=>r1(n*k);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H+F}" viewBox="0 0 ${W} ${H+F}" font-family="${CF}"><rect width="${W}" height="${H+F}" fill="#0b1422"/><rect width="${W}" height="${H}" fill="${P.card}"/>${svg.replace('<svg ','<svg x="0" y="0" ')}<text x="${z(24)}" y="${H+z(25)}" font-size="${z(17)}" font-weight="700" fill="#ffffff" letter-spacing="${z(1.5)}">TAIRABA COUNTER</text><text x="${z(24)}" y="${H+z(43)}" font-size="${z(11)}" fill="#9fb4c6">東京湾の魚・釣り / 3rd-Penguin Fishing Lab.</text><text x="${W-z(24)}" y="${H+z(34)}" font-size="${z(13)}" font-weight="700" fill="#3fc8c4" text-anchor="end">dragon-counter.cutlassfish.tokyo/tairaba</text></svg>`}
+/* インスタ用の画像：ストーリーズ（1080×1920）と投稿（1080×1350）。大見出し・基本情報・1時間ごとの本数だけを大きな文字で */
+/* いちばん釣れたテンヤ（写真は data URL にして SVG に埋め込む） */
+async function instaTop(tr,sp){const m={};catchesOf(tr,sp).forEach(e=>{if(e.rig)m[e.rig]=(m[e.rig]||0)+1});const id=Object.keys(m).sort((a,b)=>m[b]-m[a])[0];if(!id)return null;
+  const t=tenyaOf(id),top={n:m[id],sub:t?tenyaSub(t):'',main:t?tenyaMain(t):listName(sp,'rigs',id),img:''};
+  if((t&&TIMG.has(id))||GPH[id]){try{const im=new Image();await new Promise((ok,ng)=>{im.onload=ok;im.onerror=ng;im.src=TIMG.has(id)?`/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}`:GPH[id]});
+    const k=Math.min(1,480/Math.max(im.naturalWidth,im.naturalHeight)),cv=document.createElement('canvas');cv.width=Math.round(im.naturalWidth*k);cv.height=Math.round(im.naturalHeight*k);
+    cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);top.img=cv.toDataURL('image/png');top.w=cv.width;top.h=cv.height}catch(e){}}
+  return top}
+function instaSVG(tr,sp,fmt,tt){const story=fmt==='story',W=540,H=story?960:675,s=spOf(sp),c=catchesOf(tr,sp),N=c.length,dg=c.filter(e=>e.dragon).length;
+  const T=(x,y,t,o={})=>`<text x="${r1(x)}" y="${r1(y)}" font-size="${o.size||16}" fill="${o.fill||'#eef3f8'}"${o.anchor?` text-anchor="${o.anchor}"`:''}${o.bold?' font-weight="800"':''}${o.ls?` letter-spacing="${o.ls}"`:''}>${esc(t)}</text>`;
+  const fit=(t,px,w)=>clip(t,w,px);const o=[];
+  const top=story?118:34,bot=story?H-118:H-26;   // ストーリーズは上下をインスタの表示に隠れない位置まで空ける
+  let y=top;
+  o.push(T(32,y+14,'DRAGON COUNTER',{size:15,bold:1,fill:'#3fc8c4',ls:2}));o.push(T(W-32,y+14,jdate(tr.date),{size:15,fill:'#9fb4c6',anchor:'end'}));y+=story?78:58;
+  const yName=y;o.push(`<text x="32" y="${r1(y)}" font-weight="800"><tspan font-size="${story?30:26}" fill="#eef3f8">${esc(s.name)}</tspan></text>`);
+  if(dg){const nz=story?30:26,dz=story?22:19,dx=32+s.name.length*nz+18;o.push(DGI(dx+dz*.6,y-dz*.35,dz*1.3)+T(dx+dz*1.4,y,`ドラゴン ${dg}${s.unit}`,{size:dz,bold:1,fill:'#f2c063'}))}
+  const big=String(N),bs=story?120:96;o.push(`<text x="32" y="${r1(y+bs*.95)}" font-weight="800"><tspan font-size="${bs}" fill="#ffb04a">${esc(big)}</tspan><tspan dx="10" font-size="${story?40:34}" fill="#eef3f8">${esc(s.unit)}</tspan></text>`);
+  y+=bs*.95;
+  if(tt){const cw=story?222:212,cx=W-32-cw,cy=yName+(story?16:12),ph=story?84:70,lw=cw-24,fz=story?15:14;
+    const mn=Math.floor(lw/fz),ml=tt.main.length>mn?[tt.main.slice(0,mn),tt.main.slice(mn)]:[tt.main],lines=[[tt.sub,13,'#9fb4c6',0],...ml.slice(0,2).map(t=>[t,fz,'#eef3f8',1])].filter(l=>l[0]);
+    const ch=28+ph+8+lines.reduce((a,l)=>a+l[1]+6,0)+8;
+    o.push(`<rect x="${cx}" y="${cy}" width="${cw}" height="${ch}" rx="16" fill="#132236" stroke="#2c3e55"/>`+T(cx+12,cy+19,'いちばん釣れたタイラバ',{size:13,bold:1,fill:'#9fb4c6'}));
+    o.push(`<text x="${cx+cw-12}" y="${cy+21}" text-anchor="end" font-weight="800"><tspan font-size="${story?20:18}" fill="#ffb04a">${tt.n}</tspan><tspan dx="2" font-size="13" fill="#eef3f8">${esc(s.unit)}</tspan></text>`);
+    o.push(`<rect x="${cx+12}" y="${cy+28}" width="${cw-24}" height="${ph}" rx="10" fill="#ffffff"/>`);
+    if(tt.img)o.push(`<image href="${tt.img}" x="${cx+18}" y="${cy+31}" width="${cw-36}" height="${ph-6}" preserveAspectRatio="xMidYMid meet"/>`);
+    else o.push(T(cx+cw/2,cy+28+ph/2+5,'写真なし',{size:13,fill:'#9aa6b2',anchor:'middle'}));
+    let ly=cy+28+ph+8;lines.forEach(([t,z,c,b])=>{ly+=z+2;o.push(T(cx+12,ly,clip(t,lw,z),{size:z,fill:c,bold:b}));ly+=4});
+    y=Math.max(y,cy+ch-(story?14:10))}
+  y+=story?54:40;
+  const head=tlTitle(tr,sp).replace(new RegExp('^'+s.name+'は'),'').replace(/、?計\d+.*$/,'');
+  if(N&&head&&!/^計|釣果なし/.test(head)){o.push(T(32,y,fit('ピークは'+head,story?26:22,W-64),{size:story?26:22,bold:1,fill:'#3fc8c4'}));y+=story?46:36}
+  const b=nKind(tr,sp,'bite'),l=nKind(tr,sp,'lost');
+  const info=[[tr.port,tr.boat].filter(Boolean).join('・'),'席：'+seatLabel(tr),[tideNameOf(tr),tr.start?hm(tr.start)+(tr.end?'〜'+hm(tr.end):''):''].filter(Boolean).join('・'),(b||l)?`アタリ ${b}・バラシ ${l}`:''].filter(Boolean);
+  const fs=story?21:18;info.forEach(t=>{o.push(T(32,y,fit(t,fs,W-64),{size:fs,fill:'#c5d3e2'}));y+=fs*1.6});
+  // 1時間ごとの本数
+  const [t0,t1]=range(tr),h0=new Date(t0).getHours(),h1=Math.max(h0,new Date(t1-1).getHours());const hs=[];for(let h=h0;h<=h1;h++)hs.push(h);
+  const cnt=h=>c.filter(e=>new Date(e.t).getHours()===h),mx=Math.max(1,...hs.map(h=>cnt(h).length));
+  const gy0=y+(story?36:22),gy1=bot-(story?82:72),cx0=32,cw=W-64,bw=cw/hs.length;
+  o.push(`<rect x="${cx0-14}" y="${gy0-16}" width="${cw+28}" height="${gy1-gy0+70}" rx="18" fill="#132236"/>`);
+  o.push(T(cx0,gy0+10,'1時間ごとの'+s.name,{size:story?20:17,bold:1,fill:'#9fb4c6'}));
+  const by0=gy0+(story?62:46),bh=gy1-by0;
+  o.push(`<line x1="${cx0}" y1="${gy1}" x2="${cx0+cw}" y2="${gy1}" stroke="#2c3e55" stroke-width="2"/>`);
+  hs.forEach((h,i)=>{const e=cnt(h),n=e.length,d=e.filter(x=>x.dragon).length,x=cx0+i*bw,w=Math.min(bw*.68,56),xm=x+bw/2;
+    if(n){const hh=Math.max(6,n/mx*bh),hd=d/n*hh;o.push(`<rect x="${r1(xm-w/2)}" y="${r1(gy1-hh)}" width="${r1(w)}" height="${r1(hh)}" rx="6" fill="#e47b25"/>`);
+      if(d)o.push(`<rect x="${r1(xm-w/2)}" y="${r1(gy1-hd)}" width="${r1(w)}" height="${r1(hd)}" rx="6" fill="#f2c063"/>`);
+      o.push(T(xm,gy1-hh-10,String(n),{size:story?26:22,bold:1,anchor:'middle'}))}
+    o.push(T(xm,gy1+(story?30:26),h+'時',{size:hs.length>9?14:story?18:16,fill:'#9fb4c6',anchor:'middle'}))});
+  if(dg)o.push(`<rect x="${cx0+cw-80}" y="${gy0-2}" width="14" height="14" rx="3" fill="#f2c063"/>`+T(cx0+cw,gy0+10,'ドラゴン',{size:14,fill:'#9fb4c6',anchor:'end'}));
+  o.push(T(W/2,bot,'dragon-counter.cutlassfish.tokyo',{size:story?18:16,bold:1,fill:'#3fc8c4',anchor:'middle'}));
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}"><defs><linearGradient id="igbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d1a2b"/><stop offset="1" stop-color="#060a11"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#igbg)"/>${dgDefs(o)}${o.join('')}</svg>`}
 const SHR_NM={list:'記録一覧',tl:'時系列の図',seat:'座席の図'};
 function shrSp(tr){return S.ui.figTrip===tr.id?figSp(tr):mainSp(tr)}
-acts.shareAsk=b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which;
-  openSheet(`<div class="sheet-h"><h2>画像で保存・共有</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">LINE・メール・メッセージなどで送れます。</p><div class="shr-pick"><button class="btn primary" data-act="shareMake" data-which="${w}" data-id="${tr.id}">${SHR_NM[w]}だけ</button><button class="btn" data-act="shareMake" data-which="all" data-id="${tr.id}">3つまとめて<small style="display:block;font-weight:500">記録一覧・時系列の図・座席の図</small></button></div>`,{kind:'shr'})};
-acts.shareMake=async b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which,ws=w==='all'?['list','tl','seat']:[w],sp=shrSp(tr);
+acts.shareAsk=b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which,sp=shrSp(tr),mc=catchLocList(tr,sp).length,mp=pointSegs(tr).length,maps=[mc?'map-catch':'',mp?'map-pts':''].filter(Boolean),all=['list','tl','seat',...maps];
+  const nm=k=>({list:'記録一覧',tl:'時系列の図',seat:'座席の図','map-catch':'釣れた場所の地図','map-pts':'📍の地図'})[k];
+  openSheet(`<div class="sheet-h"><h2>画像で保存・共有</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted" style="margin:0">LINE・メール・メッセージなどで送れます。</p><div class="shr-pick"><button class="btn primary" data-act="shareMake" data-which="${w}" data-id="${tr.id}">${nm(w)}だけ</button><button class="btn" data-act="shareMake" data-which="all" data-id="${tr.id}">${all.length}つまとめて<small style="display:block;font-weight:500">${all.map(nm).join('・')}</small></button></div>${maps.length?`<h3 class="shr-ig-h">地図（国土地理院の地図。電波のある所で）</h3><div class="shr-ig">${maps.map(k=>`<button class="btn" data-act="shareMake" data-which="${k}" data-id="${tr.id}">${k==='map-catch'?'釣れた・アタリ・<br>バラシの場所':'📍で記録した<br>場所'}</button>`).join('')}</div>`:''}<h3 class="shr-ig-h">インスタ用（文字を大きく・インスタのサイズで）</h3><div class="shr-ig"><button class="btn" data-act="shareMake" data-which="ig-story" data-id="${tr.id}">ストーリーズ用<small>縦長 1080×1920</small></button><button class="btn" data-act="shareMake" data-which="ig-post" data-id="${tr.id}">投稿用<small>1080×1350</small></button></div>`,{kind:'shr'})};
+acts.shareMake=async b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.dataset.which,sp=shrSp(tr),ws=w==='all'?['list','tl','seat',...(catchLocList(tr,sp).length?['map-catch']:[]),...(pointSegs(tr).length?['map-pts']:[])]:[w];
   b.disabled=true;b.textContent='画像を作っています…';
-  try{const out=[];for(const k of ws){const svg=k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url}=await svgToPng(brandSVG(svg));
-      out.push({blob,url,name:`tairaba-${tr.date}-${k==='list'?'list':k==='tl'?'timeline':'seat'}.png`,type:'image/png'})}
+  try{const out=[];for(const k of ws){const ig=k.startsWith('ig-'),svg=ig?instaSVG(tr,sp,k.slice(3),await instaTop(tr,sp)):k.startsWith('map-')?await inlineTiles(mapExportSVG(tr,sp,k)):k==='list'?listSVG(tr):k==='tl'?timelineSVG(tr,sp):seatSVG(tr,sp);const {blob,url,type}=await svgToPng(ig?svg:brandSVG(svg),ig);
+      out.push({blob,url,name:`tairaba-${tr.date}-${ig?'insta-'+k.slice(3):k.startsWith('map-')?k:k==='list'?'list':k==='tl'?'timeline':'seat'}.${type==='image/jpeg'?'jpg':'png'}`,type})}
     pendingFile={files:out};
     openSheet(`<div class="sheet-h"><h2>画像${out.length>1?`（${out.length}枚）`:''}</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>${SITE?`<button class="btn primary big" data-act="shareFile">写真に保存・共有する</button>`:''}<p class="muted" style="margin:0">画像を長押しして「写真に保存」を選んでも保存できます。</p><div class="shr-imgs">${out.map(f=>`<img class="imgout" src="${f.url}" alt="${esc(f.name)}">`).join('')}</div>`,{kind:'img'})
   }catch(e){toast('画像を作れませんでした。もう一度お試しください');closeSheet()}};
@@ -2798,7 +2998,7 @@ acts.shareMake=async b=>{const tr=S.trips[b.dataset.id];if(!tr)return;const w=b.
 function backupData(){const ts=trips().filter(t=>!t.sample);
   return {app:'tairaba-counter',kind:'backup',v:3,exportedAt:new Date().toISOString(),
     counts:{trips:ts.length,catches:ts.reduce((n,t)=>n+t.events.filter(e=>e.kind==='catch').length,0),spots:S.cfg.spots.length,boats:S.cfg.boats.length,tenya:myTenya().length},
-    cfg:S.cfg,trips:ts,prefs:S.prefs}}
+    cfg:S.cfg,trips:ts,prefs:S.prefs,gearPhotos:{...GPH}}}
 const bkName=()=>{const d=new Date(),p=x=>String(x).padStart(2,'0');return `tairaba-counter-backup-${ymd(Date.now())}-${p(d.getHours())}${p(d.getMinutes())}.json`};
 function backupDone(){S.ui.lastBackup=Date.now();saveLocal();if(S.ui.tab==='gear'||S.ui.tab==='hist')render()}
 async function exportJson(){const data=JSON.stringify(backupData());const name=bkName();
@@ -2821,7 +3021,7 @@ function renderRestore(){const {d}=rs;const c=d.cfg||{};const when=d.exportedAt?
   const catches=d.trips.reduce((n,t)=>n+t.events.filter(e=>e.kind==='catch').length,0);
   openSheet(`<div class="sheet-h"><h2>バックアップから復元</h2><button class="btn sm ghost" data-act="closeSheet">やめる</button></div>
    <div class="bkinfo"><b>${when?`${jdate(ymd(when.getTime()))} ${hm(when.getTime())} のバックアップ`:'バックアップ'}</b><span>${esc(rs.src||'')}</span>
-    <ul><li>釣行 <b>${d.trips.length}</b>件（釣果 ${catches}本）</li><li>釣り場 ${(c.spots||[]).length}・船 ${(c.boats||[]).length}・所有テンヤ ${((c.tenya||{}).mine||[]).length}</li></ul></div>
+    <ul><li>釣行 <b>${d.trips.length}</b>件（釣果 ${catches}${esc(spOf(SOLO).unit)}）</li><li>釣り場 ${(c.spots||[]).length}・船 ${(c.boats||[]).length}・所有テンヤ ${((c.tenya||{}).mine||[]).length}</li></ul></div>
    <p class="muted">この端末には今、釣行 ${cur.length}件があります。</p>
    <div class="field"><span>復元のしかた</span><div class="seg"><button class="${rs.mode==='merge'?'on':''}" data-act="rsMode" data-d="merge">足して合わせる</button><button class="${rs.mode==='replace'?'on':''}" data-act="rsMode" data-d="replace">そっくり置き換える</button></div></div>
    <p class="muted">${rs.mode==='merge'?`今の記録は残したまま、バックアップにしかない釣行（${rs.nNew}件）を足し、同じ釣行はより新しいほう（バックアップが新しいのは${rs.nNewer}件）を残します。設定（釣り場・船・テンヤ）は、新しいほうを使います。`:'今のこの端末の記録と設定をすべて消して、バックアップの内容にします。バックアップにない釣行は消えます（クラウドからも消えます）。'}</p>
@@ -2834,6 +3034,7 @@ function doRestore(){const {d,mode}=rs;let n=0;
   else{d.trips.forEach(t=>{const l=S.trips[t.id];if(!l||l.deleted||(t.updatedAt||0)>(l.updatedAt||0)){S.trips[t.id]=t;markDirty(t.id);n++}});
     if(d.cfg&&(d.cfg.updatedAt||0)>(S.cfg.updatedAt||0)){S.cfg=clone(d.cfg);migrateCfg(S.cfg);S.dirty.cfg=true}
     if(!active()){const a=trips().find(t=>t.status==='active');S.activeId=a?a.id:null}}
+  if(d.gearPhotos&&typeof d.gearPhotos==='object')Object.entries(d.gearPhotos).forEach(([id,u])=>{if(typeof u==='string'&&/^data:image\//.test(u)&&(mode==='replace'||!GPH[id]))gphPut(id,u)});
   startDraft=null;rs=null;saveLocal();scheduleFlush();closeSheet();toast(mode==='replace'?`バックアップの内容に置き換えました（釣行${n}件）`:`${n}件の釣行を復元しました`)}
 function pasteRestoreSheet(){openSheet(`<div class="sheet-h"><h2>文字を貼り付けて復元</h2><button class="btn sm ghost" data-act="closeSheet">やめる</button></div>
    <p class="muted">「文字で保存」でコピーしておいたバックアップを、そのまま貼り付けてください。</p><textarea id="rsText" style="min-height:200px" placeholder='{"app":"dragon-counter", …}'></textarea><button class="btn primary" data-act="rsPasteRead">読み取る</button>`,{kind:'restore'})}
@@ -2897,7 +3098,7 @@ const TUT=[
   {k:'出船',t:'釣り場と席を選ぶ',d:'釣り場を選ぶだけで、潮回りと満潮・干潮、流れの向きと速さが自動で入ります。釣り場は全国の地図か現在地から登録できます。船と自分の席もタップで選びます。'},
   {k:'釣れたら',t:'「釣れた」を1タップ',d:'「釣れた＋1」で、今使っているタイラバ（ヘッド・ネクタイ・針）と一緒に1枚記録します。部品を替えたら「タイラバ」のボタンから、替えた部品だけ選び直します（押しても記録はされません）。アタリ・バラシも同じように記録されます。押し間違えたら下の「直前の釣果を取り消し」。マダイ以外が掛かったら小さな「外道」ボタンから（枚数には入りません）。'},
   {k:'沖上がり',t:'図にして振り返る',d:'沖上がりの予定時刻を過ぎると、画面下に「沖上がり」のボタンが出ます。押すと、潮位と釣れた時刻の図、座席の図ができて画像で保存できます。記録はあとから「履歴」の「記録を見る・修正する」で1件ずつ見たり直したりできます。'},
-  {k:'アプリとして使う',t:'ホーム画面に置いて使う',d:SITE?'Safariの共有ボタン →「ホーム画面に追加」で、アイコンからアプリのように開けます。一度開いておけば、電波のない船の上でも使えます。':'Safariでこのページを開き、共有ボタン →「ホーム画面に追加」を選ぶと、アイコンからアプリのように開けます（初回はClaudeへのログインが必要です）。記録はクラウドに同期されるので、Claudeアプリから開いても同じ記録が見られます。'}];
+  {k:'アプリとして使う',t:'ホーム画面に置いて使う',d:SITE?'Safariの共有ボタン →「ホーム画面に追加」で、アイコンからアプリのように開けます。一度開いておけば、電波のない船の上でも使えます。記録はこのスマホの中に保存されます。Safariのプライベートブラウズで開くと、タブを閉じたときに記録や登録が消えるので、通常のタブで使ってください。また、Safariとホーム画面のアイコンでは保存場所が別なので、どちらか一方で使ってください。道具や釣り場を登録したら、まず「登録」タブの下のほうにある「全データをバックアップ」で保存しておいてください。消えてしまったときも、別のスマホやホーム画面のアイコンでも、そこから写せます。':'Safariでこのページを開き、共有ボタン →「ホーム画面に追加」を選ぶと、アイコンからアプリのように開けます（初回はClaudeへのログインが必要です）。記録はクラウドに同期されるので、Claudeアプリから開いても同じ記録が見られます。'}];
 function openTut(i){tutI=i||0;let el=$('#tut');if(!el){el=document.createElement('div');el.id='tut';el.className='tut';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label','使い方');document.body.appendChild(el);bindTutSwipe(el)}
   el.hidden=false;renderTut()}
 function renderTut(){const el=$('#tut');const s=TUT[tutI],last=tutI===TUT.length-1;

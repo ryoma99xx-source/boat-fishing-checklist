@@ -178,12 +178,14 @@ const rigIm=(sp,id)=>egiIm((spOf(sp).rigs||[]).find(x=>x.id===id));
 function tbName(k,x){""")
 R("""${cur.c.map(c=>`<button class="chip ${tbc.c.has(c)?'on':''}" data-act="tbcC" data-d="${esc(c)}">${esc(c)}</button>`).join('')}""",
   """${cur.c.map((c,j)=>{const im=cur.i&&cur.i[j];return `<button class="chip ${im?'cimg':''} ${tbc.c.has(c)?'on':''}" data-act="tbcC" data-d="${esc(c)}">${eimg(im,'cc')}<span>${esc(c)}</span></button>`}).join('')}""")
-R("""l.map(g=>`<div class="grow ${g.hidden?'hid':''}"><span class="tb-nm">${esc(g.name)}</span>""",
-  """l.map(g=>`<div class="grow ${g.hidden?'hid':''}">${k==='rigs'?eimg(egiIm(g),'row'):''}<span class="tb-nm">${esc(g.name)}</span>""")
-R("""`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">""",
-  """`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${k==='rigs'?eimg(egiIm(g),'ch'):''}${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">""")
-R("""<button class="td-tenya ${ten&&curGear(tr).rig&&TIMG.has(curGear(tr).rig)?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):''}""",
-  """<button class="td-tenya ${(ten?curGear(tr).rig&&TIMG.has(curGear(tr).rig):rigIm(sp,curGear(tr).rig))?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):eimg(rigIm(sp,curGear(tr).rig),'cur')}""")
+R("""l.map(g=>`<div class="grow ${g.hidden?'hid':''}">${gph(g.id,'row')}<span class="tb-nm">${esc(g.name)}</span>""",
+  """l.map(g=>`<div class="grow ${g.hidden?'hid':''}">${k==='rigs'?eimg(egiIm(g),'row'):''}${gph(g.id,'row')}<span class="tb-nm">${esc(g.name)}</span>""")
+# カタログの写真があるエギには、自分の写真は付けない
+R("const gphBtn=g=>`", "const gphBtn=g=>egiIm(g)?'':`")
+R("""`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${gph(g.id,'ch')}${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">""",
+  """`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${k==='rigs'?eimg(egiIm(g),'ch'):''}${gph(g.id,'ch')}${esc(g.name)}</button>`).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">""")
+R("""<button class="td-tenya ${(ten?curGear(tr).rig&&(TIMG.has(curGear(tr).rig)||GPH[curGear(tr).rig]):GPH[curGear(tr).rig])?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):gph(curGear(tr).rig,'eimg cur')}""",
+  """<button class="td-tenya ${(ten?curGear(tr).rig&&(TIMG.has(curGear(tr).rig)||GPH[curGear(tr).rig]):(rigIm(sp,curGear(tr).rig)||GPH[curGear(tr).rig]))?'has-img':''}" data-act="${ten?'curTenya':'rigPick'}">${ten?timg(curGear(tr).rig,'cur'):(eimg(rigIm(sp,curGear(tr).rig),'cur')||gph(curGear(tr).rig,'eimg cur'))}""")
 R(".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}",
   ".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}\n"
   ".eimg{flex:none;object-fit:contain;background:#fff;border-radius:6px}\n"
@@ -295,7 +297,7 @@ R("people:b?(b.people||b.seats*2):(p.people||(p.seats||8)*2)", "people:b?(b.peop
 R("return row(10,true,'40号 パープルグロー','ダイワ SS AH')+row(48,true,'40号 ケイムラ','シマノ サーベルマスター')+row(86,false,'50号 ゴールド','ハヤブサ')+",
   "return row(10,true,'エギ王 TR 3.5号 30g 金アジ','エギ・ヤマシタ')+row(48,true,'エメラルダス ボート 3.5号 赤テープ','エギ・ダイワ')+row(86,true,'エギ王TRシンカー 20g','シンカー（増し錘）')+")
 R("'一軍リスト（2）'", "'カタログから選べます'")
-R("タチウオ以外に釣れた魚を、今の時刻と使用テンヤで1匹記録します（タチウオの本数には入りません）。", "アオリイカ以外に釣れたものを、今の時刻と使っているエギで1匹記録します（杯数には入りません）。")
+R("アオリイカ以外に釣れた魚を、今の時刻と使っているエギで1匹記録します（アオリイカの杯数には入りません）。", "アオリイカ以外に釣れたものを、今の時刻と使っているエギで1匹記録します（杯数には入りません）。")
 R("時刻・テンヤ・種類（釣れた／アタリ／バラシ）", "時刻・エギ・種類（釣れた／アタリ／バラシ）")
 R("設定（釣り場・船・テンヤ）は、新しいほうを使います。", "設定（釣り場・船・エギ）は、新しいほうを使います。")
 R("テンヤは、その時刻にアプリで選んでいたものになります。", "エギは、その時刻にアプリで選んでいたものになります。")

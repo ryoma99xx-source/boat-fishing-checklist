@@ -28,27 +28,27 @@ FIX = [
 # ドラゴンカウンターから入ってくる新しい機能（インスタ用の画像）をティップラン用に
 FIX_NEW = [
     ("'いちばん釣れたテンヤ'", "'いちばん釣れたエギ'"),
+    ("'いちばん釣れたタイラバ'", "'いちばん釣れたエギ'"),
     ("o.push(T(32,y+14,'DRAGON COUNTER',", "o.push(T(32,y+14,'TIPRUN COUNTER',"),
     ("o.push(T(W/2,bot,'dragon-counter.cutlassfish.tokyo',", "o.push(T(W/2,bot,'dragon-counter.cutlassfish.tokyo/tipran',"),
     # いちばん釣れたエギの写真は、ティップランのエギの写真（/tipran/egi/）から
-    ("if(t&&TIMG.has(id)){try{const im=new Image();await new Promise((ok,ng)=>{im.onload=ok;im.onerror=ng;im.src=`/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}`});",
-     "const ei=rigIm(sp,id);if(ei){try{const im=new Image();await new Promise((ok,ng)=>{im.onload=ok;im.onerror=ng;im.src=`/tipran/egi/${ei}.webp`});"),
+    ("if((t&&TIMG.has(id))||GPH[id]){try{const im=new Image();await new Promise((ok,ng)=>{im.onload=ok;im.onerror=ng;im.src=TIMG.has(id)?`/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}`:GPH[id]});",
+     "const ei=rigIm(sp,id);if(ei||GPH[id]){try{const im=new Image();await new Promise((ok,ng)=>{im.onload=ok;im.onerror=ng;im.src=ei?`/tipran/egi/${ei}.webp`:GPH[id]});"),
 ]
 
 
 def apply(s):
     if MARK in s:
         return s
-    for old, new in FIX:
-        n = s.count(old)
-        if n < 1:
-            raise SystemExit('tipran_words: not found: ' + old[:80])
+    for old, new in FIX:   # タイラバ側で魚の名前・単位を spOf(SOLO) から出すようにしたので、無ければそのままでよい
         s = s.replace(old, new)
+    if 'タチウオ ${mTot}本' in s or '<small>本</small>' in s:
+        raise SystemExit('tipran_words: タチウオ・本 left over')
     s = s.replace('・前から約${kmTxt', '・一つ前の記録から約${kmTxt')
     for old, new in FIX_NEW:   # 入っていれば直す
         s = s.replace(old, new)
     s = s.replace('/* いちばん釣れたテンヤ（', '/* いちばん釣れたエギ（')
-    if "'いちばん釣れたテンヤ'" in s or "T(32,y+14,'DRAGON COUNTER'" in s or "/tenya/${id}.webp${TV?'?v='+encodeURIComponent(TV):''}`});\n    const k=Math.min(1,480" in s:
+    if "'いちばん釣れたテンヤ'" in s or "'いちばん釣れたタイラバ'" in s or "T(32,y+14,'DRAGON COUNTER'" in s or "im.src=TIMG.has(id)?`/tenya/" in s:
         raise SystemExit('tipran_words: insta left over')
     s = s.replace('<script>', '<script>' + MARK, 1)
     return s
