@@ -7,8 +7,8 @@
    "path": "/",
    "file": "index.html",
    "content_type": "text/html; charset=utf-8",
-   "bytes": 102921,
-   "sha256": "d11835ec1c42b895b39f66f0e7dbc924e113ac14302a507428b24887098924f3",
+   "bytes": 102987,
+   "sha256": "8873773f7b940325dcb1c71d3cbb6744d8deb938f7f2d5b745f1ea93fae61e8a",
    "found_by": "start",
    "modifications": [
     "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)",
@@ -85,7 +85,7 @@
    "file": "service-worker.js",
    "content_type": "text/javascript; charset=utf-8",
    "bytes": 1142,
-   "sha256": "631fa880bc573b7daf3477d7f639fbccb1fff72974201873efa43d0a4c716f44",
+   "sha256": "5e683a2131d4878f9e85d25f516afd3b5eaeea9b5d1a90e46eb7e38eb5b9a26a",
    "found_by": "probe",
    "modifications": [
     "cache name v71"
