@@ -353,5 +353,8 @@ s = tipran_sasoi.apply(s)
 # タチウオの言葉（本・タチウオ）の残りを直す。tools/tipran_words.py
 import tipran_words
 s = tipran_words.apply(s)
+# エギのリスト（一軍リストなど）。tools/tipran_lists.py
+import tipran_lists
+s = tipran_lists.apply(s)
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))

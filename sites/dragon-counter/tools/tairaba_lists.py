@@ -82,4 +82,8 @@ document.addEventListener('change',e=>{const t=e.target;if(!t||!t.dataset||!t.da
       ".tbl{margin-top:14px;border-top:1px solid var(--line);padding-top:10px;scroll-margin-top:96px}.tbl-card{border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0}.tbl-card .grow{display:flex;gap:8px;align-items:center}.tbl-card .grow input{flex:1;min-width:0}.tbl-n{flex:none;font-size:13px}"
       ".tbl-items .chip{max-width:100%;white-space:normal;text-align:left;line-height:1.35;display:inline-flex;align-items:center;overflow-wrap:anywhere}"
       ".tbl-more{margin-top:6px}.tbl-more summary{cursor:pointer;color:var(--muted);font-size:14px;padding:6px 0}")
+    # チュートリアル
+    R("、針（市販品は商品名、自作は何本針・針と糸の号数）を登録します。スカートは使う人だけ登録できます。竿・リール・糸も登録できます。'}",
+      "を登録します。針とスカートは任意です（記録では「なし」も選べます）。よく使うヘッドとネクタイは、それぞれ「一軍」などのリストにまとめておくと、出船のときにリストを選んで、その日の分だけ並べられます。竿・リール・糸も登録できます。'}")
+    R("船と自分の席もタップで選びます。'},", "船を選ぶと、その船の片舷／両舷と人数が入ります（当日に合わせて変えられます）。自分の席もタップで選びます。その日に使うヘッド・ネクタイのリストもここで選びます。'},")
     return s
