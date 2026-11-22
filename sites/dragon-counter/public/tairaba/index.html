@@ -1571,7 +1571,7 @@ function cleanTides(a){return a.filter(x=>x.hhmm).map(x=>({id:x.id||uid(),type:x
 function boatSpotFollow(f,bt){const ids=boatSpots(bt);f.allSpots=false;if(ids.length&&!ids.includes(f.spotId)){const x=S.cfg.spots.find(y=>y.id===ids[0]);f.spotId=x.id;f.spot=spotCopy(x);f.station=spotSt(x);f.area=null}}
 function registerBoat(tr){const b=S.cfg.boats.find(x=>x.name===tr.boat);const v={people:tr.people||tr.seats*2,seats:tr.seats,side:tr.side,seat:tr.seat,lay:tr.lay||'both'};
   const t0=tr.start?hm2(tr.start):'',t1=tr.planEnd?hm2(tr.planEnd):'';
-  if(b&&!b.start&&t0){b.start=t0;if(!b.end&&t1)b.end=t1;cfgTouch()}
+  if(b&&t0&&(b.start!==t0||(t1&&b.end!==t1))){b.start=t0;if(t1)b.end=t1;cfgTouch()}
   if(b){let ch=Object.keys(v).some(k=>b[k]!==v[k]);Object.assign(b,v);if(tr.spotId&&S.cfg.spots.some(x=>x.id===tr.spotId)&&!(b.spots||[]).includes(tr.spotId)){b.spots=(b.spots||[]).concat([tr.spotId]);ch=true}if(ch)cfgTouch()}
   else{S.cfg.boats.push({id:uid(),name:tr.boat,...v,...(t0?{start:t0}:{}),...(t1?{end:t1}:{}),spots:tr.spotId?[tr.spotId]:[]});cfgTouch()}}
 function viewStart(){if(!startDraft)startDraft=newForm();curForm=startDraft;

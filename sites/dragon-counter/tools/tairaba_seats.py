@@ -34,6 +34,9 @@ def apply(s):
       "function registerBoat(tr){const b=S.cfg.boats.find(x=>x.name===tr.boat);const v={people:tr.people||tr.seats*2,seats:tr.seats,side:tr.side,seat:tr.seat,lay:tr.lay||'both'};")
     R("Object.assign(f,{boat:bt.name,people:bt.people||(bt.seats?bt.seats*2:f.people)});",
       "Object.assign(f,{boat:bt.name,people:bt.people||(bt.seats?bt.seats*2:f.people)});if(bt.lay){f.lay=bt.lay;f.seat=null}if(bt.side)f.side=bt.side;")
+    # 出船の時間・沖上がりの時間も、最後に使った（自分で直した）ものを船の初期値にする（前は空のときだけ入れていた）
+    R("if(b&&!b.start&&t0){b.start=t0;if(!b.end&&t1)b.end=t1;cfgTouch()}",
+      "if(b&&t0&&(b.start!==t0||(t1&&b.end!==t1))){b.start=t0;if(t1)b.end=t1;cfgTouch()}")
     # 船を選んだら、片舷／両舷の切り替えも描き直す
     R("if(sheetCtx&&sheetCtx.kind==='trip')openTripSheet(sheetCtx.id,f);else render()},\n  fRig:",
       "if(sheetCtx&&sheetCtx.kind==='trip')openTripSheet(sheetCtx.id,f);else render()},\n  fRig:")
