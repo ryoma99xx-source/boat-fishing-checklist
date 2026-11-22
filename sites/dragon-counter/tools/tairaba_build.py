@@ -312,5 +312,8 @@ s = tairaba_lists.apply(s)
 # 座席の片舷／両舷・初期登録の船（tairaba_seats.py）
 import tairaba_seats
 s = tairaba_seats.apply(s)
+# 記録画面の下：ヘッド・ネクタイを横スライドで替える／出船条件を直すを右上へ（gear_dock.py。ティップランと共通）
+import gear_dock
+s = gear_dock.apply(s, [('rigs', 'ヘッド', 'rig'), ('baits', 'ネクタイ', 'bait')], 'gph', '使用中のタイラバを変更')
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))

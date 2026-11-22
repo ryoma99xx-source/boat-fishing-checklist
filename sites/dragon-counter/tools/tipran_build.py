@@ -356,5 +356,8 @@ s = tipran_words.apply(s)
 # エギのリスト（一軍リストなど）。tools/tipran_lists.py
 import tipran_lists
 s = tipran_lists.apply(s)
+# 記録画面の下：エギを横スライドで替える／出船条件を直すを右上へ。tools/gear_dock.py
+import gear_dock
+s = gear_dock.apply(s, [('rigs', 'エギ', 'rig')], 'egi', '使用中のエギを変更')
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))
