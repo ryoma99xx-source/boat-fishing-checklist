@@ -136,7 +136,9 @@ def apply(s):
     s = s.replace("pe:'1.5'", "pe:'0.8'")
     # メーカーの並びは1行で横に送る。カタログの下に「保存して戻る」
     R(".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}",
-      ".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}\n.chips.wrap.tk-mk{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px}.seg.tk-kind button{font-size:14px;padding-left:4px;padding-right:4px;white-space:nowrap}")
+      ".timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}\n"
+      ".gearpick .chips.wrap .chip{max-width:100%;white-space:normal;text-align:left;line-height:1.35;display:inline-flex;align-items:center;overflow-wrap:anywhere}.gearpick .chips.wrap .chip .eimg{flex:none}\n"   # 長い部品名を折り返す（はみ出さない）
+      ".chips.wrap.tk-mk{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px}.seg.tk-kind button{font-size:14px;padding-left:4px;padding-right:4px;white-space:nowrap}")
     R("押すと所有に追加／もう一度押すと外れます。${TCAT.v?`カタログ：${esc(TCAT.v)}時点。`:''}</p>`,{kind:'tkcat'})}",
       "押すと所有に追加／もう一度押すと外れます。${TCAT.v?`カタログ：${esc(TCAT.v)}時点。`:''}</p>\n   <div class=\"tb-foot\"><button class=\"btn primary\" data-act=\"tkCatDone\">所有タックルを保存して戻る</button></div>`,{kind:'tkcat'})}")
     R("  closeSheet:()=>closeSheet(),", "  closeSheet:()=>closeSheet(),\n  tkCatDone:()=>{const t=TK();closeSheet();cfgTouch();render();toast(`保存しました（ロッド${t.rods.mine.length}・リール${t.reels.mine.length}）`)},")
