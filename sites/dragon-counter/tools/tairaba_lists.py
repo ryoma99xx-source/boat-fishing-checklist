@@ -54,19 +54,19 @@ def apply(s):
 function TBL(){const c=S.cfg;c.tbl=c.tbl||{};c.tbl.rigs=c.tbl.rigs||[];c.tbl.baits=c.tbl.baits||[];return c.tbl}
 const tblLabel=k=>k==='rigs'?'ヘッド':'ネクタイ';
 function tblHTML(k){const s=spOf(SOLO),own=(s[k]||[]).filter(g=>!g.hidden),L=TBL()[k],W=tblLabel(k);
-  return `<div class="tbl" id="tbl-${k}"><h3 class="tk-g">${W}のリスト<small class="muted">（任意）</small></h3><p class="muted">「一軍」「深場用」のように${W}の組み合わせを作っておくと、出船のときにリストを選んで、その${W}だけを並べられます。リストにない${W}も「ほかの${W}」から選べます。</p>
+  return `<div class="tbl" id="tbl-${k}"><h3 class="tk-g">釣行で使う${W}リスト（一軍リスト）<small class="muted">（任意）</small></h3><p class="muted">所有${W}の中から、釣行で使う${W}を選んで「一軍」などのリストにします。出船の準備でリストを選ぶと、その${W}だけが並びます（リストにない${W}も「ほかの${W}」から選べます）。</p>
    ${L.map(l=>`<div class="tbl-card"><div class="grow"><input type="text" data-tbl="${k}" data-l="${l.id}" value="${esc(l.name)}" aria-label="リストの名前"><span class="tbl-n muted">${l.items.length}件</span><button class="btn sm danger" data-act="tblDel" data-k="${k}" data-l="${l.id}">リストを消す</button></div>
      <div class="chips wrap tbl-items">${own.map(g=>{const on=l.items.includes(g.id);return `<button class="chip ${on?'on':''}" data-act="tblTog" data-k="${k}" data-l="${l.id}" data-id="${g.id}" aria-pressed="${on}">${gph(g.id,'ch')}${esc(g.name)}</button>`}).join('')||`<span class="muted">先に${W}を登録してください</span>`}</div></div>`).join('')}
-   <button class="btn sm" data-act="tblAdd" data-k="${k}">＋ ${W}のリストを作る</button></div>`}
+   <button class="btn sm" data-act="tblAdd" data-k="${k}">${L.length?'＋ '+W+'リストをもう1つ作る':'＋ '+W+'の一軍リストを作る'}</button></div>`}
 /* 出船の準備：リストを選ぶ */
-function lstPick(f,k){const L=TBL()[k].filter(l=>l.items.length);if(!L.length)return `<div class="gearpick lstpick"><button class="golink" data-act="goSec" data-sec="tbl-${k}">${tblLabel(k)}の一軍リストを作る →</button></div>`;const cur=(f.lst||{})[k]||'';
-  return `<div class="gearpick lstpick"><div class="gp-lbl">${tblLabel(k)}のリスト</div><div class="chips wrap"><button class="chip ${!cur?'on':''}" data-act="fLst" data-k="${k}" data-id="">すべて</button>${L.map(l=>`<button class="chip ${cur===l.id?'on':''}" data-act="fLst" data-k="${k}" data-id="${l.id}">${esc(l.name)}</button>`).join('')}</div></div>`}
+function lstPick(f,k){const L=TBL()[k].filter(l=>l.items.length);if(!L.length)return '';const cur=(f.lst||{})[k]||'';
+  return `<div class="gearpick lstpick"><div class="gp-lbl">釣行で使う${tblLabel(k)}リスト</div><div class="chips wrap"><button class="chip ${!cur?'on':''}" data-act="fLst" data-k="${k}" data-id="">すべて</button>${L.map(l=>`<button class="chip ${cur===l.id?'on':''}" data-act="fLst" data-k="${k}" data-id="${l.id}">${esc(l.name)}</button>`).join('')}</div></div>`}
 /* リストのものを先に、ほかは「ほかの…」の中に */
 function chipsL(sp,k,sel,act,lid){const s=spOf(sp),label=k==='rigs'?s.rigLabel:s.baitLabel;if(!label)return '';
   const all=(s[k]||[]).filter(g=>!g.hidden),L=lid?TBL()[k].find(l=>l.id===lid):null;
   const main=L&&L.items.length?L.items.map(id=>all.find(g=>g.id===id)).filter(Boolean):all,rest=L&&L.items.length?all.filter(g=>!L.items.includes(g.id)):[];
   const chip=g=>`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}" aria-pressed="${g.id===sel}">${gph(g.id,'ch')}${esc(g.name)}</button>`;
-  return `<div class="gearpick"><div class="gp-lbl">${esc(label)}${L?`<small class="muted">（${esc(L.name)}）</small>`:''}</div><div class="chips wrap">${main.map(chip).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">＋</button></div>`
+  return `<div class="gearpick"><div class="gp-lbl gp-row"><span>${esc(label)}${L?`<small class="muted">（${esc(L.name)}）</small>`:''}</span>${act[0]==='f'?tblBan(k):''}</div><div class="chips wrap">${main.map(chip).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">＋</button></div>`
    +(rest.length?`<details class="tbl-more"${rest.some(g=>g.id===sel)?' open':''}><summary>ほかの${esc(label)}（${rest.length}）</summary><div class="chips wrap">${rest.map(chip).join('')}</div></details>`:'')+`</div>`}
 /* 針など、任意のもの：「なし」を選べる */
 function optChips(k,sel,act){const s=spOf(SOLO),label=k==='hooks'?s.hookLabel:k,l=(s[k]||[]).filter(g=>!g.hidden);
@@ -86,7 +86,11 @@ document.addEventListener('change',e=>{const t=e.target;if(!t||!t.dataset||!t.da
     R("、針（市販品は商品名、自作は何本針・針と糸の号数）を登録します。スカートは使う人だけ登録できます。竿・リール・糸も登録できます。'}",
       "を登録します。針とスカートは任意です（記録では「なし」も選べます）。よく使うヘッドとネクタイは、それぞれ「一軍」などのリストにまとめておくと、出船のときにリストを選んで、その日の分だけ並べられます。竿・リール・糸も登録できます。'}")
     R("船と自分の席もタップで選びます。'},", "船を選ぶと、その船の片舷／両舷と人数が入ります（当日に合わせて変えられます）。自分の席もタップで選びます。その日に使うヘッド・ネクタイのリストもここで選びます。'},")
+    # 出船の準備の見出し・所有の欄の見出し
+    R("<div class=\"card\"><h2>仕掛けと餌</h2>${SOLO?", "<div class=\"card\"><h2>今日のタイラバ</h2>${SOLO?")
+    R("<div class=\"card\" id=\"tbHeads\"><h2>ヘッド</h2>", "<div class=\"card\" id=\"tbHeads\"><h2>所有ヘッド</h2>")
+    R("<div class=\"card\" id=\"tbTies\"><h2>ネクタイ</h2>", "<div class=\"card\" id=\"tbTies\"><h2>所有ネクタイ</h2>")
     # 一軍リストを作る画面（出船の準備のリンクから開く）。tools/tbl_focus.py
     import tbl_focus
-    s = tbl_focus.apply(s, ['rigs', 'baits'], 'ヘッド・ネクタイ')
+    s = tbl_focus.apply(s, ['rigs', 'baits'], 'ヘッド・ネクタイ', {'rigs': 'ヘッド', 'baits': 'ネクタイ'})
     return s

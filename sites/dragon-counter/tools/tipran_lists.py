@@ -28,7 +28,7 @@ def apply(s):
   const all=(s[k]||[]).filter(g=>!g.hidden),L=k==='rigs'&&lid?TBL().rigs.find(l=>l.id===lid):null,on=L&&L.items.length;
   const main=on?L.items.map(id=>all.find(g=>g.id===id)).filter(Boolean):all,rest=on?all.filter(g=>!L.items.includes(g.id)):[];
   const chip=g=>`<button class="chip ${g.id===sel?'on':''}" data-act="${act}" data-id="${g.id}"${k==='rigs'?` data-z="${esc(g.shape||'')}"`:''} aria-pressed="${g.id===sel}">${k==='rigs'?eimg(egiIm(g),'ch'):''}${gph(g.id,'ch')}${esc(g.name)}</button>`;
-  return `<div class="gearpick"><div class="gp-lbl">${esc(label)}${on?`<small class="muted">（${esc(L.name)}）</small>`:''}</div>${k==='rigs'?rigZRow(all):''}<div class="chips wrap">${main.map(chip).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">＋</button></div>`
+  return `<div class="gearpick"><div class="gp-lbl gp-row"><span>${esc(label)}${on?`<small class="muted">（${esc(L.name)}）</small>`:''}</span>${k==='rigs'&&act[0]==='f'?tblBan(k):''}</div>${k==='rigs'?rigZRow(all):''}<div class="chips wrap">${main.map(chip).join('')}<button class="chip add" data-act="goGear" aria-label="${esc(label)}を登録">＋</button></div>`
    +(rest.length?`<details class="tbl-more"${rest.some(g=>g.id===sel)?' open':''}><summary>ほかの${esc(label)}（${rest.length}）</summary><div class="chips wrap">${rest.map(chip).join('')}</div></details>`:'')+`</div>`}""")
     R("chipsHTML(sp,'rigs',g.rig,'fRig')", "lstPick(f,'rigs')+chipsHTML(sp,'rigs',g.rig,'fRig',(f.lst||{}).rigs)")
     R("chipsHTML(sp,'rigs',g.rig,'setRigK')", "chipsHTML(sp,'rigs',g.rig,'setRigK',(tr.lst||{}).rigs)")
@@ -51,13 +51,13 @@ def apply(s):
 /* エギのリスト（一軍リストなど）。S.cfg.tbl.rigs = [{id,name,items:[]}] */
 function TBL(){const c=S.cfg;c.tbl=c.tbl||{};c.tbl.rigs=c.tbl.rigs||[];return c.tbl}
 function tblHTML(k){const s=spOf(SOLO),own=(s[k]||[]).filter(g=>!g.hidden),L=TBL()[k],W='エギ';
-  return `<div class="tbl" id="tbl-${k}"><h3 class="tk-g">${W}のリスト<small class="muted">（任意）</small></h3><p class="muted">「一軍」「濁り用」のようにエギの組み合わせを作っておくと、出船のときにリストを選んで、そのエギだけを並べられます。リストにないエギも「ほかのエギ」から選べます。</p>
+  return `<div class="tbl" id="tbl-${k}"><h3 class="tk-g">釣行で使う${W}リスト（一軍リスト）<small class="muted">（任意）</small></h3><p class="muted">所有${W}の中から、釣行で使う${W}を選んで「一軍」などのリストにします。出船の準備でリストを選ぶと、その${W}だけが並びます（リストにない${W}も「ほかの${W}」から選べます）。</p>
    ${L.map(l=>`<div class="tbl-card"><div class="grow"><input type="text" data-tbl="${k}" data-l="${l.id}" value="${esc(l.name)}" aria-label="リストの名前"><span class="tbl-n muted">${l.items.length}件</span><button class="btn sm danger" data-act="tblDel" data-k="${k}" data-l="${l.id}">リストを消す</button></div>
      <div class="chips wrap tbl-items">${own.map(g=>{const on=l.items.includes(g.id);return `<button class="chip ${on?'on':''}" data-act="tblTog" data-k="${k}" data-l="${l.id}" data-id="${g.id}" aria-pressed="${on}">${eimg(egiIm(g),'ch')}${gph(g.id,'ch')}${esc(g.name)}</button>`}).join('')||`<span class="muted">先にエギを登録してください</span>`}</div></div>`).join('')}
-   <button class="btn sm" data-act="tblAdd" data-k="${k}">＋ エギのリストを作る</button></div>`}
+   <button class="btn sm" data-act="tblAdd" data-k="${k}">${L.length?'＋ エギリストをもう1つ作る':'＋ エギの一軍リストを作る'}</button></div>`}
 /* 出船の準備：リストを選ぶ（まだ無ければ、作る場所へのリンク） */
-function lstPick(f,k){const L=TBL()[k].filter(l=>l.items.length);if(!L.length)return `<div class="gearpick lstpick"><button class="golink" data-act="goSec" data-sec="tbl-${k}">エギの一軍リストを作る →</button></div>`;const cur=(f.lst||{})[k]||'';
-  return `<div class="gearpick lstpick"><div class="gp-lbl">エギのリスト</div><div class="chips wrap"><button class="chip ${!cur?'on':''}" data-act="fLst" data-k="${k}" data-id="">すべて</button>${L.map(l=>`<button class="chip ${cur===l.id?'on':''}" data-act="fLst" data-k="${k}" data-id="${l.id}">${esc(l.name)}</button>`).join('')}</div></div>`}
+function lstPick(f,k){const L=TBL()[k].filter(l=>l.items.length);if(!L.length)return '';const cur=(f.lst||{})[k]||'';
+  return `<div class="gearpick lstpick"><div class="gp-lbl">釣行で使うエギリスト</div><div class="chips wrap"><button class="chip ${!cur?'on':''}" data-act="fLst" data-k="${k}" data-id="">すべて</button>${L.map(l=>`<button class="chip ${cur===l.id?'on':''}" data-act="fLst" data-k="${k}" data-id="${l.id}">${esc(l.name)}</button>`).join('')}</div></div>`}
 document.addEventListener('change',e=>{const t=e.target;if(!t||!t.dataset||!t.dataset.tbl)return;const L=TBL()[t.dataset.tbl].find(x=>x.id===t.dataset.l);if(!L)return;L.name=t.value.trim()||L.name;cfgTouch()});
 """
     R("function rigZRow(l){", js + "function rigZRow(l){")
@@ -72,7 +72,9 @@ document.addEventListener('change',e=>{const t=e.target;if(!t||!t.dataset||!t.da
     R("持っているエギ（メーカー・号数・重さ・色）と、使うシンカーの重さを登録します。竿・リール・糸も登録できます。'}",
       "持っているエギ（メーカー・号数・重さ・色）と、使うシンカーの重さを登録します。よく使うエギは「一軍」などのリストにまとめておくと、出船のときにリストを選んで、その日の分だけ並べられます。竿・リール・糸も登録できます。'}")
     R("船と自分の席もタップで選びます。'},", "船と自分の席もタップで選びます。その日に使うエギのリストもここで選びます。'},")
+    # 出船の準備の見出し・所有の欄の見出し
+    R("<div class=\"card\"><h2>エギとシンカー</h2>${SOLO?", "<div class=\"card\"><h2>今日のエギ・シンカー</h2>${SOLO?")
     # 一軍リストを作る画面（出船の準備のリンクから開く）。tools/tbl_focus.py
     import tbl_focus
-    s = tbl_focus.apply(s, ['rigs'], 'エギ')
+    s = tbl_focus.apply(s, ['rigs'], 'エギ', {'rigs': 'エギ'})
     return s
