@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Dragon Counter Data
  * Description: ドラゴンカウンター（TOOL 05）・ティップランカウンター・タイラバカウンターから匿名で届いた釣果データを、管理画面（ツール → ドラゴンカウンターのデータ）でダッシュボード・一覧・ダウンロード・削除します。上のタブでアプリを切り替えます。データはサーバーの .data/trips/（ティップランは tipran/.data/trips/、タイラバは tairaba/.data/trips/）にあるものを読むだけで、外には出しません。
- * Version: 1.4.0
+ * Version: 1.5.0
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -110,8 +110,14 @@ final class DCD_Admin {
     private static function dashboard($dir, $per) {
         $T = self::load($dir, $per); $tz = new DateTimeZone('Asia/Tokyo');
         $n = count($T); $catch = 0; $dragon = 0; $bite = 0; $lost = 0; $hrs = 0;
-        $byDay = []; $byHour = array_fill(0, 24, 0); $spot = []; $boat = []; $tide = []; $rig = []; $skirt = []; $U = self::A('unit'); $sa = []; $ka = []; $rod = []; $reel = []; $sst = []; $mode = ['simple' => 0, 'detail' => 0];
+        $byDay = []; $byHour = array_fill(0, 24, 0); $spot = []; $boat = []; $tide = []; $rig = []; $skirt = []; $tie = []; $szc = []; $spd = []; $tn = []; $U = self::A('unit'); $sa = []; $ka = []; $rod = []; $reel = []; $sst = []; $mode = ['simple' => 0, 'detail' => 0];
         $SA = ['maki-move' => '巻き・誘い中', 'maki-stay' => '巻き・ステイ中', 'tata-move' => '叩き・誘い中', 'tata-stay' => '叩き・ステイ中', 'fall' => 'フォール中', 'oki' => '置き竿']; $KA = ['soku' => '即掛け', 'fuka' => '深追い'];
+        // アプリごとの言葉（タイラバ：出方・合わせ・速さ・位置、ティップラン：誘い・アタリの出方）とサイズ区分
+        if (self::$app === 'tairaba') { $SA = ['maki' => '巻き', 'fall' => 'フォール']; $KA = ['awase' => '合わせあり', 'none' => '合わせなし']; }
+        if (self::$app === 'tipran') { $SA = ['shakuri' => 'シャクリ中', 'stay-just' => 'ステイ直後', 'stay-long' => 'ロングステイ', 'fall' => 'フォール中', 'maki' => '巻き上げ中']; $KA = ['iru' => '穂先が入る', 'modoru' => '穂先が戻る', 'omomi' => '重みが乗る', 'te' => '手元に来る']; }
+        $SZ = self::$app === 'tairaba' ? ['chariko' => 'チャリコ', 'kodai' => 'コダイ', 'chudai' => 'チュウダイ', 'odai' => 'オオダイ', 'oban' => '大判']
+            : (self::$app === 'tipran' ? ['croq' => 'コロッケ', 'tonk' => 'トンカツ', 'ryo' => '良型・中型', 'kiro' => 'キロアップ', 'kiro2' => '2キロアップ', 'mon' => 'モンスター'] : []);
+        $SPD = ['slow' => 'スロー', 'mid' => '中速', 'fast' => '高速']; $TN = ['lo' => '巻き始め（〜3m）', 'mid' => '3〜7m', 'hi' => '7mより上'];
         $avgAdd = function (&$arr, $k, $v) { if ($k === '' || $k === null) return; if (!isset($arr[$k])) $arr[$k] = [0, 0]; $arr[$k][0] += $v; $arr[$k][1]++; };
         foreach ($T as $t) {
             $c = 0;
@@ -120,10 +126,15 @@ final class DCD_Admin {
                 if ($k === 'catch') { $c++; if (!empty($e['dragon'])) $dragon++;
                     $d = new DateTime('@' . intdiv((int)($e['t'] ?? 0), 1000)); $d->setTimezone($tz); $byHour[(int)$d->format('G')]++;
                     if (!empty($e['rigName'])) $rig[$e['rigName']] = ($rig[$e['rigName']] ?? 0) + 1;
-                    if (self::$app === 'tipran') { $sk = !empty($e['skirtName']) ? $e['skirtName'] : 'なし'; $skirt[$sk] = ($skirt[$sk] ?? 0) + 1; } }
+                    if (self::$app === 'tipran' || self::$app === 'tairaba') { $sk = !empty($e['skirtName']) ? $e['skirtName'] : 'なし'; $skirt[$sk] = ($skirt[$sk] ?? 0) + 1; }
+                    if (self::$app === 'tairaba' && !empty($e['baitName'])) $tie[$e['baitName']] = ($tie[$e['baitName']] ?? 0) + 1;
+                    if (!empty($e['szc'])) { $l = $SZ[$e['szc']] ?? $e['szc']; $szc[$l] = ($szc[$l] ?? 0) + 1; } }
+                if (self::$app === 'tairaba' && ($e['sa'] ?? '') === 'maki' && in_array($k, ['catch', 'bite', 'lost'], true)) {
+                    if (!empty($e['spd'])) { $l = $SPD[$e['spd']] ?? ('電動 ' . $e['spd']); $spd[$l] = $spd[$l] ?? ['catch' => 0, 'bite' => 0, 'lost' => 0]; $spd[$l][$k]++; }
+                    if (!empty($e['tn'])) { $l = $TN[$e['tn']] ?? $e['tn']; $tn[$l] = $tn[$l] ?? ['catch' => 0, 'bite' => 0, 'lost' => 0]; $tn[$l][$k]++; } }
                 if ($k === 'bite') $bite++; if ($k === 'lost') $lost++;
                 if (!empty($e['sa']) && in_array($k, ['catch', 'bite', 'lost'], true)) { $l = $SA[$e['sa']] ?? $e['sa']; $sa[$l] = $sa[$l] ?? ['catch' => 0, 'bite' => 0, 'lost' => 0]; $sa[$l][$k]++; }
-                if (!empty($e['ka']) && in_array($k, ['catch', 'lost'], true)) { $l = $KA[$e['ka']] ?? $e['ka']; $ka[$l] = $ka[$l] ?? ['catch' => 0, 'bite' => 0, 'lost' => 0]; $ka[$l][$k]++; }
+                if (!empty($e['ka']) && in_array($k, self::$app === 'dc' ? ['catch', 'lost'] : ['catch', 'bite', 'lost'], true)) { $l = $KA[$e['ka']] ?? $e['ka']; $ka[$l] = $ka[$l] ?? ['catch' => 0, 'bite' => 0, 'lost' => 0]; $ka[$l][$k]++; }
             }
             $catch += $c; $h = max(0, ((int)($t['end'] ?? 0) - (int)($t['start'] ?? 0)) / 3600000); $hrs += $h;
             $day = $t['date'] ?? ''; if (!isset($byDay[$day])) $byDay[$day] = [0, 0]; $byDay[$day][0] += $c; $byDay[$day][1]++;
@@ -151,8 +162,12 @@ final class DCD_Admin {
         self::bars('潮回りごとの平均', $avg($tide), $U);
         if ($sst) { $o = $avg($sst); ksort($o); self::bars('水温ごとの平均', $o, $U); }
         arsort($rig); self::bars('よく釣れた' . self::A('rig'), $rig, $U, self::A('rig') . 'を選んで記録された分だけ。');
-        if ($skirt) { arsort($skirt); self::bars('シンカー（増し錘）ごとの釣れた数', $skirt, $U); }
-        foreach (['誘いごと（詳細モードの分）' => $sa, '掛け方ごと（詳細モードの分）' => $ka] as $ttl => $arr) {
+        if ($tie) { arsort($tie); self::bars('よく釣れたネクタイ', $tie, $U, 'ネクタイを選んで記録された分だけ。'); }
+        if ($skirt) { arsort($skirt); self::bars(self::$app === 'tairaba' ? 'スカートごとの釣れた数' : 'シンカー（増し錘）ごとの釣れた数', $skirt, $U); }
+        if ($SZ) { $o = []; foreach ($SZ as $kk => $l) if (isset($szc[$l])) $o[$l] = $szc[$l]; self::bars('サイズ区分ごとの釣れた数', $o, $U, '釣れたあとにサイズを選んだ分だけ。'); }
+        $T2 = self::$app === 'tairaba' ? ['出方ごと（詳細モードの分）' => $sa, '合わせごと（詳細モードの分）' => $ka, '巻きの速さごと（巻きの分）' => $spd, 'アタリの位置ごと（巻きの分）' => $tn]
+            : (self::$app === 'tipran' ? ['誘いごと（詳細モードの分）' => $sa, 'アタリの出方ごと（詳細モードの分）' => $ka] : ['誘いごと（詳細モードの分）' => $sa, '掛け方ごと（詳細モードの分）' => $ka]);
+        foreach ($T2 as $ttl => $arr) {
             echo '<div class="dcd-card"><h3>' . esc_html($ttl) . '</h3>';
             if (!$arr) { echo '<p class="description">データがありません。</p></div>'; continue; }
             echo '<table class="dcd-tb"><tr><th></th><th>釣れた</th><th>アタリ</th><th>バラシ</th><th>取り込み</th></tr>';
