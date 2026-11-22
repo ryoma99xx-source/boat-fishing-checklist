@@ -44,5 +44,6 @@ function viewGear0(){""")
       ".tbl-ban{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:1px;max-width:62%;padding:7px 12px;border-radius:12px;border:1px solid rgba(65,201,198,.55);background:rgba(65,201,198,.12);color:var(--teal,#41c9c6);text-align:right;line-height:1.25;cursor:pointer}"
       ".tbl-ban b{font-size:14px;font-weight:800}.tbl-ban small{font-size:11px;color:var(--muted);font-weight:400}"
       "h1 small{font-size:.7em;font-weight:700;color:var(--muted)}"
+      ".tbl-rec{margin:8px 0 10px;padding:10px 12px;border-radius:10px;background:rgba(227,164,59,.12);border:1px solid rgba(227,164,59,.45);font-size:15px;line-height:1.7}.tblfocus .tbl-rec{font-size:16px}"
       ".tbl{margin-top:14px;")
     return s

@@ -54,7 +54,7 @@ def apply(s):
 function TBL(){const c=S.cfg;c.tbl=c.tbl||{};c.tbl.rigs=c.tbl.rigs||[];c.tbl.baits=c.tbl.baits||[];return c.tbl}
 const tblLabel=k=>k==='rigs'?'ヘッド':'ネクタイ';
 function tblHTML(k){const s=spOf(SOLO),own=(s[k]||[]).filter(g=>!g.hidden),L=TBL()[k],W=tblLabel(k);
-  return `<div class="tbl" id="tbl-${k}"><h3 class="tk-g">釣行で使う${W}リスト（一軍リスト）<small class="muted">（任意）</small></h3><p class="muted">所有${W}の中から、釣行で使う${W}を選んで「一軍」などのリストにします。出船の準備でリストを選ぶと、その${W}だけが並びます（リストにない${W}も「ほかの${W}」から選べます）。</p>
+  return `<div class="tbl" id="tbl-${k}"><h3 class="tk-g">釣行で使う${W}リスト（一軍リスト）<small class="muted">（任意）</small></h3><p class="muted">所有${W}の中から、釣行で使う${W}を選んで「一軍」などのリストにします。出船の準備でリストを選ぶと、その${W}だけが並びます（リストにない${W}も「ほかの${W}」から選べます）。</p><p class="tbl-rec"><b>おすすめ：</b>リストを作らないと、記録のときに所有${W}が<b>全部並びます</b>。数が多いときは、一軍リストを作っておくと選びやすくなります（もう使わない${W}は「隠す」にしても減らせます）。</p>
    ${L.map(l=>`<div class="tbl-card"><div class="grow"><input type="text" data-tbl="${k}" data-l="${l.id}" value="${esc(l.name)}" aria-label="リストの名前"><span class="tbl-n muted">${l.items.length}件</span><button class="btn sm danger" data-act="tblDel" data-k="${k}" data-l="${l.id}">リストを消す</button></div>
      <div class="chips wrap tbl-items">${own.map(g=>{const on=l.items.includes(g.id);return `<button class="chip ${on?'on':''}" data-act="tblTog" data-k="${k}" data-l="${l.id}" data-id="${g.id}" aria-pressed="${on}">${gph(g.id,'ch')}${esc(g.name)}</button>`}).join('')||`<span class="muted">先に${W}を登録してください</span>`}</div></div>`).join('')}
    <button class="btn sm" data-act="tblAdd" data-k="${k}">${L.length?'＋ '+W+'リストをもう1つ作る':'＋ '+W+'の一軍リストを作る'}</button></div>`}
