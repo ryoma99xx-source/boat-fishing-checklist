@@ -1249,6 +1249,14 @@ function migrateCfg(c){const before=JSON.stringify(c);c.mig=c.mig||{};const M=c.
   // 初期登録の船（オーナー指定）。同じ名前がすでにあれば足さない。一度だけ
   if(!M.boats1){c.boats=c.boats||[];for(const name of ['教至丸','こうゆう丸','長谷川丸','一ノ瀬丸']){if(!c.boats.some(b=>b.name===name))c.boats.push({id:uid(),name,people:16,seats:8,start:'07:20',end:'13:00',spots:[]})}M.boats1=1}
   const changed=JSON.stringify(c)!==before;if(changed&&c.updatedAt)c.updatedAt=Date.now();return changed}
+/* 2026-11-22 オーナー指示：リール名「ソルティガ bj」は「ソルティガ BJ 100PL」。登録したリールと、過去の釣行に控えたリール名を一度だけ直す */
+function fixSbj(s){const M=(s.cfg.mig=s.cfg.mig||{});if(M.sbj1)return;M.sbj1=1;const one=/ソルティガ\s*bj(?![\s\-]*\d)/i,all=/ソルティガ\s*bj(?![\s\-]*\d)/gi,to='ソルティガ BJ 100PL';
+  const t=s.cfg.tackle;let cfg=false;if(t&&t.reels)for(const c of (t.reels.custom||[])){const nm=[c.s,c.model].filter(Boolean).join(' ');if(one.test(nm)){c.s='';c.model=nm.replace(all,to);cfg=true}}
+  if(cfg)s.cfg.updatedAt=Date.now();
+  for(const id in s.trips){const tr=s.trips[id],sn=tr&&tr.tk&&tr.tk.snap;if(!sn)continue;let ch=false;
+    for(const k in sn){const x=sn[k];for(const f of ['reel','label','short'])if(typeof x[f]==='string'&&one.test(x[f])){x[f]=x[f].replace(all,to);ch=true}}
+    if(ch){tr.updatedAt=Date.now();if(s.dirty&&s.dirty.trips&&!s.dirty.trips.includes(id))s.dirty.trips.push(id)}}
+  if(cfg&&s.dirty)s.dirty.cfg=true}
 function migrateState(s){
   if(s.gear&&!s.cfg){const sp=defaultSpecies();sp[0].rigs=s.gear.tenya||sp[0].rigs;sp[0].baits=s.gear.bait||sp[0].baits;
     s.cfg={species:sp,boats:s.gear.boats||[],updatedAt:s.gear.updatedAt||0};delete s.gear}
@@ -1256,7 +1264,7 @@ function migrateState(s){
   migrateCfg(s.cfg);const ta=s.cfg.species.find(x=>x.id==='tachiuo');
   if(SOLO&&!s.soloV){if(s.trips['sample-fugu'])delete s.trips['sample-fugu'];if(ta)ta.hidden=false;if(s.prefs)s.prefs.sp=SOLO;s.soloV=true}
   for(const id in s.trips)migrateTrip(s.trips[id]);
-  s.dirty=s.dirty||{trips:[],cfg:false};if('gear' in s.dirty){s.dirty.cfg=s.dirty.cfg||s.dirty.gear;delete s.dirty.gear}
+  s.dirty=s.dirty||{trips:[],cfg:false};if('gear' in s.dirty){s.dirty.cfg=s.dirty.cfg||s.dirty.gear;delete s.dirty.gear}fixSbj(s);
   s.ui=s.ui||{};s.ui.tab=s.ui.tab||'rec';s.prefs=s.prefs||{};s.prefs.g=s.prefs.g||{};
   if(!s.samplesV2){delete s.trips.sample;const a=makeSampleTachi();s.trips[a.id]=a;if(!SOLO){const b=makeSampleFugu();s.trips[b.id]=b}s.samplesV2=true;if(!s.ui.figTrip||!s.trips[s.ui.figTrip])s.ui.figTrip=a.id}
   if(SOLO&&s.trips['sample-fugu'])delete s.trips['sample-fugu'];

@@ -63,6 +63,7 @@ def build(date=''):
             ln = x.get('length_m')
             rods.append([i, m, s, model, round(ln, 2) if isinstance(ln, (int, float)) else '', 'spinning' if x.get('type') == 'spinning' else 'bait', nk(x.get('lure_g')), st(x)])
     src = [(f, 'electric') for f in sorted(glob.glob(os.path.join(D, 'research-reels', 'electric-*.json')))]
+    src += [(f, 'bait') for f in sorted(glob.glob(os.path.join(D, 'research-reels', 'bait-*.json')))]   # タイラバだけに足すベイトリール（例：ソルティガ BJ）
     src += [(f, None) for f in sorted(glob.glob(os.path.join(TP, 'research-reels', '*.json')))]
     for f, kind in src:
         d = json.load(open(f, encoding='utf-8'))
