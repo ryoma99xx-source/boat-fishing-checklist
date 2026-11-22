@@ -359,5 +359,10 @@ s = tipran_lists.apply(s)
 # 記録画面の下：エギを横スライドで替える／出船条件を直すを右上へ。tools/gear_dock.py
 import gear_dock
 s = gear_dock.apply(s, [('rigs', 'エギ', 'rig')], 'egi', '使用中のエギを変更')
+# アオリイカのサイズ区分（オーナーの表）。釣れたあとに選ぶ。キロアップ以上は「キロアップ」の印も付ける。tools/size_class.py
+import size_class
+s = size_class.apply(s, [('croq', 'コロッケ', '〜200g'), ('tonk', 'トンカツ', '200〜400g'), ('ryo', '良型・中型', '400g〜1kg'),
+                         ('kiro', 'キロアップ', '1〜2kg'), ('kiro2', '2キロアップ', '2〜3kg'), ('mon', 'モンスター', '3kg超')],
+                     big={'kiro', 'kiro2', 'mon'})
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))

@@ -318,5 +318,9 @@ s = gear_dock.apply(s, [('rigs', 'ヘッド', 'rig'), ('baits', 'ネクタイ', 
 # カタログの写真（ヘッド・ネクタイ・スカート）。tools/tairaba_images.py
 import tairaba_images
 s = tairaba_images.apply(s)
+# マダイのサイズ区分（オーナーの表。80cm超の「大判」も）。釣れたあとに選ぶ。tools/size_class.py
+import size_class
+s = size_class.apply(s, [('chariko', 'チャリコ', '〜20cm前後'), ('kodai', 'コダイ（小鯛）', '10〜25cm前後'), ('chudai', 'チュウダイ（中鯛）', '30〜50cm前後'),
+                         ('odai', 'オオダイ（大鯛）', '60cm以上'), ('oban', '大判', '80cm超')])
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))
