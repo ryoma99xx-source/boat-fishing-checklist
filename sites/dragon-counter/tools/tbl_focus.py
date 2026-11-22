@@ -24,19 +24,23 @@ def apply(s, kinds, label, words):
     R("function render(){", "function render(){if(S.ui.tab!=='gear')S.ui.tblFocus=0;")
     R("function viewGear(){", """function viewGear(){if(!S.ui.tblFocus)return viewGear0();
   return `<h1>釣行で使うリスト<small>（一軍リスト）</small>を作る</h1><p class="tblf-lead">所有している""" + label + """の中から、釣行で使うものを選んでリストにします。作ったら、下の「保存して記録に戻る」で出船の準備に戻り、リストを選んでください。</p>
-  <div class="card tblfocus">${""" + ks + """.map(k=>tblHTML(k)).join('')}</div>
-  <details class="tbl-others"><summary>ほかの登録を開く<small>（""" + label + """の登録・タックル・釣り場など）</small></summary>${viewGear0().replace('<h1>登録</h1>','')}</details>`}
+  <div class="card tblfocus">${""" + ks + """.map(k=>tblHTML(k)+tblOwnBtn(k)).join('')}</div>
+  <details class="tbl-others" ${S.ui.tblOpen?'open':''}><summary>ほかの登録を開く<small>（""" + label + """の登録・タックル・釣り場など）</small></summary>${viewGear0().replace('<h1>登録</h1>','')}</details>`}
 function viewGear0(){""")
+    # 一軍リストの画面から、所有（部品の登録）へ飛ぶボタン。オーナー指示 2026-11-22
+    R("function viewGear0(){", "const TBL_SEC={rigs:'tbHeads',baits:'tbTies'};\nfunction tblOwnBtn(k){const w=TBL_W[k]||'';return `<button class=\"tbl-own\" data-act=\"goOwn\" data-k=\"${k}\"><b>＋ 所有${w}を追加する</b><small>持っている${w}を登録すると、ここで選べるようになります</small></button>`}\nfunction viewGear0(){")
     import json
     W = json.dumps(words, ensure_ascii=False)
     # 出船の準備：各部品の見出しの右に、一軍リストを作る（編集する）バナー
     R("function viewGear(){", "const TBL_W=" + W + ";\nfunction tblBan(k){const has=TBL()[k].some(l=>l.items.length),w=TBL_W[k]||'';return `<button class=\"tbl-ban\" data-act=\"goTbl\"><b>${has?'一軍リストを編集':'＋ 一軍リストを作る'}</b><small>所有${w}から釣行で使う${w}を選ぶ</small></button>`}\nfunction viewGear(){")
-    R("  backRec:()=>{", "  goTbl:b=>{S.ui.tblFocus=1;S.ui.tab='gear';if(!$('#sheet').hidden){$('#sheet').hidden=true;sheetCtx=null}render();scrollTo(0,0)},\n  backRec:()=>{")
+    R("  backRec:()=>{", "  goOwn:b=>{S.ui.tblOpen=1;render();setTimeout(()=>{const el=$('#'+(TBL_SEC[b.dataset.k]||''));if(el)el.scrollIntoView({block:'start',behavior:'smooth'})},40)},\n  goTbl:b=>{S.ui.tblOpen=0;S.ui.tblFocus=1;S.ui.tab='gear';if(!$('#sheet').hidden){$('#sheet').hidden=true;sheetCtx=null}render();scrollTo(0,0)},\n  backRec:()=>{")
     R(".tbl{margin-top:14px;", ".tblf-lead{font-size:16px;line-height:1.7;color:var(--muted);margin:0 0 12px}"
       ".tblfocus .tbl{margin-top:4px;border-top:0;padding-top:4px}.tblfocus .tbl+.tbl{margin-top:22px;border-top:1px solid var(--line);padding-top:16px}"
       ".tblfocus .tbl h3{font-size:22px;margin:0 0 6px;color:var(--ink,#eef3f8)}.tblfocus .tbl>p{font-size:16px;line-height:1.7}"
       ".tblfocus .tbl-card .grow input{font-size:18px;min-height:48px}.tblfocus .tbl-items .chip{font-size:17px;min-height:50px;padding:10px 16px}"
       ".tblfocus .tbl>.btn{font-size:18px;min-height:54px;width:100%;margin-top:8px}"
+      ".tbl-own{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;margin:12px 0 4px;padding:12px 14px;border-radius:12px;border:2px dashed rgba(65,201,198,.6);background:rgba(65,201,198,.08);color:var(--teal,#41c9c6);text-align:left;cursor:pointer}"
+      "#tbHeads,#tbTies{scroll-margin-top:90px}.tbl-own b{font-size:17px;font-weight:800}.tbl-own small{font-size:13px;color:var(--muted);font-weight:400;line-height:1.5}"
       ".tbl-others{margin:18px 0}.tbl-others>summary{cursor:pointer;font-size:17px;font-weight:700;padding:14px 16px;border:1px solid var(--line);border-radius:12px;list-style:none}"
       ".tbl-others>summary small{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-top:2px}.tbl-others[open]>summary{margin-bottom:12px}"
       ".tbl h3{font-size:19px}.tbl>p{font-size:15px;line-height:1.7}.tbl-items .chip{font-size:16px}"
