@@ -306,5 +306,8 @@ s = tairaba_sasoi.apply(s)
 # 竿とリールのカタログ（ベイト／キャスラバ、ベイト／電動／スピニング）（tairaba_tackle.py）
 import tairaba_tackle
 s = tairaba_tackle.apply(s)
+# 針は任意・ヘッドとネクタイのリスト（tairaba_lists.py）
+import tairaba_lists
+s = tairaba_lists.apply(s)
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))
