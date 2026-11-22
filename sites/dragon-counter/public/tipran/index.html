@@ -481,7 +481,7 @@ body.has-dock .sync span{display:none}
 .td-tenya i{grid-column:3;grid-row:1/3;font-style:normal;color:var(--teal);font-size:18px;padding-left:6px}
 /* with a photo: row 1 = small photo + label, row 2 = the name across the full width (the box is narrow) */
 .td-tenya.has-img{grid-template-columns:auto 1fr auto;column-gap:6px;row-gap:2px} .timg.cur{grid-column:1;grid-row:1;width:34px;height:26px}
-.tbl{margin-top:14px;border-top:1px solid var(--line);padding-top:10px;scroll-margin-top:96px}.tbl-card{border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0}.tbl-card .grow{display:flex;gap:8px;align-items:center}.tbl-card .grow input{flex:1;min-width:0}.tbl-n{flex:none;font-size:13px}.tbl-items .chip{max-width:100%;white-space:normal;text-align:left;line-height:1.35;display:inline-flex;align-items:center;overflow-wrap:anywhere}.tbl-more{margin-top:6px}.tbl-more summary{cursor:pointer;color:var(--muted);font-size:14px;padding:6px 0}
+.tblf-lead{font-size:16px;line-height:1.7;color:var(--muted);margin:0 0 12px}.tblfocus .tbl{margin-top:4px;border-top:0;padding-top:4px}.tblfocus .tbl+.tbl{margin-top:22px;border-top:1px solid var(--line);padding-top:16px}.tblfocus .tbl h3{font-size:22px;margin:0 0 6px}.tblfocus .tbl>p{font-size:16px;line-height:1.7}.tblfocus .tbl-card .grow input{font-size:18px;min-height:48px}.tblfocus .tbl-items .chip{font-size:17px;min-height:50px;padding:10px 16px}.tblfocus .tbl>.btn{font-size:18px;min-height:54px;width:100%;margin-top:8px}.tbl-others{margin:18px 0}.tbl-others>summary{cursor:pointer;font-size:17px;font-weight:700;padding:14px 16px;border:1px solid var(--line);border-radius:12px;list-style:none}.tbl-others>summary small{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-top:2px}.tbl-others[open]>summary{margin-bottom:12px}.tbl h3{font-size:19px}.tbl>p{font-size:15px;line-height:1.7}.tbl-items .chip{font-size:16px}.tbl{margin-top:14px;border-top:1px solid var(--line);padding-top:10px;scroll-margin-top:96px}.tbl-card{border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0}.tbl-card .grow{display:flex;gap:8px;align-items:center}.tbl-card .grow input{flex:1;min-width:0}.tbl-n{flex:none;font-size:13px}.tbl-items .chip{max-width:100%;white-space:normal;text-align:left;line-height:1.35;display:inline-flex;align-items:center;overflow-wrap:anywhere}.tbl-more{margin-top:6px}.tbl-more summary{cursor:pointer;color:var(--muted);font-size:14px;padding:6px 0}
 .gearpick .chips.wrap .chip{max-width:100%;white-space:normal;text-align:left;line-height:1.35;display:inline-flex;align-items:center;overflow-wrap:anywhere}.gearpick .chips.wrap .chip .eimg.ch{flex:none}
 .chips.rigz{margin:2px 0 6px}.chips.rigz .chip{min-height:34px;padding:4px 12px;font-size:14px}
 .chips.wrap.tk-mk{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px}.seg.tk-kind button{font-size:14px;padding-left:4px;padding-right:4px;white-space:nowrap}
@@ -1460,7 +1460,7 @@ function backBar(){let el=$('#backBar');if(!el){el=document.createElement('div')
   const on=S.ui.tab==='gear';el.hidden=!on;document.body.classList.toggle('has-back',on);
   if(on){const tb=document.querySelector('.tabs');if(tb)document.documentElement.style.setProperty('--tabs-h',tb.offsetHeight+'px')}
   if(on)el.innerHTML=`<button data-act="backRec"><span class="bb-a">←</span><span><b>保存して記録に戻る</b><small>${active()?'記録中の釣行へ':'出船の準備へ'}</small></span></button>`}
-function render(){if(S.ui.tab!==lastTab&&window.gtag)try{gtag('event','tab_view',{tab:S.ui.tab})}catch(e){}if(lastTab==='rec'&&S.ui.tab!=='rec')recScroll=scrollY;lastTab=S.ui.tab;renderTabs();renderSync();backBar();const t=S.ui.tab;document.body.classList.toggle('has-dock',t==='rec'&&!!active());topTrip();const tc=$('#topCatch');if(tc)tc.hidden=!active();
+function render(){if(S.ui.tab!=='gear')S.ui.tblFocus=0;if(S.ui.tab!==lastTab&&window.gtag)try{gtag('event','tab_view',{tab:S.ui.tab})}catch(e){}if(lastTab==='rec'&&S.ui.tab!=='rec')recScroll=scrollY;lastTab=S.ui.tab;renderTabs();renderSync();backBar();const t=S.ui.tab;document.body.classList.toggle('has-dock',t==='rec'&&!!active());topTrip();const tc=$('#topCatch');if(tc)tc.hidden=!active();
   const dr0=document.querySelector('.dk-row'),dkSl=dr0?dr0.scrollLeft:0;
   $('#view').innerHTML=t==='rec'?(active()?viewActive(active()):viewStart()):t==='fig'?viewFig():t==='hist'?viewHist():viewGear();if(t==='gear'){applyTq('mine');applyTq('set')}if(dkSl){const dr=document.querySelector('.dk-row');if(dr)dr.scrollLeft=dkSl}}
 
@@ -1544,7 +1544,7 @@ function tblHTML(k){const s=spOf(SOLO),own=(s[k]||[]).filter(g=>!g.hidden),L=TBL
      <div class="chips wrap tbl-items">${own.map(g=>{const on=l.items.includes(g.id);return `<button class="chip ${on?'on':''}" data-act="tblTog" data-k="${k}" data-l="${l.id}" data-id="${g.id}" aria-pressed="${on}">${eimg(egiIm(g),'ch')}${gph(g.id,'ch')}${esc(g.name)}</button>`}).join('')||`<span class="muted">先にエギを登録してください</span>`}</div></div>`).join('')}
    <button class="btn sm" data-act="tblAdd" data-k="${k}">＋ エギのリストを作る</button></div>`}
 /* 出船の準備：リストを選ぶ（まだ無ければ、作る場所へのリンク） */
-function lstPick(f,k){const L=TBL()[k].filter(l=>l.items.length);if(!L.length)return `<div class="gearpick lstpick"><button class="golink" data-act="goSec" data-sec="tbl-${k}">エギの一軍リストを作る →</button></div>`;const cur=(f.lst||{})[k]||'';
+function lstPick(f,k){const L=TBL()[k].filter(l=>l.items.length);if(!L.length)return `<div class="gearpick lstpick"><button class="golink" data-act="goTbl" data-sec="tbl-${k}">エギの一軍リストを作る →</button></div>`;const cur=(f.lst||{})[k]||'';
   return `<div class="gearpick lstpick"><div class="gp-lbl">エギのリスト</div><div class="chips wrap"><button class="chip ${!cur?'on':''}" data-act="fLst" data-k="${k}" data-id="">すべて</button>${L.map(l=>`<button class="chip ${cur===l.id?'on':''}" data-act="fLst" data-k="${k}" data-id="${l.id}">${esc(l.name)}</button>`).join('')}</div></div>`}
 document.addEventListener('change',e=>{const t=e.target;if(!t||!t.dataset||!t.dataset.tbl)return;const L=TBL()[t.dataset.tbl].find(x=>x.id===t.dataset.l);if(!L)return;L.name=t.value.trim()||L.name;cfgTouch()});
 function rigZRow(l){const zs=[...new Set((l||[]).filter(g=>!g.hidden&&g.shape).map(g=>String(g.shape)))].sort((a,b)=>a-b);if(zs.length<2)return '';
@@ -2230,7 +2230,7 @@ function tbPartsHTML(){
     <label class="field"><span>号数</span><input type="text" id="tbHs" list="tbHsL" inputmode="decimal" placeholder="例：3.5">${tbDl('tbHsL','sz')}</label>
     <label class="field"><span>重さ（g）</span><input type="number" id="tbHg" inputmode="numeric" min="1" max="300" placeholder="例：40"></label>
     <label class="field"><span>色</span><input type="text" id="tbHc" list="tbHcL" placeholder="例：赤テープ">${tbDl('tbHcL','hc')}</label></div>
-   <button class="btn sm primary" data-act="tbAdd" data-kind="rigs">エギを登録</button>${tblHTML('rigs')}</div>
+   <button class="btn sm primary" data-act="tbAdd" data-kind="rigs">エギを登録</button>${S.ui.tblFocus?'':tblHTML('rigs')}</div>
   <div class="card" id="tbSkirts"><h2>シンカー（増し錘）<small class="muted">（任意）</small></h2><p class="muted">メーカーのカタログから選ぶか、使う重さを登録しておくと、記録のときに選べます。付けないときは「なし」。</p>${tbList('skirts')}${TB_CAT.skirts.length?`<button class="btn sm" data-act="tbcOpen" data-kind="skirts" style="margin:8px 0">📖 カタログから選ぶ（${[...new Set(TB_CAT.skirts.map(r=>r.m))].length}社・${TB_CAT.skirts.length}製品）</button><p class="muted" style="margin:0">カタログにないものは、下に重さを入れて登録</p>`:''}
    <div class="tb-form"><label class="field"><span>重さ（g）</span><input type="number" id="tbKg" inputmode="numeric" min="1" max="300" placeholder="例：10"></label></div>
    <button class="btn sm primary" data-act="tbAdd" data-kind="skirts">シンカーを登録</button></div>`}
@@ -2336,7 +2336,11 @@ function openTenyaSheet(){const close=tb.mode==='catch'||tb.mode==='cur';const t
    <div class="searchbox"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg><input type="search" id="tbQ" data-tbq="1" value="${esc(tb.q)}" placeholder="検索（例：ケイムラ 40、ダイワ グロー）" autocomplete="off" enterkeyhint="search"><button class="sb-x" data-act="tbClear" aria-label="検索を消す" ${tb.q?'':'hidden'}>×</button></div><div id="tbBar" style="display:flex;flex-direction:column;gap:8px">${tbBarHTML()}</div><div id="tbList" class="tblist">${tbRows()}</div>
    <div class="tb-foot">${tb.mode==='set'?`<button class="btn tb-foot-link" data-act="tbToMine"><span>所有テンヤを追加・編集する（カタログ）</span><small>リストに入れられるのは所有テンヤです</small></button>`:''}<button class="btn primary" data-act="${doneAct}">${close?'閉じる':back?`「${esc(backName)}」の編集に戻る`:'完了して元の画面に戻る'}</button></div>`,{kind:'tenya'})}
 function tbRefresh(){const b=$('#tbBar');if(b)b.innerHTML=tbBarHTML();const l=$('#tbList');if(l)l.innerHTML=tbRows()}
-function viewGear(){const sp=SOLO||(spOf(S.ui.gearSp).id!=='?'?S.ui.gearSp:S.cfg.species[0].id);const s=spOf(sp);
+function viewGear(){if(!S.ui.tblFocus)return viewGear0();
+  return `<h1>一軍リストを作る</h1><p class="tblf-lead">よく使うエギを、リストにまとめます。作ったら、下の「保存して記録に戻る」で出船の準備に戻り、リストを選んでください。</p>
+  <div class="card tblfocus">${['rigs'].map(k=>tblHTML(k)).join('')}</div>
+  <details class="tbl-others"><summary>ほかの登録を開く<small>（エギの登録・タックル・釣り場など）</small></summary>${viewGear0().replace('<h1>登録</h1>','')}</details>`}
+function viewGear0(){const sp=SOLO||(spOf(S.ui.gearSp).id!=='?'?S.ui.gearSp:S.cfg.species[0].id);const s=spOf(sp);
   return `<h1>登録</h1>
   <h2 class="sec-h" id="tenyaSec0">エギ</h2>
   ${tbPartsHTML()}
@@ -2672,6 +2676,7 @@ const acts={
   memoCopyLast:b=>{const m=lastMemo();const el=$('#'+(b.dataset.into||'fMemo'));if(!el||!m)return;el.value=m;if(!b.dataset.into&&curForm)curForm.memo=m;b.remove();el.focus()},
   tenView:b=>tenViewSheet(b.dataset.id,+b.dataset.n||0),
   tab:b=>{S.ui.tab=b.dataset.tab;saveLocal();render();scrollTo(0,0)},
+  goTbl:b=>{S.ui.tblFocus=1;S.ui.tab='gear';if(!$('#sheet').hidden){$('#sheet').hidden=true;sheetCtx=null}render();scrollTo(0,0)},
   backRec:()=>{const a=document.activeElement;if(a&&a.blur)a.blur(); // commit the field being edited
     const nb=$('#add-boat');if(nb&&nb.value.trim()&&!S.cfg.boats.some(x=>x.name===nb.value.trim()))acts.boatAdd(); // a boat typed but not yet registered
     S.ui.tab='rec';saveLocal();render();const y=recScroll;requestAnimationFrame(()=>scrollTo(0,y))},
