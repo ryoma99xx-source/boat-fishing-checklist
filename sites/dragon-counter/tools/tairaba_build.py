@@ -314,7 +314,7 @@ import tairaba_seats
 s = tairaba_seats.apply(s)
 # 記録画面の下：ヘッド・ネクタイを横スライドで替える／出船条件を直すを右上へ（gear_dock.py。ティップランと共通）
 import gear_dock
-s = gear_dock.apply(s, [('rigs', 'ヘッド', 'rig'), ('baits', 'ネクタイ', 'bait')], 'gph', '使用中のタイラバを変更')
+s = gear_dock.apply(s, [('rigs', 'ヘッド', 'rig'), ('baits', 'ネクタイ', 'bait'), ('skirts', 'スカート', 'skirt', 1)], 'gph', '使用中のタイラバを変更')
 # カタログの写真（ヘッド・ネクタイ・スカート）。tools/tairaba_images.py
 import tairaba_images
 s = tairaba_images.apply(s)

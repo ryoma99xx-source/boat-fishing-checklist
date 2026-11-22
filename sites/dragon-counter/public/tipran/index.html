@@ -742,7 +742,7 @@ body.has-trip .rmeta{align-items:center;gap:8px;margin-top:0;font-size:14px}
 body.has-trip .rm-txt{flex:1;flex-wrap:nowrap;white-space:nowrap;overflow:hidden;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent)}
 body.has-trip .rmeta .rm-edit{display:inline-flex;flex:none;margin:0;min-height:28px;padding:0 12px;align-items:center}
 .rmeta{position:relative}.rmeta .rm-txt{padding-right:118px}.rmeta .rm-edit{position:absolute;top:0;right:0;min-height:30px;padding:0 10px;font-size:12px}
-.dk-gr{display:flex;align-items:stretch;gap:6px;margin:0 0 6px}.dk-gr:last-child{margin-bottom:0}.dk-gl{flex:none;width:52px;display:flex;flex-direction:column;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);line-height:1.2}.dk-gl small{font-weight:400;font-size:10px;color:var(--teal,#41c9c6)}.dk-gr .dk-row{flex:1;min-width:0;margin:0}.dk-t.dk-g{flex:0 0 136px;min-height:58px;padding:6px 10px;border-width:1.5px}.dk-t.dk-g.cur .dk-c{color:var(--catch-ink);font-weight:800}.dk-t.dk-g .dk-c{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.3}body.has-trip .rmeta{flex-wrap:wrap;row-gap:6px}body.has-trip .rm-txt{flex:1 1 100%}
+body.has-dock main:has(.dk-gr ~ .dk-gr){padding-bottom:calc(96px + 236px + env(safe-area-inset-bottom,0px))}body.has-dock main:has(.dk-gr ~ .dk-gr ~ .dk-gr){padding-bottom:calc(96px + 304px + env(safe-area-inset-bottom,0px))}.dk-gr{display:flex;align-items:stretch;gap:6px;margin:0 0 6px}.dk-gr:last-child{margin-bottom:0}.dk-gl{flex:none;width:52px;display:flex;flex-direction:column;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);line-height:1.2}.dk-gl small{font-weight:400;font-size:10px;color:var(--teal,#41c9c6)}.dk-gr .dk-row{flex:1;min-width:0;margin:0}.dk-t.dk-g.dk-none{flex:0 0 64px;align-items:center;text-align:center}.dk-t.dk-g{flex:0 0 136px;min-height:58px;padding:6px 10px;border-width:1.5px}.dk-t.dk-g.cur .dk-c{color:var(--catch-ink);font-weight:800}.dk-t.dk-g .dk-c{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.3}body.has-trip .rmeta{flex-wrap:wrap;row-gap:6px}body.has-trip .rm-txt{flex:1 1 100%}
 body.has-trip main{padding-top:8px}body.has-trip .rmeta{margin-bottom:-6px}
 .b-trip{display:flex;align-items:center;gap:10px;font-style:normal;line-height:1.2;min-width:0}
 .bt-now{display:flex;flex-direction:column;align-items:flex-start;font-family:var(--f-num);font-size:34px;font-weight:600;line-height:1;color:var(--ink);letter-spacing:.02em;font-variant-numeric:tabular-nums}
@@ -1739,11 +1739,11 @@ function feedRow(tr,it,idx){const time=`<span class="fd-t">${hm(it.t)}</span>`;
 /* gear-dock v1：記録画面の下で、使う部品を横スライドで替える */
 const GD_ROWS=[["rigs", "エギ", "rig"]];
 function gearDock(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr),c=catchesOf(tr,sp);
-  return GD_ROWS.map(([k,lab,key])=>{const all=(s[k]||[]).filter(x=>!x.hidden);if(!all.length)return '';
+  return GD_ROWS.map(([k,lab,key,opt])=>{const all=(s[k]||[]).filter(x=>!x.hidden);if(!all.length)return '';
     const L=(tr.lst||{})[k]&&typeof TBL==='function'?TBL()[k]&&TBL()[k].find(l=>l.id===tr.lst[k]):null;
     let items=L&&L.items.length?L.items.map(id=>all.find(x=>x.id===id)).filter(Boolean):all;if(g[key]&&!items.some(x=>x.id===g[key])){const cur=all.find(x=>x.id===g[key]);if(cur)items=[cur].concat(items)}
-    return `<div class="dk-gr"><span class="dk-gl">${esc(lab)}${L?`<small>${esc(L.name)}</small>`:''}</span><div class="dk-row">${items.map(g2=>{const n=c.filter(e=>e[key]===g2.id).length;const g=g2;
-      return `<button class="dk-t dk-g ${g.id===curGear(tr)[key]?'cur':''}" data-act="dockGear" data-k="${key}" data-id="${g.id}" aria-label="${esc(lab)}を${esc(g.name)}にする">${eimg(egiIm(g),'dkimg')+gph(g.id,'dkimg')}<span class="dk-c">${esc(g.name)}</span><span class="dk-n">${n||''}</span></button>`}).join('')}</div></div>`}).join('')}
+    return `<div class="dk-gr"><span class="dk-gl">${esc(lab)}${L?`<small>${esc(L.name)}</small>`:''}</span><div class="dk-row">${opt?`<button class="dk-t dk-g dk-none ${!curGear(tr)[key]?'cur':''}" data-act="dockGear" data-k="${key}" data-id="" data-l="${esc(lab)}" data-n="なし"><span class="dk-c">なし</span></button>`:''}${items.map(g2=>{const n=c.filter(e=>e[key]===g2.id).length;const g=g2;
+      return `<button class="dk-t dk-g ${g.id===curGear(tr)[key]?'cur':''}" data-act="dockGear" data-k="${key}" data-id="${g.id}" data-l="${esc(lab)}" data-n="${esc(g.name)}" aria-label="${esc(lab)}を${esc(g.name)}にする">${eimg(egiIm(g),'dkimg')+gph(g.id,'dkimg')}<span class="dk-c">${esc(g.name)}</span><span class="dk-n">${n||''}</span></button>`}).join('')}</div></div>`}).join('')}
 function dockHTML(tr){const sp=tr.cur.sp,s=spOf(sp),g=curGear(tr);let main='';
   if(isTenya(sp,g)){const all=dayTenya(tr,sp);const c=catchesOf(tr,sp);
     // the dock shows up to 15 tenya (swipe sideways); the one in use is always among them; the rest are under ほかのテンヤ
@@ -2689,7 +2689,7 @@ const acts={
   tenView:b=>tenViewSheet(b.dataset.id,+b.dataset.n||0),
   tab:b=>{S.ui.tab=b.dataset.tab;saveLocal();render();scrollTo(0,0)},
   goTbl:b=>{S.ui.tblFocus=1;S.ui.tab='gear';if(!$('#sheet').hidden){$('#sheet').hidden=true;sheetCtx=null}render();scrollTo(0,0)},
-  dockGear:b=>{const tr=active();if(!tr)return;const g=curGear(tr),key=b.dataset.k;if(g[key]===b.dataset.id)return;g[key]=b.dataset.id;logGear(tr);touch(tr);render();toast(`${key==='rig'?spOf(tr.cur.sp).rigLabel:spOf(tr.cur.sp).baitLabel}を「${listName(tr.cur.sp,key==='rig'?'rigs':'baits',b.dataset.id)}」に替えました`)},
+  dockGear:b=>{const tr=active();if(!tr)return;const g=curGear(tr),key=b.dataset.k;if((g[key]||'')===b.dataset.id)return;g[key]=b.dataset.id;logGear(tr);touch(tr);render();toast(`${b.dataset.l}を「${b.dataset.n}」に替えました`)},
   backRec:()=>{const a=document.activeElement;if(a&&a.blur)a.blur(); // commit the field being edited
     const nb=$('#add-boat');if(nb&&nb.value.trim()&&!S.cfg.boats.some(x=>x.name===nb.value.trim()))acts.boatAdd(); // a boat typed but not yet registered
     S.ui.tab='rec';saveLocal();render();const y=recScroll;requestAnimationFrame(()=>scrollTo(0,y))},
