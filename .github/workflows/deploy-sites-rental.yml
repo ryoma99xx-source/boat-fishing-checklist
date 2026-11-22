@@ -15,7 +15,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 120   # 写真が多いとき（タイラバのカタログ写真 約2,700枚）は1枚ずつ送るので20分では終わらない
     strategy:
       fail-fast: false
       matrix:
