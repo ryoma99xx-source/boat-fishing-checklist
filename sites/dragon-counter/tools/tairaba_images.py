@@ -110,7 +110,7 @@ def apply(s):
 
     IMG = json.load(open(MAP, encoding='utf-8'))
     # オーナーに確かめ中のもの（写真の中にメーカーの文字・印が入っていて、切り抜きでは外せない）。決まるまでアプリには出さない
-    HOLD_MAKERS = {'松岡スペシャル'}
+    HOLD_MAKERS = set()   # 松岡スペシャル：オーナーが「そのまま使う」と決めた（2026-11-22）
     HOLD_KEYS = set(json.load(open(os.path.join(HERE, 'tairaba', 'images-hold.json'), encoding='utf-8'))['keys']) if os.path.exists(os.path.join(HERE, 'tairaba', 'images-hold.json')) else set()
     IMG = {k: v for k, v in IMG.items() if k.split('|')[1] not in HOLD_MAKERS and k not in HOLD_KEYS}
     m = _re.search(r"const TB_CAT=(\{.*?\});\n", s, flags=_re.S)
