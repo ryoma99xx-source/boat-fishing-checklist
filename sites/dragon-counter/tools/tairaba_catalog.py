@@ -8,7 +8,7 @@ import glob, json, os, re, sys, unicodedata
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, 'tairaba', 'catalog.json')
-ORDER = ['ダイワ', 'シマノ', 'ジャッカル', 'ハヤブサ', 'メジャークラフト', 'START', '海遊', '松岡スペシャル', 'O.S.P', 'RISE JAPAN', 'フリマアプリ系']
+ORDER = ['ダイワ', 'シマノ', 'ジャッカル', 'ハヤブサ', 'メジャークラフト', 'START', '海遊', '松岡スペシャル', 'O.S.P', 'RISE JAPAN', 'がまかつ', 'フリマアプリ系']
 GONE = lambda x: bool(x.get('discontinued'))  # 調べた結果、現行品でないと判断したものに付ける
 
 
