@@ -2,14 +2,14 @@
 
   初期登録の船（同じ名前がすでにあれば足さない。一度だけ）
     長谷川丸　　　：両舷・10人
-    のんちゃん丸　：片舷（右舷）・8人
+    のんちゃん丸　：片舷（右舷）・8人・5:30〜13:00（2026-11-22 追加。すでに入っている人も一度だけ時間を直す）
     なぶらフィッシング・村本海事・野毛屋：名前だけ（人数・片舷／両舷は決めない）
   船には片舷／両舷と舷も覚えさせ、船を選ぶとそれが入る。
 """
 import seat_lay
 
 MARK = '/* tairaba-seats v1 */'
-BOATS = [('長谷川丸', {'people': 10, 'lay': 'both'}), ('のんちゃん丸', {'people': 8, 'lay': 'one', 'side': 'R'}),
+BOATS = [('長谷川丸', {'people': 10, 'lay': 'both'}), ('のんちゃん丸', {'people': 8, 'lay': 'one', 'side': 'R', 'start': '05:30', 'end': '13:00'}),
          ('なぶらフィッシング', {}), ('村本海事', {}), ('野毛屋', {})]
 
 
@@ -28,7 +28,7 @@ def apply(s):
     import json
     js = json.dumps([dict(name=n, **v) for n, v in BOATS], ensure_ascii=False, separators=(',', ':'))
     # 初期登録の船（一度だけ。すでに同じ名前があれば足さない）
-    R("M.boats1=1}", "M.boats1=1}\n  " + MARK + "\n  if(!M.tbBoats1){c.boats=c.boats||[];for(const d of " + js + "){if(!c.boats.some(b=>b.name===d.name))c.boats.push({id:uid(),spots:[],...d})}M.tbBoats1=1}")
+    R("M.boats1=1}", "M.boats1=1}\n  " + MARK + "\n  if(!M.tbBoats1){c.boats=c.boats||[];for(const d of " + js + "){if(!c.boats.some(b=>b.name===d.name))c.boats.push({id:uid(),spots:[],...d})}M.tbBoats1=1}\n  if(!M.tbBoats2){const n=(c.boats||[]).find(b=>b.name==='のんちゃん丸');if(n){n.start='05:30';n.end='13:00'}M.tbBoats2=1}")
     # 船に片舷／両舷と舷を覚えさせる・船を選ぶと入る
     R("function registerBoat(tr){const b=S.cfg.boats.find(x=>x.name===tr.boat);const v={people:tr.people||tr.seats*2,seats:tr.seats,side:tr.side,seat:tr.seat};",
       "function registerBoat(tr){const b=S.cfg.boats.find(x=>x.name===tr.boat);const v={people:tr.people||tr.seats*2,seats:tr.seats,side:tr.side,seat:tr.seat,lay:tr.lay||'both'};")

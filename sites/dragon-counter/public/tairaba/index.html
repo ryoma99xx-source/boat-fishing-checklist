@@ -1253,7 +1253,8 @@ function migrateCfg(c){const before=JSON.stringify(c);c.mig=c.mig||{};const M=c.
   // 初期登録の船（オーナー指定）。同じ名前がすでにあれば足さない。一度だけ
   if(!M.boats1){c.boats=c.boats||[];for(const name of []){if(!c.boats.some(b=>b.name===name))c.boats.push({id:uid(),name,people:16,seats:8,start:'07:20',end:'13:00',spots:[]})}M.boats1=1}
   /* tairaba-seats v1 */
-  if(!M.tbBoats1){c.boats=c.boats||[];for(const d of [{"name":"長谷川丸","people":10,"lay":"both"},{"name":"のんちゃん丸","people":8,"lay":"one","side":"R"},{"name":"なぶらフィッシング"},{"name":"村本海事"},{"name":"野毛屋"}]){if(!c.boats.some(b=>b.name===d.name))c.boats.push({id:uid(),spots:[],...d})}M.tbBoats1=1}
+  if(!M.tbBoats1){c.boats=c.boats||[];for(const d of [{"name":"長谷川丸","people":10,"lay":"both"},{"name":"のんちゃん丸","people":8,"lay":"one","side":"R","start":"05:30","end":"13:00"},{"name":"なぶらフィッシング"},{"name":"村本海事"},{"name":"野毛屋"}]){if(!c.boats.some(b=>b.name===d.name))c.boats.push({id:uid(),spots:[],...d})}M.tbBoats1=1}
+  if(!M.tbBoats2){const n=(c.boats||[]).find(b=>b.name==='のんちゃん丸');if(n){n.start='05:30';n.end='13:00'}M.tbBoats2=1}
   const changed=JSON.stringify(c)!==before;if(changed&&c.updatedAt)c.updatedAt=Date.now();return changed}
 function migrateState(s){
   if(s.gear&&!s.cfg){const sp=defaultSpecies();sp[0].rigs=s.gear.tenya||sp[0].rigs;sp[0].baits=s.gear.bait||sp[0].baits;
