@@ -1800,6 +1800,8 @@ const detailTxt=e=>[e.sa?SA_JP[e.sa]+(e.sa==='maki'&&e.spd?' '+SPD_JP[e.spd]:'')
 /* size-class v1：釣れたもののサイズ区分 */
 const SZC=[["chariko", "チャリコ", "〜20cm前後"], ["kodai", "コダイ（小鯛）", "10〜25cm前後"], ["chudai", "チュウダイ（中鯛）", "30〜50cm前後"], ["odai", "オオダイ（大鯛）", "60cm以上"], ["oban", "大判", "80cm超"]],SZC_BIG=[];
 const szLabel=k=>{const c=SZC.find(x=>x[0]===k);return c?c[1]:''};
+function szRank(L){const m={};let tot=0;L.forEach(t=>t.events.forEach(e=>{if(e.kind!=='catch'||e.sp!==SOLO||!e.szc)return;m[e.szc]=(m[e.szc]||0)+1;tot++}));if(!tot)return '';
+  return `<div class="rank"><h3>サイズ区分ごと（選んだ分）</h3>${SZC.filter(c=>m[c[0]]).map(([k,l,r])=>`<div class="rk sa-rk"><span>${esc(l)}<small class="muted">（${esc(r)}）</small></span><b>${m[k]}${esc(spOf(SOLO).unit)}<small>・${Math.round(m[k]/tot*100)}%</small></b></div>`).join('')}</div>`}
 function openSz(tid,eid){const tr=S.trips[tid];if(!tr)return;const e=tr.events.find(x=>x.id===eid);if(!e)return;if(!$('#sheet').hidden)return;
   openSheet(`<div class="sheet-h"><h2>サイズは？</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted">記録はもう済んでいます（${hm(e.t)}）。サイズを押すと、この記録に付きます。選ばなくてもかまいません。</p>
    <div class="sa-grid sz-grid">${SZC.map(([k,l,r])=>`<button class="sa-b ${e.szc===k?'on':''}" data-act="szPick" data-t="${tid}" data-e="${eid}" data-k="${k}">${esc(l)}<small>${esc(r)}</small></button>`).join('')}</div>
@@ -2000,7 +2002,7 @@ function timelineSVG(tr,sp){
       o.push(TX(40,yy,nm,{size:13,bold:1}));[[a,P.catch],[b,P.bite],[l,P.lost]].forEach(([v,c],j)=>o.push(TX(cx[j],yy,v,{size:14,bold:1,fill:v?c:P.muted,anchor:'middle'})));
       o.push(TX(cx[3],yy,a+l?Math.round(a/(a+l)*100)+'%':'—',{size:13,fill:P.ink,anchor:'middle'}))});
     o.push(TX(W-26,tt+TH-8,'取り込み＝釣れた÷（釣れた＋バラシ）',{size:10.5,fill:P.muted,anchor:'end'}));y+=TH+10}
-  const H1=3600e3;for(let h=Math.ceil(t0/H1)*H1;h<=t1;h+=H1){const x=X(h);under.push(`<line x1="${r1(x)}" y1="${gridTop}" x2="${r1(x)}" y2="${y}" stroke="${P.grid}" stroke-dasharray="3 4"/>`);o.push(TX(x,y+20,hm(h),{size:12,fill:P.muted,anchor:'middle'}))}
+  {const sc=tr.events.filter(e=>e.kind==='catch'&&e.sp===sp&&e.t>=t0&&e.t<=t1),rows=SZC.map(([k,l])=>[l,sc.filter(e=>e.szc===k).length]).filter(r=>r[1]),none=sc.filter(e=>!e.szc).length;if(rows.length){const all=rows.concat(none?[['（サイズなし）',none]]:[]),RH=24,TH=46+all.length*RH+6,tt=y,mx=Math.max(...all.map(r=>r[1]),1),x0=W*0.42,bw=W*0.4;band(tt,TH,'#eef5ec');o.push(TX(26,tt+24,'サイズ区分ごとの数',{size:15,bold:1}));all.forEach(([l,n],i)=>{const yy=tt+48+i*RH,w=Math.max(2,bw*n/mx);o.push(TX(40,yy,l,{size:13,bold:1,fill:l.startsWith('（')?P.muted:P.ink}));o.push(`<rect x="${r1(x0)}" y="${yy-12}" width="${r1(w)}" height="14" rx="3" fill="${P.catch}" opacity="${l.startsWith('（')?0.35:1}"/>`);o.push(TX(x0+w+8,yy,n+spOf(sp).unit,{size:13,bold:1}))});y+=TH+10}}const H1=3600e3;for(let h=Math.ceil(t0/H1)*H1;h<=t1;h+=H1){const x=X(h);under.push(`<line x1="${r1(x)}" y1="${gridTop}" x2="${r1(x)}" y2="${y}" stroke="${P.grid}" stroke-dasharray="3 4"/>`);o.push(TX(x,y+20,hm(h),{size:12,fill:P.muted,anchor:'middle'}))}
   const marks=[[tr.start,'出船 '+hm(tr.start),'start']];if(tr.end)marks.push([tr.end,'沖上がり '+hm(tr.end),'end']);
   marks.forEach(([t,lb,k])=>{const x=X(t);o.push(`<path d="M${r1(x)},${y+26} l-4,7 h8 z" fill="${P.ink}"/>`);o.push(TX(k==='start'?x-4:x+4,y+46,lb,{size:11,anchor:k==='start'?'start':'end'}))});
   y+=66;let lx=24;const leg=(sw,txt)=>{o.push(sw(lx)+TX(lx+14,y,txt,{size:12,fill:P.muted}));lx+=14+txt.length*12.5+18};
@@ -2168,6 +2170,7 @@ function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYe
    ${rank('よく釣れたタックル',(t,e)=>e.tk?tkLabelOf(t,e.tk):'',k=>k)}
    ${avgBy('釣り場ごとの平均',t=>t.spot?t.spot.name:(t.port||''))}
    ${avgBy('潮回りごとの平均',t=>tideNameOf(t))}
+   ${szRank(L)}
    ${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.sa||!['catch','bite','lost'].includes(e.kind))return;if(e.kind==='catch'&&e.sp!==SOLO)return;m[e.sa]=m[e.sa]||{catch:0,bite:0,lost:0};m[e.sa][e.kind]++}));const it=SA_KEYS.filter(k=>m[k]);if(!it.length)return '';
      return `<div class="rank"><h3>アタリの出方ごと（詳細モードで記録した分）</h3>${it.map(k=>`<div class="rk sa-rk"><span>${SA_JP[k]}</span><b>${m[k].catch}${esc(spOf(SOLO).unit)}<small>・アタリ${m[k].bite}・バラシ${m[k].lost}</small></b></div>`).join('')}</div>`})()}
    ${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.ka||!['catch','bite','lost'].includes(e.kind))return;if(e.kind==='catch'&&e.sp!==SOLO)return;m[e.ka]=m[e.ka]||{catch:0,bite:0,lost:0};m[e.ka][e.kind]++}));const it=KA_KEYS.filter(k=>m[k]);if(!it.length)return '';
