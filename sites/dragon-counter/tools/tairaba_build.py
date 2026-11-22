@@ -309,5 +309,8 @@ s = tairaba_tackle.apply(s)
 # 針は任意・ヘッドとネクタイのリスト（tairaba_lists.py）
 import tairaba_lists
 s = tairaba_lists.apply(s)
+# 座席の片舷／両舷・初期登録の船（tairaba_seats.py）
+import tairaba_seats
+s = tairaba_seats.apply(s)
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))
