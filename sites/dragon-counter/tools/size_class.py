@@ -47,11 +47,11 @@ function openSz(tid,eid){const tr=S.trips[tid];if(!tr)return;const e=tr.events.f
     R(".sa-grid .sa-fall{grid-column:1/-1;min-height:52px}",
       ".sa-grid .sa-fall{grid-column:1/-1;min-height:52px}.sa-grid.sz-grid{grid-template-columns:1fr 1fr}.sa-grid.sz-grid .sa-b{min-height:66px;font-size:18px}.sa-grid.sz-grid .sa-b small{display:block;font-size:12px;font-weight:400;opacity:.8;margin-top:2px}")
     # 振り返りの図：サイズ区分ごとの数（その日の釣れた分。選ばなかった分は「サイズなし」）
-    R("const H1=3600e3;for(let h=Math.ceil(t0/H1)*H1;h<=t1;h+=H1){",
+    R("{const H1=3600e3,DU=t1-t0,",
       "{const sc=tr.events.filter(e=>e.kind==='catch'&&e.sp===sp&&e.t>=t0&&e.t<=t1),rows=SZC.map(([k,l])=>[l,sc.filter(e=>e.szc===k).length]).filter(r=>r[1]),none=sc.filter(e=>!e.szc).length;"
       "if(rows.length){const all=rows.concat(none?[['（サイズなし）',none]]:[]),RH=24,TH=46+all.length*RH+6,tt=y,mx=Math.max(...all.map(r=>r[1]),1),x0=W*0.42,bw=W*0.4;band(tt,TH,'#eef5ec');o.push(TX(26,tt+24,'サイズ区分ごとの数',{size:15,bold:1}));"
       "all.forEach(([l,n],i)=>{const yy=tt+48+i*RH,w=Math.max(2,bw*n/mx);o.push(TX(40,yy,l,{size:13,bold:1,fill:l.startsWith('（')?P.muted:P.ink}));o.push(`<rect x=\"${r1(x0)}\" y=\"${yy-12}\" width=\"${r1(w)}\" height=\"14\" rx=\"3\" fill=\"${P.catch}\" opacity=\"${l.startsWith('（')?0.35:1}\"/>`);o.push(TX(x0+w+8,yy,n+spOf(sp).unit,{size:13,bold:1}))});y+=TH+10}}"
-      "const H1=3600e3;for(let h=Math.ceil(t0/H1)*H1;h<=t1;h+=H1){")
+      "{const H1=3600e3,DU=t1-t0,")
     # 分析：サイズ区分ごと（選んだ分）
     R("${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.sa||", "${szRank(L)}\n   ${(()=>{const m={};L.forEach(t=>t.events.forEach(e=>{if(!e.sa||")
     return s

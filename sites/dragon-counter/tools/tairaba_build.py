@@ -328,8 +328,5 @@ s = oth_seat.apply(s, 'both')
 import size_class
 s = size_class.apply(s, [('chariko', 'チャリコ', '〜20cm前後'), ('kodai', 'コダイ（小鯛）', '10〜25cm前後'), ('chudai', 'チュウダイ（中鯛）', '30〜50cm前後'),
                          ('odai', 'オオダイ（大鯛）', '60cm以上'), ('oban', '大判', '80cm超')])
-# 振り返りの図：横軸の時刻を長さに合わせた間隔で（上と下）。tools/fig_ticks.py（size_class のあと）
-import fig_ticks
-s = fig_ticks.apply(s)
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))
