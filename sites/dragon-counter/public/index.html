@@ -2034,15 +2034,18 @@ function seatSVG(tr,sp){
   o.push(TX(cx,160,'ミヨシ',{size:18,bold:1,fill:P.tide,anchor:'middle'}));
   o.push(`<path d="M${xl},612 L${xl},262 Q${xl},206 ${cx},172 Q${xr},206 ${xr},262 L${xr},612 Q${cx},632 ${xl},612 Z" fill="${P.hull}" stroke="${P.ink}" stroke-width="3"/>`);
   o.push(TX(cx,662,'トモ',{size:18,bold:1,fill:P.tide,anchor:'middle'}));o.push(TX(xl-40,240,'左舷',{size:14,fill:P.muted,anchor:'middle'}));o.push(TX(xr+40,240,'右舷',{size:14,fill:P.muted,anchor:'middle'}));
-  const [t0,t1]=range(tr);const tE=tr.end||t1;const hs=headSegs(tr,tE),st=stateSegs(tr,tE);const rep=st[0];
+  const [t0,t1]=range(tr);const tE=tr.end||t1;const hs=headSegs(tr,tE),st=stateSegs(tr,tE);const longest=(L,key)=>{const m={};L.forEach(q=>{const k=key(q);m[k]=(m[k]||0)+(q.te-q.t)});let bk=null;for(const k in m)if(bk===null||m[k]>m[bk])bk=k;return bk===null?null:{k:bk,ms:m[bk]}};
+  /* 主な潮：船から見た向きを時間で重み付けして足し合わせた向き（8方向に分かれても、後ろ→前が長ければ後ろ→前）。計＝その向き±45°の時間 */
+  const domF=(()=>{let x=0,y=0;const fl=st.filter(q=>q.flow&&q.flow!=='C');fl.forEach(q=>{const [vx,vy]=vec(q.flow),w=q.te-q.t;x+=vx*w;y+=vy*w});if(!fl.length||Math.hypot(x,y)<1)return null;    const k=DIRS[Math.round(((Math.atan2(x,-y)*180/Math.PI+360)%360)/45)%8],near=q=>{const d=Math.abs(DIRS.indexOf(q.flow)-DIRS.indexOf(k))%8;return Math.min(d,8-d)<=1};const sub=fl.filter(near);return {k,sub,ms:sub.reduce((a,q)=>a+q.te-q.t,0)}})();
+  const rep=domF?(()=>{const sp=longest(domF.sub,q=>q.speed);return {...domF.sub[0],flow:domF.k,speed:sp?sp.k:'',ms:domF.ms}})():(st[0]||null);const durTxt=ms=>{const m=Math.round(ms/60e3);return m>=60?`${Math.floor(m/60)}時間${m%60?m%60+'分':''}`:`${m}分`};
   if(rep){if(rep.flow!=='C'){const [vx,vy]=vec(rep.flow);const my=430;o.push(arrowSVG(cx-vx*62,my-vy*62,cx+vx*62,my+vy*62,P.tide,7,18));o.push(TX(cx-vx*62-vy*20,my-vy*62+vx*20+6,'潮',{size:16,bold:1,fill:P.tide,anchor:'middle'}))}
     else o.push(TX(cx,436,'潮止まり',{size:17,bold:1,fill:P.muted,anchor:'middle'}));
-    o.push(TX(W/2,690,st.length>1?`潮の向き（最初）：${flowTxt(rep)}　※変化は右の記録`:`潮の向き：${flowTxt(rep)}（${hm(rep.t)}〜${hm(rep.te)}）`,{size:15,anchor:'middle'}))}
+    o.push(TX(W/2,690,st.length>1?(rep.ms?`主な潮：${flowTxt(rep)}（この向き前後で計${durTxt(rep.ms)}）　※変化は右の記録`:`潮の向き：${flowTxt(rep)}　※変化は右の記録`):`潮の向き：${flowTxt(rep)}（${hm(rep.t)}〜${hm(rep.te)}）`,{size:15,anchor:'middle'}))}
   else o.push(TX(W/2,690,'潮の向きなし（船首の向きが記録されていません）',{size:15,fill:P.muted,anchor:'middle'}));
-  const head=hs.length?hs[0].heading:null,R=tr.side==='R';
+  const domH=longest(hs,q=>q.heading),head=domH?domH.k:null,R=tr.side==='R';
   if(head){const qx=R?86:514,qy=200;const a=-DIRS.indexOf(head)*Math.PI/4;const vx=Math.sin(a),vy=-Math.cos(a);
     o.push(`<circle cx="${qx}" cy="${qy}" r="32" fill="#fff" stroke="${P.grid}" stroke-width="2"/>`);o.push(arrowSVG(qx-vx*18,qy-vy*18,qx+vx*20,qy+vy*20,P.ink,2.6,9));
-    o.push(TX(qx+vx*44,qy+vy*44+5,'北',{size:13,bold:1,anchor:'middle'}));o.push(TX(qx,qy+(vy>0.5?72:56),`船首 ${HEAD_JP[head]}${hs.length>1?'（最初）':''}`,{size:13,fill:P.muted,anchor:'middle'}))}
+    o.push(TX(qx+vx*44,qy+vy*44+5,'北',{size:13,bold:1,anchor:'middle'}));o.push(TX(qx,qy+(vy>0.5?72:56),`船首 ${HEAD_JP[head]}${new Set(hs.map(q=>q.heading)).size>1?'（いちばん長い）':''}`,{size:13,fill:P.muted,anchor:'middle'}))}
   // changes written in the free space beside the hull (opposite the own seat)
   if(st.length>1){const lx=R?30:398,mx=R?204:572;let ly=286;o.push(TX(lx,ly,'潮の向きの変化',{size:13,bold:1,fill:P.tide}));const maxRows=8;
     st.slice(0,maxRows).forEach(q=>{ly+=19;o.push(TX(lx,ly,`${hm(q.t)}〜${hm(q.te)}${hs.length>1?'・船首'+HEAD_JP[q.heading]:''}`,{size:11.5,fill:P.muted}));ly+=17;o.push(TX(lx,ly,clip(flowTxt(q),mx-lx,12),{size:12,bold:1}))});
