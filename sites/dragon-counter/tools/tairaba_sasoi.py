@@ -57,9 +57,12 @@ def apply(s):
 
     # 記録の流れ：出方 → （巻きなら）速さ → 位置 → 合わせ。1枚ずつ押して進む
     RX(r"function openKake\(kind,sa\)\{.*?\nfunction openSasoi\(kind\)\{.*?\{kind:'sasoi'\}\)\}\n",
-       lambda m: r"""function tkElec(id){const st=id?setOf(id):null,q=st?tkItem(st.reel):null;return !!(q&&q.kind==='electric')}
-function trElec(){const tr=active();return tkElec(tr&&tr.tk&&tr.tk.cur)}
-function evElec(f){const tr=S.trips[f.tid],e=tr&&tr.events.find(x=>x.id===f.id);return tkElec(e&&e.tk)}
+       lambda m: r"""/* 電動かどうか：リールの種類が電動、または種類がない（ラインマネージャーから写したリールなど）ときは名前で見る。
+   今日のタックルが分からないときは、この釣行で「電動の目盛りで選ぶ」を押したら、その釣行は電動として覚える（tr.elecM） */
+const ELEC_RE=/シーボーグ|seaborg|レオブリッツ|leobritz|フォースマスター|force\s*master|ビーストマスター|beast\s*master|プレイズ|plays|タナコン|tanacom|電動/i;
+function tkElec(id){const st=id?setOf(id):null,q=st?tkItem(st.reel):null;return !!(q&&(q.kind==='electric'||(!q.kind&&ELEC_RE.test([q.m,q.s,q.model].join(' ')))))}
+function trElec(){const tr=active();return tkElec(tr&&tr.tk&&tr.tk.cur)||!!(tr&&tr.elecM)}
+function evElec(f){const tr=S.trips[f.tid],e=tr&&tr.events.find(x=>x.id===f.id);return tkElec(e&&e.tk)||!!(tr&&tr.elecM)}
 let trD=null;
 function openSasoi(kind){const tr=active();if(!tr)return;trD={kind,elec:trElec()};trStep()}
 function trStep(){const d=trD,k=d.kind,L=S.ui.lastTr||{},nk=k==='bite'?1:0,n=d.sa==='maki'?4-nk:d.sa?2-nk:0;
@@ -70,7 +73,7 @@ function trStep(){const d=trD,k=d.kind,L=S.ui.lastTr||{},nk=k==='bite'?1:0,n=d.s
   let h;
   if(d.sa===undefined)h=head(1,'アタリの出方')+`<div class="sa-grid tr-sa">${b('sa','maki','巻き')}${b('sa','fall','フォール')}</div>`+`<button class="btn" data-act="trDone">選ばずに記録</button>`;
   else if(d.sa==='maki'&&d.spd===undefined)h=head(2,'巻きの速さ')+(d.elec
-     ?`<div class="sa-grid tr-el">${SPD_KEYS.filter(x=>!isNaN(x)).map(x=>b('spd',x,x)).join('')}</div><p class="muted">電動リールの速さの目盛り（使っているリールが電動のため、数字で選びます）</p>`
+     ?`<div class="sa-grid tr-el">${SPD_KEYS.filter(x=>!isNaN(x)).map(x=>b('spd',x,x)).join('')}</div><p class="muted">電動リールの速さの目盛り${(()=>{const tr=active();return tkElec(tr&&tr.tk&&tr.tk.cur)?'（使っているリールが電動のため、数字で選びます）':''})()}</p>${(()=>{const tr=active();return tkElec(tr&&tr.tk&&tr.tk.cur)?'':'<button class="btn sm ghost" data-act="trElec">手巻き（スロー・中速・高速）で選ぶ</button>'})()}`
      :`<div class="sa-grid tr-sa tr-3">${SPD_KEYS.filter(x=>isNaN(x)).map(x=>b('spd',x,SPD_JP[x],SPD_N[x])).join('')}</div><button class="btn sm ghost" data-act="trElec">電動リールの目盛り（1〜20）で選ぶ</button>`)+skip('spd','速さは選ばない（次へ）')+back;
   else if(d.sa==='maki'&&d.tn===undefined)h=head(3,'アタリの位置')+`<div class="sa-grid tr-sa tr-3">${TN_KEYS.map(x=>b('tn',x,TN_JP[x],TN_N[x])).join('')}</div>`+skip('tn','位置は選ばない（次へ）')+back;
   else if(k==='bite')return trRec();
@@ -83,7 +86,7 @@ function trRec(){const d=trD;if(!d)return;$('#sheet').hidden=true;sheetCtx=null;
     RX(r"  saRec:b=>\{.*?\n  saBack:b=>openSasoi\(b\.dataset\.k\),\n  kaRec:b=>\{.*?\n    try\{recKind\(k\)\}finally\{bypassDetail=false;nextSa=null;nextKa=null\}\},\n",
        lambda m: "  trPick:b=>{const d=trD;if(!d)return;const f=b.dataset.f,v=b.dataset.v;d[f]=v;if(f==='sa'&&v!=='maki'){d.spd='';d.tn=''}if(f==='ka')return trRec();trStep()},\n"
                  "  trBack:()=>{const d=trD;if(!d)return;if(d.sa!=='maki'){delete d.sa;delete d.spd;delete d.tn}else for(const f of ['tn','spd','sa'])if(d[f]!==undefined){delete d[f];break}trStep()},\n"
-                 "  trElec:()=>{if(!trD)return;trD.elec=!trD.elec;trStep()},\n"
+                 "  trElec:()=>{if(!trD)return;trD.elec=!trD.elec;const tr=active();if(tr){tr.elecM=trD.elec?1:0;touch(tr)}trStep()},\n"
                  "  trDone:()=>{if(!trD)return;trD.sa='';trD.ka='';trRec()},\n",
        flags=re.S)
     R("toast(b.dataset.d==='detail'?'詳細モード：釣れた・アタリ・バラシを押すと、誘いと掛け方を選んで記録します'",
