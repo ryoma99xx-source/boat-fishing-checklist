@@ -323,7 +323,7 @@ s = tbc_search.apply(s)
 # マダイのサイズ区分（オーナーの定義）。釣れたあとに選ぶ。tools/size_class.py
 import size_class
 # 区分はオーナーの定義（2026-11-23 に重さで決め直し）。キーは前のまま（前の記録はそのまま：オーナー指示）
-s = size_class.apply(s, [('chariko', 'チャリコ', ''), ('kodai', '小鯛', '1キロ以下'), ('chudai', '中鯛', '1キロ〜2キロ'),
+s = size_class.apply(s, [('chariko', 'チャリコ', ''), ('kodai', '小鯛', '1キロ以下'), ('chudai', '中鯛', '1キロ〜3キロ'),
                          ('odai', '大鯛', '3キロ以上'), ('oban', '特鯛', '5キロ以上')])
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))

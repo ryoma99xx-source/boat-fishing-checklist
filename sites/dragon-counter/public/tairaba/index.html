@@ -1874,7 +1874,7 @@ const KA_JP={awase:'合わせあり',none:'合わせなし'},KA_KEYS=Object.keys
 const modeOf=tr=>tr&&tr.mode==='detail'?'detail':'simple';
 const detailTxt=e=>[e.sa?SA_JP[e.sa]+(e.sa==='maki'&&e.spd?' '+SPD_JP[e.spd]:''):'',e.sa==='maki'&&e.tn?'位置 '+TN_JP[e.tn]:'',e.ka?KA_JP[e.ka]:''].filter(Boolean).join('・');
 /* size-class v1：釣れたもののサイズ区分 */
-const SZC=[["chariko", "チャリコ", ""], ["kodai", "小鯛", "1キロ以下"], ["chudai", "中鯛", "1キロ〜2キロ"], ["odai", "大鯛", "3キロ以上"], ["oban", "特鯛", "5キロ以上"]],SZC_BIG=[];
+const SZC=[["chariko", "チャリコ", ""], ["kodai", "小鯛", "1キロ以下"], ["chudai", "中鯛", "1キロ〜3キロ"], ["odai", "大鯛", "3キロ以上"], ["oban", "特鯛", "5キロ以上"]],SZC_BIG=[];
 const szLabel=k=>{const c=SZC.find(x=>x[0]===k);return c?c[1]:''};
 function szRank(L){const m={};let tot=0;L.forEach(t=>t.events.forEach(e=>{if(e.kind!=='catch'||e.sp!==SOLO||!e.szc)return;m[e.szc]=(m[e.szc]||0)+1;tot++}));if(!tot)return '';
   return `<div class="rank"><h3>サイズ区分ごと（選んだ分）</h3>${SZC.filter(c=>m[c[0]]).map(([k,l,r])=>`<div class="rk sa-rk"><span>${esc(l)}${r?`<small class="muted">（${esc(r)}）</small>`:''}</span><b>${m[k]}${esc(spOf(SOLO).unit)}<small>・${Math.round(m[k]/tot*100)}%</small></b></div>`).join('')}</div>`}
