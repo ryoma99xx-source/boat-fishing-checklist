@@ -12,7 +12,7 @@
   reels [id, メーカー, シリーズ, 品番, 'bait'|'electric'|'spinning', カウンター0|1, 状態]
 id はメーカー|シリーズ|品番のハッシュ（ティップランと同じ作り方。同じリールは同じ id）。
 竿は「ベイト」と「キャスラバ（スピニング）」、リールは「ベイト」「電動」「スピニング」で分けて選ぶ。
-電動のリールを使っているときは、詳細モードの巻きの速さが 1〜16 になる（tairaba_sasoi.py）。
+電動のリールを使っているときは、詳細モードの巻きの速さが 1〜20 になる（tairaba_sasoi.py）。
 """
 import glob, hashlib, json, os, re, sys, unicodedata
 
@@ -125,7 +125,7 @@ def apply(s):
       "${x.len?`<small>${x.len}m</small>`:''}<small>${tkKind(x)}</small>${x.lure?`<small>${esc(x.lure)}${/g/.test(x.lure)?'':'g'}</small>`:''}")
     R("placeholder=\"${k==='rod'?'例：極鋭、サーベルマスター、175':'例：ソルティガ、フォースマスター、200'}\"", "placeholder=\"${k==='rod'?'例：紅牙、炎月、69':'例：シーボーグ、フォースマスター、200'}\"")
     R("placeholder=\"${k==='rod'?'例：極鋭タチウオテンヤSP EX MH-175':'例：ソルティガ BJ 100SH'}\"", "placeholder=\"${k==='rod'?'例：紅牙 X 69MHB':'例：シーボーグ 200J'}\"")
-    # 自分で登録：種類を選ぶ（電動にすると、巻きの速さが 1〜16 になる）
+    # 自分で登録：種類を選ぶ（電動にすると、巻きの速さが 1〜20 になる）
     R('<label class="field"><span>製品名・型番</span><input type="text" id="tkcN"',
       '<label class="field"><span>種類</span><select id="tkcK">${(k===\'rod\'?[[\'bait\',\'ベイト\'],[\'spinning\',\'キャスラバ（スピニング）\']]:[[\'bait\',\'ベイト\'],[\'electric\',\'電動\'],[\'spinning\',\'スピニング\']]).map(([v,l])=>`<option value="${v}">${l}</option>`).join(\'\')}</select></label>\n'
       '   <label class="field"><span>製品名・型番</span><input type="text" id="tkcN"')

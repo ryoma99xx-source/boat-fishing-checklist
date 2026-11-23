@@ -1791,7 +1791,7 @@ function addGedo(name){const tr=active();if(!tr||!name)return;const g=curGear(tr
   toast(`${hm(now)} 外道 ${name} を記録`,'取り消す',()=>{const t=S.trips[id];t.events=t.events.filter(x=>x.id!==e.id);touch(t);render()})}
 /* tairaba-sasoi v1 */
 /* 出方（e.sa）・巻きの速さ（e.spd）・アタリの位置（e.tn）・合わせ（e.ka）。釣れた・アタリ・バラシに付ける */
-const SA_JP={maki:'巻き',fall:'フォール'};const SPD_JP={'slow':'スロー','mid':'中速','fast':'高速','1':'電動 1','2':'電動 2','3':'電動 3','4':'電動 4','5':'電動 5','6':'電動 6','7':'電動 7','8':'電動 8','9':'電動 9','10':'電動 10','11':'電動 11','12':'電動 12','13':'電動 13','14':'電動 14','15':'電動 15','16':'電動 16'},SPD_N={'slow':'0.5m/秒以下','mid':'1m/秒前後','fast':'1.5m/秒以上'},SPD_A={'slow':'ス','mid':'中','fast':'高'};const TN_JP={'lo':'巻き始め','mid':'3〜7m','hi':'7mより上'},TN_N={'lo':'底から3mまで','mid':'底から','hi':'底から'};
+const SA_JP={maki:'巻き',fall:'フォール'};const SPD_JP={'slow':'スロー','mid':'中速','fast':'高速','1':'電動 1','2':'電動 2','3':'電動 3','4':'電動 4','5':'電動 5','6':'電動 6','7':'電動 7','8':'電動 8','9':'電動 9','10':'電動 10','11':'電動 11','12':'電動 12','13':'電動 13','14':'電動 14','15':'電動 15','16':'電動 16','17':'電動 17','18':'電動 18','19':'電動 19','20':'電動 20'},SPD_N={'slow':'0.5m/秒以下','mid':'1m/秒前後','fast':'1.5m/秒以上'},SPD_A={'slow':'ス','mid':'中','fast':'高'};const TN_JP={'lo':'巻き始め','mid':'3〜7m','hi':'7mより上'},TN_N={'lo':'底から3mまで','mid':'底から','hi':'底から'};
 const SPD_KEYS=Object.keys(SPD_JP).sort((a,b)=>(isNaN(a)?0:1)-(isNaN(b)?0:1)||(+a)-(+b)),TN_KEYS=Object.keys(TN_JP);let nextX=null;
 const SA_KEYS=Object.keys(SA_JP);let nextSa=null;
 const KA_JP={awase:'合わせあり',none:'合わせなし'},KA_KEYS=Object.keys(KA_JP);let nextKa=null,bypassDetail=false;
@@ -1821,7 +1821,7 @@ function trStep(){const d=trD,k=d.kind,L=S.ui.lastTr||{},nk=k==='bite'?1:0,n=d.s
   if(d.sa===undefined)h=head(1,'アタリの出方')+`<div class="sa-grid tr-sa">${b('sa','maki','巻き')}${b('sa','fall','フォール')}</div>`+`<button class="btn" data-act="trDone">選ばずに記録</button>`;
   else if(d.sa==='maki'&&d.spd===undefined)h=head(2,'巻きの速さ')+(d.elec
      ?`<div class="sa-grid tr-el">${SPD_KEYS.filter(x=>!isNaN(x)).map(x=>b('spd',x,x)).join('')}</div><p class="muted">電動リールの速さの目盛り（使っているリールが電動のため、数字で選びます）</p>`
-     :`<div class="sa-grid tr-sa tr-3">${SPD_KEYS.filter(x=>isNaN(x)).map(x=>b('spd',x,SPD_JP[x],SPD_N[x])).join('')}</div><button class="btn sm ghost" data-act="trElec">電動リールの目盛り（1〜16）で選ぶ</button>`)+skip('spd','速さは選ばない（次へ）')+back;
+     :`<div class="sa-grid tr-sa tr-3">${SPD_KEYS.filter(x=>isNaN(x)).map(x=>b('spd',x,SPD_JP[x],SPD_N[x])).join('')}</div><button class="btn sm ghost" data-act="trElec">電動リールの目盛り（1〜20）で選ぶ</button>`)+skip('spd','速さは選ばない（次へ）')+back;
   else if(d.sa==='maki'&&d.tn===undefined)h=head(3,'アタリの位置')+`<div class="sa-grid tr-sa tr-3">${TN_KEYS.map(x=>b('tn',x,TN_JP[x],TN_N[x])).join('')}</div>`+skip('tn','位置は選ばない（次へ）')+back;
   else if(k==='bite')return trRec();
   else h=head(n,'合わせ')+`<div class="sa-grid tr-sa">${KA_KEYS.map(x=>b('ka',x,KA_JP[x])).join('')}</div>`+skip('ka','合わせは選ばずに記録')+back;
@@ -2706,7 +2706,7 @@ function tenViewSheet(id,n){const t=tenyaOf(id);if(!t)return;const img=TIMG.has(
 const acts={
   modeHelp:()=>openSheet(`<div class="sheet-h"><h2>シンプルと詳細の違い</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
    <div class="mh"><h3>シンプル</h3><p>「釣れた」「アタリ」「バラシ」を押すと、その場ですぐ1件記録します。時刻と使っているテンヤ・タックルが残ります。手早く数えたいとき向けです。</p></div>
-   <div class="mh"><h3>詳細</h3><p>押したあとに、そのときの<b>アタリの出方</b>（巻き／フォール）→ 巻きなら<b>速さ</b>（スロー0.5m/秒以下・中速1m/秒前後・高速1.5m/秒以上。電動リールは目盛り1〜16）と<b>アタリの位置</b>（巻き始め＝底から3mまで・3〜7m・7mより上）→ <b>合わせ</b>（あり／なし）の順に押して記録します。アタリのときは合わせは選びません（位置まで選んだら記録）。電動リールのときの速さは目盛り（1〜16）で選びます。</p><p>急いでいるときは、ボタンを<b>長押し</b>すると選ばずにすぐ記録できます。</p><p>出方・合わせは、振り返りの図とダッシュボードで「どの誘いで釣れたか」「取り込み率」として見られます。</p></div>
+   <div class="mh"><h3>詳細</h3><p>押したあとに、そのときの<b>アタリの出方</b>（巻き／フォール）→ 巻きなら<b>速さ</b>（スロー0.5m/秒以下・中速1m/秒前後・高速1.5m/秒以上。電動リールは目盛り1〜20）と<b>アタリの位置</b>（巻き始め＝底から3mまで・3〜7m・7mより上）→ <b>合わせ</b>（あり／なし）の順に押して記録します。アタリのときは合わせは選びません（位置まで選んだら記録）。電動リールのときの速さは目盛り（1〜20）で選びます。</p><p>急いでいるときは、ボタンを<b>長押し</b>すると選ばずにすぐ記録できます。</p><p>出方・合わせは、振り返りの図とダッシュボードで「どの誘いで釣れたか」「取り込み率」として見られます。</p></div>
    <p class="muted">釣行中も「本日の釣果」の左上で切り替えられます。シンプルで付けた記録も、あとから記録の一覧で出方・合わせを付け足せます。</p>`,{kind:'help'}),
   tkSetEdit:b=>tkSetSheet(b.dataset.id),tkSetNew:()=>tkSetSheet(''),
   tkSetSave:b=>{const t=TK(),rod=$('#tseRod').value,reel=$('#tseReel').value;if(!rod||!reel)return;

@@ -2,7 +2,7 @@
 
   出方　　：巻き／フォール                                   （e.sa = 'maki' | 'fall'）
   巻きの速さ：スロー（0.5m/秒以下）／中速（1m/秒前後）／高速（1.5m/秒以上）
-            使っているリールが電動なら 1〜16 の目盛りだけ（オーナー指示 2026-11-23）          （e.spd = 'slow'|'mid'|'fast'|'1'..'16'）
+            使っているリールが電動なら 1〜20 の目盛りだけ（オーナー指示 2026-11-23）          （e.spd = 'slow'|'mid'|'fast'|'1'..'20'）
   アタリの位置：巻き始め（底から3mまで）／3〜7m／7mより上　※巻きのときだけ（e.tn = 'lo'|'mid'|'hi'）
   合わせ　：あり／なし                                       （e.ka = 'awase' | 'none'）
 釣れた・アタリ・バラシのどれも同じ。どれも選ばずに記録することもできる。
@@ -33,7 +33,7 @@ def apply(s):
             raise SystemExit('tairaba_sasoi: regex %d: %s' % (c, pat[:90]))
         s = s2
 
-    spd = '{' + ','.join("'%s':'%s'" % (k, j) for k, j, _, _ in SPD3) + "," + ','.join("'%d':'電動 %d'" % (i, i) for i in range(1, 17)) + '}'
+    spd = '{' + ','.join("'%s':'%s'" % (k, j) for k, j, _, _ in SPD3) + "," + ','.join("'%d':'電動 %d'" % (i, i) for i in range(1, 21)) + '}'
     spdn = '{' + ','.join("'%s':'%s'" % (k, n) for k, _, n, _ in SPD3) + '}'
     spda = '{' + ','.join("'%s':'%s'" % (k, a) for k, _, _, a in SPD3) + '}'
     tn = '{' + ','.join("'%s':'%s'" % (k, j) for k, j, _, _ in TN) + '}'
@@ -71,7 +71,7 @@ function trStep(){const d=trD,k=d.kind,L=S.ui.lastTr||{},nk=k==='bite'?1:0,n=d.s
   if(d.sa===undefined)h=head(1,'アタリの出方')+`<div class="sa-grid tr-sa">${b('sa','maki','巻き')}${b('sa','fall','フォール')}</div>`+`<button class="btn" data-act="trDone">選ばずに記録</button>`;
   else if(d.sa==='maki'&&d.spd===undefined)h=head(2,'巻きの速さ')+(d.elec
      ?`<div class="sa-grid tr-el">${SPD_KEYS.filter(x=>!isNaN(x)).map(x=>b('spd',x,x)).join('')}</div><p class="muted">電動リールの速さの目盛り（使っているリールが電動のため、数字で選びます）</p>`
-     :`<div class="sa-grid tr-sa tr-3">${SPD_KEYS.filter(x=>isNaN(x)).map(x=>b('spd',x,SPD_JP[x],SPD_N[x])).join('')}</div><button class="btn sm ghost" data-act="trElec">電動リールの目盛り（1〜16）で選ぶ</button>`)+skip('spd','速さは選ばない（次へ）')+back;
+     :`<div class="sa-grid tr-sa tr-3">${SPD_KEYS.filter(x=>isNaN(x)).map(x=>b('spd',x,SPD_JP[x],SPD_N[x])).join('')}</div><button class="btn sm ghost" data-act="trElec">電動リールの目盛り（1〜20）で選ぶ</button>`)+skip('spd','速さは選ばない（次へ）')+back;
   else if(d.sa==='maki'&&d.tn===undefined)h=head(3,'アタリの位置')+`<div class="sa-grid tr-sa tr-3">${TN_KEYS.map(x=>b('tn',x,TN_JP[x],TN_N[x])).join('')}</div>`+skip('tn','位置は選ばない（次へ）')+back;
   else if(k==='bite')return trRec();
   else h=head(n,'合わせ')+`<div class="sa-grid tr-sa">${KA_KEYS.map(x=>b('ka',x,KA_JP[x])).join('')}</div>`+skip('ka','合わせは選ばずに記録')+back;
@@ -137,7 +137,7 @@ function trRec(){const d=trD;if(!d)return;$('#sheet').hidden=true;sheetCtx=null;
     R("誘い（巻き／叩き × 誘い中／ステイ中）と掛け方（即掛け／深追い）を選んで記録します。",
       "アタリの出方（巻き／フォール）、巻きの速さ、アタリの位置、合わせ（あり／なし）を選んで記録します。")
     RX(r"<b>誘い</b>（[^）]*）と、<b>掛け方</b>（即掛け／深追い）を選んで記録します。[^<]*",
-       "<b>アタリの出方</b>（巻き／フォール）→ 巻きなら<b>速さ</b>（スロー0.5m/秒以下・中速1m/秒前後・高速1.5m/秒以上。電動リールは目盛り1〜16）と<b>アタリの位置</b>（巻き始め＝底から3mまで・3〜7m・7mより上）→ <b>合わせ</b>（あり／なし）の順に押して記録します。アタリのときは合わせは選びません（位置まで選んだら記録）。電動リールのときの速さは目盛り（1〜16）で選びます。")
+       "<b>アタリの出方</b>（巻き／フォール）→ 巻きなら<b>速さ</b>（スロー0.5m/秒以下・中速1m/秒前後・高速1.5m/秒以上。電動リールは目盛り1〜20）と<b>アタリの位置</b>（巻き始め＝底から3mまで・3〜7m・7mより上）→ <b>合わせ</b>（あり／なし）の順に押して記録します。アタリのときは合わせは選びません（位置まで選んだら記録）。電動リールのときの速さは目盛り（1〜20）で選びます。")
     s = s.replace('各記録の時刻に小さな札（上＝巻／叩、塗り＝誘い中・白抜き＝ステイ中、下＝即／深）', '各記録の時刻に小さな札（上＝速さ／フ、塗り＝巻き・白抜き＝フォール、下＝合わせ）')
     s = s.replace('誘い・掛け方', '出方・合わせ').replace('誘いと掛け方', '出方と合わせ').replace('誘いや掛け方', '出方や合わせ')
     left = [m.group(0) for m in re.finditer(r'.{0,30}(掛け方|叩き|即掛け|深追い|ステイ中).{0,30}', s)]
