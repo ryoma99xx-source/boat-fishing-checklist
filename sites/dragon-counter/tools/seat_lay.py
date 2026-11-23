@@ -29,7 +29,7 @@ def apply(s, default='one', one_label=('片舷流し', '（基本）'), both_lab
     R("<b>${esc(seatLabel({side:f.side,seat:f.seat,seats:f.seats}))}</b><span class=\"muted\">${f.side==='L'?'左':'右'}舷・前から${f.seat}番目／${f.people}人（片舷${f.seats}席）</span>",
       "<b>${esc(seatLabel({side:f.side,seat:f.seat,seats:f.seats,lay:f.lay}))}</b><span class=\"muted\">${f.lay==='one'?`片舷流し（${f.side==='L'?'左':'右'}舷）・前から${f.seat}番目／${f.people}人`:`${f.side==='L'?'左':'右'}舷・前から${f.seat}番目／${f.people}人（片舷${f.seats}席）`}</span>")
     R("for(const side of ['L','R'])for(let i=1;i<=n;i++){const y=side==='L'?34:96,", "for(const side of (f.lay==='one'?[f.side||'R']:['L','R']))for(let i=1;i<=n;i++){const y=side==='L'?34:96,")
-    R("for(const side of ['L','R'])for(let i=1;i<=n;i++){const x=side==='L'?xl:xr,", "for(const side of (tr.lay==='one'?[tr.side||'R']:['L','R']))for(let i=1;i<=n;i++){const x=side==='L'?xl:xr,")
+    R("for(const side of ['L','R'])for(let i=1;i<=sN(side);i++){const x=side==='L'?xl:xr,", "for(const side of (tr.lay==='one'?[tr.side||'R']:['L','R']))for(let i=1;i<=sN(side);i++){const x=side==='L'?xl:xr,")
     R('<text x="180" y="20" text-anchor="middle" font-size="12" style="fill:var(--muted)">左舷</text><text x="180" y="124" text-anchor="middle" font-size="12" style="fill:var(--muted)">右舷</text>',
       '${f.lay===\'one\'?`<text x="180" y="${f.side===\'L\'?20:124}" text-anchor="middle" font-size="12" style="fill:var(--muted)">${f.side===\'L\'?\'左\':\'右\'}舷（片舷流し）</text>`:\'<text x="180" y="20" text-anchor="middle" font-size="12" style="fill:var(--muted)">左舷</text><text x="180" y="124" text-anchor="middle" font-size="12" style="fill:var(--muted)">右舷</text>\'}')
     R('   <div class="seatwrap"><div id="seatPick">${seatPickerSVG(f)}</div>',

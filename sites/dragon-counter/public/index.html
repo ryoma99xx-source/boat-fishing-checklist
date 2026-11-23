@@ -2055,6 +2055,8 @@ function seatSVG(tr,sp){
   o.push(TX(W/2,54,title,{size:30,bold:1,anchor:'middle'}));o.push(TX(W/2,84,`${jdate(tr.date)}｜${tr.boat}${tr.port?'（'+tr.port+'）':''}`,{size:15,fill:P.muted,anchor:'middle'}));
   o.push(`<rect x="20" y="104" width="560" height="600" rx="18" fill="#eef4f6"/>`);o.push(TX(W/2,130,'船首を上にした座席図',{size:13,fill:P.muted,anchor:'middle'}));
   const cx=300,xl=222,xr=378,y0=272,y1=590,ys=i=>n<2?y0:y0+(i-1)*(y1-y0)/(n-1);
+  /* 両舷で乗船人数が奇数のときは、自分と反対の舷を1席少なく描く（11人なら自分の舷6・反対5） */
+  const sN=side=>tr.lay!=='one'&&(tr.people||n*2)%2===1&&side!==tr.side?Math.max(1,n-1):n,ysd=(side,i)=>{const m=sN(side);return m<2?y0:y0+(i-1)*(y1-y0)/(m-1)};
   o.push(TX(cx,160,'ミヨシ',{size:18,bold:1,fill:P.tide,anchor:'middle'}));
   o.push(`<path d="M${xl},612 L${xl},262 Q${xl},206 ${cx},172 Q${xr},206 ${xr},262 L${xr},612 Q${cx},632 ${xl},612 Z" fill="${P.hull}" stroke="${P.ink}" stroke-width="3"/>`);
   o.push(TX(cx,662,'トモ',{size:18,bold:1,fill:P.tide,anchor:'middle'}));o.push(TX(xl-40,240,'左舷',{size:14,fill:P.muted,anchor:'middle'}));o.push(TX(xr+40,240,'右舷',{size:14,fill:P.muted,anchor:'middle'}));
@@ -2074,11 +2076,11 @@ function seatSVG(tr,sp){
   if(st.length>1){const lx=R?30:398,mx=R?204:572;let ly=286;o.push(TX(lx,ly,'潮の向きの変化',{size:13,bold:1,fill:P.tide}));const maxRows=8;
     st.slice(0,maxRows).forEach(q=>{ly+=19;o.push(TX(lx,ly,`${hm(q.t)}〜${hm(q.te)}${hs.length>1?'・船首'+HEAD_JP[q.heading]:''}`,{size:11.5,fill:P.muted}));ly+=17;o.push(TX(lx,ly,clip(flowTxt(q),mx-lx,12),{size:12,bold:1}))});
     if(st.length>maxRows){ly+=19;o.push(TX(lx,ly,`ほか${st.length-maxRows}件は下の一覧`,{size:11.5,fill:P.muted}))}}
-  for(const side of ['L','R'])for(let i=1;i<=n;i++){const x=side==='L'?xl:xr,y=ys(i),me=tr.side===side&&tr.seat===i;
+  for(const side of ['L','R'])for(let i=1;i<=sN(side);i++){const x=side==='L'?xl:xr,y=ysd(side,i),me=tr.side===side&&tr.seat===i;
     o.push(me?`<circle cx="${x}" cy="${r1(y)}" r="13" fill="${P.catch}" stroke="#fff" stroke-width="3"/>`:`<circle cx="${x}" cy="${r1(y)}" r="6.5" fill="${P.seatOff}"/>`)}
   /* ほかの席の本命（👥ほかの席で記録した分）。紫の丸に数 */
   {const on=othOf(tr).filter(q=>q.sp===s.name),m={};on.forEach(q=>{const k=q.side+q.seat;m[k]=(m[k]||0)+1});
-   for(const k in m){const side=k[0],i=+k.slice(1);if(i<1||i>n||(tr.side===side&&tr.seat===i))continue;const x=side==='L'?xl:xr,yy=ys(i);
+   for(const k in m){const side=k[0],i=+k.slice(1);if(i<1||i>sN(side)||(tr.side===side&&tr.seat===i))continue;const x=side==='L'?xl:xr,yy=ysd(side,i);
      o.push(`<circle cx="${x}" cy="${r1(yy)}" r="13" fill="#6a58b3" stroke="#fff" stroke-width="2.5"/>`+TX(x,yy+5,String(m[k]),{size:14,bold:1,fill:'#fff',anchor:'middle'}))}
    if(on.length)o.push(TX(W/2,716,`紫の丸＝ほかの席で釣れた${s.name}（記録した分・計${on.length}${s.unit}）`,{size:13,fill:P.muted,anchor:'middle'}))}
   {const y=ys(tr.seat),R=tr.side==='R',x=R?xr+28:xl-28,an=R?'start':'end';o.push(TX(x,y-12,seatShort(tr),{size:17,bold:1,anchor:an}));o.push(TX(x,y+32,`${N}${s.unit}`,{size:42,bold:1,fill:P.catch,anchor:an}));
