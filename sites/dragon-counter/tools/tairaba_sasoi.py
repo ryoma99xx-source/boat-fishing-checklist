@@ -2,7 +2,7 @@
 
   出方　　：巻き／フォール                                   （e.sa = 'maki' | 'fall'）
   巻きの速さ：スロー（0.5m/秒以下）／中速（1m/秒前後）／高速（1.5m/秒以上）
-            使っているリールが電動なら 1〜16 の目盛り           （e.spd = 'slow'|'mid'|'fast'|'1'..'16'）
+            使っているリールが電動なら 1〜16 の目盛りだけ（オーナー指示 2026-11-23）          （e.spd = 'slow'|'mid'|'fast'|'1'..'16'）
   アタリの位置：巻き始め（底から3mまで）／3〜7m／7mより上　※巻きのときだけ（e.tn = 'lo'|'mid'|'hi'）
   合わせ　：あり／なし                                       （e.ka = 'awase' | 'none'）
 釣れた・アタリ・バラシのどれも同じ。どれも選ばずに記録することもできる。
@@ -57,7 +57,9 @@ def apply(s):
 
     # 記録の流れ：出方 → （巻きなら）速さ → 位置 → 合わせ。1枚ずつ押して進む
     RX(r"function openKake\(kind,sa\)\{.*?\nfunction openSasoi\(kind\)\{.*?\{kind:'sasoi'\}\)\}\n",
-       lambda m: r"""function trElec(){const tr=active(),st=tr&&tr.tk&&tr.tk.cur?setOf(tr.tk.cur):null,q=st?tkItem(st.reel):null;return !!(q&&q.kind==='electric')}
+       lambda m: r"""function tkElec(id){const st=id?setOf(id):null,q=st?tkItem(st.reel):null;return !!(q&&q.kind==='electric')}
+function trElec(){const tr=active();return tkElec(tr&&tr.tk&&tr.tk.cur)}
+function evElec(f){const tr=S.trips[f.tid],e=tr&&tr.events.find(x=>x.id===f.id);return tkElec(e&&e.tk)}
 let trD=null;
 function openSasoi(kind){const tr=active();if(!tr)return;trD={kind,elec:trElec()};trStep()}
 function trStep(){const d=trD,k=d.kind,L=S.ui.lastTr||{},n=d.sa==='maki'?4:d.sa?2:0;
@@ -68,7 +70,7 @@ function trStep(){const d=trD,k=d.kind,L=S.ui.lastTr||{},n=d.sa==='maki'?4:d.sa?
   let h;
   if(d.sa===undefined)h=head(1,'アタリの出方')+`<div class="sa-grid tr-sa">${b('sa','maki','巻き')}${b('sa','fall','フォール')}</div>`+`<button class="btn" data-act="trDone">選ばずに記録</button>`;
   else if(d.sa==='maki'&&d.spd===undefined)h=head(2,'巻きの速さ')+(d.elec
-     ?`<div class="sa-grid tr-el">${SPD_KEYS.filter(x=>!isNaN(x)).map(x=>b('spd',x,x)).join('')}</div><p class="muted">電動リールの速さの目盛り</p><button class="btn sm ghost" data-act="trElec">手巻きの3段階で選ぶ</button>`
+     ?`<div class="sa-grid tr-el">${SPD_KEYS.filter(x=>!isNaN(x)).map(x=>b('spd',x,x)).join('')}</div><p class="muted">電動リールの速さの目盛り（使っているリールが電動のため、数字で選びます）</p>`
      :`<div class="sa-grid tr-sa tr-3">${SPD_KEYS.filter(x=>isNaN(x)).map(x=>b('spd',x,SPD_JP[x],SPD_N[x])).join('')}</div><button class="btn sm ghost" data-act="trElec">電動リールの目盛り（1〜16）で選ぶ</button>`)+skip('spd','速さは選ばない（次へ）')+back;
   else if(d.sa==='maki'&&d.tn===undefined)h=head(3,'アタリの位置')+`<div class="sa-grid tr-sa tr-3">${TN_KEYS.map(x=>b('tn',x,TN_JP[x],TN_N[x])).join('')}</div>`+skip('tn','位置は選ばない（次へ）')+back;
   else h=head(n,'合わせ')+`<div class="sa-grid tr-sa">${KA_KEYS.map(x=>b('ka',x,KA_JP[x])).join('')}</div>`+skip('ka','合わせは選ばずに記録')+back;
@@ -93,7 +95,7 @@ function trRec(){const d=trD;if(!d)return;$('#sheet').hidden=true;sheetCtx=null;
     # 記録を直す画面
     RX(r"\$\{false\?`<div class=\"field\"><span>誘い</span>.*?`:''\}`:''\}\n",
        lambda m: "${f.kind!=='gedo'?`<div class=\"field\"><span>アタリの出方</span><div class=\"chips wrap\">${['',...Object.keys(SA_JP)].map(k=>`<button class=\"chip ${f.sa===k?'on':''}\" data-act=\"evSa\" data-d=\"${k}\">${k?SA_JP[k]:'なし'}</button>`).join('')}</div></div>"
-                 "${f.sa==='maki'?`<div class=\"field\"><span>巻きの速さ</span><div class=\"chips wrap\">${['',...SPD_KEYS].map(k=>`<button class=\"chip ${(f.spd||'')===k?'on':''}\" data-act=\"evX\" data-f=\"spd\" data-d=\"${k}\">${k?(isNaN(k)?SPD_JP[k]:k):'なし'}</button>`).join('')}</div><small class=\"muted\">数字は電動リールの目盛り</small></div>"
+                 "${f.sa==='maki'?`<div class=\"field\"><span>巻きの速さ</span><div class=\"chips wrap\">${['',...SPD_KEYS.filter(k=>!evElec(f)||!isNaN(k)||(f.spd||'')===k)].map(k=>`<button class=\"chip ${(f.spd||'')===k?'on':''}\" data-act=\"evX\" data-f=\"spd\" data-d=\"${k}\">${k?(isNaN(k)?SPD_JP[k]:k):'なし'}</button>`).join('')}</div><small class=\"muted\">${evElec(f)?'電動リールの目盛りで選びます':'数字は電動リールの目盛り'}</small></div>"
                  "<div class=\"field\"><span>アタリの位置（底から）</span><div class=\"chips wrap\">${['',...TN_KEYS].map(k=>`<button class=\"chip ${(f.tn||'')===k?'on':''}\" data-act=\"evX\" data-f=\"tn\" data-d=\"${k}\">${k?TN_JP[k]:'なし'}</button>`).join('')}</div></div>`:''}"
                  "<div class=\"field\"><span>合わせ</span><div class=\"chips wrap\">${['',...KA_KEYS].map(k=>`<button class=\"chip ${f.ka===k?'on':''}\" data-act=\"evKa\" data-d=\"${k}\">${k?KA_JP[k]:'なし'}</button>`).join('')}</div></div>`:''}\n",
        flags=re.S)
