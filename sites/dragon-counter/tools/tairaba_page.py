@@ -31,7 +31,8 @@ PAGES = {'head': ('tairaba-catalog', HOST + '/tairaba-catalog/'), 'tie': ('taira
 AOUT = {'head': os.path.join(REPO, 'wordpress', 'tairaba-head-catalog'), 'tie': os.path.join(REPO, 'wordpress', 'tairaba-tie-catalog')}
 POSTS = os.path.join(REPO, 'wordpress', 'tairaba-catalog-posts.json')   # 記事の ID とアイキャッチ {kind: {post_id, sha256, media_id}}
 BTN = 'display:inline-block;font-size:14px;font-weight:700;padding:8px 14px;border-radius:8px;text-decoration:none;margin:0 6px 6px 0'
-NOLINK = {'フリマアプリ系'}   # 店のリンクを付けないメーカー（決まった商品名がない）
+NOLINK = {'フリマアプリ系'}
+LAST = ['シマノ']   # ページ・記事でいちばん下に置くメーカー   # 店のリンクを付けないメーカー（決まった商品名がない）
 CAT_ART = {'head': 'https://cutlassfish.tokyo/article/tairaba-head-catalog/', 'tie': 'https://cutlassfish.tokyo/article/tairaba-tie-catalog/'}
 
 
@@ -61,6 +62,9 @@ def load():
                 q = T.norm_q(' '.join([m, p, c] + info + ['%sg' % zs(x) for x in w]))
                 cols.append({'c': c, 'img': im['id'] if im else '', 'q': q, 'z': ' '.join(zs(x) for x in w)})
             plist.append({'m': m, 'p': p, 'u': r.get('u', ''), 'tg': r.get('mat') == 'TG', 'w': w, 'wt': wt, 'info': info, 'cols': cols})
+        # 写真のない色が多いシマノは、ページ・記事ではいちばん下（オーナー指示 2026-11-23。アプリの順は変えない）
+        makers = [m for m in makers if m not in LAST] + [m for m in LAST if m in makers]
+        plist.sort(key=lambda r: makers.index(r['m']))
         out[kind] = (plist, makers)
     return cat.get('v', ''), out
 
