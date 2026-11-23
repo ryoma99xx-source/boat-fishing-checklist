@@ -12,6 +12,15 @@
    "modifications": []
   },
   {
+   "path": "/shio-grid.json",
+   "file": "shio-grid.json",
+   "content_type": "application/json; charset=utf-8",
+   "bytes": 668188,
+   "sha256": "4a389adf6553c291ddb10b237e65ce4ada704fe49352b123c986956bae26aca5",
+   "found_by": "added 2026-11-23 (tools/shio_grid.py: SHIO tide-current model sampled for the counters)",
+   "modifications": []
+  },
+  {
    "path": "/favicon.png",
    "file": "favicon.png",
    "content_type": "image/png",
@@ -51,8 +60,8 @@
    "path": "/",
    "file": "index.html",
    "content_type": "text/html; charset=utf-8",
-   "bytes": 598249,
-   "sha256": "99c9076c8f37dcd775fe7df5350b085ec313a1564b51872acf2faaa2d82162b0",
+   "bytes": 603683,
+   "sha256": "9752b998d9bb8ccefc01dbeb3e5d44e69ded0a561c0d3e454f8f79f25e98bae9",
    "found_by": "release zip",
    "modifications": [
     "「はじめに表示した5ステップの説明」→「6ステップ」（実際の案内は6ステップ。オーナー指示 2026-11-04）"
@@ -89,8 +98,8 @@
    "path": "/sw.js",
    "file": "sw.js",
    "content_type": "application/javascript; charset=utf-8",
-   "bytes": 2802,
-   "sha256": "15352efbd092460b78017aec848107ebc2121cc93dd031bf748b6b51a0892694",
+   "bytes": 3107,
+   "sha256": "508c0132d308ddf42993e7917c9c8bf0558ea87a71a7d72b9e2c0d6e6f9f67b6",
    "found_by": "release zip",
    "modifications": []
   },

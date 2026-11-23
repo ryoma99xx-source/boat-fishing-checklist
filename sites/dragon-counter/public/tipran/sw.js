@@ -10,6 +10,7 @@ async function netFirst(req,key){const c=await caches.open(VER);try{const res=aw
 self.addEventListener('fetch',e=>{
   const req=e.request;if(req.method!=='GET')return;const url=new URL(req.url);
   if(req.mode==='navigate'){if(url.pathname.startsWith('/tipran/'))e.respondWith(netFirst(req,PAGE));return}
+  if(url.origin===location.origin&&url.pathname==='/shio-grid.json'){e.respondWith(caches.open(VER).then(async c=>{const hit=await c.match('/shio-grid.json');const net=fetch(req).then(r=>{if(r&&r.ok)c.put('/shio-grid.json',r.clone());return r}).catch(()=>hit||Response.error());return hit||net}));return}
   if(url.origin===location.origin&&url.pathname===EXTRA){e.respondWith(netFirst(req,EXTRA));return}
   /* エギの写真：見たものだけ端末に残す（海の上でも出る）。裏で新しいものに入れ替える */
   const swr=name=>e.respondWith((async()=>{const c=await caches.open(name);const hit=await c.match(req);

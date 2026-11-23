@@ -1361,7 +1361,7 @@ function floodDir(tr){const ll=trLL(tr);if(!ll||!inTokyoBay(ll[0],ll[1]))return 
   const b=(Math.atan2(dx,dy)*180/Math.PI+360)%360;return DIRS[Math.round(b/45)%8]}
 /* 東京湾の外：潮の向きと速さは Open-Meteo の海流（潮流を含む）を1時間ごとに使い、上げ／下げは近くの潮位地点から判断する */
 const offBay=tr=>{const ll=trLL(tr);return !!ll&&!inTokyoBay(ll[0],ll[1])};
-const canAutoFlow=tr=>!!(tr.station&&TIDE.st[tr.station]&&(floodDir(tr)||offBay(tr)));
+const canAutoFlow=tr=>!!(tr.station&&TIDE.st[tr.station]&&(floodDir(tr)||offBay(tr)))||inShioBox(posAt(tr,tr.start||Date.now()));
 function ocurAt(tr,t){const o=tr.ocur;if(!o||o.date!==tr.date||!o.h)return null;const i=Math.round((t-o.t0)/3600e3);const q=o.h[Math.max(0,Math.min(o.h.length-1,i))];return q&&q[0]!=null&&q[1]!=null?q:null}
 const ocurBusy=new Set(),ocurTried={};
 function ocurEnsure(tr){if(!tr||tr.sample||!offBay(tr)||!tr.date||ocurBusy.has(tr.id))return;if(tr.ocur&&tr.ocur.date===tr.date)return;if(Date.now()-(ocurTried[tr.id]||0)<10*60e3)return;
@@ -1371,7 +1371,52 @@ function ocurEnsure(tr){if(!tr||tr.sample||!offBay(tr)||!tr.date||ocurBusy.has(t
     const k=u.includes('m/s')?1.94384:u.includes('kn')?1:1/1.852;const v=d.hourly.ocean_current_velocity||[],dr=d.hourly.ocean_current_direction||[];
     if(!v.some(x=>x!=null))return;t.ocur={date:t.date,t0:new Date(d.hourly.time[0]+':00+09:00').getTime(),h:v.map((x,i)=>[dr[i],x==null?null:Math.round(x*k*100)/100])};touch(t);if($('#sheet').hidden)render()})
    .catch(()=>ocurBusy.delete(tr.id))}
-function tideCur(tr,t){if(!canAutoFlow(tr))return null;const r=(tideH(tr.station,t+10*60e3)-tideH(tr.station,t-10*60e3))*3; // cm/時
+/* ---------- SHIO（東京湾の潮と流れ）の自作潮汐モデル：記録した位置ごとの潮流 ----------
+   /shio-grid.json（tools/shio_grid.py で SHIOM の調和定数を約1km・横須賀〜中ノ瀬は約500mに間引いたもの）を読み、
+   その時刻にいちばん近い GPS の記録（釣れた・アタリ・バラシ・📍）の位置で、流れの向きと流速を計算する。
+   GPS が無いときだけ釣り場の位置。範囲外・読み込み前は、これまでの計算（湾内の簡易計算／Open-Meteo）を使う。 */
+let SHIOM=null,shioState='',shioFail=0;
+function shioLoad(){if(SHIOM||shioState==='busy'||(shioState==='fail'&&Date.now()-shioFail<60e3))return;shioState='busy';
+  fetch('/shio-grid.json').then(r=>r.ok?r.json():null).then(j=>{if(!j){shioState='fail';shioFail=Date.now();return}
+    const dec=b=>{const x=atob(b),u=new Uint8Array(x.length);for(let i=0;i<x.length;i++)u[i]=x.charCodeAt(i);return u};
+    const prep=g=>{const m=dec(g.mask),c=dec(g.coef),idx=new Int32Array(g.nx*g.ny).fill(-1);let k=0;for(let i=0;i<m.length;i++)if(m[i])idx[i]=k++;
+      return {lat0:g.lat0,lon0:g.lon0,dlat:g.dlat,dlon:g.dlon,nx:g.nx,ny:g.ny,idx,co:new Int16Array(c.buffer,0,c.length>>1)}};
+    SHIOM={meta:j,G:[j.fine?prep(j.fine):null,prep(j)].filter(Boolean)};shioState='ok';try{render()}catch(e){}}).catch(()=>{shioState='fail';shioFail=Date.now()})}
+setTimeout(()=>{try{shioLoad()}catch(e){}},3000); // 電波のあるうちに読んでおく（スマホに保存され、沖でも使える）
+function shioCell(lat,lon){if(!SHIOM)return null;
+  for(const g of SHIOM.G){const fx=(lon-g.lon0)/g.dlon,fy=(lat-g.lat0)/g.dlat;if(fx<-.5||fy<-.5||fx>g.nx-.5||fy>g.ny-.5)continue;
+    const ix=Math.round(fx),iy=Math.round(fy);let best=-1,bd=9;
+    for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const x=ix+dx,y=iy+dy;if(x<0||y<0||x>=g.nx||y>=g.ny)continue;const i=g.idx[y*g.nx+x];if(i<0)continue;const d=(x-fx)*(x-fx)+(y-fy)*(y-fy);if(d<bd){bd=d;best=i}}
+    if(best>=0)return {g,i:best}}
+  return null}
+function shioFac(ms){const M=SHIOM.meta,R=Math.PI/180,t=(ms-Date.UTC(2000,0,1,12))/3600e3,T=t/(24*36525);
+  const s=218.3164477+481267.88123421*T,h=280.46646+36000.76983*T,p=83.3532465+4069.0137287*T,N=125.04452-1934.136261*T,p1=282.93735+1.71946*T,ut=(((t+12)%24)+24)%24;
+  const a=[15*ut+180+h-s,s,h,p,-N,p1],n=N*R,c=Math.cos,sn=Math.sin;
+  const nod=f=>{switch(f){case 'one':return [1,0];case 'M2':return [1.0004-.0373*c(n)+.0002*c(2*n),-2.14*sn(n)];
+    case 'O1':return [1.0089+.1871*c(n)-.0147*c(2*n)+.0014*c(3*n),10.8*sn(n)-1.34*sn(2*n)+.19*sn(3*n)];
+    case 'K1':return [1.0060+.1150*c(n)-.0088*c(2*n)+.0006*c(3*n),-8.86*sn(n)+.68*sn(2*n)-.07*sn(3*n)];
+    case 'K2':return [1.0241+.2863*c(n)+.0083*c(2*n)-.0015*c(3*n),-17.74*sn(n)+.68*sn(2*n)-.04*sn(3*n)];
+    case 'J1':return [1.0129+.1676*c(n)-.0170*c(2*n)+.0016*c(3*n),-12.94*sn(n)+1.34*sn(2*n)-.19*sn(3*n)];
+    case 'OO1':return [1.1027+.6504*c(n)+.0317*c(2*n)-.0014*c(3*n),-36.68*sn(n)+4.02*sn(2*n)-.57*sn(3*n)];
+    case 'Mm':return [1-.13*c(n)+.0013*c(2*n),0]}
+    const [fm,um]=nod('M2');if(f==='M4')return [fm*fm,2*um];if(f==='M6')return [fm**3,3*um];if(f==='M3')return [fm**1.5,1.5*um];
+    if(f==='MK3'){const [fk,uk]=nod('K1');return [fm*fk,um+uk]}return [1,0]};
+  return M.constituents.map((_,j)=>{const d=M.doodson[j];let V=M.phaseOffsetDeg[j];for(let k=0;k<6;k++)V+=d[k]*a[k];const [f,u]=nod(M.nodal[j]);const g=(V+u)*R;return [f*Math.cos(g),f*Math.sin(g)]})}
+/* 流れ（m/s の東向き u・北向き v）。範囲外は null */
+function shioUV(lat,lon,ms){const q=shioCell(lat,lon);if(!q)return null;const F=shioFac(ms),st=SHIOM.meta.stride,o=q.i*st,C=q.g.co;let u=C[o],v=C[o+1];
+  for(let j=0;j<F.length;j++){const k=o+2+4*j;u+=C[k]*F[j][0]+C[k+1]*F[j][1];v+=C[k+2]*F[j][0]+C[k+3]*F[j][1]}return [u/1000,v/1000]}
+/* その時刻にいちばん近い GPS の記録の位置（前後90分まで）。無ければ釣り場 */
+function posAt(tr,t){let best=null,bd=90*60e3;
+  const P=(tr.events||[]).filter(e=>isFinite(e.lat)&&isFinite(e.lon)).concat((tr.points||[]).filter(p=>isFinite(p.lat)&&isFinite(p.lon)));
+  for(const p of P){const d=Math.abs(p.t-t);if(d<=bd){bd=d;best=p}}
+  return best?[best.lat,best.lon,'gps']:(()=>{const ll=trLL(tr);return ll?[ll[0],ll[1],'spot']:null})()}
+function shioCur(tr,t){const ll=posAt(tr,t);if(!ll)return null;if(!SHIOM){if(inShioBox(ll))shioLoad();return null}
+  const uv=shioUV(ll[0],ll[1],t);if(!uv)return null;const kn=Math.hypot(uv[0],uv[1])*1.94384,b=(Math.atan2(uv[0],uv[1])*180/Math.PI+360)%360;
+  const r=tr.station&&TIDE.st[tr.station]?(tideH(tr.station,t+10*60e3)-tideH(tr.station,t-10*60e3))*3:0;
+  return {abs:DIRS[Math.round(b/45)%8],phase:kn<0.1?'止まり':r>0?'上げ潮':r<0?'下げ潮':'',speed:kn<0.1?'':kn<0.4?'slow':kn<0.9?'normal':'fast',rate:r,kn,deg:Math.round(b),src:'shio',pos:ll[2]}}
+const inShioBox=ll=>!!ll&&ll[0]>34.9&&ll[0]<35.75&&ll[1]>139.43&&ll[1]<140.2;
+const usesShio=tr=>{const t0=tr.start||Date.now(),t1=tr.end||Date.now();for(let t=t0;t<=t1;t+=30*60e3){const c=shioCur(tr,t);if(c)return true}return false};
+function tideCur(tr,t){{const sh=shioCur(tr,t);if(sh)return sh}if(!canAutoFlow(tr))return null;const r=(tideH(tr.station,t+10*60e3)-tideH(tr.station,t-10*60e3))*3; // cm/時
   if(!floodDir(tr)){const q=ocurAt(tr,t);if(!q)return null;const kn=q[1],abs=DIRS[Math.round(((q[0]%360)+360)%360/45)%8];
     return {abs,phase:kn<0.2?'止まり':r>0?'上げ潮':'下げ潮',speed:kn<0.2?'':kn<0.5?'slow':kn<1?'normal':'fast',rate:r,kn,src:'om'}}
   const a=Math.abs(r);const abs=r>0?floodDir(tr):OPP(floodDir(tr));
@@ -2045,7 +2090,7 @@ function timelineSVG(tr,sp){
   o.push(`<rect x="${lx}" y="${y-9}" width="20" height="8" rx="4" fill="${P.slow}"/><rect x="${lx+22}" y="${y-9}" width="20" height="8" rx="4" fill="${P.normal}"/><rect x="${lx+44}" y="${y-9}" width="20" height="8" rx="4" fill="${P.fast}"/>`+TX(lx+72,y,'潮の速さ（緩い・普通・速い）',{size:12,fill:P.muted}));
   if(dv.length){y+=22;o.push(`<rect x="24" y="${y-12}" width="16" height="16" rx="3" fill="${P.catch}"/>`+TX(32,y+1,'中',{size:10,bold:1,fill:'#fff',anchor:'middle'})+TX(46,y,'巻き（塗り）',{size:12,fill:P.muted})+`<rect x="150" y="${y-12}" width="16" height="16" rx="3" fill="#fff" stroke="${P.catch}" stroke-width="1.6"/>`+TX(158,y+1,'フ',{size:10,bold:1,fill:P.catch,anchor:'middle'})+TX(172,y,'フォール（白抜き）　枠の色＝釣れた／アタリ／バラシ',{size:12,fill:P.muted}));y+=20;o.push(TX(24,y,'上：ス＝スロー　中＝中速　高＝高速　数字＝電動の目盛り　下：合＝合わせあり　無＝なし',{size:12,fill:P.muted}))}
   y+=22;o.push(TX(24,y,tr.station?`※潮位は気象庁の潮位表（${stName(tr.station)}）をもとに計算した推算値です。潮の向きは船首を上にしたときの、潮が流れていく向きです。`:'※潮位は満潮・干潮の時刻と潮位から補間した概形です。潮の向きは船首を上にしたときの、潮が流れていく向きです。',{size:11,fill:P.muted}));
-  if(tr.station&&offBay(tr)){y+=20;o.push(TX(24,y,'※東京湾の外では、潮の向きと速さを Open-Meteo の海流データ（約8km四方の推算値）から出しています。',{size:11,fill:P.muted}))}
+  if(usesShio(tr)){y+=20;o.push(TX(24,y,'※潮の向き・速さ：SHIO（東京湾の潮と流れ）の潮汐モデルで、記録した位置ごとに計算（風・二枚潮は含まず）',{size:11,fill:P.muted}))}else if(tr.station&&offBay(tr)){y+=20;o.push(TX(24,y,'※東京湾の外では、潮の向きと速さを Open-Meteo の海流データ（約8km四方の推算値）から出しています。',{size:11,fill:P.muted}))}
   y+=18;o.push(TX(24,y,'※枚数は自分の席で釣れた分だけです。',{size:11,fill:P.muted}));const Ht=y+20;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}" font-family="${CF}" role="img" aria-label="${esc(tlTitle(tr,sp))}"><rect width="${W}" height="${Ht}" rx="16" fill="${P.card}"/>${under.join('')}${dgDefs(o)}${o.join('')}</svg>`}
 function sizeBins(sp,vals){const u=spOf(sp).sizeUnit,m={},ord=[];const add=k=>{if(!(k in m)){m[k]=0;ord.push(k)}m[k]++};

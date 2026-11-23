@@ -10,6 +10,7 @@ async function netFirst(req,key){const c=await caches.open(VER);try{const res=aw
 self.addEventListener('fetch',e=>{
   const req=e.request;if(req.method!=='GET')return;const url=new URL(req.url);
   if(req.mode==='navigate'){if(url.pathname.startsWith('/tairaba/'))e.respondWith(netFirst(req,PAGE));return}
+  if(url.origin===location.origin&&url.pathname==='/shio-grid.json'){e.respondWith(caches.open(VER).then(async c=>{const hit=await c.match('/shio-grid.json');const net=fetch(req).then(r=>{if(r&&r.ok)c.put('/shio-grid.json',r.clone());return r}).catch(()=>hit||Response.error());return hit||net}));return}
   if(url.origin===location.origin&&url.pathname===EXTRA){e.respondWith(netFirst(req,EXTRA));return}
   if(url.hostname==='fonts.googleapis.com'||url.hostname==='fonts.gstatic.com'){
     e.respondWith((async()=>{const c=await caches.open('tairaba-fonts');const hit=await c.match(req);
