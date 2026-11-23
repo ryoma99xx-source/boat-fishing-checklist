@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Dragon Counter Data
  * Description: ドラゴンカウンター（TOOL 05）・ティップランカウンター・タイラバカウンターから匿名で届いた釣果データを、管理画面（ツール → ドラゴンカウンターのデータ）でダッシュボード・一覧・ダウンロード・削除します。上のタブでアプリを切り替えます。データはサーバーの .data/trips/（ティップランは tipran/.data/trips/、タイラバは tairaba/.data/trips/）にあるものを読むだけで、外には出しません。
- * Version: 1.5.2
+ * Version: 1.6.0
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -191,7 +191,7 @@ final class DCD_Admin {
         echo '</h2>';
         if ($isDl) { self::downloads($dir); echo '</div>'; return; }
         if ($notice) echo '<div class="notice notice-info is-dismissible"><p>' . esc_html($notice) . '</p></div>';
-        echo '<p class="description">' . esc_html(self::A('name')) . 'で「沖上がり」まで記録された釣行が、匿名（名前・メモなし）で届いたものです。アプリで釣行を消しても、ここには残ります。テストの釣行などは「消す」で取り除けます。</p>';
+        echo '<p class="description">' . esc_html(self::A('name')) . 'で「沖上がり」まで記録された釣行が、匿名（名前・メモなし）で届いたものです。アプリで釣行を消しても、ここには残ります。テストの釣行などは「一覧」で選んで消せます。</p>';
         if (!$dir && self::$app !== 'dc') { echo '<p>まだ届いていません（データの置き場所 <code>tipran/.data/trips</code> がまだできていません）。</p></div>'; return; }
         if (!$dir) {
             echo '<div class="notice notice-warning"><p>データの置き場所が見つかりませんでした。ドラゴンカウンターの公開フォルダの中の <code>.data/trips</code> の場所（サーバー上のフルパス）を入れてください。WordPress と別のサーバーアカウントにある場合は読めません。</p></div>';
@@ -212,17 +212,26 @@ final class DCD_Admin {
         echo '<p>届いた釣行：<strong>' . count($rows) . '件</strong>（' . esc_html(self::A('fish') . ' ' . (int)$sum['catch'] . self::A('unit') . '・' . self::A('big') . ' ' . (int)$sum['dragon'] . self::A('unit')) . '）';
         echo '　<a class="button" href="' . esc_url(wp_nonce_url(admin_url('admin-post.php?action=dcd_download&fmt=csv&app=' . self::$app), 'dcd_download')) . '">CSVでダウンロード</a> ';
         echo '<a class="button" href="' . esc_url(wp_nonce_url(admin_url('admin-post.php?action=dcd_download&fmt=json&app=' . self::$app), 'dcd_download')) . '">JSON（全項目）でダウンロード</a></p>';
-        echo '<div style="overflow-x:auto"><table class="widefat striped" style="min-width:1100px"><thead><tr>';
+        // 選んでまとめて消す（オーナー指示 2026-11-24）。行ごとの「消す」も同じフォームで送る
+        echo '<form id="dcd-del" method="post" action="' . esc_url(admin_url('admin-post.php')) . '" onsubmit="var n=this.querySelectorAll(\'input[name=&quot;uids[]&quot;]:checked\').length;var one=this.dataset.one;this.dataset.one=\'\';return confirm((one?\'この釣行\':n+\'件の釣行\')+\'のデータを消しますか？（元に戻せません）\')">';
+        wp_nonce_field('dcd_delete'); echo '<input type="hidden" name="action" value="dcd_delete"><input type="hidden" name="app" value="' . esc_attr(self::$app) . '">';
+        $bulk = '<p><button class="button button-primary dcd-bulk" disabled>選んだ釣行を消す（<span class="dcd-n">0</span>件）</button></p>';
+        if ($rows) echo $bulk;
+        echo '<div style="overflow-x:auto"><table class="widefat striped" style="min-width:1100px"><thead><tr><th style="width:2em"><input type="checkbox" class="dcd-all" aria-label="すべて選ぶ"></th>';
         foreach (['届いた日時', '釣行日', '釣り場', '船・席', '時間', '潮', '記録', '釣れた', self::A('big'), 'アタリ', 'バラシ', '外道', '天気', 'タックル', '場所記録', ''] as $h) echo '<th>' . esc_html($h) . '</th>';
         echo '</tr></thead><tbody>';
         foreach ($rows as $r) {
-            echo '<tr><td>' . esc_html($r['received']) . '</td><td>' . esc_html($r['date']) . '</td><td>' . esc_html($r['spot']) . '</td><td>' . esc_html($r['boat'] . ' ' . $r['seat']) . '</td><td>' . esc_html($r['time']) . '</td><td>' . esc_html($r['tide']) . '</td><td>' . esc_html($r['mode']) . '</td>';
+            echo '<tr><td><input type="checkbox" name="uids[]" value="' . esc_attr($r['uid']) . '" aria-label="選ぶ"></td><td>' . esc_html($r['received']) . '</td><td>' . esc_html($r['date']) . '</td><td>' . esc_html($r['spot']) . '</td><td>' . esc_html($r['boat'] . ' ' . $r['seat']) . '</td><td>' . esc_html($r['time']) . '</td><td>' . esc_html($r['tide']) . '</td><td>' . esc_html($r['mode']) . '</td>';
             echo '<td><strong>' . (int)$r['catch'] . '</strong></td><td>' . (int)$r['dragon'] . (self::$app === 'tipran' && $r['gmax'] ? '<br><small>最大 ' . esc_html(round($r['gmax'])) . 'g</small>' : '') . '</td><td>' . (int)$r['bite'] . '</td><td>' . (int)$r['lost'] . '</td><td>' . (int)$r['gedo'] . '</td><td>' . esc_html($r['wx']) . '</td><td style="max-width:260px">' . esc_html($r['tackle']) . '</td><td>' . ($r['points'] ? (int)$r['points'] . '点' : '') . '</td>';
-            echo '<td><form method="post" action="' . esc_url(admin_url('admin-post.php')) . '" onsubmit="return confirm(\'この釣行のデータを消しますか？（元に戻せません）\')">';
-            wp_nonce_field('dcd_delete'); echo '<input type="hidden" name="action" value="dcd_delete"><input type="hidden" name="app" value="' . esc_attr(self::$app) . '"><input type="hidden" name="uid" value="' . esc_attr($r['uid']) . '"><button class="button button-small">消す</button></form></td></tr>';
+            echo '<td><button class="button button-small" name="uid" value="' . esc_attr($r['uid']) . '" onclick="this.form.dataset.one=1">消す</button></td></tr>';
         }
-        if (!$rows) echo '<tr><td colspan="16">まだ届いていません。</td></tr>';
+        if (!$rows) echo '<tr><td colspan="17">まだ届いていません。</td></tr>';
         echo '</tbody></table></div>';
+        if ($rows) echo $bulk;
+        echo '</form><script>(function(){var f=document.getElementById("dcd-del");if(!f)return;var bx=function(){return f.querySelectorAll(\'input[name="uids[]"]\')};'
+            . 'var up=function(){var n=f.querySelectorAll(\'input[name="uids[]"]:checked\').length;f.querySelectorAll(".dcd-n").forEach(function(e){e.textContent=n});f.querySelectorAll(".dcd-bulk").forEach(function(b){b.disabled=!n})};'
+            . 'f.addEventListener("change",function(e){if(e.target.classList.contains("dcd-all"))bx().forEach(function(c){c.checked=e.target.checked});up()});'
+            . 'up()})();</script>';
         echo '<p class="description">置き場所：<code>' . esc_html($dir) . '</code></p>';
         if (self::$app === 'dc') self::dir_form($dir);
         echo '</div>';
@@ -283,11 +292,14 @@ final class DCD_Admin {
         if (!current_user_can('manage_options')) wp_die('権限がありません。');
         check_admin_referer('dcd_delete');
         self::pick_app();
-        $uid = sanitize_text_field(wp_unslash($_POST['uid'] ?? ''));
         $dir = self::dir();
-        if (!$dir || !preg_match('/^[a-z0-9]{8,40}$/', $uid)) self::back('消せませんでした。');
-        $f = $dir . '/' . $uid . '.json';
-        self::back(is_file($f) && @unlink($f) ? '1件消しました。' : '消せませんでした（書き込みの権限が無い可能性があります）。');
+        // 行の「消す」なら uid の1件、まとめて消すなら uids[] で選んだもの
+        $one = sanitize_text_field(wp_unslash($_POST['uid'] ?? ''));
+        $ids = $one !== '' ? [$one] : array_map(function ($x) { return sanitize_text_field(wp_unslash($x)); }, (array)($_POST['uids'] ?? []));
+        $ids = array_values(array_unique(array_filter($ids, function ($u) { return preg_match('/^[a-z0-9]{8,40}$/', $u); })));
+        if (!$dir || !$ids) self::back('消せませんでした（選ばれていません）。');
+        $ok = 0; foreach ($ids as $u) { $f = $dir . '/' . $u . '.json'; if (is_file($f) && @unlink($f)) $ok++; }
+        self::back($ok === count($ids) ? $ok . '件消しました。' : $ok . '件消しました（' . (count($ids) - $ok) . '件は消せませんでした。書き込みの権限が無い可能性があります）。');
     }
     public static function download() {
         if (!current_user_can('manage_options')) wp_die('権限がありません。');
