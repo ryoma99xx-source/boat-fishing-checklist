@@ -54,7 +54,9 @@ p.tcat-none{padding:16px;text-align:center;color:var(--tcat-muted,${C.muted})!im
 [data-tcat-rank] li a{display:grid;grid-template-columns:28px 64px 1fr;gap:8px;align-items:center;text-decoration:none;color:inherit;padding:6px 0;border-top:1px solid var(--tcat-line,${C.line});font-size:14px;line-height:1.35}
 [data-tcat-rank] li a::before{content:counter(r);font-size:22px;font-weight:700;color:#e3a43b;text-align:center}
 [data-tcat-rank] li img{width:64px;height:48px;object-fit:contain;background:#fff;border-radius:6px}[data-tcat-rank] li small{display:block;color:var(--tcat-muted,${C.muted});font-size:12px}
-.tcat-hide{display:none!important}`;
+.tcat-hide{display:none!important}
+/* 色の名前だけのチップ（タイラバのネクタイの記事など、写真を出さない一覧）。検索は製品の data-pq と名前で */
+.tcat-chip{display:inline-block;margin:0 6px 6px 0;padding:3px 10px;border:1px solid var(--tcat-line,${C.line});border-radius:999px;font-size:13px;line-height:1.5;background:var(--tcat-field,${C.field});color:var(--tcat-ink,${C.ink})}`;
 if(!cssDone){document.head.appendChild(css);cssDone=true}
 
 /* 操作部品 */
@@ -64,7 +66,7 @@ const makers=[];prods.forEach(p=>{if(!makers.some(x=>x[0]===p.dataset.m))makers.
 const bar=root.querySelector('[data-tcat-bar]');
 if(bar){bar.className='tcat-bar';bar.innerHTML=`
  <div class="tcat-row" style="margin:0 0 8px"><select aria-label="メーカー"><option value="">すべてのメーカー</option>${makers.map(([m,j])=>`<option value="${esc(m)}">${esc(j===m?m:m+'（'+j+'）')}</option>`).join('')}</select></div>
- <div class="tcat-seg" data-k="z">${[['',ZALL],...sizes.map(z=>[z,z+UNIT])].map(([v,l])=>`<button type="button" data-v="${v}" class="${v===''?'on':''}">${l}</button>`).join('')}</div>
+ ${sizes.length?'':'<!--'}<div class="tcat-seg" data-k="z">${[['',ZALL],...sizes.map(z=>[z,z+UNIT])].map(([v,l])=>`<button type="button" data-v="${v}" class="${v===''?'on':''}">${l}</button>`).join('')}</div>${sizes.length?'':'-->'}
  ${NONEW?'':`<div class="tcat-seg" data-k="only"><button type="button" data-v="" class="on">すべて</button><button type="button" data-v="new">新商品だけ</button></div>`}
  ${prods.some(p=>p.dataset.tg)?`<div class="tcat-seg" data-k="tg"><button type="button" data-v="" class="on">すべての素材</button><button type="button" data-v="1">タングステン（TG）だけ</button></div>`:''}
  <div class="tcat-row"><div class="tcat-q"><input type="search" placeholder="${esc(PH)}" autocomplete="off" enterkeyhint="search" aria-label="${NOUN}を検索"><button type="button" aria-label="検索を消す" hidden>×</button></div></div>
@@ -91,7 +93,7 @@ figs.forEach(f=>{if(isNewDate(f)&&!f.querySelector('.tcat-new')){const b=documen
 function apply(){const terms=normQ(st.q).split(/\s+/).filter(Boolean);let np=0,nc=0;
   prods.forEach(p=>{let k=0;const okP=(!st.m||p.dataset.m===st.m)&&(!st.tg||p.dataset.tg==='1');
     $$('[data-tcat-c]',p).forEach(f=>{const zs=(f.dataset.z||'').split(' ');let ok=okP&&(!st.z||zs.includes(st.z))&&(st.only!=='new'||isNew(f));
-      if(ok&&terms.length){const h=f.dataset.q||'',h2=h.replace(/[\s・･\-]/g,'');
+      if(ok&&terms.length){const h=f.dataset.q||(f.dataset.q=normQ((p.dataset.pq||'')+' '+f.textContent)),h2=h.replace(/[\s・･\-]/g,'');
         ok=terms.every(q=>{const n=q.replace(UNIT==='号'?/号$/:/g$/i,'');if(/^\d+(\.\d+)?$/.test(n))return zs.includes(String(+n));return h.includes(q)||h2.includes(q.replace(/[・･\-]/g,''))})}
       f.classList.toggle('tcat-hide',!ok);if(ok)k++});
     p.classList.toggle('tcat-hide',!k);if(k){np++;nc+=k}});
