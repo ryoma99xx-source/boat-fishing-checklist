@@ -121,6 +121,9 @@ R("tx(196,132,'自作 2本針'", "tx(196,132,'1kg以上'")
 # ───────── 座席：基本は片舷流し（全員が片側に並ぶ）。両舷・バーティカルも選べる（seat_lay.py。タイラバカウンターと共通）
 import seat_lay
 s = seat_lay.apply(s, 'one')
+# ほかの席（tools/oth_seat.py、ドラゴンカウンターに入っている）：ティップランは片舷流しが基本
+assert s.count("const OTH_LAY='both';") == 1
+s = s.replace("const OTH_LAY='both';", "const OTH_LAY='one';")
 
 # ───────── エギのカタログ（文字だけ）：tools/tipran/catalog.json（tipran_catalog.py が作る）
 # 行の形 {m:メーカー, s:製品, o:[{z:'3.0',g:30},…], w:[0,1,…], c:[色…], u:URL, note}。w は o の番号（ヘッド用の重さ選びをそのまま使うため）

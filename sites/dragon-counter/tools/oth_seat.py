@@ -5,6 +5,8 @@
 保存先は釣行の tr.oth = [{id, side, seat, t, sp, memo, lat, lon, acc}]。履歴の釣行カードに席ごとの数を出す。
 
     apply(s, lay_default='both')
+3つのカウンター共通（2026-11-23）：ドラゴンカウンターの public/index.html に一度だけ当てて保存済み（lay_default='both'）。
+タイラバ・ティップランはそこから作る（ティップランは tipran_build.py で OTH_LAY を 'one' に）。ビルドでは呼ばない。
 """
 
 
@@ -30,7 +32,7 @@ function othSheet(){const f=othF,tr=f&&S.trips[f.tid];if(!tr)return;const lay=tr
   for(const side of (lay==='one'?[pf.side]:['L','R']))for(let i=1;i<=n;i++){const c=cnt[side+i];if(c)tx+=`<text x="${r1(xs(i))}" y="${side==='L'?56:82}" text-anchor="middle" font-size="13" font-weight="800" style="fill:var(--catch,#e47b25)">${c}</text>`}
   if(tr.seat){const y=(tr.side||'R')==='L'?34:96;if(lay!=='one'||(tr.side||'R')===pf.side)tx+=`<text x="${r1(xs(tr.seat))}" y="${y+4}" text-anchor="middle" font-size="9" font-weight="800" style="fill:var(--teal)" pointer-events="none">自</text>`}
   svg=svg.replace('</svg>',tx+'</svg>');
-  const sps=[spOf(SOLO).name,...gedoNames()];if(!f.sp)f.sp=sps[0];
+  const sps=[spOf((tr.cur&&tr.cur.sp)||SOLO).name,...gedoNames().filter(x=>x!==spOf((tr.cur&&tr.cur.sp)||SOLO).name)];if(!f.sp)f.sp=sps[0];
   openSheet(`<div class="sheet-h"><h2>👥 ほかの席の釣果</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div>
    <p class="muted">ほかの人が釣ったら、その席を押して記録します（自分の枚数には入りません）。時刻と場所（スマホの位置）は自動で入ります。</p>
    <div class="field"><span>席${f.seat?`：<b>${esc(seatLabel({side:pf.side,seat:f.seat,seats:n,lay}))}</b>`:'（押して選ぶ）'}</span><div class="seatwrap oth-seat">${svg}</div></div>
