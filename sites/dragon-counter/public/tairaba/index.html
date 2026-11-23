@@ -1355,7 +1355,7 @@ function curGear(tr){const sp=tr.cur.sp;tr.cur.g=tr.cur.g||{};const pf=S.prefs.g
   const g=tr.cur.g[sp];if(isTenya(sp,g)&&(!g.rig||!tenyaOf(g.rig)))g.rig=dayTenya(tr,sp)[0]||g.rig||'';if(spOf(sp).catalog&&!isTenya(sp,g)&&(!g.rig||tenyaOf(g.rig)))g.rig=firstVis(sp,'rigs');return g}
 /* ---------- 潮の向き（自動）: 潮位の上げ下げから東京湾の上げ潮・下げ潮を推定し、船首の向きと合わせて船から見た向きにする ---------- */
 const BAY_HEAD=[35.65,139.95]; // 東京湾奥（上げ潮が向かう先）
-function inTokyoBay(lat,lon){return false} // 全国：流れはどこでも Open-Meteo の海流
+function inTokyoBay(lat,lon){return lat>35.12&&lat<35.72&&lon>139.6&&lon<140.15}
 function trLL(tr){if(tr.spot&&isFinite(tr.spot.lat))return [tr.spot.lat,tr.spot.lon];const q=ST_LL[tr.station];return q||null}
 function floodDir(tr){const ll=trLL(tr);if(!ll||!inTokyoBay(ll[0],ll[1]))return '';const dy=BAY_HEAD[0]-ll[0],dx=(BAY_HEAD[1]-ll[1])*Math.cos(ll[0]*Math.PI/180);
   const b=(Math.atan2(dx,dy)*180/Math.PI+360)%360;return DIRS[Math.round(b/45)%8]}
@@ -2045,7 +2045,7 @@ function timelineSVG(tr,sp){
   o.push(`<rect x="${lx}" y="${y-9}" width="20" height="8" rx="4" fill="${P.slow}"/><rect x="${lx+22}" y="${y-9}" width="20" height="8" rx="4" fill="${P.normal}"/><rect x="${lx+44}" y="${y-9}" width="20" height="8" rx="4" fill="${P.fast}"/>`+TX(lx+72,y,'潮の速さ（緩い・普通・速い）',{size:12,fill:P.muted}));
   if(dv.length){y+=22;o.push(`<rect x="24" y="${y-12}" width="16" height="16" rx="3" fill="${P.catch}"/>`+TX(32,y+1,'中',{size:10,bold:1,fill:'#fff',anchor:'middle'})+TX(46,y,'巻き（塗り）',{size:12,fill:P.muted})+`<rect x="150" y="${y-12}" width="16" height="16" rx="3" fill="#fff" stroke="${P.catch}" stroke-width="1.6"/>`+TX(158,y+1,'フ',{size:10,bold:1,fill:P.catch,anchor:'middle'})+TX(172,y,'フォール（白抜き）　枠の色＝釣れた／アタリ／バラシ',{size:12,fill:P.muted}));y+=20;o.push(TX(24,y,'上：ス＝スロー　中＝中速　高＝高速　数字＝電動の目盛り　下：合＝合わせあり　無＝なし',{size:12,fill:P.muted}))}
   y+=22;o.push(TX(24,y,tr.station?`※潮位は気象庁の潮位表（${stName(tr.station)}）をもとに計算した推算値です。潮の向きは船首を上にしたときの、潮が流れていく向きです。`:'※潮位は満潮・干潮の時刻と潮位から補間した概形です。潮の向きは船首を上にしたときの、潮が流れていく向きです。',{size:11,fill:P.muted}));
-  if(tr.station&&offBay(tr)){y+=20;o.push(TX(24,y,'※潮の向きと速さは、Open-Meteo の海流データ（約8km四方の推算値）から出しています。',{size:11,fill:P.muted}))}
+  if(tr.station&&offBay(tr)){y+=20;o.push(TX(24,y,'※東京湾の外では、潮の向きと速さを Open-Meteo の海流データ（約8km四方の推算値）から出しています。',{size:11,fill:P.muted}))}
   y+=18;o.push(TX(24,y,'※枚数は自分の席で釣れた分だけです。',{size:11,fill:P.muted}));const Ht=y+20;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}" font-family="${CF}" role="img" aria-label="${esc(tlTitle(tr,sp))}"><rect width="${W}" height="${Ht}" rx="16" fill="${P.card}"/>${under.join('')}${dgDefs(o)}${o.join('')}</svg>`}
 function sizeBins(sp,vals){const u=spOf(sp).sizeUnit,m={},ord=[];const add=k=>{if(!(k in m)){m[k]=0;ord.push(k)}m[k]++};

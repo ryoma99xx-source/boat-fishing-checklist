@@ -219,9 +219,8 @@ R("const AREAS=[['tokyo','東京湾'],['osaka','大阪湾']];", "const AREAS=[];
 R("${(S.cfg.mig||{}).osaka1?'':`<button class=\"btn sm\" data-act=\"addOsaka\"", "${true?'':`<button class=\"btn sm\" data-act=\"addOsaka\"")
 RX(r"function stOptions\(sel\)\{const G=\[.*?\];",
    "function stOptions(sel){const G=[['全国（北から）',Object.keys(ST_LL).filter(c=>TIDE.st[c]).sort((a,b)=>ST_LL[b][0]-ST_LL[a][0])]];", flags=re.S)
-R("function inTokyoBay(lat,lon){return lat>35.12&&lat<35.72&&lon>139.6&&lon<140.15}", "function inTokyoBay(lat,lon){return false} // 全国：流れはどこでも Open-Meteo の海流")
+# 東京湾の中（緯度35.12〜35.72・経度139.6〜140.15）はドラゴンカウンターと同じ独自の計算（上げ＝湾奥へ・下げ＝逆）。外は Open-Meteo の海流。オーナー指示 2026-11-23
 R("wave:bay?r1n(avg(pick(m,'wave_height'))):null,noWave:!bay,", "wave:r1n(avg(pick(m,'wave_height'))),noWave:false,")
-R("'※東京湾の外では、潮の向きと速さを Open-Meteo の海流データ（約8km四方の推算値）から出しています。'", "'※潮の向きと速さは、Open-Meteo の海流データ（約8km四方の推算値）から出しています。'")
 R("const COAST_W='", "/* 全国（関東・大阪湾の範囲を除く。国土数値情報（行政区域）を加工、0.01度単位） */\nconst COAST_JP='" + coast_jp + "';\nconst COAST_W='")
 R("for(const poly of (COAST+';'+COAST_W).split(';')){if(!poly)continue;const v=poly.split(',').map(Number);let x=0,y=0;const pts=[];\n    for(let i=0;i<v.length;i+=2){x+=v[i];y+=v[i+1];const [px,py]=toXY(x/1000,y/1000);",
   "for(const [src,div] of [[COAST,1000],[COAST_W,1000],[COAST_JP,100]])for(const poly of src.split(';')){if(!poly)continue;const v=poly.split(',').map(Number);let x=0,y=0;const pts=[];\n    for(let i=0;i<v.length;i+=2){x+=v[i];y+=v[i+1];const [px,py]=toXY(x/div,y/div);")
