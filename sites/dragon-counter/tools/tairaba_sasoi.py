@@ -62,7 +62,7 @@ function trElec(){const tr=active();return tkElec(tr&&tr.tk&&tr.tk.cur)}
 function evElec(f){const tr=S.trips[f.tid],e=tr&&tr.events.find(x=>x.id===f.id);return tkElec(e&&e.tk)}
 let trD=null;
 function openSasoi(kind){const tr=active();if(!tr)return;trD={kind,elec:trElec()};trStep()}
-function trStep(){const d=trD,k=d.kind,L=S.ui.lastTr||{},n=d.sa==='maki'?4:d.sa?2:0;
+function trStep(){const d=trD,k=d.kind,L=S.ui.lastTr||{},nk=k==='bite'?1:0,n=d.sa==='maki'?4-nk:d.sa?2-nk:0;
   const head=(no,ttl)=>`<div class="sheet-h"><h2>${KIND_JP[k]}：${ttl}</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted">${n?no+'/'+n+'　':''}${[d.sa?SA_JP[d.sa]:'',d.sa==='maki'&&d.spd?SPD_JP[d.spd]:'',d.tn?TN_JP[d.tn]:''].filter(Boolean).join(' → ')}</p>`;
   const b=(f,v,lbl,sub)=>`<button class="sa-b ${L[f]===v?'on':''}" data-act="trPick" data-f="${f}" data-v="${v}">${lbl}${sub?`<small>${sub}</small>`:''}</button>`;
   const skip=(f,t)=>`<button class="btn" data-act="trPick" data-f="${f}" data-v="">${t}</button>`;
@@ -73,6 +73,7 @@ function trStep(){const d=trD,k=d.kind,L=S.ui.lastTr||{},n=d.sa==='maki'?4:d.sa?
      ?`<div class="sa-grid tr-el">${SPD_KEYS.filter(x=>!isNaN(x)).map(x=>b('spd',x,x)).join('')}</div><p class="muted">電動リールの速さの目盛り（使っているリールが電動のため、数字で選びます）</p>`
      :`<div class="sa-grid tr-sa tr-3">${SPD_KEYS.filter(x=>isNaN(x)).map(x=>b('spd',x,SPD_JP[x],SPD_N[x])).join('')}</div><button class="btn sm ghost" data-act="trElec">電動リールの目盛り（1〜16）で選ぶ</button>`)+skip('spd','速さは選ばない（次へ）')+back;
   else if(d.sa==='maki'&&d.tn===undefined)h=head(3,'アタリの位置')+`<div class="sa-grid tr-sa tr-3">${TN_KEYS.map(x=>b('tn',x,TN_JP[x],TN_N[x])).join('')}</div>`+skip('tn','位置は選ばない（次へ）')+back;
+  else if(k==='bite')return trRec();
   else h=head(n,'合わせ')+`<div class="sa-grid tr-sa">${KA_KEYS.map(x=>b('ka',x,KA_JP[x])).join('')}</div>`+skip('ka','合わせは選ばずに記録')+back;
   openSheet(h,{kind:'sasoi'})}
 function trRec(){const d=trD;if(!d)return;$('#sheet').hidden=true;sheetCtx=null;nextSa=d.sa||null;nextKa=d.ka||null;
@@ -97,7 +98,7 @@ function trRec(){const d=trD;if(!d)return;$('#sheet').hidden=true;sheetCtx=null;
        lambda m: "${f.kind!=='gedo'?`<div class=\"field\"><span>アタリの出方</span><div class=\"chips wrap\">${['',...Object.keys(SA_JP)].map(k=>`<button class=\"chip ${f.sa===k?'on':''}\" data-act=\"evSa\" data-d=\"${k}\">${k?SA_JP[k]:'なし'}</button>`).join('')}</div></div>"
                  "${f.sa==='maki'?`<div class=\"field\"><span>巻きの速さ</span><div class=\"chips wrap\">${['',...SPD_KEYS.filter(k=>!evElec(f)||!isNaN(k)||(f.spd||'')===k)].map(k=>`<button class=\"chip ${(f.spd||'')===k?'on':''}\" data-act=\"evX\" data-f=\"spd\" data-d=\"${k}\">${k?(isNaN(k)?SPD_JP[k]:k):'なし'}</button>`).join('')}</div><small class=\"muted\">${evElec(f)?'電動リールの目盛りで選びます':'数字は電動リールの目盛り'}</small></div>"
                  "<div class=\"field\"><span>アタリの位置（底から）</span><div class=\"chips wrap\">${['',...TN_KEYS].map(k=>`<button class=\"chip ${(f.tn||'')===k?'on':''}\" data-act=\"evX\" data-f=\"tn\" data-d=\"${k}\">${k?TN_JP[k]:'なし'}</button>`).join('')}</div></div>`:''}"
-                 "<div class=\"field\"><span>合わせ</span><div class=\"chips wrap\">${['',...KA_KEYS].map(k=>`<button class=\"chip ${f.ka===k?'on':''}\" data-act=\"evKa\" data-d=\"${k}\">${k?KA_JP[k]:'なし'}</button>`).join('')}</div></div>`:''}\n",
+                 "${f.kind!=='bite'?`<div class=\"field\"><span>合わせ</span><div class=\"chips wrap\">${['',...KA_KEYS].map(k=>`<button class=\"chip ${f.ka===k?'on':''}\" data-act=\"evKa\" data-d=\"${k}\">${k?KA_JP[k]:'なし'}</button>`).join('')}</div></div>`:''}`:''}\n",
        flags=re.S)
     R("evF={tid:tr.id,back:back||null,id,sa:e.sa||'',ka:e.ka||'',", "evF={tid:tr.id,back:back||null,id,sa:e.sa||'',ka:e.ka||'',spd:e.spd||'',tn:e.tn||'',")
     R("  evSa:b=>{", "  evX:b=>{const tm=$('#evTime');if(tm)evF.t=tm.value;const m=$('#evMemo');if(m)evF.memo=m.value;evF[b.dataset.f]=b.dataset.d;renderEvSheet()},\n  evSa:b=>{")
@@ -136,7 +137,7 @@ function trRec(){const d=trD;if(!d)return;$('#sheet').hidden=true;sheetCtx=null;
     R("誘い（巻き／叩き × 誘い中／ステイ中）と掛け方（即掛け／深追い）を選んで記録します。",
       "アタリの出方（巻き／フォール）、巻きの速さ、アタリの位置、合わせ（あり／なし）を選んで記録します。")
     RX(r"<b>誘い</b>（[^）]*）と、<b>掛け方</b>（即掛け／深追い）を選んで記録します。[^<]*",
-       "<b>アタリの出方</b>（巻き／フォール）→ 巻きなら<b>速さ</b>（スロー0.5m/秒以下・中速1m/秒前後・高速1.5m/秒以上。電動リールは目盛り1〜16）と<b>アタリの位置</b>（巻き始め＝底から3mまで・3〜7m・7mより上）→ <b>合わせ</b>（あり／なし）の順に押して記録します。釣れた・アタリ・バラシとも同じです。")
+       "<b>アタリの出方</b>（巻き／フォール）→ 巻きなら<b>速さ</b>（スロー0.5m/秒以下・中速1m/秒前後・高速1.5m/秒以上。電動リールは目盛り1〜16）と<b>アタリの位置</b>（巻き始め＝底から3mまで・3〜7m・7mより上）→ <b>合わせ</b>（あり／なし）の順に押して記録します。アタリのときは合わせは選びません（位置まで選んだら記録）。電動リールのときの速さは目盛り（1〜16）で選びます。")
     s = s.replace('各記録の時刻に小さな札（上＝巻／叩、塗り＝誘い中・白抜き＝ステイ中、下＝即／深）', '各記録の時刻に小さな札（上＝速さ／フ、塗り＝巻き・白抜き＝フォール、下＝合わせ）')
     s = s.replace('誘い・掛け方', '出方・合わせ').replace('誘いと掛け方', '出方と合わせ').replace('誘いや掛け方', '出方や合わせ')
     left = [m.group(0) for m in re.finditer(r'.{0,30}(掛け方|叩き|即掛け|深追い|ステイ中).{0,30}', s)]
