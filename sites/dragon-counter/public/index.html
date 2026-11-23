@@ -2486,7 +2486,8 @@ function renderEvSheet(){const f=evF,s=spOf(f.sp),gs=spOf(f.gsp);if(!s.variants.
    <div class="grid2"><label class="field"><span>${esc(gs.catalog?'仕掛け':gs.rigLabel)}${f.gsp!==f.sp?`（${esc(gs.name)}の道具）`:''}</span><select id="evRig" data-ef="rig">${sel('rigs')}</select></label>${gs.baitLabel?`<label class="field"><span>${esc(gs.baitLabel)}</span><select id="evBait" data-ef="bait">${sel('baits')}</select></label>`:''}</div>
    ${f.kind==='catch'&&sizeUI?`<div class="field"><span>サイズ（全長・任意）</span>${sizeUI}</div>`:''}
    <label class="field"><span>メモ</span><input type="text" id="evMemo" data-ef="memo" value="${esc(f.memo)}" placeholder="水深・誘い方など"></label>
-   <button class="btn primary big" data-act="evSave">保存する</button><button class="btn danger" data-act="evDel">${f.armed?'もう一度押すと消します':'この記録を消す'}</button>`;
+   <button class="btn danger" data-act="evDel">${f.armed?'もう一度押すと消します':'この記録を消す'}</button>
+   <div class="tb-foot ev-foot"><button class="btn primary big" data-act="evSave">保存する</button></div>`;
   $('#sheet').hidden=false;sheetCtx={kind:'ev'}}
 
 /* ---- button-count import ---- */
