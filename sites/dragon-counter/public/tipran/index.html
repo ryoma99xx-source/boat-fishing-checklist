@@ -3097,9 +3097,14 @@ function listSVG(tr){const W=600,X0=28,RH=40,ev=sortEv(tr),o=[];const nCatch=ev.
   ev.forEach((e,i)=>{const s=spOf(e.sp);let kind,col;
     if(e.kind==='catch'){cnt[e.sp]=(cnt[e.sp]||0)+1;kind=`${s.variants.length>1?vShort(e.sp,e.v):s.name} ${cnt[e.sp]}${s.unit}目`;col=P.catch}
     else if(e.kind==='gedo'){kind='外道 '+(e.name||'');col=P.muted}else{kind=KIND_JP[e.kind]||'';col=P[e.kind]||P.ink}
-    if(i%2===0)o.push(`<rect x="16" y="${y}" width="${W-32}" height="${RH}" rx="8" fill="#eef4f6"/>`);
-    o.push(TX(X0,y+27,hm(e.t),{size:19,bold:1}));const dgn=e.kind==='catch'&&e.dragon;if(dgn)o.push(DGI(X0+81,y+RH/2,24));o.push(TX(X0+(dgn?98:70),y+27,clip(kind,dgn?122:150,15),{size:15,bold:1,fill:col}));
-    o.push(TX(X0+232,y+27,clip(evGearText(e),W-X0-232-X0,14),{size:14,fill:P.muted}));y+=RH});
+    /* 道具の文字は切らずに折り返す（3行まで）。行が増えたら、その記録の高さを広げる */
+    const GW=W-X0-206-X0+8,cw=c=>/[\x00-\x7f]/.test(c)?7.4:13.6,tw=t=>[...t].reduce((a,c)=>a+cw(c),0),gl=[];let cur='';
+    evGearText(e).split('・').filter(Boolean).forEach(tk=>{const nx=cur?cur+'・'+tk:tk;if(tw(nx)<=GW){cur=nx;return}if(cur)gl.push(cur+'・');cur='';
+      if(tw(tk)<=GW){cur=tk;return}let w=0;for(const c of [...tk]){if(w+cw(c)>GW&&cur){gl.push(cur);cur='';w=0}cur+=c;w+=cw(c)}});if(cur)gl.push(cur);
+    if(gl.length>6){gl.length=6;gl[5]=clip(gl[5]+'…',GW,14)}const rh=Math.max(RH,gl.length*19+18);
+    if(i%2===0)o.push(`<rect x="16" y="${y}" width="${W-32}" height="${rh}" rx="8" fill="#eef4f6"/>`);
+    o.push(TX(X0,y+27,hm(e.t),{size:19,bold:1}));const dgn=e.kind==='catch'&&e.dragon;if(dgn)o.push(DGI(X0+81,y+RH/2,24));o.push(TX(X0+(dgn?98:70),y+27,clip(kind,dgn?100:128,15),{size:15,bold:1,fill:col}));
+    gl.forEach((l,k)=>o.push(TX(X0+206,y+(gl.length>1?24:27)+k*19,l,{size:14,fill:P.muted})));y+=rh});
   if(!ev.length){o.push(TX(X0,y+30,'記録がありません',{size:15,fill:P.muted}));y+=50}
   const H=y+24;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="${CF}" role="img" aria-label="記録一覧"><rect width="${W}" height="${H}" rx="16" fill="${P.card}"/>${dgDefs(o)}${o.join('')}</svg>`}
