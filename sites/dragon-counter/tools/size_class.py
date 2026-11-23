@@ -23,7 +23,7 @@ def apply(s, classes, big=(), unit=''):
 const SZC=""" + cj + ",SZC_BIG=" + bj + r""";
 const szLabel=k=>{const c=SZC.find(x=>x[0]===k);return c?c[1]:''};
 function szRank(L){const m={};let tot=0;L.forEach(t=>t.events.forEach(e=>{if(e.kind!=='catch'||e.sp!==SOLO||!e.szc)return;m[e.szc]=(m[e.szc]||0)+1;tot++}));if(!tot)return '';
-  return `<div class="rank"><h3>サイズ区分ごと（選んだ分）</h3>${SZC.filter(c=>m[c[0]]).map(([k,l,r])=>`<div class="rk sa-rk"><span>${esc(l)}<small class="muted">（${esc(r)}）</small></span><b>${m[k]}${esc(spOf(SOLO).unit)}<small>・${Math.round(m[k]/tot*100)}%</small></b></div>`).join('')}</div>`}
+  return `<div class="rank"><h3>サイズ区分ごと（選んだ分）</h3>${SZC.filter(c=>m[c[0]]).map(([k,l,r])=>`<div class="rk sa-rk"><span>${esc(l)}${r?`<small class="muted">（${esc(r)}）</small>`:''}</span><b>${m[k]}${esc(spOf(SOLO).unit)}<small>・${Math.round(m[k]/tot*100)}%</small></b></div>`).join('')}</div>`}
 function openSz(tid,eid){const tr=S.trips[tid];if(!tr)return;const e=tr.events.find(x=>x.id===eid);if(!e)return;if(!$('#sheet').hidden)return;
   openSheet(`<div class="sheet-h"><h2>サイズは？</h2><button class="btn sm ghost" data-act="closeSheet">閉じる</button></div><p class="muted">記録はもう済んでいます（${hm(e.t)}）。サイズを押すと、この記録に付きます。選ばなくてもかまいません。</p>
    <div class="sa-grid sz-grid">${SZC.map(([k,l,r])=>`<button class="sa-b ${e.szc===k?'on':''}" data-act="szPick" data-t="${tid}" data-e="${eid}" data-k="${k}">${esc(l)}<small>${esc(r)}</small></button>`).join('')}</div>

@@ -320,9 +320,10 @@ s = tairaba_images.apply(s)
 # カタログを検索して登録（メーカー・製品名・色）。tools/tbc_search.py
 import tbc_search
 s = tbc_search.apply(s)
-# マダイのサイズ区分（オーナーの表。80cm超の「大判」も）。釣れたあとに選ぶ。tools/size_class.py
+# マダイのサイズ区分（オーナーの定義）。釣れたあとに選ぶ。tools/size_class.py
 import size_class
-s = size_class.apply(s, [('chariko', 'チャリコ', '〜20cm前後'), ('kodai', 'コダイ（小鯛）', '10〜25cm前後'), ('chudai', 'チュウダイ（中鯛）', '30〜50cm前後'),
-                         ('odai', 'オオダイ（大鯛）', '60cm以上'), ('oban', '大判', '80cm超')])
+# 区分はオーナーの定義（2026-11-23 に重さで決め直し）。キーは前のまま（前の記録はそのまま：オーナー指示）
+s = size_class.apply(s, [('chariko', 'チャリコ', ''), ('kodai', '小鯛', '1キロ以下'), ('chudai', '中鯛', '1キロ〜2キロ'),
+                         ('odai', '大鯛', '3キロ以上'), ('oban', '特鯛', '5キロ以上')])
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))

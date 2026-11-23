@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Dragon Counter Data
  * Description: ドラゴンカウンター（TOOL 05）・ティップランカウンター・タイラバカウンターから匿名で届いた釣果データを、管理画面（ツール → ドラゴンカウンターのデータ）でダッシュボード・一覧・ダウンロード・削除します。上のタブでアプリを切り替えます。データはサーバーの .data/trips/（ティップランは tipran/.data/trips/、タイラバは tairaba/.data/trips/）にあるものを読むだけで、外には出しません。
- * Version: 1.5.0
+ * Version: 1.5.1
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -115,7 +115,7 @@ final class DCD_Admin {
         // アプリごとの言葉（タイラバ：出方・合わせ・速さ・位置、ティップラン：誘い・アタリの出方）とサイズ区分
         if (self::$app === 'tairaba') { $SA = ['maki' => '巻き', 'fall' => 'フォール']; $KA = ['awase' => '合わせあり', 'none' => '合わせなし']; }
         if (self::$app === 'tipran') { $SA = ['shakuri' => 'シャクリ中', 'stay-just' => 'ステイ直後', 'stay-long' => 'ロングステイ', 'fall' => 'フォール中', 'maki' => '巻き上げ中']; $KA = ['iru' => '穂先が入る', 'modoru' => '穂先が戻る', 'omomi' => '重みが乗る', 'te' => '手元に来る']; }
-        $SZ = self::$app === 'tairaba' ? ['chariko' => 'チャリコ', 'kodai' => 'コダイ', 'chudai' => 'チュウダイ', 'odai' => 'オオダイ', 'oban' => '大判']
+        $SZ = self::$app === 'tairaba' ? ['chariko' => 'チャリコ', 'kodai' => '小鯛（1キロ以下）', 'chudai' => '中鯛（1〜2キロ）', 'odai' => '大鯛（3キロ以上）', 'oban' => '特鯛（5キロ以上）']
             : (self::$app === 'tipran' ? ['croq' => 'コロッケ', 'tonk' => 'トンカツ', 'ryo' => '良型・中型', 'kiro' => 'キロアップ', 'kiro2' => '2キロアップ', 'mon' => 'モンスター'] : []);
         $SPD = ['slow' => 'スロー', 'mid' => '中速', 'fast' => '高速']; $TN = ['lo' => '巻き始め（〜3m）', 'mid' => '3〜7m', 'hi' => '7mより上'];
         $avgAdd = function (&$arr, $k, $v) { if ($k === '' || $k === null) return; if (!isset($arr[$k])) $arr[$k] = [0, 0]; $arr[$k][0] += $v; $arr[$k][1]++; };
