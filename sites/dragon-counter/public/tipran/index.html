@@ -1875,7 +1875,9 @@ function locMapSVG(P,col,W=360,H=250){const pad=26,wx=lon=>(lon+180)/360,wy=lat=
     const [ix,iy]=corners.find(c=>!hit(c))||corners[0];
     o.push(`<rect x="${ix-2}" y="${iy-2}" width="${IW+4}" height="${IH+4}" rx="6" fill="#fff"/><svg x="${ix}" y="${iy}" width="${IW}" height="${IH}" viewBox="0 0 ${IW} ${IH}"><rect width="${IW}" height="${IH}" fill="#e6eef2"/>${q.join('')}</svg><rect x="${ix}" y="${iy}" width="${IW}" height="${IH}" rx="4" fill="none" stroke="#1d2b36" stroke-opacity=".5"/><text x="${ix+4}" y="${iy+IH-4}" font-size="9" fill="#1d2b36" stroke="#fff" stroke-width="2.5" paint-order="stroke">広域（赤枠＝この地図）</text>`)}
   return `<svg class="locmap" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="記録した場所の地図"><defs><marker id="mArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1d2b36"/></marker></defs><rect width="${W}" height="${H}" fill="#e6eef2"/>${o.join('')}</svg>`}
-function locMaps(L,col){const sg=mapSegs(L);return sg.map((P,k)=>`<div class="locmap-w">${sg.length>1?`<p class="locmap-h">${k+1}枚目（${P.length>1?`${hm(P[0].t)}〜${hm(P[P.length-1].t)}・${P[0].no}〜${P[P.length-1].no}`:`${hm(P[0].t)}・${P[0].no}`}）</p>`:''}${locMapSVG(P,col)}</div>`).join('')+(sg.length>1?`<p class="muted" style="font-size:12px;margin:4px 0 0">続けて記録した場所が${MAP_SPLIT_KM}km以上離れたところで、地図を分けています。</p>`:'')}
+const mapNo=n=>n>=1&&n<=20?String.fromCharCode(0x245F+n):String(n);
+const mapCap=(k,P)=>`地図${k+1}（${P.length>1?`${hm(P[0].t)}〜${hm(P[P.length-1].t)}・印${mapNo(P[0].no)}〜${mapNo(P[P.length-1].no)}`:`${hm(P[0].t)}・印${mapNo(P[0].no)}`}）`;
+function locMaps(L,col){const sg=mapSegs(L);return sg.map((P,k)=>`<div class="locmap-w">${sg.length>1?`<p class="locmap-h">${mapCap(k,P)}</p>`:''}${locMapSVG(P,col)}</div>`).join('')+(sg.length>1?`<p class="muted" style="font-size:12px;margin:4px 0 0">続けて記録した場所が${MAP_SPLIT_KM}km以上離れたところで、地図を分けています。</p>`:'')}
 /* 釣れたときに、その時の位置（GPS）も自動で残す。取れなければ何もしない（記録はそのまま） */
 function catchLoc(tid,eid){if(!navigator.geolocation||S.prefs.catchLoc===false)return;
   navigator.geolocation.getCurrentPosition(pos=>{const t=S.trips[tid];const e=t&&t.events.find(x=>x.id===eid);if(!e)return;
@@ -1888,7 +1890,7 @@ function mapExportSVG(tr,sp,kind){const W=600,MW=552,MH=400,o=[],ct=kind==='map-
   o.push(TX(24,48,ct?'釣れた・アタリ・バラシの場所':'📍で記録した場所',{size:24,bold:1}));o.push(TX(W-24,48,`${L.length}${ct?'件':'か所'}`,{size:17,bold:1,fill:P.catch,anchor:'end'}));
   o.push(TX(24,76,`${jdate(tr.date)}｜${tr.boat||''}${tr.port?'（'+tr.port+'）':''}`,{size:15,fill:P.muted}));
   let y=96;const sg=mapSegs(L);
-  sg.forEach((Q,k)=>{if(sg.length>1){o.push(TX(24,y+18,`${k+1}枚目（${Q.length>1?`${hm(Q[0].t)}〜${hm(Q[Q.length-1].t)}・${Q[0].no}〜${Q[Q.length-1].no}`:`${hm(Q[0].t)}・${Q[0].no}`}）`,{size:15,bold:1}));y+=28}
+  sg.forEach((Q,k)=>{if(sg.length>1){o.push(TX(24,y+18,mapCap(k,Q),{size:15,bold:1}));y+=28}
     o.push(locMapSVG(Q,col,MW,MH).replace(/^<svg class="locmap" /,`<svg x="24" y="${y}" width="${MW}" height="${MH}" `));o.push(`<rect x="24" y="${y}" width="${MW}" height="${MH}" rx="12" fill="none" stroke="${P.grid}" stroke-width="2"/>`);y+=MH+14});
   if(ct){const lg=[['catch','釣れた'],['bite','アタリ'],['lost','バラシ']];let x=24;lg.forEach(([k,t])=>{o.push(`<circle cx="${x+6}" cy="${y+8}" r="6" fill="${LOC_COL[k]}"/>`+TX(x+16,y+13,t,{size:13,fill:P.muted}));x+=16+t.length*13+16});o.push(TX(x,y+13,'番号は記録した順',{size:13,fill:P.muted}))}
   else o.push(TX(24,y+13,'番号は「📍場所」を押した順',{size:13,fill:P.muted}));y+=24;
