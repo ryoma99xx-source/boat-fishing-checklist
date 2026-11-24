@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: New Article Card（トップの新着記事カード）
- * Description: サイトのトップ（流れる帯の下、釣果速報の上）に、新着記事を大きなカードで出します。「設定 → 新着記事カード」で記事を指定するとその記事を、指定しなければいちばん新しい記事（投稿・記事）を出します。釣果速報は対象外です。
- * Version: 1.0.0
+ * Description: サイトのトップ（流れる帯の下、釣果速報の上）に、新着記事を大きなカードで出します。最新の記事5本を、横にスワイプするか5秒おきに順に出します。「設定 → 新着記事カード」で記事を指定すると、その記事を先頭にします。釣果速報は対象外です。
+ * Version: 1.1.0
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -10,6 +10,17 @@ if (!defined('ABSPATH')) { exit; }
 
 const CFNA_OPT = 'cfna_pin';                     // 指定した記事の ID（0 = 指定なし → 最新）
 const CFNA_TYPES = array('post', 'tachiuo_post'); // 出す対象（釣果速報 tbt_catch・動画は出さない）
+
+const CFNA_N = 5;   // カードに順に出す記事の数（オーナー指示 2026-11-24）
+
+/** 出す記事：指定した記事（公開中なら）を先頭に、最新の記事から合わせて CFNA_N 本 */
+function cfna_list() {
+    $out = array(); $pin = (int) get_option(CFNA_OPT, 0);
+    if ($pin) { $p = get_post($pin); if ($p && $p->post_status === 'publish' && in_array($p->post_type, CFNA_TYPES, true)) { $out[] = $p; } }
+    $l = get_posts(array('post_type' => CFNA_TYPES, 'post_status' => 'publish', 'numberposts' => CFNA_N + 1, 'orderby' => 'date', 'order' => 'DESC', 'suppress_filters' => false));
+    foreach ($l as $p) { if (count($out) >= CFNA_N) { break; } if (!$out || $p->ID !== $out[0]->ID) { $out[] = $p; } }
+    return $out;
+}
 
 /** 出す記事：指定があり、公開中ならそれ。なければ最新の1本 */
 function cfna_pick() {
@@ -34,18 +45,21 @@ function cfna_label($p) {
 
 add_action('wp_enqueue_scripts', function () {
     if (!is_front_page()) { return; }
-    $p = cfna_pick();
-    if (!$p) { return; }
-    $ex = has_excerpt($p) ? get_the_excerpt($p) : wp_trim_words(wp_strip_all_tags($p->post_content), 60, '…');
-    $data = array(
-        'url'   => get_permalink($p),
-        'title' => get_the_title($p),
-        'img'   => get_the_post_thumbnail_url($p, 'large') ?: '',
-        'label' => cfna_label($p),
-        'date'  => get_the_date('n月j日', $p),
-        'ex'    => mb_strimwidth(wp_strip_all_tags($ex), 0, 150, '…'),
-        'pinned'=> (int) get_option(CFNA_OPT, 0) === $p->ID,
-    );
+    $list = cfna_list();
+    if (!$list) { return; }
+    $data = array();
+    foreach ($list as $p) {
+        $ex = has_excerpt($p) ? get_the_excerpt($p) : wp_trim_words(wp_strip_all_tags($p->post_content), 60, '…');
+        $data[] = array(
+            'url'   => get_permalink($p),
+            'title' => get_the_title($p),
+            'img'   => get_the_post_thumbnail_url($p, 'large') ?: '',
+            'label' => cfna_label($p),
+            'date'  => get_the_date('n月j日', $p),
+            'ex'    => mb_strimwidth(wp_strip_all_tags($ex), 0, 150, '…'),
+            'new'   => (time() - get_post_time('U', true, $p)) < 14 * 86400,   // 2週間以内なら NEW
+        );
+    }
     wp_register_script('cfna', '', array(), '1.0.0', true);
     wp_enqueue_script('cfna');
     wp_add_inline_script('cfna', 'window.CFNA=' . wp_json_encode($data) . ';' . cfna_js());
@@ -56,18 +70,31 @@ add_action('wp_enqueue_scripts', function () {
 
 function cfna_js() {
     return <<<'JS'
-(()=>{const d=window.CFNA;if(!d||!d.url)return;
+(()=>{const d=window.CFNA;if(!d||(Array.isArray(d)?!d.length:!d.url))return;
 const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const html=`<section class="section cfna-sec"><div class="wrap"><a class="cfna-card" href="${esc(d.url)}">
- ${d.img?`<span class="cfna-img"><img src="${esc(d.img)}" alt="" loading="eager" decoding="async"></span>`:''}
- <span class="cfna-text"><span class="cfna-label en"><b>NEW</b>新着記事${d.label?` ／ ${esc(d.label)}`:''}${d.date?` ／ ${esc(d.date)}`:''}</span>
- <span class="cfna-title">${esc(d.title)}</span>${d.ex?`<span class="cfna-ex">${esc(d.ex)}</span>`:''}
- <span class="tool-cta-btn en cfna-btn">記事を読む →</span></span></a></div></section>`;
+
+const L=Array.isArray(d)?d:[d];
+const card=(x,i)=>`<div class="cfna-slide" role="group" aria-roledescription="スライド" aria-label="${i+1} / ${L.length}"><a class="cfna-card" href="${esc(x.url)}">
+ ${x.img?`<span class="cfna-img"><img src="${esc(x.img)}" alt="" loading="${i?'lazy':'eager'}" decoding="async"></span>`:''}
+ <span class="cfna-text"><span class="cfna-label en">${x.new?'<b>NEW</b>':''}${i?'記事':'新着記事'}${x.label?` ／ ${esc(x.label)}`:''}${x.date?` ／ ${esc(x.date)}`:''}</span>
+ <span class="cfna-title">${esc(x.title)}</span>${x.ex?`<span class="cfna-ex">${esc(x.ex)}</span>`:''}
+ <span class="tool-cta-btn en cfna-btn">記事を読む →</span></span></a></div>`;
+const html=`<section class="section cfna-sec"><div class="wrap"><div class="cfna-car" aria-roledescription="カルーセル" aria-label="新着記事"><div class="cfna-track">${L.map(card).join('')}</div>
+ ${L.length>1?`<div class="cfna-dots">${L.map((x,i)=>`<button type="button" aria-label="${i+1}本目の記事" class="${i?'':'on'}"></button>`).join('')}</div>`:''}</div></div></section>`;
+/* 横にスワイプ、または5秒おきに次の記事へ（触っている間・画面を見ていない間・動きを減らす設定のときは止める） */
+const carousel=()=>{const car=document.querySelector('.cfna-car');if(!car||L.length<2)return;const tr=car.querySelector('.cfna-track'),dots=[...car.querySelectorAll('.cfna-dots button')];
+  let i=0,hold=0;const go=n=>{i=(n+L.length)%L.length;tr.scrollTo({left:i*tr.clientWidth,behavior:'smooth'});mark()};
+  const mark=()=>dots.forEach((b,k)=>b.classList.toggle('on',k===i));
+  tr.addEventListener('scroll',()=>{const n=Math.round(tr.scrollLeft/Math.max(1,tr.clientWidth));if(n!==i){i=n;mark()}},{passive:true});
+  dots.forEach((b,k)=>b.addEventListener('click',()=>{hold=Date.now();go(k)}));
+  ['pointerdown','touchstart','wheel','focusin','mouseenter'].forEach(e=>car.addEventListener(e,()=>{hold=Date.now()},{passive:true}));
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  setInterval(()=>{if(document.hidden||Date.now()-hold<8000)return;go(i+1)},5000)};
 const run=()=>{if(document.querySelector('.cfna-sec'))return;
   const cc=document.querySelector('.catch-card'),sec=cc&&cc.closest('section');
-  if(sec){sec.insertAdjacentHTML('beforebegin',html);return}
-  const flow=document.querySelector('.hero-flow .ticker');if(flow){flow.insertAdjacentHTML('afterend',html);return}
-  const main=document.querySelector('main')||document.body;main.insertAdjacentHTML('afterbegin',html)};
+  if(sec)sec.insertAdjacentHTML('beforebegin',html);
+  else{const flow=document.querySelector('.hero-flow .ticker');if(flow)flow.insertAdjacentHTML('afterend',html);else{const main=document.querySelector('main')||document.body;main.insertAdjacentHTML('afterbegin',html)}}
+  carousel()};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run()})();
 JS;
 }
@@ -75,6 +102,14 @@ JS;
 function cfna_css() {
     return <<<'CSS'
 .cfna-sec{padding-bottom:0!important}
+.cfna-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:8px 0 14px}
+.cfna-track::-webkit-scrollbar{display:none}
+.cfna-slide{flex:0 0 100%;min-width:0;scroll-snap-align:start;padding:0 8px;box-sizing:border-box;display:flex}
+.cfna-slide .cfna-card{width:100%}
+.cfna-card:hover{transform:none!important}
+.cfna-dots{display:flex;justify-content:center;gap:10px;margin:2px 0 0}
+.cfna-dots button{width:10px;height:10px;padding:0;border:0;border-radius:999px;background:rgba(255,255,255,.3);cursor:pointer;transition:width .3s,background .3s}
+.cfna-dots button.on{width:26px;background:var(--accent,#41c9c6)}
 .cfna-card{display:grid;grid-template-columns:minmax(0,1fr);gap:0;overflow:hidden;border:2px solid var(--accent,#41c9c6);border-radius:18px;
   background:linear-gradient(160deg,rgba(65,201,198,.16),rgba(6,8,15,.92) 55%);color:#fff;text-decoration:none;
   box-shadow:0 0 0 6px rgba(65,201,198,.08),0 18px 44px rgba(4,18,26,.55);transition:transform .3s,box-shadow .3s}
