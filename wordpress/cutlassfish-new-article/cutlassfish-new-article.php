@@ -2,7 +2,7 @@
 /**
  * Plugin Name: New Article Card（トップの新着記事カード）
  * Description: サイトのトップ（流れる帯の下、釣果速報の上）に、新着記事を大きなカードで出します。最新の記事5本を、横にスワイプするか5秒おきに順に出します。「設定 → 新着記事カード」で記事を指定すると、その記事を先頭にします。釣果速報は対象外です。
- * Version: 1.1.1
+ * Version: 1.2.0
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -79,7 +79,7 @@ const card=(x,i)=>`<div class="cfna-slide" role="group" aria-roledescription="�
  <span class="cfna-text"><span class="cfna-label en">${x.new?'<b>NEW</b>':''}${i?'記事':'新着記事'}${x.label?` ／ ${esc(x.label)}`:''}${x.date?` ／ ${esc(x.date)}`:''}</span>
  <span class="cfna-title">${esc(x.title)}</span>${x.ex?`<span class="cfna-ex">${esc(x.ex)}</span>`:''}
  <span class="tool-cta-btn en cfna-btn">記事を読む →</span></span></a></div>`;
-const html=`<section class="section cfna-sec"><div class="wrap"><div class="cfna-car" aria-roledescription="カルーセル" aria-label="新着記事"><div class="cfna-track">${L.map(card).join('')}</div>
+const html=`<section class="section cfna-sec"><div class="wrap"><div class="cfna-head"><span class="cfna-eb en">LATEST ARTICLES</span><span class="cfna-h">最新の記事${L.length>1?` ${L.length}本`:''}</span>${L.length>1?'<span class="cfna-hint">横にスワイプ・5秒ごとに次の記事へ</span>':''}</div><div class="cfna-car" aria-roledescription="カルーセル" aria-label="新着記事"><div class="cfna-track">${L.map(card).join('')}</div>
  ${L.length>1?`<div class="cfna-dots">${L.map((x,i)=>`<button type="button" aria-label="${i+1}本目の記事" class="${i?'':'on'}"></button>`).join('')}</div>`:''}</div></div></section>`;
 /* 横にスワイプ、または5秒おきに次の記事へ（触っている間・画面を見ていない間・動きを減らす設定のときは止める） */
 const carousel=()=>{const car=document.querySelector('.cfna-car');if(!car||L.length<2)return;const tr=car.querySelector('.cfna-track'),dots=[...car.querySelectorAll('.cfna-dots button')];
@@ -102,6 +102,10 @@ JS;
 function cfna_css() {
     return <<<'CSS'
 .cfna-sec{padding-bottom:0!important}
+.cfna-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin:0 8px 4px}
+.cfna-eb{flex:0 0 100%;font-size:12px;letter-spacing:.18em;color:var(--accent,#41c9c6)}
+.cfna-h{font-size:clamp(20px,5vw,26px);font-weight:700;color:#fff}
+.cfna-hint{font-size:13px;color:var(--silver,#9cabbd)}
 .cfna-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:8px 0 14px}
 .cfna-track::-webkit-scrollbar{display:none}
 .cfna-slide{flex:0 0 100%;min-width:0;scroll-snap-align:start;padding:0 8px;box-sizing:border-box;display:flex}
