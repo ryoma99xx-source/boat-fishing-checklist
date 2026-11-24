@@ -155,3 +155,5 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($l) {
     array_unshift($l, '<a href="' . esc_url(admin_url('options-general.php?page=cfna')) . '">設定</a>');
     return $l;
 });
+
+// 4b493f15
