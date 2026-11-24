@@ -2,7 +2,7 @@
 /**
  * Plugin Name: New Article Card（トップの新着記事カード）
  * Description: サイトのトップ（流れる帯の下、釣果速報の上）に、新着記事を大きなカードで出します。最新の記事5本を、横にスワイプするか5秒おきに順に出します。「設定 → 新着記事カード」で記事を指定すると、その記事を先頭にします。釣果速報は対象外です。
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -105,7 +105,7 @@ function cfna_css() {
 .cfna-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:8px 0 14px}
 .cfna-track::-webkit-scrollbar{display:none}
 .cfna-slide{flex:0 0 100%;min-width:0;scroll-snap-align:start;padding:0 8px;box-sizing:border-box;display:flex}
-.cfna-slide .cfna-card{width:100%}
+.cfna-slide .cfna-card{width:100%;align-content:start;grid-template-rows:auto 1fr}
 .cfna-card:hover{transform:none!important}
 .cfna-dots{display:flex;justify-content:center;gap:10px;margin:2px 0 0}
 .cfna-dots button{width:10px;height:10px;padding:0;border:0;border-radius:999px;background:rgba(255,255,255,.3);cursor:pointer;transition:width .3s,background .3s}
