@@ -2,7 +2,7 @@
 /**
  * Plugin Name: SEO Basics（説明文・共有画像・公開日・書いた人）
  * Description: テーマが出していない分だけを足します。①一覧ページ（カテゴリー・トピックなど）の説明文（meta description / og:description）、②記事以外のページのSNS共有画像（og:image）、③記事の公開日・更新日（検索エンジン向けの情報と、記事の下の表示）、④記事の下の「書いた人」。テーマがすでに出しているものは重ねて出しません。
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -100,3 +100,14 @@ add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('cfsb');
     wp_add_inline_style('cfsb', '.cfsb-byline{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;margin:32px 0 8px;padding:12px 0;border-top:1px solid rgba(128,128,128,.35);font-size:13px;line-height:1.6;opacity:.85}.cfsb-byline a{color:inherit;text-decoration:underline}');
 });
+
+/* サイトマップ（/wp-sitemap.xml）の整理。オーナー指示 2026-11-24
+   - 投稿者（ユーザー）の一覧を出さない（ログイン名の手がかりになるため）
+   - 「未分類」カテゴリーを出さない（そのページは表示されず 404 のため） */
+add_filter('wp_sitemaps_add_provider', function ($provider, $name) { return $name === 'users' ? false : $provider; }, 10, 2);
+add_filter('wp_sitemaps_taxonomies_query_args', function ($args, $taxonomy) {
+    if ($taxonomy === 'category') { $args['exclude'] = array_merge((array) ($args['exclude'] ?? array()), array((int) get_option('default_category'))); }
+    return $args;
+}, 10, 2);
+
+// 5f2544f5

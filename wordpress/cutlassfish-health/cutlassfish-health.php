@@ -1,11 +1,15 @@
 <?php
 /**
  * Plugin Name: cutlassfish サイトの点検窓口
- * Description: 定期メンテナンス（Claude の点検）用に、管理者だけが読める点検結果を返します：WordPress 本体・プラグイン・テーマの更新の有無、本体ファイルが公式と同じか、アップロード置き場の PHP ファイル、最近書き換わったファイル、管理者の一覧。読むだけで、何も変更しません。REST：/wp-json/cfhealth/v1/status（manage_options が必要）。
- * Version: 1.0.4
+ * Description: 定期メンテナンス（Claude の点検）用に、管理者だけが読める点検結果を返します：WordPress 本体・プラグイン・テーマの更新の有無、本体ファイルが公式と同じか、アップロード置き場の PHP ファイル、最近書き換わったファイル、管理者の一覧（REST：/wp-json/cfhealth/v1/status、manage_options が必要。読むだけ）。あわせて、WordPress.org のプラグイン・テーマを WordPress 標準の自動更新に任せます（失敗したら元に戻るしくみ）。
+ * Version: 1.1.0
  * Author: 3rd-Penguin Fishing Lab.
  */
 if (!defined('ABSPATH')) { exit; }
+
+// 自動更新：WordPress.org のプラグイン・テーマは WordPress 標準の自動更新で入れる（オーナーの OK 2026-11-24）。本体は小さな更新（セキュリティ修正）だけ自動（WordPress の初期設定のまま）
+add_filter('auto_update_plugin', '__return_true');
+add_filter('auto_update_theme', '__return_true');
 
 add_action('rest_api_init', function () {
     register_rest_route('cfhealth/v1', '/status', array(

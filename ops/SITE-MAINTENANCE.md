@@ -29,11 +29,11 @@ tide-current-map.cutlassfish.tokyo（東京湾の潮と流れ）を、Claude の
 
 1. 毎日の 1〜3 を `--weekly` で行う。
 2. 見た目が大きく変わったページは、スクリーンショットと基準を見くらべ、崩れか、ただの記事の入れ替わりかを判断する。ただの入れ替わりなら報告に書くだけ（基準は作り直さない。作り直すのはオーナーが言ったとき：`--update-baseline` → コミット）。
-3. 更新のあるプラグイン・テーマを一覧にする。WordPress の自動更新はオーナーの OK が出るまで入れていない。
+3. 更新のあるプラグイン・テーマを一覧にする。WordPress.org のプラグイン・テーマは WordPress 標準の自動更新で入る（オーナーの OK 2026-11-24。プラグイン cutlassfish-health）。1週間以上入らずに残っているものがあれば、そう書く。
 4. 報告（5行以内）：ページ・リンク・配信ファイル・WordPress の中・更新、それぞれ「問題なし／何件」。
 
 ## 見つかっている既知のこと
 
-- サイトマップに `https://cutlassfish.tokyo/category/uncategorized/` が入っているが、そのページは 404（2026-11-24 時点。直すかはオーナー判断）。
+- サイトマップから「未分類」カテゴリー（404 だった）と投稿者の一覧を外した（2026-11-24、プラグイン cutlassfish-seo-basics 1.1.0）。
 - 日本語表示の WordPress だが本体は英語版のため、`wp-includes/version.php` は英語版の照合値と同じ（問題ではない。`cutlassfish-health` が考慮済み）。
 - Independent Analytics は自分で設定ファイル（`iawp-click-config.php`）を書き換える（問題ではない）。
