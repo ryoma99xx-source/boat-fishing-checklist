@@ -367,5 +367,8 @@ import size_class
 s = size_class.apply(s, [('croq', 'コロッケ', '〜200g'), ('tonk', 'トンカツ', '200〜400g'), ('ryo', '良型・中型', '400g〜1kg'),
                          ('kiro', 'キロアップ', '1〜2kg'), ('kiro2', '2キロアップ', '2〜3kg'), ('mon', 'モンスター', '3kg超')],
                      big={'kiro', 'kiro2', 'mon'})
+# アプリ内ブラウザ・ホーム画面に追加の案内（public/inapp.js）の名前
+s, _n = re.subn(r'(src="/inapp\.js" data-kind="app" data-name=")[^"]*"', r'\1ティップランカウンター"', s)
+assert _n == 1
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))

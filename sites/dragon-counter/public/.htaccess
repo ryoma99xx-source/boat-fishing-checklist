@@ -24,6 +24,9 @@
   RewriteRule ^tairaba-catalog/$ tairaba-catalog/index.html [L]
   RewriteRule ^tairaba-catalog/ties$ /tairaba-catalog/ties/ [R=301,L]
   RewriteRule ^tairaba-catalog/ties/$ tairaba-catalog/ties/index.html [L]
+  # リンク集（/links/）：Instagram・Threads のプロフィールに貼る入口
+  RewriteRule ^links$ /links/ [R=301,L]
+  RewriteRule ^links/$ links/index.html [L]
   RewriteRule (^|/)\. - [R=404,L]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^.+$ - [R=404,L]
@@ -43,7 +46,7 @@
 # (the service worker caches the app for offline use); images are kept for a day.
 <IfModule mod_headers.c>
   Header set Cache-Control "public, max-age=86400"
-  <FilesMatch "^(index\.html|sw\.js|catalog-extra\.json|manifest\.webmanifest|robots\.txt|tenya-rank\.php|catalog\.js)$">
+  <FilesMatch "^(index\.html|sw\.js|catalog-extra\.json|manifest\.webmanifest|robots\.txt|tenya-rank\.php|catalog\.js|inapp\.js)$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
   <Files "sw.js">

@@ -325,5 +325,8 @@ import size_class
 # 区分はオーナーの定義（2026-11-23 に重さで決め直し）。キーは前のまま（前の記録はそのまま：オーナー指示）
 s = size_class.apply(s, [('chariko', 'チャリコ', ''), ('kodai', '小鯛', '1キロ以下'), ('chudai', '中鯛', '1キロ〜3キロ'),
                          ('odai', '大鯛', '3キロ以上'), ('oban', '特鯛', '5キロ以上')])
+# アプリ内ブラウザ・ホーム画面に追加の案内（public/inapp.js）の名前
+assert s.count('data-name="ドラゴンカウンター"') == 1
+s = s.replace('data-name="ドラゴンカウンター"', 'data-name="タイラバカウンター"')
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))
