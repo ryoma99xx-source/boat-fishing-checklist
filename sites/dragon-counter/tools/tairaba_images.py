@@ -113,6 +113,8 @@ def apply(s):
     HOLD_MAKERS = set()   # 松岡スペシャル：オーナーが「そのまま使う」と決めた（2026-11-22）
     HOLD_KEYS = set(json.load(open(os.path.join(HERE, 'tairaba', 'images-hold.json'), encoding='utf-8'))['keys']) if os.path.exists(os.path.join(HERE, 'tairaba', 'images-hold.json')) else set()
     IMG = {k: v for k, v in IMG.items() if k.split('|')[1] not in HOLD_MAKERS and k not in HOLD_KEYS}
+    import tairaba_shapes
+    SHP = tairaba_shapes.load()
     m = _re.search(r"const TB_CAT=(\{.*?\});\n", s, flags=_re.S)
     cat = json.loads(m.group(1))
     for k in ('heads', 'ties', 'skirts'):
@@ -121,6 +123,9 @@ def apply(s):
             ii = [i if i and os.path.exists(os.path.join(OUT, i + '.webp')) else '' for i in ii]
             if any(ii):
                 r['i'] = ii
+            sh = SHP.get('%s|%s|%s' % (k, r['m'], r['s']))   # 形の写真（tairaba_shapes.py）
+            if sh and os.path.exists(os.path.join(OUT, sh['id'] + '.webp')):
+                r['shp'] = sh['id']
     s = s[:m.start(1)] + json.dumps(cat, ensure_ascii=False, separators=(',', ':')) + s[m.end(1):]
     # 写真：自分で付けた写真があればそれ、なければカタログの写真（カタログから登録したもの）
     R("const gph=(id,cls)=>id&&GPH[id]?`<img class=\"gph ${cls||''}\" src=\"${GPH[id]}\" alt=\"\" decoding=\"async\">`:'';",
@@ -134,11 +139,11 @@ def apply(s):
     s = s.replace("GPH[curGear(tr).rig]", "(GPH[curGear(tr).rig]||catIm(curGear(tr).rig))")
     # カタログの色の選択肢に写真
     R("""${cur.c.map(c=>`<button class="chip ${tbc.c.has(c)?'on':''}" data-act="tbcC" data-d="${esc(c)}">${esc(c)}</button>`).join('')}""",
-      """${cur.c.map((c,j)=>{const im=cur.i&&cur.i[j];return `<button class="chip ${im?'cimg':''} ${tbc.c.has(c)?'on':''}" data-act="tbcC" data-d="${esc(c)}">${cimg(im,'cc')}<span>${esc(c)}</span></button>`}).join('')}""")
+      """${cur.shp?`<div class="tbc-sh">${cimg(cur.shp,'shp')}<small>形（色は下の写真）</small></div>`:''}${cur.c.map((c,j)=>{const im=cur.i&&cur.i[j];return `<button class="chip ${im?'cimg':''} ${tbc.c.has(c)?'on':''}" data-act="tbcC" data-d="${esc(c)}">${cimg(im,'cc')}<span>${esc(c)}</span></button>`}).join('')}""")
     R(".gph{flex:none;object-fit:cover;background:#fff;border-radius:6px}",
       ".gph{flex:none;object-fit:cover;background:#fff;border-radius:6px}.gph.cat{object-fit:contain}\n"
       ".chips.wrap .chip.cimg{box-sizing:border-box;display:inline-flex;flex-direction:column;align-items:stretch;gap:4px;flex:0 0 calc(50% - 4px);width:calc(50% - 4px);max-width:calc(50% - 4px);min-width:0;border-radius:12px;padding:6px;white-space:normal;text-align:center;font-size:14px;line-height:1.3}\n"
-      ".gph.cc{width:100%;height:76px;border-radius:8px}.chip.cimg.on .gph{outline:3px solid var(--chipon);outline-offset:-3px}\n"
+      ".gph.cc{width:100%;height:76px;border-radius:8px}.tbc-sh{flex:0 0 100%;width:100%;margin:0 0 6px}.tbc-sh .gph.shp{display:block;width:100%;height:140px;border-radius:10px}.tbc-sh small{display:block;font-size:12px;opacity:.75;margin-top:2px}.chip.cimg.on .gph{outline:3px solid var(--chipon);outline-offset:-3px}\n"
       ".dk-t.dk-g:has(.gph){flex-direction:row;align-items:center;gap:8px;flex-basis:168px}.dk-t.dk-g .gph.dkimg{position:static;flex:none;width:52px;height:42px;transform:none;border-radius:8px}.dk-t.dk-g:has(.gph) .dk-c{flex:1 1 auto;min-width:0;width:auto;max-width:none;font-size:13px;line-height:1.3;padding-right:14px}")
     return s
 

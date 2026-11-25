@@ -20,6 +20,7 @@ from PIL import Image, ImageDraw, ImageFont
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import tenya_page as T
+import tairaba_shapes as SH   # 形の写真（製品ごとに1枚）
 
 SITE, PUB = T.SITE, T.PUB
 REPO = os.path.dirname(os.path.dirname(SITE))
@@ -42,6 +43,7 @@ def zs(z):
 def load():
     cat = json.load(open(os.path.join(HERE, 'tairaba', 'catalog.json'), encoding='utf-8'))
     mp = json.load(open(os.path.join(HERE, 'tairaba', 'images.json'), encoding='utf-8'))
+    shp = SH.load()
     hp = os.path.join(HERE, 'tairaba', 'images-hold.json')
     hold = set(json.load(open(hp, encoding='utf-8'))['keys']) if os.path.exists(hp) else set()
     out = {}
@@ -60,7 +62,7 @@ def load():
                 im = mp.get(k) if k not in hold else None
                 q = T.norm_q(' '.join([m, p, c] + info + ['%sg' % zs(x) for x in w]))
                 cols.append({'c': c, 'img': im['id'] if im else '', 'q': q, 'z': ' '.join(zs(x) for x in w)})
-            plist.append({'m': m, 'p': p, 'u': r.get('u', ''), 'tg': r.get('mat') == 'TG', 'w': w, 'wt': wt, 'info': info, 'cols': cols})
+            plist.append({'shape': (shp.get('%s|%s|%s' % (key, m, p)) or {}).get('id', ''), 'm': m, 'p': p, 'u': r.get('u', ''), 'tg': r.get('mat') == 'TG', 'w': w, 'wt': wt, 'info': info, 'cols': cols})
         # ページ・記事のメーカーの順は、写真のある色の割合が高い順（低いほど下）。同じ割合ならアプリの順。オーナー指示 2026-11-23（アプリの順は変えない）
         rate = {m: (lambda cs: sum(1 for c in cs if c['img']) / max(1, len(cs)))([c for r in plist if r['m'] == m for c in r['cols']]) for m in makers}
         makers = sorted(makers, key=lambda m: (-round(rate[m], 4), makers.index(m)))
@@ -115,6 +117,14 @@ def shop_links(r, kind, page=True, small=False):
     return x
 
 
+def shape_fig(r, article):
+    """形の写真（色ごとの写真が色見本だけの製品に、全体が写った写真を1枚）。オーナー指示 2026-11-25"""
+    if not r.get('shape'):
+        return ''
+    return ('<figure style="margin:0 0 12px;max-width:420px"><img src="%s" alt="%s の形" loading="lazy" style="display:block;width:100%%;height:auto;max-height:260px;object-fit:contain;background:#fff;border-radius:10px">'
+            '<figcaption style="font-size:12px;opacity:.75;margin-top:4px">形（色は下の写真）</figcaption></figure>' % (photo(r['shape'], article), E(r['p'])))
+
+
 def cards_page(plist, kind, pre):
     out = []
     for pi, r in enumerate(plist):
@@ -122,8 +132,8 @@ def cards_page(plist, kind, pre):
         for ci, c in enumerate(r['cols']):
             img = ('<img src="%s" alt="%s %s" loading="lazy" decoding="async" width="240" height="180">' % (photo(c['img'], False), E(r['p']), E(c['c']))) if c['img'] else '<div class="noimg">写真なし</div>'
             cols.append('<figure class="cl" %s>%s<figcaption><b>%s</b></figcaption></figure>' % (fig_attrs(r, c, '%s-%d-%d' % (pre, pi, ci)), img, E(c['c'])))
-        out.append('<section class="pd" id="%s-%d" %s>\n <h2><small>%s</small>%s</h2>\n <p class="meta">%s</p>\n <p class="links" data-tcat-links="1">%s</p>\n <div class="grid">%s</div>\n</section>'
-                   % (pre, pi, prod_attrs(r), E(r['m']), E(r['p']), E(meta(r)), shop_links(r, kind), ''.join(cols)))
+        out.append('<section class="pd" id="%s-%d" %s>\n <h2><small>%s</small>%s</h2>\n <p class="meta">%s</p>\n <p class="links" data-tcat-links="1">%s</p>\n %s<div class="grid">%s</div>\n</section>'
+                   % (pre, pi, prod_attrs(r), E(r['m']), E(r['p']), E(meta(r)), shop_links(r, kind), shape_fig(r, False), ''.join(cols)))
     return '\n'.join(out)
 
 
@@ -252,8 +262,8 @@ def art_photo_block(plist, makers, kind, pre, mkh=True):
             for ci, c in enumerate(r['cols']):
                 img = '<img src="%s" alt="%s %s" width="240" height="180" loading="lazy" style="%s">' % (photo(c['img'], True), E(r['p']), E(c['c']), IMGST) if c['img'] else ''
                 figs.append('<figure %s style="%s">%s<figcaption style="%s">%s</figcaption></figure>' % (fig_attrs(r, c, '%s-%d-%d' % (pre, pi, ci)), FIG, img, CAP, E(c['c'])))
-            blk.append('<div %s>\n<h3 id="%s-%d">%s</h3>\n<p>%s</p>\n<p data-tcat-links="1">%s</p>\n<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin:0 0 28px">%s</div>\n</div>'
-                       % (prod_attrs(r), pre, pi, E(r['p']), E(meta(r)), shop_links(r, kind, page=False), ''.join(figs)))
+            blk.append('<div %s>\n<h3 id="%s-%d">%s</h3>\n<p>%s</p>\n<p data-tcat-links="1">%s</p>\n%s<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin:0 0 28px">%s</div>\n</div>'
+                       % (prod_attrs(r), pre, pi, E(r['p']), E(meta(r)), shop_links(r, kind, page=False), shape_fig(r, True), ''.join(figs)))
         blk.append('</div>')
         body.append('\n'.join(blk))
     return '\n'.join(body)
@@ -267,7 +277,7 @@ def art_tie_block(plist, makers):
         blk = ['<div data-tcat-mkb="%s">' % E(m), '<h2 id="t-mk-%d"><span class="en">MAKER</span>%s</h2>\n<p>%d製品・%d色</p>' % (mi, E(m), len(rs), sum(len(r['cols']) for r in rs))]
         for r in rs:
             pi = plist.index(r)
-            rep = next((c['img'] for c in r['cols'] if c['img']), '')
+            rep = r.get('shape') or next((c['img'] for c in r['cols'] if c['img']), '')
             chips = ''.join('<span data-tcat-c>%s</span>' % E(c['c']) for c in r['cols'])
             img = '<img src="%s" alt="%s" width="240" height="180" loading="lazy" style="%s;border-radius:8px">' % (photo(rep, True), E(r['p']), IMGST) if rep else ''
             blk.append('<div %s style="margin:0 0 26px">\n<h3 id="t-%d">%s</h3>\n<p>%s</p>\n<div style="display:grid;grid-template-columns:minmax(110px,160px) 1fr;gap:12px;align-items:start">%s<div>%s</div></div>\n'
