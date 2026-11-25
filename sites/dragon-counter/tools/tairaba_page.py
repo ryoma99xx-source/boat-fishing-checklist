@@ -104,6 +104,9 @@ def shop_links(r, kind, page=True, small=False):
     if page:
         return ('<a class="off" href="%s" target="_blank" rel="noopener">メーカーのページ ↗</a>' % E(r['u']) if r['u'] else '') + \
             '<a class="buy az" href="%s" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a><a class="buy rk" href="%s" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a><a class="buy yh" href="%s" target="_blank" rel="nofollow sponsored noopener">Yahoo!で探す</a>' % (E(T.amazon(k)), E(T.rakuten(k)), E(T.yahoo(k)))
+    if small == 'cls':   # ネクタイの記事：見た目は catalog.js の .tcat-b（記事を1MB以下にするため）
+        x = '<a href="%s" target="_blank" rel="noopener" class="tcat-b mk">メーカーのページ</a>' % E(r['u']) if r['u'] else ''
+        return x + ''.join('<a href="%s" target="_blank" rel="nofollow sponsored noopener" class="tcat-b %s">%sで探す</a>' % (E(u), c, n) for u, c, n in ((T.amazon(k), 'az', 'Amazon'), (T.rakuten(k), 'rk', '楽天'), (T.yahoo(k), 'yh', 'Yahoo!')))
     b = BTN + (';font-size:13px;padding:6px 10px' if small else '')
     x = '<a href="%s" target="_blank" rel="noopener" style="%s;border:1px solid #99a;color:inherit">メーカーのページ</a>' % (E(r['u']), b) if r['u'] and not small else ''
     x += '<a href="%s" target="_blank" rel="nofollow sponsored noopener" style="%s;background:#f3a847;color:#111 !important">Amazonで探す</a>' % (E(T.amazon(k)), b)
@@ -265,11 +268,11 @@ def art_tie_block(plist, makers):
         for r in rs:
             pi = plist.index(r)
             rep = next((c['img'] for c in r['cols'] if c['img']), '')
-            chips = ''.join('<span data-tcat-c="1" class="tcat-chip">%s</span>' % E(c['c']) for c in r['cols'])
+            chips = ''.join('<span data-tcat-c>%s</span>' % E(c['c']) for c in r['cols'])
             img = '<img src="%s" alt="%s" width="240" height="180" loading="lazy" style="%s;border-radius:8px">' % (photo(rep, True), E(r['p']), IMGST) if rep else ''
             blk.append('<div %s style="margin:0 0 26px">\n<h3 id="t-%d">%s</h3>\n<p>%s</p>\n<div style="display:grid;grid-template-columns:minmax(110px,160px) 1fr;gap:12px;align-items:start">%s<div>%s</div></div>\n'
-                       '<p data-tcat-links="1" style="margin:10px 0 0"><a href="%s#t-%d" target="_blank" rel="noopener" style="%s;background:#41c9c6;color:#03161c !important">全色の写真を見る</a>%s</p>\n</div>'
-                       % (prod_attrs(r), pi, E(r['p']), E(meta(r)), img or '<div></div>', chips, PAGES['tie'][1], pi, BTN, shop_links(r, 'tie', page=False)))
+                       '<p data-tcat-links="1" style="margin:10px 0 0"><a href="%s#t-%d" target="_blank" rel="noopener" class="tcat-b all">全色の写真を見る</a>%s</p>\n</div>'
+                       % (prod_attrs(r), pi, E(r['p']), E(meta(r)), img or '<div></div>', chips, PAGES['tie'][1], pi, shop_links(r, 'tie', page=False, small='cls')))
         blk.append('</div>')
         body.append('\n'.join(blk))
     return '\n'.join(body)

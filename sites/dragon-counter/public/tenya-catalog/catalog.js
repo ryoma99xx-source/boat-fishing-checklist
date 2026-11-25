@@ -55,8 +55,10 @@ p.tcat-none{padding:16px;text-align:center;color:var(--tcat-muted,${C.muted})!im
 [data-tcat-rank] li a::before{content:counter(r);font-size:22px;font-weight:700;color:#e3a43b;text-align:center}
 [data-tcat-rank] li img{width:64px;height:48px;object-fit:contain;background:#fff;border-radius:6px}[data-tcat-rank] li small{display:block;color:var(--tcat-muted,${C.muted});font-size:12px}
 .tcat-hide{display:none!important}
+/* 記事のボタン（タイラバのネクタイの記事は大きいので、ボタンの見た目は style ではなくここで付ける） */
+.tcat-b{display:inline-block;font-size:14px;font-weight:700;padding:8px 14px;border-radius:8px;text-decoration:none!important;margin:0 6px 6px 0}.tcat-b.all{background:#41c9c6;color:#03161c!important}.tcat-b.mk{border:1px solid #99a;color:inherit}.tcat-b.az{background:#f3a847;color:#111!important}.tcat-b.rk{background:#bf0000;color:#fff!important}.tcat-b.yh{background:#ff0033;color:#fff!important}
 /* 色の名前だけのチップ（タイラバのネクタイの記事など、写真を出さない一覧）。検索は製品の data-pq と名前で */
-.tcat-chip{display:inline-block;margin:0 6px 6px 0;padding:3px 10px;border:1px solid var(--tcat-line,${C.line});border-radius:999px;font-size:13px;line-height:1.5;background:var(--tcat-field,${C.field});color:var(--tcat-ink,${C.ink})}`;
+.tcat-chip,span[data-tcat-c]{display:inline-block;margin:0 6px 6px 0;padding:3px 10px;border:1px solid var(--tcat-line,${C.line});border-radius:999px;font-size:13px;line-height:1.5;background:var(--tcat-field,${C.field});color:var(--tcat-ink,${C.ink})}`;
 if(!cssDone){document.head.appendChild(css);cssDone=true}
 
 /* 操作部品 */
