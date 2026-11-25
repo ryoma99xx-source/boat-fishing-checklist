@@ -275,6 +275,12 @@ def art_tie_block(plist, makers):
     return '\n'.join(body)
 
 
+# ネクタイの記事の冒頭に出す更新のお知らせ（新しいものを上に）
+TIE_UPDATES = [
+    ('2026/11/25', 'ネクタイに<b>17メーカー</b>を追加しました。アブガルシア・オーナー・クレージーオーシャン・アクティブ、関西のササラボ・BRIZM・UROKODO・ヌーテック・AZZURO・剣屋・イグレイ、釣具店のタカミヤ・ガラパゴス、遊漁船発のクレイジーコレクション、ワーム系のソルトウォーターボーイズ・バレーヒル、そしてダイソー。いまは<b>%(nm)dメーカー・%(np)d製品・%(nc)d色</b>です。'),
+]
+
+
 def article(kind, v, D):
     hp, hm = D['head']; tp, tm = D['tie']; sp, sm = D['skirt']
     nh, nt, ns = (sum(len(r['cols']) for r in x) for x in (hp, tp, sp))
@@ -307,6 +313,8 @@ def article(kind, v, D):
         excerpt = 'ダイワ・シマノ・ジャッカルなど%dメーカーのタイラバのヘッド%d製品・%d色を、写真で一覧にしました。重さ・メーカー・素材（タングステン）で絞り込めて、色や製品の名前で検索できます。スカート%d製品も載せています。釣果記録アプリ「タイラバカウンター」と同じデータです。' % (len(hm), len(hp), nh, len(sp))
         ncol, nmk, plist = nh, len(hm), hp
     else:
+        for d_, txt in TIE_UPDATES:   # オーナー指示 2026-11-25：冒頭に UPDATE のラベルで更新内容を書く
+            a.append('<div style="border:2px solid #e3a43b;border-radius:12px;padding:10px 14px;margin:0 0 18px;background:rgba(227,164,59,.08)"><span style="display:inline-block;background:#e3a43b;color:#03161c;font-weight:700;font-size:12px;letter-spacing:.12em;padding:2px 8px;border-radius:6px;margin-right:8px">UPDATE</span><b>%s</b><br>%s</div>' % (E(d_), txt % {'nm': len(tm), 'np': len(tp), 'nc': nt}))
         title = 'タイラバのネクタイ カタログ｜%dメーカー・%d色を一覧（写真はツールのページで）' % (len(tm), nt)
         a.append('<p class="lead">タイラバのネクタイは、形も色も数えきれないほどあります。「あのカーリー、オレンジゼブラあったっけ？」と思っても、メーカーのページで探すのは大変です。'
                  'そこで、タイラバのネクタイを<strong>メーカー・製品ごとに、全部の色の名前を一覧</strong>にしました。%dメーカー・%d製品・%d色です。釣果記録アプリ「タイラバカウンター」のカタログと同じデータです。</p>' % (len(tm), len(tp), nt))
