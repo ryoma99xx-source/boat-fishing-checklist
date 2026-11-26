@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cutlassfish Archive（記事一覧・釣行記の年表・検索）
  * Description: 過去記事を見つけやすくします。全記事一覧（/articles/：魚・テーマ・年月で絞り込み、文字で検索）、釣行記の年表（/fishing-log/）、メニューの検索欄、記事の下の「前後の記事」と「同じ魚の記事」。釣果速報は一覧に入れません。
- * Version: 1.0.8
+ * Version: 1.0.9
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPLv2 or later
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class CF_Archive {
-	const V     = '1.0.8';
+	const V     = '1.0.9';
 	const TYPES = array( 'tachiuo_post' );   // 釣り記事だけ。釣果速報（tbt_catch）・動画・初期の投稿（Hello world!）は入れない
 	const CACHE = 'cf_archive_items_v1';
 	// 目立たせるカタログ（メニューと記事の下）。slug は記事のURL。sp：この魚種の記事に出す／kw：タイトル・抜粋にこの言葉がある記事に出す（両方あれば両方を満たすとき）
@@ -222,6 +222,7 @@ var r=news.querySelectorAll('.reveal');for(var j=0;j<r.length;j++)r[j].classList
 		'end'  => 1795971540,                 // 2026-11-30 01:59（日本時間）
 		'tag'  => 'BLACK FRIDAY 後半戦',
 		'text' => '1.5万円から1,000円OFF｜11/30 1:59まで',
+		'badge' => 'ポイント最大23％',          // 見出しの右に出す小さな札（Yahoo! の公式バナーの数字。オーナー指示 2026-11-26）
 	);
 
 	public static function promo_bar() {
@@ -237,10 +238,11 @@ var r=news.querySelectorAll('.reveal');for(var j=0;j<r.length;j++)r[j].classList
 <style>
 .cfa-promo{position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;display:flex;align-items:center;gap:6px;max-width:560px;margin:0 auto;padding:10px 8px 10px 14px;background:#111;border:2px solid #f5c83c;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.45);font-family:inherit;line-height:1.35}
 .cfa-promo a.cfa-promo-go{flex:1;color:#fff !important;text-decoration:none;font-size:14px;font-weight:700}
-.cfa-promo b{display:block;color:#f5c83c;font-size:12px;letter-spacing:.08em}
+.cfa-promo b{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#f5c83c;font-size:12px;letter-spacing:.08em;margin-bottom:2px}
+.cfa-promo b i{flex:none;font-style:normal;background:#f5c83c;color:#111;border-radius:999px;padding:1px 9px;font-size:12px;letter-spacing:.02em;white-space:nowrap}
 .cfa-promo button{flex:none;width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:#aaa;font-size:22px;line-height:1;cursor:pointer}
 </style>
-<div class="cfa-promo" id="cfa-promo" hidden><a class="cfa-promo-go" href="<?php echo esc_url( $url ); ?>"><b><?php echo esc_html( $p['tag'] ); ?></b><?php echo esc_html( $p['text'] ); ?> →</a><button type="button" aria-label="閉じる">×</button></div>
+<div class="cfa-promo" id="cfa-promo" hidden><a class="cfa-promo-go" href="<?php echo esc_url( $url ); ?>"><b><span><?php echo esc_html( $p['tag'] ); ?></span><?php if ( ! empty( $p['badge'] ) ) : ?><i><?php echo esc_html( $p['badge'] ); ?></i><?php endif; ?></b><?php echo esc_html( $p['text'] ); ?> →</a><button type="button" aria-label="閉じる">×</button></div>
 <script>
 (function(){var el=document.getElementById('cfa-promo'),k='cfa-promo-<?php echo esc_js( $p['id'] ); ?>';if(!el)return;
 if(Date.now()>=<?php echo (int) $p['end']; ?>*1000){el.remove();return}
