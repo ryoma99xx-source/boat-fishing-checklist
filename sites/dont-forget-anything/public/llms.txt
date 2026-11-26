@@ -1,0 +1,8 @@
+# 釣り持ち物チェックツール（Don't forget anything）
+
+> 釣り方ごとの持ち物リストをチェックボックスで管理する無料ツール。釣行前の準備の抜け漏れをなくします。テンヤタチウオ用・泳がせ用・遠征用のリストが最初から入っていて、自分の釣り方に合わせて編集・共有できます。登録なしで使え、データは端末の中に保存されます。
+
+- [釣り持ち物チェックツール](https://dont-forget-anything.cutlassfish.tokyo/)
+- [釣り持ち物チェックツールの使い方](https://dont-forget-anything.cutlassfish.tokyo/help.html)
+- [紹介記事](https://cutlassfish.tokyo/article/dont-forget-anything/)
+- [運営サイト：東京湾の魚・釣り（3rd-Penguin Fishing Lab.）](https://cutlassfish.tokyo/)（案内：https://cutlassfish.tokyo/llms.txt）

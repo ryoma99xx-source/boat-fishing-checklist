@@ -7,12 +7,13 @@
    "path": "/",
    "file": "index.html",
    "content_type": "text/html; charset=utf-8",
-   "bytes": 102987,
-   "sha256": "8873773f7b940325dcb1c71d3cbb6744d8deb938f7f2d5b745f1ea93fae61e8a",
+   "bytes": 104642,
+   "sha256": "bb84f883edad5d87f349a32a8952cf864d4f46b7efbf9e0d1f470e8cda3a7dfb",
    "found_by": "start",
    "modifications": [
     "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)",
-    "added copy-for-Dragon-Counter button (2026-11-09)"
+    "added copy-for-Dragon-Counter button (2026-11-09)",
+    "AI・検索向けの印を追加（説明文・canonical・構造化データ、2026-11-26）"
    ]
   },
   {
@@ -37,11 +38,12 @@
    "path": "/help.html",
    "file": "help.html",
    "content_type": "text/html; charset=utf-8",
-   "bytes": 25915,
-   "sha256": "146a1e7061120e25f18064a5ecc173ad75d5d8a45a004587ce363a69c2744602",
+   "bytes": 26292,
+   "sha256": "dbcdf1f2d4685d1b6df5d77062a852bbeefc162f32a434efd60aa643d092e910",
    "found_by": "link from /",
    "modifications": [
-    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)"
+    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)",
+    "AI・検索向けの印を追加（説明文・canonical・構造化データ、2026-11-26）"
    ]
   },
   {
@@ -99,6 +101,33 @@
    "sha256": "a0104b8600f1a520aa23a10a5b438a4685b7a1d57eb97bfe06baf4ef2368be59",
    "found_by": "added 2026-11-09 (Dragon Counter import bridge)",
    "modifications": []
+  },
+  {
+   "path": "/robots.txt",
+   "file": "robots.txt",
+   "content_type": "text/plain; charset=utf-8",
+   "found_by": "added 2026-11-26 (AI・検索向け)",
+   "modifications": [],
+   "sha256": "a0680e04949c41992e3c9052fab695edd7aab8be123d5263f4a239885a189313",
+   "bytes": 89
+  },
+  {
+   "path": "/sitemap.xml",
+   "file": "sitemap.xml",
+   "content_type": "application/xml; charset=utf-8",
+   "found_by": "added 2026-11-26 (AI・検索向け)",
+   "modifications": [],
+   "sha256": "6564071fa72910a7a8ec16f9e4bf8d258fd99acc679d741933cd163bbe2f3eae",
+   "bytes": 253
+  },
+  {
+   "path": "/llms.txt",
+   "file": "llms.txt",
+   "content_type": "text/plain; charset=utf-8",
+   "found_by": "added 2026-11-26 (AI・検索向け)",
+   "modifications": [],
+   "sha256": "1054b9c089093ef7f9808db1cd572eaef8e9d8da035d1061e057d2797b942210",
+   "bytes": 808
   }
  ],
  "missing_references": {},

@@ -1,0 +1,7 @@
+# テンヤシミュレーター（テンヤ海中挙動シミュレーター）
+
+> タチウオのテンヤが海中でどう動くかを見る無料の理論シミュレーター。ダイワタイプとシマノ平型タイプのテンヤをA/B比較でき、叩きの幅・回数・保持角度・潮流を変えて、ヘッドの上下動とひねりを見比べられます。
+
+- [テンヤシミュレーター](https://tenya-simulator.cutlassfish.tokyo/)
+- [紹介記事](https://cutlassfish.tokyo/article/tenya-simulator/)
+- [運営サイト：東京湾の魚・釣り（3rd-Penguin Fishing Lab.）](https://cutlassfish.tokyo/)（案内：https://cutlassfish.tokyo/llms.txt）

@@ -7,11 +7,12 @@
    "path": "/",
    "file": "index.html",
    "content_type": "text/html; charset=utf-8",
-   "bytes": 6580,
-   "sha256": "d5dfe756405913a60e970c6036bbc2f9f7f29cac42879d5acbba08857e65ab48",
+   "bytes": 7829,
+   "sha256": "4fa894c82d6602abfa98413823fd0ef8318197b6613dbe78676bcd59f404a5f1",
    "found_by": "start",
    "modifications": [
-    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)"
+    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)",
+    "AI・検索向けの印を追加（説明文・canonical・構造化データ、2026-11-26）"
    ]
   },
   {
@@ -56,11 +57,12 @@
    "path": "/help.html",
    "file": "help.html",
    "content_type": "text/html; charset=utf-8",
-   "bytes": 23122,
-   "sha256": "96b99959c0ae99e1cb0b88b834fb9eb765488c31aa824f5c277ef58006a37c29",
+   "bytes": 23538,
+   "sha256": "df6df974fbfdee328ca6caed9ba1793e8c5408607046125c0b7ed7e51920ca76",
    "found_by": "link from /",
    "modifications": [
-    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)"
+    "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)",
+    "AI・検索向けの印を追加（説明文・canonical・構造化データ、2026-11-26）"
    ]
   },
   {
@@ -116,6 +118,33 @@
    "sha256": "634a1a0543670be7eaa768aa3f4d9dd5e4d32045d6910eba76a8fe8ec3b94016",
    "found_by": "ref from /",
    "modifications": []
+  },
+  {
+   "path": "/robots.txt",
+   "file": "robots.txt",
+   "content_type": "text/plain; charset=utf-8",
+   "found_by": "added 2026-11-26 (AI・検索向け)",
+   "modifications": [],
+   "sha256": "76ca7539469104c080fcb81052b718ca998f46643d97d7cf385079e8d6155a5c",
+   "bytes": 92
+  },
+  {
+   "path": "/sitemap.xml",
+   "file": "sitemap.xml",
+   "content_type": "application/xml; charset=utf-8",
+   "found_by": "added 2026-11-26 (AI・検索向け)",
+   "modifications": [],
+   "sha256": "00e754d05b9db2a733b041c264c22b533aa6e01f1e49d4bff6e4a398ebea2012",
+   "bytes": 259
+  },
+  {
+   "path": "/llms.txt",
+   "file": "llms.txt",
+   "content_type": "text/plain; charset=utf-8",
+   "found_by": "added 2026-11-26 (AI・検索向け)",
+   "modifications": [],
+   "sha256": "fc3eb9019355fc92b4d869af13470e411ed26c91e5676ac037853c26bccef9a5",
+   "bytes": 881
   }
  ],
  "missing_references": {},

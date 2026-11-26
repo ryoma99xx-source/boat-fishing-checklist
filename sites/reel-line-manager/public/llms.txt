@@ -1,0 +1,8 @@
+# リール糸管理ツール（REEL LINE MANAGER）
+
+> リールの糸を、もう迷わない。リールごとの糸の種類・号数・長さ・巻き替え日・使用回数をまとめて記録できる、釣り人のための無料ツール。替えスプールやラインの在庫、買い物メモも管理できます。登録なしで使え、データは端末の中に保存されます。
+
+- [リール糸管理ツール](https://reel-line-manager.cutlassfish.tokyo/)
+- [リール糸管理ツールの使い方](https://reel-line-manager.cutlassfish.tokyo/help.html)
+- [紹介記事](https://cutlassfish.tokyo/article/reel-line-manager/)
+- [運営サイト：東京湾の魚・釣り（3rd-Penguin Fishing Lab.）](https://cutlassfish.tokyo/)（案内：https://cutlassfish.tokyo/llms.txt）

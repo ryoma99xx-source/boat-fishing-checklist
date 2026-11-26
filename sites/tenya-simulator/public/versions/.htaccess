@@ -1,0 +1,4 @@
+# 古い版のページは検索に出さない（いまの版は / ）。2026-11-26
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex"
+</IfModule>

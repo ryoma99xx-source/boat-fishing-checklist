@@ -31,7 +31,9 @@ ErrorDocument 404 /404.html
   AddType image/png .png
   AddType image/x-icon .ico
   AddType font/woff2 .woff2
-  AddCharset utf-8 .html .js .mjs .css .json .webmanifest
+  AddType text/plain .txt
+  AddType application/xml .xml
+  AddCharset utf-8 .html .js .mjs .css .json .webmanifest .txt .xml
 </IfModule>
 
 # data/*.f64.gz holds raw gzip bytes that the app inflates itself: send it as
@@ -54,4 +56,11 @@ ErrorDocument 404 /404.html
   <FilesMatch "\.html$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
+</IfModule>
+
+# 正式なURLの印（canonical）。HTML は React が描き直すので、ヘッダーで伝える（2026-11-26）
+<IfModule mod_headers.c>
+  <Files "index.html">
+    Header set Link "<https://tenya-simulator.cutlassfish.tokyo/>; rel=\"canonical\""
+  </Files>
 </IfModule>

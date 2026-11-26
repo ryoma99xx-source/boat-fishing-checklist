@@ -311,6 +311,33 @@
    "modifications": [
     "removed Cloudflare-injected challenge-platform <script> (only works behind Cloudflare)"
    ]
+  },
+  {
+   "path": "/robots.txt",
+   "file": "robots.txt",
+   "content_type": "text/plain; charset=utf-8",
+   "found_by": "added 2026-11-26 (AI・検索向け)",
+   "modifications": [],
+   "sha256": "9f75ff1d0c068f57e4427eb42c36b87b855d4fd1b216e06e83e6282343f87e88",
+   "bytes": 87
+  },
+  {
+   "path": "/sitemap.xml",
+   "file": "sitemap.xml",
+   "content_type": "application/xml; charset=utf-8",
+   "found_by": "added 2026-11-26 (AI・検索向け)",
+   "modifications": [],
+   "sha256": "7e9ac954504a64a819eb51b3eb3b818cfdb3759a0190b7d074632035e54bb429",
+   "bytes": 175
+  },
+  {
+   "path": "/llms.txt",
+   "file": "llms.txt",
+   "content_type": "text/plain; charset=utf-8",
+   "found_by": "added 2026-11-26 (AI・検索向け)",
+   "modifications": [],
+   "sha256": "6f2e5e2ad2b0caed5c9a0c6d4f05cc4211b217216010b5abf4914cb03843e169",
+   "bytes": 685
   }
  ],
  "missing_references": {},

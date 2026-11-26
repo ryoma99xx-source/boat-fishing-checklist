@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dont-forget-anything.cutlassfish.tokyo/sitemap.xml

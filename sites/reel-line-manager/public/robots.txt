@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://reel-line-manager.cutlassfish.tokyo/sitemap.xml
