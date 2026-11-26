@@ -370,6 +370,7 @@ def main():
         d = os.path.join(PUB, PAGES[kind][0])
         os.makedirs(d, exist_ok=True)
         s = page_html(kind, v, D)
+        import seo_extras; s = seo_extras.ld(s, '/tairaba-catalog/' + ('ties/' if kind == 'tie' else ''))   # 構造化データ（AI・検索向け）
         open(os.path.join(d, 'index.html'), 'w', encoding='utf-8').write(s)
         plist = D[kind][0]
         print('page %s: %d products, %d colours, %d with photo, %d KB' % (kind, len(plist), sum(len(r['cols']) for r in plist), sum(1 for r in plist for c in r['cols'] if c['img']), len(s.encode()) // 1024))

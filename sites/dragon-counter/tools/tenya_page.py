@@ -293,6 +293,7 @@ def main():
     allc, plist, rmap, pv = build()
     os.makedirs(OUT, exist_ok=True)
     s = page(allc, plist, pv)
+    import seo_extras; s = seo_extras.ld(s, '/tenya-catalog/')   # 構造化データ（AI・検索向け）
     open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
     json.dump(rmap, open(os.path.join(OUT, 'rank-map.json'), 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     print(len(plist), 'products,', sum(len(r['cols']) for r in plist), 'colours,', len(rmap), 'items,',

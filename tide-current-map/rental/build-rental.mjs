@@ -107,6 +107,10 @@ export async function buildRental(appDir, outDir) {
  write('api/map-config.php', tpl('map-config.php'));
  write('_errors/404.php', tpl('404.php'));
  write('.htaccess', tpl('root.htaccess'));
+ // AI・検索向け（オーナー指示 2026-11-26）：全部どうぞ＋サイトマップ、AI 向けの案内
+ write('robots.txt', 'User-agent: *\nAllow: /\n\nSitemap: https://tide-current-map.cutlassfish.tokyo/sitemap.xml\n');
+ write('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n<url><loc>https://tide-current-map.cutlassfish.tokyo/</loc></url>\n</urlset>\n');
+ write('llms.txt', '# 東京湾の潮と流れ（TIDE & CURRENT MAP）\n\n> 東京湾の地図をタップして、選んだ日時のその場所の流れの向きと速さ（ノット）、水深、潮位の1日の動きを見る無料の釣りツール。自作の潮汐モデル（東京湾250m・中部100m・横須賀沿岸50mの格子）と海上保安庁の潮流推算を比較できる。風・河川・密度流などは含まない参考計算。\n\n- [東京湾の潮と流れ](https://tide-current-map.cutlassfish.tokyo/)\n- [運営サイト：東京湾の魚・釣り](https://cutlassfish.tokyo/)（https://cutlassfish.tokyo/llms.txt）\n');
  write('api/harmonic/.htaccess', tpl('harmonic.htaccess'));
  return {revision, iconRevision, tiles, snapshots, grids: JSON.parse(harmonic.index).grids.map(g => g.name)};
 }

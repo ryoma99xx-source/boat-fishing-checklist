@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://dragon-counter.cutlassfish.tokyo/sitemap.xml

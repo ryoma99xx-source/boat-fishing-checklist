@@ -386,6 +386,7 @@ def main():
     v, plist, makers = load()
     os.makedirs(OUT, exist_ok=True)
     s = page(v, plist, makers)
+    import seo_extras; s = seo_extras.ld(s, '/egi-catalog/')   # 構造化データ（AI・検索向け）
     open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
     print(len(plist), 'products,', sum(len(r['cols']) for r in plist), 'colours,', sum(1 for r in plist for c in r['cols'] if c['img']), 'with photo,', len(s) // 1024, 'KB')
     article(v, plist, makers)

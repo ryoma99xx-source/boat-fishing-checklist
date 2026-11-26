@@ -328,5 +328,6 @@ s = size_class.apply(s, [('chariko', 'チャリコ', ''), ('kodai', '小鯛', '1
 # アプリ内ブラウザ・ホーム画面に追加の案内（public/inapp.js）の名前
 assert s.count('data-name="ドラゴンカウンター"') == 1
 s = s.replace('data-name="ドラゴンカウンター"', 'data-name="タイラバカウンター"')
+import seo_extras; s = seo_extras.ld(s, '/tairaba/')   # 構造化データ（AI・検索向け）
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))

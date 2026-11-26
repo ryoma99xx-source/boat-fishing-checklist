@@ -370,5 +370,6 @@ s = size_class.apply(s, [('croq', 'コロッケ', '〜200g'), ('tonk', 'トン�
 # アプリ内ブラウザ・ホーム画面に追加の案内（public/inapp.js）の名前
 s, _n = re.subn(r'(src="/inapp\.js" data-kind="app" data-name=")[^"]*"', r'\1ティップランカウンター"', s)
 assert _n == 1
+import seo_extras; s = seo_extras.ld(s, '/tipran/')   # 構造化データ（AI・検索向け）
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
 print('ok', len(s))

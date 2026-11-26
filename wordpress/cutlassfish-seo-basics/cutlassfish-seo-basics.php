@@ -2,7 +2,7 @@
 /**
  * Plugin Name: SEO Basics（説明文・共有画像・公開日・書いた人）
  * Description: テーマが出していない分だけを足します。①一覧ページ（カテゴリー・トピックなど）の説明文（meta description / og:description）、②記事以外のページのSNS共有画像（og:image）、③記事の公開日・更新日（検索エンジン向けの情報と、記事の下の表示）、④記事の下の「書いた人」。テーマがすでに出しているものは重ねて出しません。
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -111,3 +111,42 @@ add_filter('wp_sitemaps_taxonomies_query_args', function ($args, $taxonomy) {
 }, 10, 2);
 
 // 5f2544f5
+
+/* ---------- /llms.txt：AI 向けの案内（サイトの説明と主なページの一覧）。オーナー指示 2026-11-26 ---------- */
+add_action('template_redirect', function () {
+    $path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+    if ($path !== '/llms.txt') return;
+    $o = array();
+    $o[] = '# 東京湾の魚・釣り（3rd-Penguin Fishing Lab.）';
+    $o[] = '';
+    $o[] = '> 東京湾の船釣り（タチウオのテンヤ釣りを中心に、マダイのタイラバ、アオリイカのティップラン、サワラ、トラフグなど）の釣行記・釣り方・考察と、無料の釣りツール（釣果記録アプリ、テンヤ・エギ・タイラバのカタログ、東京湾の潮と流れ）を公開している個人サイトです。釣行記は実際の釣行の記録で、考察は仮説として書いています。';
+    $o[] = '';
+    $o[] = '## ツールとカタログ';
+    foreach (array(
+        array('ドラゴンカウンター（タチウオの釣果記録）', 'https://dragon-counter.cutlassfish.tokyo/'),
+        array('ティップランカウンター（アオリイカの釣果記録）', 'https://dragon-counter.cutlassfish.tokyo/tipran/'),
+        array('タイラバカウンター（マダイの釣果記録）', 'https://dragon-counter.cutlassfish.tokyo/tairaba/'),
+        array('船タチウオテンヤ カタログ', 'https://dragon-counter.cutlassfish.tokyo/tenya-catalog/'),
+        array('ティップラン用エギ・シンカー カタログ', 'https://dragon-counter.cutlassfish.tokyo/egi-catalog/'),
+        array('タイラバ ヘッド・スカート カタログ', 'https://dragon-counter.cutlassfish.tokyo/tairaba-catalog/'),
+        array('タイラバ ネクタイ カタログ', 'https://dragon-counter.cutlassfish.tokyo/tairaba-catalog/ties/'),
+        array('東京湾の潮と流れ（地図で流れの向きと速さを見る）', 'https://tide-current-map.cutlassfish.tokyo/'),
+    ) as $t) $o[] = '- [' . $t[0] . '](' . $t[1] . ')';
+    $o[] = '';
+    $o[] = '## 記事（新しい順）';
+    $q = get_posts(array('post_type' => 'tachiuo_post', 'post_status' => 'publish', 'numberposts' => 200, 'orderby' => 'date', 'order' => 'DESC'));
+    foreach ($q as $p) {
+        $ex = trim(preg_replace('/\s+/u', ' ', wp_strip_all_tags(get_the_excerpt($p))));
+        if (mb_strlen($ex) > 120) $ex = mb_substr($ex, 0, 120) . '…';
+        $o[] = '- [' . get_the_title($p) . '](' . get_permalink($p) . ')' . ($ex !== '' ? ': ' . $ex : '');
+    }
+    $o[] = '';
+    $o[] = '## そのほか';
+    $o[] = '- [サイトマップ](' . home_url('/wp-sitemap.xml') . ')';
+    $o[] = '- [記事の一覧](' . home_url('/articles/') . ')';
+    status_header(200);
+    header('Content-Type: text/plain; charset=UTF-8');
+    header('Cache-Control: public, max-age=3600');
+    echo implode("\n", $o) . "\n";
+    exit;
+}, 0);

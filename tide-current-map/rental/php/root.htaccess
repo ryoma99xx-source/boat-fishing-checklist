@@ -35,7 +35,9 @@ ErrorDocument 403 /_errors/404.php
   AddType image/x-icon .ico
   AddType image/png .png
   AddType image/webp .webp
-  AddCharset utf-8 .js .css .html .json .webmanifest
+  AddType text/plain .txt
+  AddType application/xml .xml
+  AddCharset utf-8 .js .css .html .json .webmanifest .txt .xml
 </IfModule>
 
 # --- cache and security headers (identical to the Worker) ---

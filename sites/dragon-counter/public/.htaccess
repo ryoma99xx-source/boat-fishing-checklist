@@ -39,14 +39,15 @@
   AddType application/manifest+json .webmanifest
   AddType image/png .png
   AddType text/plain .txt
-  AddCharset utf-8 .html .js .json .webmanifest .txt
+  AddType application/xml .xml
+  AddCharset utf-8 .html .js .json .webmanifest .txt .xml
 </IfModule>
 
 # index.html, sw.js, catalog-extra.json and the manifest are revalidated on every load
 # (the service worker caches the app for offline use); images are kept for a day.
 <IfModule mod_headers.c>
   Header set Cache-Control "public, max-age=86400"
-  <FilesMatch "^(index\.html|sw\.js|catalog-extra\.json|manifest\.webmanifest|robots\.txt|tenya-rank\.php|catalog\.js|inapp\.js)$">
+  <FilesMatch "^(index\.html|sw\.js|catalog-extra\.json|manifest\.webmanifest|robots\.txt|sitemap\.xml|llms\.txt|tenya-rank\.php|catalog\.js|inapp\.js)$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
   <Files "sw.js">
