@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cutlassfish Archive（記事一覧・釣行記の年表・検索）
  * Description: 過去記事を見つけやすくします。全記事一覧（/articles/：魚・テーマ・年月で絞り込み、文字で検索）、釣行記の年表（/fishing-log/）、メニューの検索欄、記事の下の「前後の記事」と「同じ魚の記事」。釣果速報は一覧に入れません。
- * Version: 1.0.9
+ * Version: 1.0.10
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPLv2 or later
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class CF_Archive {
-	const V     = '1.0.9';
+	const V     = '1.0.10';
 	const TYPES = array( 'tachiuo_post' );   // 釣り記事だけ。釣果速報（tbt_catch）・動画・初期の投稿（Hello world!）は入れない
 	const CACHE = 'cf_archive_items_v1';
 	// 目立たせるカタログ（メニューと記事の下）。slug は記事のURL。sp：この魚種の記事に出す／kw：タイトル・抜粋にこの言葉がある記事に出す（両方あれば両方を満たすとき）
@@ -222,7 +222,7 @@ var r=news.querySelectorAll('.reveal');for(var j=0;j<r.length;j++)r[j].classList
 		'end'  => 1795971540,                 // 2026-11-30 01:59（日本時間）
 		'tag'  => 'BLACK FRIDAY 後半戦',
 		'text' => '1.5万円から1,000円OFF｜11/30 1:59まで',
-		'badge' => 'ポイント最大23％',          // 見出しの右に出す小さな札（Yahoo! の公式バナーの数字。オーナー指示 2026-11-26）
+		'badge' => '年間最大級のセール',          // 見出しの右に出す小さな札（オーナーの言い回し 2026-11-26）
 	);
 
 	public static function promo_bar() {
