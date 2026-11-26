@@ -60,8 +60,8 @@
    "path": "/",
    "file": "index.html",
    "content_type": "text/html; charset=utf-8",
-   "bytes": 615288,
-   "sha256": "82ce24b52cc86ba92fa6963fd31ff633b5a7cad165b8f7724c0b240462f8a8f3",
+   "bytes": 615410,
+   "sha256": "3ee4d7a1581d34a7c769d3591b1835b0872ee55dbc24eea78265f93b60bc84ce",
    "found_by": "release zip",
    "modifications": [
     "「はじめに表示した5ステップの説明」→「6ステップ」（実際の案内は6ステップ。オーナー指示 2026-11-04）"
@@ -89,8 +89,8 @@
    "path": "/robots.txt",
    "file": "robots.txt",
    "content_type": "text/plain; charset=utf-8",
-   "bytes": 23,
-   "sha256": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+   "bytes": 86,
+   "sha256": "f1c24dd7a962c577e7a8eb3c8286ecabb546f044b2d32f97991218b49ed2072a",
    "found_by": "release zip",
    "modifications": []
   },

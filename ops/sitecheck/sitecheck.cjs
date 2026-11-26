@@ -68,7 +68,7 @@ async function diffShot(f,name,url){
 /* 配信ファイルの照合：ドラゴンカウンターのサーバーにあるファイルが、リポジトリと同じか（改ざん・公開し忘れ） */
 async function checkFiles(){
   const list=fs.readFileSync(path.join(DC,'SHA256SUMS'),'utf8').trim().split('\n').map(l=>l.split(/\s+/)).map(([h,f])=>[f,h]);
-  for(const f of ['tairaba/index.html','tipran/index.html','inapp.js','tenya-catalog/catalog.js','links/index.html','tairaba-catalog/index.html','egi-catalog/index.html','tenya-catalog/index.html'])
+  for(const f of ['tairaba/index.html','tipran/index.html','inapp.js','tenya-catalog/catalog.js','links/index.html','tairaba-catalog/index.html','tairaba-catalog/ties/index.html','egi-catalog/index.html','tenya-catalog/index.html','sitemap.xml','llms.txt'])
     if(fs.existsSync(path.join(DC,'public',f)))list.push([f,sha(fs.readFileSync(path.join(DC,'public',f)))]);
   let n=0;const diff=[];
   for(const [f,h] of list){if(/\.php$/.test(f))continue;try{const r=await fetch('https://dragon-counter.cutlassfish.tokyo/'+f+'?sc='+Date.now(),{headers:{'Cache-Control':'no-cache'}});if(!r.ok){diff.push(f+'（HTTP '+r.status+'）');continue}

@@ -1,0 +1,30 @@
+{
+ "egi-catalog/index.html": {
+  "date": "2026-11-26",
+  "sha": "9687a537b6da1b592cca792c7a00d23f517f240e65b953f45da899c0336922da"
+ },
+ "index.html": {
+  "date": "2026-11-26",
+  "sha": "3ee4d7a1581d34a7c769d3591b1835b0872ee55dbc24eea78265f93b60bc84ce"
+ },
+ "tairaba-catalog/index.html": {
+  "date": "2026-11-26",
+  "sha": "3e74f989c19d62e8b38fdc15383b3456189fc3220ba3033e9ad5a098cc2b4e46"
+ },
+ "tairaba-catalog/ties/index.html": {
+  "date": "2026-11-26",
+  "sha": "4c2d3b61ab46c43e9e9d7442ec185dc27c9b83199e6550f08517865701d56007"
+ },
+ "tairaba/index.html": {
+  "date": "2026-11-26",
+  "sha": "d9935d1be162acabd6a09d34b68707b3dd0efadefdf8b7422339d8676fccb743"
+ },
+ "tenya-catalog/index.html": {
+  "date": "2026-11-26",
+  "sha": "99811f746f0885a0239fee3bc953a0beded466e0135cb0638d63dead575b55bd"
+ },
+ "tipran/index.html": {
+  "date": "2026-11-26",
+  "sha": "b6d0fab9295b7ae5d3a430c9845a04403c9dfc717fc889ea989064fb40ed7456"
+ }
+}

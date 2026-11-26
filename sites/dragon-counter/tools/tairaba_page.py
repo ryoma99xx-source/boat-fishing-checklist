@@ -372,6 +372,7 @@ def main():
         s = page_html(kind, v, D)
         import seo_extras; s = seo_extras.ld(s, '/tairaba-catalog/' + ('ties/' if kind == 'tie' else ''))   # 構造化データ（AI・検索向け）
         open(os.path.join(d, 'index.html'), 'w', encoding='utf-8').write(s)
+        seo_extras.after_build()   # sitemap.xml の更新日・llms.txt・照合用の一覧
         plist = D[kind][0]
         print('page %s: %d products, %d colours, %d with photo, %d KB' % (kind, len(plist), sum(len(r['cols']) for r in plist), sum(1 for r in plist for c in r['cols'] if c['img']), len(s.encode()) // 1024))
         article(kind, v, D)

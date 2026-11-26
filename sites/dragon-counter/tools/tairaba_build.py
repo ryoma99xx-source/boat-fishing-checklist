@@ -330,4 +330,5 @@ assert s.count('data-name="ドラゴンカウンター"') == 1
 s = s.replace('data-name="ドラゴンカウンター"', 'data-name="タイラバカウンター"')
 import seo_extras; s = seo_extras.ld(s, '/tairaba/')   # 構造化データ（AI・検索向け）
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
+seo_extras.after_build()   # sitemap.xml の更新日・llms.txt・照合用の一覧
 print('ok', len(s))

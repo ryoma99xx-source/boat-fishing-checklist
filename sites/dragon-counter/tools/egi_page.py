@@ -388,6 +388,7 @@ def main():
     s = page(v, plist, makers)
     import seo_extras; s = seo_extras.ld(s, '/egi-catalog/')   # 構造化データ（AI・検索向け）
     open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(s)
+    seo_extras.after_build()   # sitemap.xml の更新日・llms.txt・照合用の一覧
     print(len(plist), 'products,', sum(len(r['cols']) for r in plist), 'colours,', sum(1 for r in plist for c in r['cols'] if c['img']), 'with photo,', len(s) // 1024, 'KB')
     article(v, plist, makers)
 
