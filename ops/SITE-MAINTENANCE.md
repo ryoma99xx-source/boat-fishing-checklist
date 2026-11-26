@@ -1,7 +1,7 @@
 # サイトの定期メンテナンス（点検の手順）
 
 オーナー指示 2026-11-24。cutlassfish.tokyo（WordPress）と dragon-counter.cutlassfish.tokyo（3つのカウンター・カタログ・リンク集）、
-tide-current-map.cutlassfish.tokyo（東京湾の潮と流れ）を、Claude の定期作業で点検する。
+tide-current-map.cutlassfish.tokyo（東京湾の潮と流れ）、小さなツール3つ（reel-line-manager・dont-forget-anything・tenya-simulator）を、Claude の定期作業で点検する。
 
 **この点検は読むだけ。** サイトのファイル・設定・記事は変えない。問題を見つけたら報告し、直すのはオーナーの OK をもらってから（別の作業として）。
 
@@ -9,7 +9,7 @@ tide-current-map.cutlassfish.tokyo（東京湾の潮と流れ）を、Claude の
 
 | 道具 | 何をみるか |
 |---|---|
-| `node ops/sitecheck/sitecheck.cjs --daily` | 主なページをスマホ幅で開く：開けるか・画面のエラー・自分のサイトの部品が読めないもの・横のはみ出し・あるはずの部品。ドラゴンカウンターの配信ファイルがリポジトリと同じか（改ざん・公開し忘れ） |
+| `node ops/sitecheck/sitecheck.cjs --daily` | 主なページをスマホ幅で開く：開けるか・画面のエラー・自分のサイトの部品が読めないもの・横のはみ出し・あるはずの部品。ドラゴンカウンターと、小さなツール3つ（リール糸管理・持ち物チェック・テンヤシミュレーター）の配信ファイルがリポジトリと同じか（改ざん・公開し忘れ）。6つのサイトの robots.txt（全部お断りになっていないか）・サイトマップ・llms.txt が読めるか（2026-11-26 追加） |
 | `node ops/sitecheck/sitecheck.cjs --weekly` | ↑に加えて、サイトマップの全ページと主なページのリンク先（404 探し）、画面の最初の1枚を基準（`ops/sitecheck/baseline/`）とくらべる |
 | `python3 ops/sitecheck/wp_health.py` | WordPress の中（プラグイン `cutlassfish-health` の管理者だけの窓口）：本体・プラグイン・テーマの更新、本体ファイルが公式と同じか、サイトのいちばん上の見覚えのない PHP、アップロード置き場の PHP、ここ7日で書き換わったプラグイン・テーマのファイル、管理者の人数 |
 
@@ -37,3 +37,4 @@ tide-current-map.cutlassfish.tokyo（東京湾の潮と流れ）を、Claude の
 - サイトマップから「未分類」カテゴリー（404 だった）と投稿者の一覧を外した（2026-11-24、プラグイン cutlassfish-seo-basics 1.1.0）。
 - 日本語表示の WordPress だが本体は英語版のため、`wp-includes/version.php` は英語版の照合値と同じ（問題ではない。`cutlassfish-health` が考慮済み）。
 - Independent Analytics は自分で設定ファイル（`iawp-click-config.php`）を書き換える（問題ではない）。
+- AI・検索向けの印（2026-11-26）：各サイトに robots.txt・サイトマップ・llms.txt を置いた。作り方は、ドラゴンカウンターのサイト＝`sites/dragon-counter/tools/seo_extras.py`（ページを作るたびに自動）、小さなツール3つ＝`sites/seo_static.py`、東京湾の潮と流れ＝`tide-current-map/rental/build-rental.mjs`、cutlassfish.tokyo の llms.txt＝プラグイン cutlassfish-seo-basics。

@@ -108,7 +108,7 @@ def shop_links(r, kind, page=True, small=False):
             '<a class="buy az" href="%s" target="_blank" rel="nofollow sponsored noopener">Amazonで探す</a><a class="buy rk" href="%s" target="_blank" rel="nofollow sponsored noopener">楽天で探す</a><a class="buy yh" href="%s" target="_blank" rel="nofollow sponsored noopener">Yahoo!で探す</a>' % (E(T.amazon(k)), E(T.rakuten(k)), E(T.yahoo(k)))
     if small == 'cls':   # ネクタイの記事：見た目は catalog.js の .tcat-b（記事を1MB以下にするため）
         x = '<a href="%s" target="_blank" rel="noopener" class="tcat-b mk">メーカーのページ</a>' % E(r['u']) if r['u'] else ''
-        return x + ''.join('<a href="%s" target="_blank" rel="nofollow sponsored noopener" class="tcat-b %s">%sで探す</a>' % (E(u), c, n) for u, c, n in ((T.amazon(k), 'az', 'Amazon'), (T.rakuten(k), 'rk', '楽天'), (T.yahoo(k), 'yh', 'Yahoo!')))
+        return x + ''.join('<a href="%s" target="_blank" rel="nofollow sponsored noopener" class="tcat-b %s">%sで探す</a>' % (E(u), c, n) for u, c, n in ((T.amazon(k), 'az', 'Amazon'), (T.rakuten(k).split('&m=')[0], 'rk', '楽天'), (T.yahoo(k), 'yh', 'Yahoo!')))   # 楽天はモバイル用の飛び先（&m=）を省く（同じURLなので無くても同じページに行く。記事の大きさを抑える）
     b = BTN + (';font-size:13px;padding:6px 10px' if small else '')
     x = '<a href="%s" target="_blank" rel="noopener" style="%s;border:1px solid #99a;color:inherit">メーカーのページ</a>' % (E(r['u']), b) if r['u'] and not small else ''
     x += '<a href="%s" target="_blank" rel="nofollow sponsored noopener" style="%s;background:#f3a847;color:#111 !important">Amazonで探す</a>' % (E(T.amazon(k)), b)
@@ -326,7 +326,7 @@ def article(kind, v, D):
         excerpt = 'ダイワ・シマノ・ジャッカルなど%dメーカーのタイラバのヘッド%d製品・%d色を、写真で一覧にしました。重さ・メーカー・素材（タングステン）で絞り込めて、色や製品の名前で検索できます。スカート%d製品も載せています。釣果記録アプリ「タイラバカウンター」と同じデータです。' % (len(hm), len(hp), nh, len(sp))
         ncol, nmk, plist = nh, len(hm), hp
     else:
-        for d_, txt in TIE_UPDATES:   # オーナー指示 2026-11-25：冒頭に UPDATE のラベルで更新内容を書く
+        for d_, txt in TIE_UPDATES[:3]:   # 新しいもの3つまで   # オーナー指示 2026-11-25：冒頭に UPDATE のラベルで更新内容を書く
             a.append('<div style="border:2px solid #e3a43b;border-radius:12px;padding:10px 14px;margin:0 0 18px;background:rgba(227,164,59,.08)"><span style="display:inline-block;background:#e3a43b;color:#03161c;font-weight:700;font-size:12px;letter-spacing:.12em;padding:2px 8px;border-radius:6px;margin-right:8px">UPDATE</span><b>%s</b><br>%s</div>' % (E(d_), txt % {'nm': len(tm), 'np': len(tp), 'nc': nt}))
         title = 'タイラバのネクタイ カタログ｜%dメーカー・%d色を一覧（写真はツールのページで）' % (len(tm), nt)
         a.append('<p class="lead">タイラバのネクタイは、形も色も数えきれないほどあります。「あのカーリー、オレンジゼブラあったっけ？」と思っても、メーカーのページで探すのは大変です。'

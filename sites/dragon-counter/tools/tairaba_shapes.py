@@ -6,7 +6,7 @@
 入力：work/tairaba-shape/<メーカー>/shapes-<メーカー>.json = [{series, ok, why, image_url, file, source, crop?}]
      work/tairaba-shape/skirts/shapes-skirts.json はスカート（maker を各行に持つ）
      ok=false で file のあるものだけ使う。写真は「切り抜く」と「縮める」だけ（tipran_images.make）。
-出力：public/tairaba/img/<id>.webp と tools/tairaba/shapes.json {"ties|maker|series": {"id","src"}}
+出力：public/tairaba/img/<id>.webp と tools/tairaba/shapes.json（足すだけ。渡したフォルダに無い製品の写真は、前のまま残る） {"ties|maker|series": {"id","src"}}
 表示：カタログのページ・記事（tairaba_page.py）とアプリの色を選ぶところ（tairaba_images.apply）。
 """
 import glob, hashlib, json, os, re, sys
@@ -24,7 +24,7 @@ def main():
     TI.MAXW, TI.MAXH = 480, 300
     cat = json.load(open(os.path.join(HERE, 'tairaba', 'catalog.json'), encoding='utf-8'))
     ok = {'%s|%s|%s' % (k, r['m'], r['s']) for k in ('ties', 'skirts') for r in cat[k]}
-    mp, bad = {}, []
+    mp, bad = load(), []   # 足すだけ：前からある形の写真は残す（月次更新の新しいセッションには work/ が無い）
     for f in sorted(glob.glob(os.path.join(src, '*', 'shapes-*.json'))):
         d = os.path.dirname(f)
         name = re.sub(r'^shapes-|\.json$', '', os.path.basename(f))
@@ -42,6 +42,7 @@ def main():
             TI.make(p, os.path.join(OUT, i + '.webp'), False, r.get('crop'), bool(r.get('asis')))
             mp[k] = {'id': i, 'src': r.get('image_url', '')}
     json.dump(dict(sorted(mp.items())), open(MAP, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    mp = {k: v for k, v in mp.items() if k in ok and os.path.exists(os.path.join(OUT, v['id'] + '.webp'))}
     print(len(mp), 'shape photos; not matched:', len(bad))
     for b in bad:
         print('  ', b)

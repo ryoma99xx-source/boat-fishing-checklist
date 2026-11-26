@@ -28,7 +28,10 @@ const PAGES=[
  ['https://dragon-counter.cutlassfish.tokyo/tairaba-catalog/','タイラバ ヘッドのカタログ',['.tcat-bar']],
  ['https://dragon-counter.cutlassfish.tokyo/tairaba-catalog/ties/','タイラバ ネクタイのカタログ',['.tcat-bar']],
  ['https://dragon-counter.cutlassfish.tokyo/links/','リンク集',['a.l']],
- ['https://tide-current-map.cutlassfish.tokyo/','東京湾の潮と流れ',[]],
+ ['https://tide-current-map.cutlassfish.tokyo/','東京湾の潮と流れ',['.tool-about']],
+ ['https://reel-line-manager.cutlassfish.tokyo/','リール糸管理',[]],
+ ['https://dont-forget-anything.cutlassfish.tokyo/','持ち物チェック',[]],
+ ['https://tenya-simulator.cutlassfish.tokyo/','テンヤシミュレーター',[]],
 ];
 const problems=[],notes=[];
 const bad=(m)=>{problems.push(m);console.log('  ✗ '+m)},ok=(m)=>console.log('  ✓ '+m);
@@ -76,6 +79,30 @@ async function checkFiles(){
   if(diff.length)bad('ドラゴンカウンターの配信ファイルがリポジトリと違う：'+diff.join('、')+'（公開の直後なら、反映待ちのことがある）');else ok(`配信ファイル ${n}個がリポジトリと同じ`);
 }
 
+/* 配信ファイルの照合：小さなツール3つ（リール糸管理・持ち物チェック・テンヤシミュレーター）。sites/<名前>/mirror-manifest.json のハッシュとくらべる */
+async function checkMirrors(){
+  for(const [sub,name] of [['reel-line-manager','リール糸管理'],['dont-forget-anything','持ち物チェック'],['tenya-simulator','テンヤシミュレーター']]){
+    const mf=path.join(REPO,'sites',sub,'mirror-manifest.json');if(!fs.existsSync(mf))continue;
+    const files=JSON.parse(fs.readFileSync(mf,'utf8')).files;let n=0;const diff=[];
+    for(let i=0;i<files.length;i+=6)await Promise.all(files.slice(i,i+6).map(async r=>{try{const res=await fetch('https://'+sub+'.cutlassfish.tokyo'+r.path+(r.path.includes('?')?'&':'?')+'sc='+Date.now(),{headers:{'Cache-Control':'no-cache'}});
+      if(!res.ok){diff.push(r.path+'（HTTP '+res.status+'）');return}const b=Buffer.from(await res.arrayBuffer());n++;if(sha(b)!==r.sha256)diff.push(r.path)}catch(e){diff.push(r.path+'（'+String(e.message).slice(0,60)+'）')}}));
+    if(diff.length)bad(name+'の配信ファイルがリポジトリと違う：'+diff.slice(0,8).join('、')+(diff.length>8?' ほか'+(diff.length-8)+'件':'')+'（公開の直後なら、反映待ちのことがある）');else ok(`${name}：配信ファイル ${n}個がリポジトリと同じ`);
+  }
+}
+
+/* AI・検索向けの印：6つのサイトで、ロボットへの案内（robots.txt）が全部お断りになっていないか・サイトマップ・AI向けの案内（llms.txt）が読めるか */
+async function checkSeoFiles(){
+  const get=async u=>{try{const r=await fetch(u+'?sc='+Date.now());return [r.status,r.ok?await r.text():'']}catch(e){return [0,'']}};
+  for(const [host,sm] of [['cutlassfish.tokyo','/wp-sitemap.xml'],['dragon-counter.cutlassfish.tokyo','/sitemap.xml'],['tide-current-map.cutlassfish.tokyo','/sitemap.xml'],
+    ['reel-line-manager.cutlassfish.tokyo','/sitemap.xml'],['dont-forget-anything.cutlassfish.tokyo','/sitemap.xml'],['tenya-simulator.cutlassfish.tokyo','/sitemap.xml']]){
+    const msg=[];const [rs,rt]=await get('https://'+host+'/robots.txt');
+    if(rs!==200)msg.push('robots.txt が読めない（'+rs+'）');else{if(/^\s*Disallow:\s*\/\s*$/mi.test(rt))msg.push('robots.txt が全部お断りになっている');if(!/^Sitemap:/mi.test(rt))msg.push('robots.txt にサイトマップの場所が無い')}
+    const [ss,st]=await get('https://'+host+sm);if(ss!==200||!/<(urlset|sitemapindex)/.test(st))msg.push('サイトマップが読めない（'+ss+'）');
+    const [ls,lt]=await get('https://'+host+'/llms.txt');if(ls!==200||!/^# /.test(lt))msg.push('llms.txt が読めない（'+ls+'）');
+    if(msg.length)bad(host+'：'+msg.join('／'));else ok(host);
+  }
+}
+
 /* 毎週：サイトマップの全ページと、主なページのリンク先が開けるか（404 探し）。数が多いので HEAD（だめなら GET）で軽く */
 async function checkLinks(b){
   const seen=new Map();const urls=new Set();
@@ -93,7 +120,8 @@ async function checkLinks(b){
   console.log(`サイトの点検（${WEEKLY?'毎週':'毎日'}）${new Date().toISOString()}`);
   const b=await chromium.launch();
   console.log('■ 主なページ（スマホ幅）');for(const pg of PAGES)await checkPage(b,pg);
-  console.log('■ 配信ファイル');await checkFiles();
+  console.log('■ 配信ファイル');await checkFiles();await checkMirrors();
+  console.log('■ AI・検索向けの印（robots.txt・サイトマップ・llms.txt）');await checkSeoFiles();
   if(WEEKLY){console.log('■ リンク切れ');await checkLinks(b)}
   await b.close();
   if(notes.length){console.log('■ メモ');notes.forEach(n=>console.log('  - '+n))}
