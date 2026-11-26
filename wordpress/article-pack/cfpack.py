@@ -218,7 +218,7 @@ def main():
     l = sub.add_parser("list"); l.add_argument("--status", default="any", choices=["draft", "pending", "future", "private", "publish", "any"])
     l.add_argument("--search", default=""); l.add_argument("--type", default=""); l.add_argument("--per-page", type=int, default=20); l.add_argument("--page", type=int, default=1)
     g = sub.add_parser("get"); g.add_argument("id", type=int); g.add_argument("--out")
-    up = sub.add_parser("update"); up.add_argument("id", type=int); up.add_argument("zip"); up.add_argument("--allow-published", action="store_true")
+    up = sub.add_parser("update"); up.add_argument("id", type=int); up.add_argument("zip"); up.add_argument("--allow-published", action="store_true"); up.add_argument("--allow-block-loss", action="store_true")
     p = sub.add_parser("publish"); p.add_argument("id", type=int); p.add_argument("--slug"); p.add_argument("--topics"); p.add_argument("--date")
     un = sub.add_parser("unpublish"); un.add_argument("id", type=int)
     a = ap.parse_args()
@@ -251,6 +251,14 @@ def main():
     elif a.cmd == "update":
         data = open(a.zip, "rb").read()
         check_pack(data, allow_media=True)
+        # 安全装置（2026-11-26）：ブロックエディターで作った記事（content_format が raw）は、この更新で
+        # YouTube の埋め込み（iframe）・ブロックの印（wp:embed、商品リンクのブロックなど）が消える。
+        # 記事 590・602 で実際に消してしまった。そういう記事は止める（わかったうえで上書きするときだけ --allow-block-loss）。
+        cur = api(f"/articles/{a.id}")[1]
+        if cur.get("content_format") == "raw" and not a.allow_block_loss:
+            fail("この記事はブロックエディターで作られています（content_format: raw）。update すると、埋め込み（iframe）や"
+                 "ブロックの印が消えます。本文を足すだけなら、管理画面で編集するか、一度だけ動くプラグインで直してください。"
+                 "わかったうえで上書きするなら --allow-block-loss を付けます。")
         path = f"/articles/{a.id}/content" + ("?allow_published=1" if a.allow_published else "")
         show(api(path, data, "application/zip")[1])
     elif a.cmd == "publish":
