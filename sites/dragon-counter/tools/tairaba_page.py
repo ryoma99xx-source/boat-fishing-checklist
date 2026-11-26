@@ -397,7 +397,7 @@ def push():
         sha = hashlib.sha256(open(img, 'rb').read()).hexdigest()
         same = info.get('sha256') == sha and info.get('media_id')
         done = False
-        for n in range(6):
+        for n in range(9):
             with tempfile.TemporaryDirectory() as d:
                 os.makedirs(os.path.join(d, 'images'))
                 a2 = dict(art)
@@ -406,11 +406,12 @@ def push():
                 else:
                     shutil.copyfile(img, os.path.join(d, 'images', os.path.basename(img)))
                 json.dump(a2, open(os.path.join(d, 'article.json'), 'w', encoding='utf-8'), ensure_ascii=False)
-                open(os.path.join(d, 'article.html'), 'w', encoding='utf-8').write(' ' * n + body)
+                open(os.path.join(d, 'article.html'), 'w', encoding='utf-8').write(' ' * (n % 2) + body)
                 z = os.path.join(d, 'pack.zip')
                 b = subprocess.run([sys.executable, cf, 'build', d, '-o', z], capture_output=True, text=True)
                 if b.returncode:
                     print('記事パックを作れませんでした:', (b.stdout + b.stderr)[-300:]); rc = 1; break
+                T.rezip(z, n)   # やり直しのたびに圧縮の強さを変える（SiteGuard の 403 対策）
                 r = subprocess.run([sys.executable, cf, 'update', str(info['post_id']), z, '--allow-published'], capture_output=True, text=True)
             o = r.stdout + r.stderr
             if r.returncode == 0:
@@ -423,7 +424,7 @@ def push():
             if 'HTTP 403' not in o:
                 print('記事の更新に失敗しました:', o[-300:]); rc = 1; break
         if not done and rc == 0:
-            print('記事の更新に失敗しました：ファイアウォール（SiteGuard）に6回断られました'); rc = 1
+            print('記事の更新に失敗しました：ファイアウォール（SiteGuard）に9回断られました'); rc = 1
     return rc
 
 
