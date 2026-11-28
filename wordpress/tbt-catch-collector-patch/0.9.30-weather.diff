@@ -1,0 +1,145 @@
+diff -ru full/tbt-catch-collector-ai/README.md new/tbt-catch-collector-ai/README.md
+--- full/tbt-catch-collector-ai/README.md	2026-11-28 09:53:29.600436519 +0000
++++ new/tbt-catch-collector-ai/README.md	2026-11-28 09:55:24.759696224 +0000
+@@ -54,3 +54,10 @@
+   - 次の取得・保存から反映。過去日の保存済みの文は、その日を取り直すか「ランキング再計算」で直る。
+ - `cfbp_daily_report` の各船宿に `method` を追加。Cutlassfish Buffer Publisher 1.10.1 以降は、テンヤ以外を竿頭・最大サイズ・本数の表から外す。
+ 
++## 0.9.30
++- 天気の決め方を直した。釣行時間帯（6〜14時）で、降った時間が3分の1以上、または合計2mm以上なら「雨」（弱ければ「霧雨」、雪なら「雪」）にする。
++  - 2026-11-28 は朝から昼前まで雨（合計4.9mm）だったのに「くもり」と出ていた。これまでは時間ごとの天気を並べた真ん中だけで決めていたため。
++  - ラベルの種類は増やしていない（集計の「天気」の切り口はそのまま）。
++- 風の表示を「北北東の風 平均2.5m/s・最大4.9m/s（突風13.6m/s）」の形にした。これまでは最大だけ。
++- `/wp-json/tbtcc/v1/series` の各日の `conditions` に `gust_max_ms`（突風）と `wet_hours`（降った時間の数）を追加。
++- 次の取得・保存から反映。過去日の保存済みの値は、その日を取り直すと直る。
+diff -ru full/tbt-catch-collector-ai/includes/class-tbtcc-conditions.php new/tbt-catch-collector-ai/includes/class-tbtcc-conditions.php
+--- full/tbt-catch-collector-ai/includes/class-tbtcc-conditions.php	2026-11-28 09:53:29.600326397 +0000
++++ new/tbt-catch-collector-ai/includes/class-tbtcc-conditions.php	2026-11-28 09:55:24.758312322 +0000
+@@ -332,7 +332,13 @@
+         $rad  = $pick('shortwave_radiation'); // W/m2
+         $dirs = $pick('wind_direction_10m');
+         $codes = [];
+-        foreach ($idx as $i) { if (isset($hourly['weather_code'][$i])) $codes[] = (int)$hourly['weather_code'][$i]; }
++        $code_rain = []; // $codes と同じ並びの、その時間の降水量(mm)
++        foreach ($idx as $i) {
++            if (!isset($hourly['weather_code'][$i])) continue;
++            $codes[] = (int)$hourly['weather_code'][$i];
++            $code_rain[] = (isset($hourly['precipitation'][$i]) && $hourly['precipitation'][$i] !== null) ? (float)$hourly['precipitation'][$i] : 0.0;
++        }
++        $rep  = $codes ? self::dominant_code($codes, $code_rain) : null;
+ 
+         // 風向は角度の単純平均だと北付近で破綻するのでベクトル平均を取る。
+         $dir = null;
+@@ -343,8 +349,10 @@
+         }
+         return [
+             'hours'          => sprintf('%d:00-%d:00', self::TRIP_START_HOUR, self::TRIP_END_HOUR),
+-            'weather_code'   => $codes ? self::dominant_code($codes) : null,
+-            'weather_label'  => $codes ? self::weather_label(self::dominant_code($codes)) : '',
++            'weather_code'   => $rep,
++            'weather_label'  => $rep === null ? '' : self::weather_label($rep),
++            // 雨・雪が降った時間の数（降水0.1mm以上、または天気が霧雨・雨・雪）。
++            'wet_hours'      => $codes ? self::wet_hours($codes, $code_rain) : null,
+             'temp_avg_c'     => $temp ? round(array_sum($temp) / count($temp), 1) : null,
+             'precip_mm'      => $rain ? round(array_sum($rain), 1) : null,
+             'wind_max_ms'    => $wind ? round(max($wind), 1) : null,
+@@ -363,11 +371,50 @@
+         ];
+     }
+ 
+-    /** 時間帯で最も「悪い」天気を代表値にする（晴れの中の一時的な雨を見落とさないため）。 */
+-    private static function dominant_code($codes){
+-        rsort($codes);
+-        $worst = $codes[0];
+-        return ($worst >= 95) ? $worst : $codes[(int)floor(count($codes) / 2)];
++    /** その時間が「降っていた」か。降水0.1mm以上、または天気が霧雨・雨・雪（51以上）。 */
++    private static function is_wet($code, $rain){
++        return ($code >= 51) || ($rain >= 0.1);
++    }
++
++    private static function wet_hours($codes, $rain){
++        $n = 0;
++        foreach ($codes as $i => $c) { if (self::is_wet($c, (float)($rain[$i] ?? 0))) $n++; }
++        return $n;
++    }
++
++    /**
++     * 時間帯を代表する天気。
++     *
++     * 0.9.29 までは「天気コードを大きい順に並べた真ん中」だけで決めていた。
++     * 雨が 6〜10時に降って昼に上がった日（9時間のうち雨4時間・合計4.9mm）が
++     * 「くもり」になり、釣りをしていた人の実感と合わなかった（2026-11-28）。
++     *
++     * 0.9.30 から：雷があれば雷雨。降った時間が全体の3分の1以上、または合計2mm以上なら、
++     * 降った時間の中の真ん中の天気にする（合計1mm以上なら「霧雨」ではなく「雨」）。
++     * それ以外は、これまでどおり全体の真ん中。
++     * ラベルの種類は増やさない（集計の「天気」の切り口が細かく割れないように）。
++     */
++    private static function dominant_code($codes, $rain = []){
++        $n = count($codes);
++        if (!$n) return null;
++        $sorted = $codes;
++        rsort($sorted);
++        if ($sorted[0] >= 95) return $sorted[0];
++        $wet = [];
++        $wet_n = 0;
++        $sum = 0.0;
++        foreach ($codes as $i => $c) {
++            $r = (float)($rain[$i] ?? 0);
++            $sum += $r;
++            if (self::is_wet($c, $r)) { $wet_n++; if ($c >= 51) $wet[] = $c; }
++        }
++        if ($wet_n * 3 >= $n || $sum >= 2.0) {
++            rsort($wet);
++            $c = $wet ? $wet[(int)floor(count($wet) / 2)] : 61;
++            if ($c <= 57 && $sum >= 1.0) $c = 61; // 霧雨の扱いでも、まとまって降っていれば「雨」
++            return $c;
++        }
++        return $sorted[(int)floor($n / 2)];
+     }
+ 
+     private static function sec_to_min($v){
+@@ -475,7 +522,13 @@
+         $lab = ($t && ($t['wind_dir_label']??'')!=='') ? $t['wind_dir_label'] : ($w['wind_dir_label'] ?? '');
+         $max = ($t && ($t['wind_max_ms']??null)!==null) ? $t['wind_max_ms'] : ($w['wind_max_ms'] ?? null);
+         if ($lab === '' || $max === null) return '';
+-        return $lab.'の風 '.round((float)$max,1).'m/s';
++        // 0.9.30：最大だけだと弱く見える日があるので、平均・最大・突風を並べる。
++        // 「最大」は1時間ごとの平均風速のいちばん大きい値、「突風」は瞬間の強さ（どちらも数値モデルの値）。
++        $avg  = ($t && ($t['wind_avg_ms']??null)!==null) ? $t['wind_avg_ms'] : null;
++        $gust = ($t && ($t['gust_max_ms']??null)!==null) ? $t['gust_max_ms'] : ($w['gust_max_ms'] ?? null);
++        $out  = $lab.'の風 '.($avg!==null ? '平均'.round((float)$avg,1).'m/s・' : '').'最大'.round((float)$max,1).'m/s';
++        if ($gust !== null && (float)$gust > (float)$max) $out .= '（突風'.round((float)$gust,1).'m/s）';
++        return $out;
+     }
+ 
+     public static function display_block($cond){
+diff -ru full/tbt-catch-collector-ai/includes/class-tbtcc-stats.php new/tbt-catch-collector-ai/includes/class-tbtcc-stats.php
+--- full/tbt-catch-collector-ai/includes/class-tbtcc-stats.php	2026-11-28 09:53:29.599197443 +0000
++++ new/tbt-catch-collector-ai/includes/class-tbtcc-stats.php	2026-11-28 09:55:24.759176604 +0000
+@@ -251,6 +251,8 @@
+             'precip_mm'           => self::num($trip['precip_mm'] ?? null),
+             'wind_max_ms'         => self::num($trip['wind_max_ms'] ?? null),
+             'wind_avg_ms'         => self::num($trip['wind_avg_ms'] ?? null),
++            'gust_max_ms'         => self::num($trip['gust_max_ms'] ?? null),
++            'wet_hours'           => self::num($trip['wet_hours'] ?? null),
+             'wind_dir_label'      => $trip['wind_dir_label'] ?? ($w['wind_dir_label'] ?? ''),
+             'pressure_hpa'        => self::num($trip['pressure_hpa'] ?? null),
+             'pressure_change_hpa' => self::num($trip['pressure_change_hpa'] ?? null),
+diff -ru full/tbt-catch-collector-ai/tbt-catch-collector.php new/tbt-catch-collector-ai/tbt-catch-collector.php
+--- full/tbt-catch-collector-ai/tbt-catch-collector.php	2026-11-28 09:53:29.600385812 +0000
++++ new/tbt-catch-collector-ai/tbt-catch-collector.php	2026-11-28 09:55:24.759457011 +0000
+@@ -2,11 +2,11 @@
+ /**
+  * Plugin Name: TBT Catch Collector AI
+  * Description: 各船宿の釣果一覧をローカル解析するのを主系統に、AI Web検索を補完として、東京湾タチウオ釣果を8船宿から収集し、テーマ側 tbt_catch_upsert() に投入します。長谷川丸は独立モジュール（取得→本文抽出→AI構造化）で処理します。
+- * Version: 0.9.29
++ * Version: 0.9.30
+  * Author: cutlassfish.tokyo
+  */
+ if (!defined('ABSPATH')) exit;
+-define('TBTCC_VERSION','0.9.29');
++define('TBTCC_VERSION','0.9.30');
+ define('TBTCC_DIR',plugin_dir_path(__FILE__));
+ require_once TBTCC_DIR.'includes/class-tbtcc-boats.php';
+ require_once TBTCC_DIR.'includes/class-tbtcc-ai-web.php';

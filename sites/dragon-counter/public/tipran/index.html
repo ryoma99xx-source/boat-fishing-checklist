@@ -2213,24 +2213,31 @@ const tripEndT=(t,fb)=>t.end||(t.planEnd?(t.status==='active'?Math.min(Date.now(
 const WX_DIR=['北','北北東','北東','東北東','東','東南東','南東','南南東','南','南南西','南西','西南西','西','西北西','北西','北北西'];
 const wmoLabel=c=>c===0?'快晴':c===1?'晴れ':c===2?'晴れ時々くもり':c===3?'くもり':c<=48?'霧':c<=57?'霧雨':c<=67?'雨':c<=77?'雪':c<=82?'にわか雨':c<=86?'にわか雪':'雷雨';
 const avg=a=>{a=a.filter(x=>typeof x==='number'&&isFinite(x));return a.length?a.reduce((p,q)=>p+q,0)/a.length:null};
+const wxMax=a=>{a=a.filter(x=>typeof x==='number'&&isFinite(x));return a.length?Math.max(...a):null};
+/* 時間ごとの天気（codes）と雨の量（rain・mm）から、その時間帯の天気を1つ決める。雷があれば雷雨。降った時間（0.1mm以上か、霧雨・雨・雪）が3分の1以上、または合計2mm以上なら、
+   降った時間の真ん中の天気（合計1mm以上なら霧雨ではなく雨）。それ以外は、いちばん多かった天気。前は「いちばん多かった天気」だけで決めていて、朝から昼前まで雨の日が「くもり」になった（2026-11-28） */
+function wxCode(codes,rain){const n=codes.length;if(!n)return null;const th=codes.filter(c=>c>=95);if(th.length)return Math.max(...th);
+  let sum=0,nw=0;const wet=[];codes.forEach((c,i)=>{const r=rain[i]||0;sum+=r;if(c>=51||r>=0.1){nw++;if(c>=51)wet.push(c)}});
+  if(nw*3>=n||sum>=2){wet.sort((x,y)=>y-x);let c=wet.length?wet[Math.floor(wet.length/2)]:61;if(c<=57&&sum>=1)c=61;return c}
+  const cnt={};codes.forEach(c=>cnt[c]=(cnt[c]||0)+1);return +Object.keys(cnt).sort((x,y)=>cnt[y]-cnt[x])[0]}
 const r1n=x=>x==null?null:Math.round(x*10)/10;
-function wxTxt(w){if(!w)return '';const a=[];if(w.weather)a.push(w.weather);if(w.temp!=null)a.push(`気温${w.temp}℃`);if(w.wind!=null)a.push(`${w.dir?w.dir+'の風':'風'}${w.wind}m/s`);if(w.wave!=null)a.push(`波高${w.wave}m`);else if(w.noWave)a.push('波高は東京湾のみ');if(w.sst!=null)a.push(`水温${w.sst}℃`);
+function wxTxt(w){if(!w)return '';const a=[];if(w.weather)a.push(w.weather);if(w.temp!=null)a.push(`気温${w.temp}℃`);if(w.wind!=null){const x=[];if(w.wmax!=null&&w.wmax>w.wind)x.push('最大'+w.wmax);if(w.gust!=null&&w.gust>(w.wmax!=null?w.wmax:w.wind))x.push('突風'+w.gust);a.push(`${w.dir?w.dir+'の風':'風'}${w.wind}m/s`+(x.length?`（${x.join('・')}）`:''))}if(w.wave!=null)a.push(`波高${w.wave}m`);else if(w.noWave)a.push('波高は東京湾のみ');if(w.sst!=null)a.push(`水温${w.sst}℃`);
   return a.length?a.join('・')+(w.prov?'（速報値）':''):''}
 async function wxCatch(tr){const r=await fetch(`https://cutlassfish.tokyo/wp-json/tbtcc/v1/series?from=${tr.date}&to=${tr.date}`);if(!r.ok)return null;const d=await r.json();
   const day=(d.days||[]).find(x=>x.date===tr.date),k=day&&day.conditions;if(!k||(k.sst_avg_c==null&&k.wave_height_m==null&&!k.weather_label))return null;
-  return {src:'catch',weather:k.weather_label||'',temp:r1n(k.temp_avg_c),wind:r1n(k.wind_avg_ms),dir:k.wind_dir_label||'',wave:r1n(k.wave_height_m),sst:r1n(k.sst_avg_c),prov:!!k.provisional,win:'6:00-14:00'}}
+  return {src:'catch',weather:k.weather_label||'',temp:r1n(k.temp_avg_c),wind:r1n(k.wind_avg_ms),wmax:r1n(k.wind_max_ms),gust:r1n(k.gust_max_ms),dir:k.wind_dir_label||'',wave:r1n(k.wave_height_m),sst:r1n(k.sst_avg_c),prov:!!k.provisional,win:'6:00-14:00'}}
 async function wxMeteo(tr){let ll=tr.spot&&tr.spot.lat!=null?[tr.spot.lat,tr.spot.lon]:(tr.station&&ST_LL[tr.station])||null;
   const g=(tr.points||[])[0];if(g&&(!ll||ptKm(g,{lat:ll[0],lon:ll[1]})>30))ll=[g.lat,g.lon]; // 登録した釣り場から遠い場所で📍を記録していれば、そちらを使う
   if(!ll)return null;const bay=inTokyoBay(ll[0],ll[1]);
   const q=`latitude=${(+ll[0]).toFixed(3)}&longitude=${(+ll[1]).toFixed(3)}&timezone=Asia%2FTokyo&start_date=${tr.date}&end_date=${tr.date}`;
-  const [f,m]=await Promise.all([fetch(`https://api.open-meteo.com/v1/forecast?${q}&hourly=weather_code,temperature_2m,wind_speed_10m,wind_direction_10m&wind_speed_unit=ms`).then(r=>r.ok?r.json():null).catch(()=>null),
+  const [f,m]=await Promise.all([fetch(`https://api.open-meteo.com/v1/forecast?${q}&hourly=weather_code,temperature_2m,precipitation,wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=ms`).then(r=>r.ok?r.json():null).catch(()=>null),
     fetch(`https://marine-api.open-meteo.com/v1/marine?${q}&hourly=${bay?'wave_height,':''}sea_surface_temperature`).then(r=>r.ok?r.json():null).catch(()=>null)]);
   if(!f&&!m)return null;const a=tr.start,b=tr.end||tr.planEnd||(tr.start+6*3600e3);
   const pick=(o,k)=>{if(!o||!o.hourly||!o.hourly[k])return [];return o.hourly.time.map((t,i)=>[new Date(t+':00+09:00').getTime(),o.hourly[k][i]]).filter(([t])=>t>=a-1800e3&&t<=b+1800e3).map(([,v])=>v)};
-  const codes=pick(f,'weather_code').filter(x=>x!=null),cnt={};codes.forEach(c=>cnt[c]=(cnt[c]||0)+1);const mode=codes.length?+Object.keys(cnt).sort((x,y)=>cnt[y]-cnt[x])[0]:null;
+  const pr=pick(f,'precipitation'),cp=pick(f,'weather_code').map((c,i)=>[c,pr[i]||0]).filter(([c])=>c!=null),mode=wxCode(cp.map(x=>x[0]),cp.map(x=>x[1]));
   const ws=pick(f,'wind_speed_10m'),wd=pick(f,'wind_direction_10m');let u=0,v=0;ws.forEach((s,i)=>{const d=wd[i];if(s!=null&&d!=null){u+=s*Math.sin(d*Math.PI/180);v+=s*Math.cos(d*Math.PI/180)}});
   const dir=ws.length&&(u||v)?WX_DIR[Math.round(((Math.atan2(u,v)*180/Math.PI)+360)%360/22.5)%16]:'';
-  const w={src:'open-meteo',weather:mode!=null?wmoLabel(mode):'',temp:r1n(avg(pick(f,'temperature_2m'))),wind:r1n(avg(ws)),dir,wave:r1n(avg(pick(m,'wave_height'))),noWave:false,sst:r1n(avg(pick(m,'sea_surface_temperature'))),prov:tr.date>=ymd(Date.now())||tr.status==='active',win:hm(a)+'-'+hm(b)};
+  const w={src:'open-meteo',weather:mode!=null?wmoLabel(mode):'',temp:r1n(avg(pick(f,'temperature_2m'))),wind:r1n(avg(ws)),wmax:r1n(wxMax(ws)),gust:r1n(wxMax(pick(f,'wind_gusts_10m'))),dir,wave:r1n(avg(pick(m,'wave_height'))),noWave:false,sst:r1n(avg(pick(m,'sea_surface_temperature'))),prov:tr.date>=ymd(Date.now())||tr.status==='active',win:hm(a)+'-'+hm(b)};
   return wxTxt(w)?w:null}
 const wxBusy=new Set(),wxTried={};
 function wxEnsure(tr,force){if(!tr||tr.sample||!tr.date||!tr.start||tr.start>Date.now()||wxBusy.has(tr.id))return;const w=tr.wx;if(!force){
@@ -2242,7 +2249,7 @@ function wxEnsure(tr,force){if(!tr||tr.sample||!tr.date||!tr.start||tr.start>Dat
     if(!r||!r.weather||r.temp==null||r.wind==null){let m=null;try{m=await wxMeteo(tr)}catch(e){}
       if(!r)r=m;else if(m){for(const k of ['weather','temp','wind','dir'])if(r[k]==null||r[k]==='')r[k]=m[k];if(m.prov&&(r.temp===m.temp||r.wind===m.wind))r.prov=true}}
     wxBusy.delete(tr.id);const t=S.trips[tr.id];if(!r||!t){if(force)toast('天気を取れませんでした。電波のある所でもう一度押してください');return}
-    const old=t.wx||{};for(const k of ['weather','temp','wind','dir','wave','sst'])if((r[k]==null||r[k]==='')&&old[k]!=null&&old[k]!=='')r[k]=old[k];   // 取り直しで値が消えないように、前の値を残す
+    const old=t.wx||{};for(const k of ['weather','temp','wind','wmax','gust','dir','wave','sst'])if((r[k]==null||r[k]==='')&&old[k]!=null&&old[k]!=='')r[k]=old[k];   // 取り直しで値が消えないように、前の値を残す
     r.at=Date.now();t.wx=r;if(force)toast('天気：'+wxTxt(r));touch(t);if(['fig','hist'].includes(S.ui.tab)&&$('#sheet').hidden)render()})()}
 const tripHours=t=>Math.max(0,(tripEndT(t)-t.start)/3600e3);
 function dashHTML(){const per=S.ui.dashPer||'all',y0=String(new Date().getFullYear());

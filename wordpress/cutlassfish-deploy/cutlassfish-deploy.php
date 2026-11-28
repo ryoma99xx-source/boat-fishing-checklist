@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cutlassfish プラグイン更新の受け口
  * Description: このサイトの自作プラグイン（名前が決まったものだけ）を、REST API から zip で「置き換え」インストールします。管理者のアプリケーションパスワードでだけ使えます。テーマや他社のプラグインは触れません。削除・無効化の機能はありません。入れた記録は「ツール → プラグイン更新の記録」で見られます。
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: 3rd-Penguin Fishing Lab.
  * License: GPL-2.0-or-later
  */
@@ -12,7 +12,7 @@ final class CF_Deploy {
     const NS  = 'cfdeploy/v1';
     const LOG = 'cfdeploy_log';
     /** 入れてよいプラグイン（フォルダ名）。ここに無いものは受け付けない */
-    const ALLOW = '/\A(?:cutlassfish-[a-z0-9-]+|cf-gear-deals|dragon-counter-[a-z0-9-]+|tbt-site-insights-patch)\z/';
+    const ALLOW = '/\A(?:cutlassfish-[a-z0-9-]+|cf-gear-deals|dragon-counter-[a-z0-9-]+|tbt-site-insights-patch|tbt-catch-collector-ai)\z/';   // tbt-catch-collector-ai：釣果速報の天気の直し（オーナー指示 2026-11-28）
 
     public static function init() {
         add_action('rest_api_init', function () {
